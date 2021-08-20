@@ -9,15 +9,15 @@ import SwiftUI
 
 struct SpotRowView: View {
     let width = UIScreen.main.bounds.width
-    let image: Image
+    let imageUrl: String
     let name: String
-    let distance: CGFloat
+    let distance: Double
     let size: CGFloat = 80
     
     var body: some View {
         HStack {
             
-            SecretSpotView(width: size, height: size, image: image)
+            SecretSpotView(width: size, height: size, imageUrl: imageUrl)
             
             Spacer()
             
@@ -44,7 +44,7 @@ struct SpotRowView: View {
 struct SpotRowView_Previews: PreviewProvider {
     static var previews: some View {
         
-        let donut = Image("donut")
-        SpotRowView(image: donut, name: "The Big Duck", distance: 10)
+      
+        SpotRowView(imageUrl: "donut", name: "The Big Duck", distance: 10)
     }
 }

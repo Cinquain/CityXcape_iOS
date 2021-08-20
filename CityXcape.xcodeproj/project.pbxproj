@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,6 +19,10 @@
 		217DAF3026CD7A1C00A395BC /* SecretSpotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DAF2F26CD7A1C00A395BC /* SecretSpotView.swift */; };
 		217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DAF3126CD7D5600A395BC /* Helpers.swift */; };
 		217DAF3426CD97D400A395BC /* SpotRowHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DAF3326CD97D400A395BC /* SpotRowHeader.swift */; };
+		219842A026CF39A30089CE03 /* LocationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2198429F26CF39A30089CE03 /* LocationController.swift */; };
+		219842A326CF3A680089CE03 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = 219842A226CF3A680089CE03 /* LBTATools */; };
+		219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A526CF4E3D0089CE03 /* SecretSpot.swift */; };
+		219842A826CF57740089CE03 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A726CF57740089CE03 /* ImagePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +40,9 @@
 		217DAF2F26CD7A1C00A395BC /* SecretSpotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretSpotView.swift; sourceTree = "<group>"; };
 		217DAF3126CD7D5600A395BC /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		217DAF3326CD97D400A395BC /* SpotRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotRowHeader.swift; sourceTree = "<group>"; };
+		2198429F26CF39A30089CE03 /* LocationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationController.swift; sourceTree = "<group>"; };
+		219842A526CF4E3D0089CE03 /* SecretSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretSpot.swift; sourceTree = "<group>"; };
+		219842A726CF57740089CE03 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +50,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				219842A326CF3A680089CE03 /* LBTATools in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +107,8 @@
 		217DA73726CC90F60039A145 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				219842A426CF4E120089CE03 /* Models */,
+				2198429E26CF396E0089CE03 /* MapView */,
 				217DA73B26CC96850039A145 /* My Journey */,
 				217DA73826CC90FB0039A145 /* Components */,
 			);
@@ -113,6 +123,7 @@
 				217DAF2D26CD789300A395BC /* SpotRowView.swift */,
 				217DAF2F26CD7A1C00A395BC /* SecretSpotView.swift */,
 				217DAF3326CD97D400A395BC /* SpotRowHeader.swift */,
+				219842A726CF57740089CE03 /* ImagePicker.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -123,6 +134,22 @@
 				217DA73C26CC96A30039A145 /* MyJourney.swift */,
 			);
 			path = "My Journey";
+			sourceTree = "<group>";
+		};
+		2198429E26CF396E0089CE03 /* MapView */ = {
+			isa = PBXGroup;
+			children = (
+				2198429F26CF39A30089CE03 /* LocationController.swift */,
+			);
+			path = MapView;
+			sourceTree = "<group>";
+		};
+		219842A426CF4E120089CE03 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				219842A526CF4E3D0089CE03 /* SecretSpot.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,6 +168,9 @@
 			dependencies = (
 			);
 			name = CityXcape;
+			packageProductDependencies = (
+				219842A226CF3A680089CE03 /* LBTATools */,
+			);
 			productName = CityXcape;
 			productReference = 217DA72426CC8F8B0039A145 /* CityXcape.app */;
 			productType = "com.apple.product-type.application";
@@ -168,6 +198,9 @@
 				Base,
 			);
 			mainGroup = 217DA71B26CC8F8B0039A145;
+			packageReferences = (
+				219842A126CF3A680089CE03 /* XCRemoteSwiftPackageReference "LBTATools" */,
+			);
 			productRefGroup = 217DA72526CC8F8B0039A145 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -194,8 +227,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				219842A826CF57740089CE03 /* ImagePicker.swift in Sources */,
+				219842A026CF39A30089CE03 /* LocationController.swift in Sources */,
 				217DA73D26CC96A30039A145 /* MyJourney.swift in Sources */,
 				217DAF3426CD97D400A395BC /* SpotRowHeader.swift in Sources */,
+				219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */,
 				217DA74126CCAFDD0039A145 /* UserDotView.swift in Sources */,
 				217DA72A26CC8F8B0039A145 /* HomeView.swift in Sources */,
 				217DA73F26CC972C0039A145 /* Ticker.swift in Sources */,
@@ -392,6 +428,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		219842A126CF3A680089CE03 /* XCRemoteSwiftPackageReference "LBTATools" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/bhlvoong/LBTATools.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.17;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		219842A226CF3A680089CE03 /* LBTATools */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 219842A126CF3A680089CE03 /* XCRemoteSwiftPackageReference "LBTATools" */;
+			productName = LBTATools;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 217DA71C26CC8F8B0039A145 /* Project object */;
 }

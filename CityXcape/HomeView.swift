@@ -16,21 +16,22 @@ struct HomeView: View {
                 .tabItem {
                     Image(AppIcon.tabItemI.rawValue)
                         .renderingMode(.template)
-                    Text("My Journey")
+                    Text(AppLabels.tab1.rawValue)
                 }
             
-            Color.yellow.edgesIgnoringSafeArea(.all)
+            MapView()
+                .edgesIgnoringSafeArea(.top)
                 .tabItem {
                     Image(AppIcon.tabItemII.rawValue)
                         .renderingMode(.template)
-                    Text("Post Spot")
+                    Text(AppLabels.tab2.rawValue)
                 }
             
             Color.blue.edgesIgnoringSafeArea(.all)
                 .tabItem {
                     Image(AppIcon.tabItemIII.rawValue)
                         .renderingMode(.template)
-                    Text("StreetPass")
+                    Text(AppLabels.tab2.rawValue)
                 }
                 
         }

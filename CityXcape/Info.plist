@@ -44,5 +44,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>CityXcape Needs Your Location for Secret Spots</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>CityXcape Needs Your Location</string>
 </dict>
 </plist>

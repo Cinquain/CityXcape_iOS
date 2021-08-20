@@ -9,17 +9,17 @@ import SwiftUI
 
 struct MyJourney: View {
     
-    let picture = Image("donut")
-    @State private var spotNumber: Int = 0
-    let spots = [
-        "The Big Duck",
-        "Graffit Pier",
-        "Donut Pub"
-    ]
     
+    let spots: [SecretSpot] = [
+        SecretSpot(name: "The Big Duck", imageUrl: "donut", distance: 0.5),
+        SecretSpot(name: "Graffiti Pier", imageUrl: "donut", distance: 2),
+        SecretSpot(name: "Donut Pub", imageUrl: "donut", distance: 10)
+    ]
     @State private var isPresented: Bool = false
+    @State private var currentSpot: SecretSpot?
     
     var body: some View {
+        
         
         GeometryReader { geo in
             ZStack {
@@ -32,10 +32,10 @@ struct MyJourney: View {
                     SpotRowHeader()
                
                         List {
-                            ForEach(1...10, id: \.self) { spot in
-                                SpotRowView(image: picture, name: "Donut Pub", distance: 0.5)
+                            ForEach(spots, id: \.self) { spot in
+                                SpotRowView(imageUrl: spot.imageUrl, name: spot.name, distance: spot.distance)
                                     .onTapGesture {
-                                        spotNumber = spot
+                                        self.currentSpot = spot
                                         isPresented.toggle()
                                     }
                             }
@@ -49,12 +49,14 @@ struct MyJourney: View {
         .sheet(isPresented: $isPresented, content: {
             ZStack {
                 Color.black
-                Text("Spot \(spotNumber)")
+                Text(currentSpot?.name ?? "")
+                    .font(.headline)
                     .foregroundColor(.white)
             }
             .edgesIgnoringSafeArea(.all)
             .onTapGesture {
                 isPresented.toggle()
+                
             }
         })
         

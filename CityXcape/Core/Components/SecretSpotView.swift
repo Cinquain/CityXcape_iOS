@@ -11,7 +11,7 @@ struct SecretSpotView: View {
     
     let width: CGFloat
     let height: CGFloat
-    let image: Image
+    let imageUrl: String
     
     var body: some View {
         
@@ -20,7 +20,7 @@ struct SecretSpotView: View {
             .aspectRatio(contentMode: .fit)
             .frame(width: width, height: height)
             .overlay(
-                image
+                Image(imageUrl)
                     .resizable()
                     .frame(width: width / 1.35, height: height / 1.35)
                     .cornerRadius(40)
@@ -32,7 +32,6 @@ struct SecretSpotView: View {
 
 struct SecretSpotView_Previews: PreviewProvider {
     static var previews: some View {
-        let donut = Image("donut")
-        SecretSpotView(width: 100, height: 100, image: donut)
+        SecretSpotView(width: 100, height: 100, imageUrl: "donut")
     }
 }

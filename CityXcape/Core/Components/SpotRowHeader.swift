@@ -18,6 +18,7 @@ struct SpotRowHeader: View {
                 Spacer()
                 Text(AppLabels.headerName.rawValue)
                     .frame(alignment: .center)
+                    .padding(.leading, 40)
                 Spacer()
                 Text(AppLabels.headerDistance.rawValue)
                     .frame(width: width / 3.5, alignment: .center)
