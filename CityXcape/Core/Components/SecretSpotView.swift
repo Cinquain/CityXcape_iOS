@@ -15,7 +15,7 @@ struct SecretSpotView: View {
     
     var body: some View {
         
-        Image(AppIcon.pin.rawValue)
+        Image(Icon.pin.rawValue)
             .resizable()
             .aspectRatio(contentMode: .fit)
             .frame(width: width, height: height)

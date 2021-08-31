@@ -9,18 +9,29 @@ import Foundation
 import SwiftUI
 
 
-enum AppIcon: String {
+enum Icon: String {
     case pin = "pin_blue"
     case dot = "dot"
+    case save = "save"
+    case pass = "pass"
+    case gear = "gears"
+    case logo = "logo"
+    case check = "checkmark"
+    case globe = "globe"
+    case unknown = "silhouette"
+    case back = "back_arrow"
+    case compass = "compass"
     case tabItemI = "tab1"
     case tabItemII = "tab2"
     case tabItemIII = "tab3"
+    case history = "history"
 }
 
-enum AppLabels: String {
+enum Labels: String {
     case tab1 = "My Journey"
     case tab2 = "Post Spot"
     case tab3 = "StreetPass"
+
     case headerName = "Name"
     case headerDistance = "Distance"
     case headerPhoto = "Spot Image"

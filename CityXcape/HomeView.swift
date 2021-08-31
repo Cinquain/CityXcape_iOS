@@ -8,40 +8,46 @@
 import SwiftUI
 
 struct HomeView: View {
+    
+    init() {
+        UITabBar.appearance().isTranslucent = false
+        UITabBar.appearance().barTintColor = .black
+    }
+    
     var body: some View {
        
         TabView {
     
                 MyJourney()
                 .tabItem {
-                    Image(AppIcon.tabItemI.rawValue)
+                    Image(Icon.tabItemI.rawValue)
                         .renderingMode(.template)
-                    Text(AppLabels.tab1.rawValue)
+                    Text(Labels.tab1.rawValue)
                 }
             
-            MapView()
+            MapContainer()
                 .edgesIgnoringSafeArea(.top)
                 .tabItem {
-                    Image(AppIcon.tabItemII.rawValue)
+                    Image(Icon.tabItemII.rawValue)
                         .renderingMode(.template)
-                    Text(AppLabels.tab2.rawValue)
+                    Text(Labels.tab2.rawValue)
                 }
             
-            Color.blue.edgesIgnoringSafeArea(.all)
+            StreetPass()
                 .tabItem {
-                    Image(AppIcon.tabItemIII.rawValue)
+                    Image(Icon.tabItemIII.rawValue)
                         .renderingMode(.template)
-                    Text(AppLabels.tab2.rawValue)
+                    Text(Labels.tab3.rawValue)
                 }
                 
         }
-        .accentColor(.accent)
+        .accentColor(.orange)
+        .colorScheme(.dark)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
-            .colorScheme(.dark)
     }
 }

@@ -9,12 +9,8 @@ import SwiftUI
 
 struct Ticker: View {
     
-    @State private var selection: Int = 0
-    var captions: [String] = [
-        "Welcome to CityXcape",
-        "Find Secret Spots",
-        "Keep Exploring!"
-    ]
+    @State private var selection: Int = 2
+    let captions: [String]
     
     var body: some View {
         
@@ -26,11 +22,12 @@ struct Ticker: View {
                     .overlay(
                         Text(captions[selection])
                             .fontWeight(.light)
-                            .padding(.leading, -90)
+                            .padding(.leading, 10)
+                            .animation(.easeOut(duration: 1))
                     )
                 
                 if selection == 2 {
-                    UserDotView(image: Image("User"), width: 60, height: 60)
+                    UserDotView(imageUrl: "User", width: 60, height: 60)
                 } else {
                     Circle()
                         .stroke(Color.accent, lineWidth: selection == 2 ? 0 : 1)
@@ -48,10 +45,13 @@ struct Ticker: View {
                 }
                 
             }
+            .foregroundColor(.accent)
             .animation(.easeIn)
             .padding()
             .onAppear(perform: {
                 runAnimation()
+            })
+            .onDisappear(perform: {
             })
         }
      
@@ -65,7 +65,7 @@ struct Ticker: View {
         case 1:
             return "pin"
         case 2:
-            return "dot"
+            return "User"
         default:
             return "cx"
         }
@@ -85,7 +85,13 @@ struct Ticker: View {
 
 struct Ticker_Previews: PreviewProvider {
     static var previews: some View {
-        Ticker()
+        let captions: [String] = [
+            "Welcome to CityXcape",
+            "Find Secret Spots",
+            "Keep Exploring!"
+        ]
+        
+        Ticker(captions: captions)
             .preferredColorScheme(.dark)
             .previewLayout(.sizeThatFits)
     }

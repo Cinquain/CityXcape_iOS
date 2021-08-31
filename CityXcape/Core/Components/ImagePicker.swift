@@ -10,6 +10,7 @@ import SwiftUI
 import UIKit
 
 
+
 struct ImagePicker: UIViewControllerRepresentable {
     
     @Environment(\.presentationMode) var presentationMode
@@ -19,6 +20,7 @@ struct ImagePicker: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
         picker.allowsEditing = true
+        picker.delegate = context.coordinator
         picker.sourceType = sourceType
         return picker
     }
@@ -43,9 +45,14 @@ struct ImagePicker: UIViewControllerRepresentable {
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             
-            if let image = info[.editedImage] as? UIImage ?? info[.originalImage] as? UIImage {
+            if let image = info[.editedImage] as? UIImage {
                 parent.imageSelected = image
                 parent.presentationMode.wrappedValue.dismiss()
+            } else {
+                if let image = info[.originalImage] as? UIImage {
+                    parent.imageSelected = image
+                    parent.presentationMode.wrappedValue.dismiss()
+                }
             }
         }
     }

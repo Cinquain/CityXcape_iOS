@@ -1,16 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "pin.pdf",
-      "idiom" : "universal"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
       "filename" : "pin2.pdf",
       "idiom" : "universal"
     }

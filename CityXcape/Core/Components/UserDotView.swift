@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UserDotView: View {
     
-    let image: Image
+    let imageUrl: String
     let width: CGFloat
     let height: CGFloat
     let ratio : CGFloat = 1.3
@@ -17,11 +17,11 @@ struct UserDotView: View {
     var body: some View {
         
         ZStack {
-            Image(AppIcon.dot.rawValue)
+            Image(Icon.dot.rawValue)
                 .resizable()
                 .frame(width: width, height: height, alignment: .center)
                 .overlay(
-                    image
+                    Image(imageUrl)
                         .resizable()
                         .frame(width: width / ratio, height: height / ratio, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                     
@@ -35,8 +35,7 @@ struct UserDotView_Previews: PreviewProvider {
     
     
     static var previews: some View {
-        let dummyImage = Image("User")
         
-        UserDotView(image: dummyImage, width: 150, height: 150)
+        UserDotView(imageUrl: "User", width: 150, height: 150)
     }
 }

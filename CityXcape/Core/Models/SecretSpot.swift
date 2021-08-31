@@ -11,10 +11,10 @@ import Foundation
 struct SecretSpot: Identifiable, Hashable, Codable {
     
     var id: String = UUID().uuidString
-    
+    let username: String
     let name: String
     let imageUrl: String
     let distance: Double
-    
+    let address: String
     
 }

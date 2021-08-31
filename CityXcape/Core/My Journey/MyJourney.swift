@@ -11,22 +11,36 @@ struct MyJourney: View {
     
     
     let spots: [SecretSpot] = [
-        SecretSpot(name: "The Big Duck", imageUrl: "donut", distance: 0.5),
-        SecretSpot(name: "Graffiti Pier", imageUrl: "donut", distance: 2),
-        SecretSpot(name: "Donut Pub", imageUrl: "donut", distance: 10)
+        SecretSpot(username: "Cinquain", name: "The Big Duck", imageUrl: "big duck", distance: 0.5, address: "3402 avenue I, Brooklyn, NY"),
+        SecretSpot(username: "JamesAllan", name: "Graffiti Pier", imageUrl: "graffiti pier", distance: 2, address: "230 Court St, Philly, PA"),
+        SecretSpot(username: "IceHistory", name: "Donut Pub", imageUrl: "donut", distance: 10, address: "45 Wall St, NY, NY"),
+        SecretSpot(username: "Cinquain", name: "Eicher Home", imageUrl: "Eichler", distance: 5, address: "656 Explorer avenenue"),
+        SecretSpot(username: "Cinquain", name: "Ark Encounter", imageUrl: "Ark Encounter", distance: 300, address: "1 Ark Encounter Dr, Williamstown, KY")
     ]
+    
+    let captions: [String] = [
+        "Welcome to CityXcape",
+        "Find Secret Spots",
+        "Keep Exploring!"
+    ]
+    
     @State private var isPresented: Bool = false
-    @State private var currentSpot: SecretSpot?
+    @State var currentSpot: SecretSpot? {
+        didSet {
+            isPresented.toggle()
+        }
+    }
     
     var body: some View {
         
         
         GeometryReader { geo in
             ZStack {
-                Color("Background")
+                Color.background
+                    .edgesIgnoringSafeArea(.all)
+                
                 VStack {
-                    Ticker()
-                        .padding(.top, geo.size.width / 8)
+                    Ticker(captions: captions)
                         .frame(height: 150)
                     
                     SpotRowHeader()
@@ -36,28 +50,25 @@ struct MyJourney: View {
                                 SpotRowView(imageUrl: spot.imageUrl, name: spot.name, distance: spot.distance)
                                     .onTapGesture {
                                         self.currentSpot = spot
-                                        isPresented.toggle()
                                     }
                             }
+                            
                         }
                         .listStyle(PlainListStyle())
+                        .colorScheme(.dark)
+
                 }
                     
             }
         }
-        .edgesIgnoringSafeArea(.all)
         .sheet(isPresented: $isPresented, content: {
-            ZStack {
-                Color.black
-                Text(currentSpot?.name ?? "")
-                    .font(.headline)
-                    .foregroundColor(.white)
+            
+            if let spot = currentSpot {
+                SpotDetailsView(spot: spot)
+            } else {
+                Text("No Spot Found")
             }
-            .edgesIgnoringSafeArea(.all)
-            .onTapGesture {
-                isPresented.toggle()
-                
-            }
+            
         })
         
     }
@@ -66,6 +77,5 @@ struct MyJourney: View {
 struct MyJourney_Previews: PreviewProvider {
     static var previews: some View {
         MyJourney()
-            .colorScheme(.dark)
     }
 }
