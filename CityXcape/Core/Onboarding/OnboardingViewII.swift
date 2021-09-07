@@ -8,12 +8,15 @@
 import SwiftUI
 
 struct OnboardingViewII: View {
-    
-    @State private var username = ""
+    @Environment(\.presentationMode) var presentationMode
+
+    @State private var displayName = ""
     @State private var showPicker: Bool = false
     @State var userImage: UIImage = UIImage()
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    
     @State private var opacity: Double = 0
+    @State var showError: Bool = false
     
     @Binding var email: String
     @Binding var name: String
@@ -47,7 +50,7 @@ struct OnboardingViewII: View {
                                         .frame(width: geo.size.width / 3, height: geo.size.width / 3)
                                         .cornerRadius((geo.size.width / 3) / 2)
                                 )
-                            Text(username)
+                            Text(displayName)
                                 .font(.title3)
                                 .fontWeight(.thin)
                         }
@@ -55,7 +58,7 @@ struct OnboardingViewII: View {
                     Spacer()
                 }
             
-                TextField("Create a Username", text: $username)
+                TextField("Create a Username", text: $displayName)
                     .padding()
                     .frame(height: 60)
                     .frame(maxWidth: .infinity)
@@ -76,7 +79,7 @@ struct OnboardingViewII: View {
                         .frame(maxWidth: .infinity)
                         .background(Color.orange)
                         .cornerRadius(8)
-                        .opacity(username.count > 3 ? 1.0 : 0.0)
+                        .opacity(displayName.count > 3 ? 1.0 : 0.0)
                         .animation(.easeOut(duration: 1.0))
                         .padding(.horizontal)
                 })
@@ -119,12 +122,45 @@ struct OnboardingViewII: View {
                     .colorScheme(.dark)
                     
             })
+            .alert(isPresented: $showError, content: {
+                return Alert(title: Text("Error creating profile 😤"))
+            })
             
         }
     }
     
     fileprivate func createProfile() {
+        print("Create Profile")
         
+        AuthService.instance.createNewUserInDatabase(name: displayName, email: email, providerId: providerId, provider: provider, profileImage: userImage) { (uid) in
+            
+            if let userId = uid {
+                
+                AuthService.instance.loginUserToApp(userId: userId) { (success) in
+                    if success {
+                        print("User logged in")
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                    } else {
+                        print("Error logging in")
+                        self.showError.toggle()
+                    }
+                   
+                }
+                
+                
+                
+                //Error Creatign User in Database
+            } else {
+                print("Error creating user in database")
+                self.showError.toggle()
+                
+            }
+            
+            
+        }
     }
     
   

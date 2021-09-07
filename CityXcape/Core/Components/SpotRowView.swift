@@ -15,17 +15,27 @@ struct SpotRowView: View {
     let size: CGFloat = 80
     
     var body: some View {
+        
         HStack {
             
             SecretSpotView(width: size, height: size, imageUrl: imageUrl)
             
+            
+            HStack {
+                Text(name)
+                Spacer()
+            }
+            .frame(maxWidth: width / 2)
+            .padding(.leading, 20)
+            
             Spacer()
             
-            Text(name)
+            HStack {
+                Text(returnDistance())
+                Spacer()
+            }
+            .frame(width: width / 4)
             
-            Spacer()
-    
-            Text(returnDistance())
         }
         .frame(width: .infinity, height: 80)
         .padding()

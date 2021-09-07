@@ -44,6 +44,7 @@ struct SettingsEditTextView: View {
                     .frame(maxWidth: .infinity)
                     .background(Color.black)
                     .cornerRadius(12)
+                    .withPresstableStyle()
             })
             .accentColor(Color.orange)
             

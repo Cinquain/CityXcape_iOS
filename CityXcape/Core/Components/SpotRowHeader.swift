@@ -14,14 +14,24 @@ struct SpotRowHeader: View {
     var body: some View {
 
             HStack {
+                
                 Text(Labels.headerPhoto.rawValue)
+                    .frame(width: width / 4.5)
+                
                 Spacer()
-                Text(Labels.headerName.rawValue)
-                    .frame(alignment: .center)
-                    .padding(.leading, 40)
-                Spacer()
-                Text(Labels.headerDistance.rawValue)
-                    .frame(width: width / 3.5, alignment: .center)
+                
+                HStack {
+                    Text(Labels.headerName.rawValue)
+                    Spacer()
+                }
+                .frame(width: width / 2.5)
+                .padding(.leading, 20)
+                
+                HStack {
+                    Text(Labels.headerDistance.rawValue)
+                    Spacer()
+                }
+                .frame(width: width / 4)
             }
             .frame(width: .infinity, height: 30)
             .padding()

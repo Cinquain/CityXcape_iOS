@@ -58,4 +58,15 @@ extension MKMapItem {
     }
 }
 
+extension View {
+    func standardButtonFormatting(textColor: Color, color: Color) -> some View {
+        modifier(StandardButton(textColor: textColor, color: color))
+    }
+    
+    func withPresstableStyle() -> some View {
+        buttonStyle(StandardPressStyle())
+    }
+}
+
+
 

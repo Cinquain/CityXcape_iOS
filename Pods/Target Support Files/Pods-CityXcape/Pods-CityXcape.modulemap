@@ -1,0 +1,6 @@
+framework module Pods_CityXcape {
+  umbrella header "Pods-CityXcape-umbrella.h"
+
+  export *
+  module * { export * }
+}

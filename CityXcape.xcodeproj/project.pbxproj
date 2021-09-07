@@ -7,9 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214FAC6C26E2F16300F37B80 /* ImageManager.swift */; };
 		21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */; };
 		21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9326D536B30049CE2D /* SettingsLabelView.swift */; };
 		21785D9626D547AC0049CE2D /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9526D547AC0049CE2D /* SettingsRowView.swift */; };
+		217884F526E1796A0066C719 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 217884F426E1796A0066C719 /* GoogleService-Info.plist */; };
+		217884F926E17B870066C719 /* SignInWithApple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217884F826E17B870066C719 /* SignInWithApple.swift */; };
+		217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217884FA26E181CE0066C719 /* SignInWithGoogle.swift */; };
+		217884FE26E18CEA0066C719 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217884FD26E18CEA0066C719 /* AuthService.swift */; };
 		21793FC726D919D9001ACD1A /* SettingsEditImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21793FC626D919D9001ACD1A /* SettingsEditImageView.swift */; };
 		217B770B26DD007C000A78C9 /* CreateSpotFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217B770A26DD007C000A78C9 /* CreateSpotFormView.swift */; };
 		217C08D726D1AFF400751933 /* MapContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217C08D626D1AFF400751933 /* MapContainer.swift */; };
@@ -29,6 +34,7 @@
 		217DAF3026CD7A1C00A395BC /* SecretSpotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DAF2F26CD7A1C00A395BC /* SecretSpotView.swift */; };
 		217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DAF3126CD7D5600A395BC /* Helpers.swift */; };
 		217DAF3426CD97D400A395BC /* SpotRowHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DAF3326CD97D400A395BC /* SpotRowHeader.swift */; };
+		217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217EFE8926DEAB1F005C7C88 /* CongratsView.swift */; };
 		218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218980A626DC54C500A6FD23 /* LikeAnimationView.swift */; };
 		218CADBE26D5C94300496884 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CADBD26D5C94300496884 /* SettingsView.swift */; };
 		218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CADBF26D5D7E400496884 /* SettingsEditTextView.swift */; };
@@ -38,12 +44,21 @@
 		219842A826CF57740089CE03 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A726CF57740089CE03 /* ImagePicker.swift */; };
 		21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA28DF26D13BB40001A02E /* StreetPass.swift */; };
 		21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */; };
+		21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BBB06026E596C2000B40B3 /* AnimationController.swift */; };
+		B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		03633A38349C026A52CC221D /* Pods-CityXcape.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.release.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.release.xcconfig"; sourceTree = "<group>"; };
+		214FAC6C26E2F16300F37B80 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewModel.swift; sourceTree = "<group>"; };
 		21785D9326D536B30049CE2D /* SettingsLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLabelView.swift; sourceTree = "<group>"; };
 		21785D9526D547AC0049CE2D /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
+		217884F326E1784E0066C719 /* CityXcape.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CityXcape.entitlements; sourceTree = "<group>"; };
+		217884F426E1796A0066C719 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		217884F826E17B870066C719 /* SignInWithApple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithApple.swift; sourceTree = "<group>"; };
+		217884FA26E181CE0066C719 /* SignInWithGoogle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithGoogle.swift; sourceTree = "<group>"; };
+		217884FD26E18CEA0066C719 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		21793FC626D919D9001ACD1A /* SettingsEditImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditImageView.swift; sourceTree = "<group>"; };
 		217B770A26DD007C000A78C9 /* CreateSpotFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSpotFormView.swift; sourceTree = "<group>"; };
 		217C08D626D1AFF400751933 /* MapContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContainer.swift; sourceTree = "<group>"; };
@@ -65,6 +80,7 @@
 		217DAF2F26CD7A1C00A395BC /* SecretSpotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretSpotView.swift; sourceTree = "<group>"; };
 		217DAF3126CD7D5600A395BC /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		217DAF3326CD97D400A395BC /* SpotRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotRowHeader.swift; sourceTree = "<group>"; };
+		217EFE8926DEAB1F005C7C88 /* CongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongratsView.swift; sourceTree = "<group>"; };
 		218980A626DC54C500A6FD23 /* LikeAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAnimationView.swift; sourceTree = "<group>"; };
 		218CADBD26D5C94300496884 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		218CADBF26D5D7E400496884 /* SettingsEditTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditTextView.swift; sourceTree = "<group>"; };
@@ -73,6 +89,9 @@
 		219842A726CF57740089CE03 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		21AA28DF26D13BB40001A02E /* StreetPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetPass.swift; sourceTree = "<group>"; };
 		21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailsView.swift; sourceTree = "<group>"; };
+		21BBB06026E596C2000B40B3 /* AnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
+		D55E8FAFE7D475B0B8F4DBF2 /* Pods-CityXcape.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.debug.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.debug.xcconfig"; sourceTree = "<group>"; };
+		DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CityXcape.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,18 +100,55 @@
 			buildActionMask = 2147483647;
 			files = (
 				219842A326CF3A680089CE03 /* LBTATools in Frameworks */,
+				B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		214FAC6B26E2F14F00F37B80 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				214FAC6C26E2F16300F37B80 /* ImageManager.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		217884F626E17B5F0066C719 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				214FAC6B26E2F14F00F37B80 /* Utilities */,
+				217884FC26E18CD90066C719 /* Firebase */,
+				217884F726E17B680066C719 /* SignInProviders */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		217884F726E17B680066C719 /* SignInProviders */ = {
+			isa = PBXGroup;
+			children = (
+				217884F826E17B870066C719 /* SignInWithApple.swift */,
+				217884FA26E181CE0066C719 /* SignInWithGoogle.swift */,
+			);
+			path = SignInProviders;
+			sourceTree = "<group>";
+		};
+		217884FC26E18CD90066C719 /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				217884FD26E18CEA0066C719 /* AuthService.swift */,
+			);
+			path = Firebase;
+			sourceTree = "<group>";
+		};
 		217C08D826D1B9E600751933 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
 				217C08D926D1B9FE00751933 /* SignUpView.swift */,
 				217C08DB26D1C38E00751933 /* OnboardingView.swift */,
 				217C08DF26D1CC4500751933 /* OnboardingViewII.swift */,
+				21BBB06026E596C2000B40B3 /* AnimationController.swift */,
 			);
 			path = Onboarding;
 			sourceTree = "<group>";
@@ -102,6 +158,8 @@
 			children = (
 				217DA72626CC8F8B0039A145 /* CityXcape */,
 				217DA72526CC8F8B0039A145 /* Products */,
+				B6156AA5742D5EE0631CA8A9 /* Pods */,
+				2C5DDA3884E8770F1BEF8846 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -116,12 +174,15 @@
 		217DA72626CC8F8B0039A145 /* CityXcape */ = {
 			isa = PBXGroup;
 			children = (
+				217884F626E17B5F0066C719 /* Services */,
+				217884F326E1784E0066C719 /* CityXcape.entitlements */,
 				217DA73626CC90D90039A145 /* Helpers & Extensions */,
 				217DA72726CC8F8B0039A145 /* CityXcapeApp.swift */,
 				217DA72926CC8F8B0039A145 /* HomeView.swift */,
 				217DA73726CC90F60039A145 /* Core */,
 				217DA72B26CC8F8C0039A145 /* Assets.xcassets */,
 				218E76F226DBB08A00F720F1 /* LaunchScreen.storyboard */,
+				217884F426E1796A0066C719 /* GoogleService-Info.plist */,
 				217DA73026CC8F8C0039A145 /* Info.plist */,
 				217DA72D26CC8F8C0039A145 /* Preview Content */,
 			);
@@ -190,6 +251,7 @@
 				217C08D626D1AFF400751933 /* MapContainer.swift */,
 				21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */,
 				217B770A26DD007C000A78C9 /* CreateSpotFormView.swift */,
+				217EFE8926DEAB1F005C7C88 /* CongratsView.swift */,
 			);
 			path = MapView;
 			sourceTree = "<group>";
@@ -213,6 +275,23 @@
 			path = StreetPass;
 			sourceTree = "<group>";
 		};
+		2C5DDA3884E8770F1BEF8846 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B6156AA5742D5EE0631CA8A9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D55E8FAFE7D475B0B8F4DBF2 /* Pods-CityXcape.debug.xcconfig */,
+				03633A38349C026A52CC221D /* Pods-CityXcape.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -220,9 +299,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 217DA73326CC8F8C0039A145 /* Build configuration list for PBXNativeTarget "CityXcape" */;
 			buildPhases = (
+				5A7555390EC920663C056C8B /* [CP] Check Pods Manifest.lock */,
 				217DA72026CC8F8B0039A145 /* Sources */,
 				217DA72126CC8F8B0039A145 /* Frameworks */,
 				217DA72226CC8F8B0039A145 /* Resources */,
+				2F2CAF926CFDC93990959A9E /* [CP] Embed Pods Frameworks */,
+				FC6BCB4C3C317EE76191E6D2 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -277,6 +359,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				218E76F326DBB08A00F720F1 /* LaunchScreen.storyboard in Resources */,
+				217884F526E1796A0066C719 /* GoogleService-Info.plist in Resources */,
 				217DA72F26CC8F8C0039A145 /* Preview Assets.xcassets in Resources */,
 				217DA72C26CC8F8C0039A145 /* Assets.xcassets in Resources */,
 			);
@@ -284,12 +367,72 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2F2CAF926CFDC93990959A9E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CityXcape/Pods-CityXcape-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CityXcape/Pods-CityXcape-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CityXcape/Pods-CityXcape-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5A7555390EC920663C056C8B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-CityXcape-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FC6BCB4C3C317EE76191E6D2 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CityXcape/Pods-CityXcape-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CityXcape/Pods-CityXcape-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CityXcape/Pods-CityXcape-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		217DA72026CC8F8B0039A145 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				217C08E026D1CC4500751933 /* OnboardingViewII.swift in Sources */,
+				217884FE26E18CEA0066C719 /* AuthService.swift in Sources */,
 				218CADBE26D5C94300496884 /* SettingsView.swift in Sources */,
 				219842A826CF57740089CE03 /* ImagePicker.swift in Sources */,
 				217DA73D26CC96A30039A145 /* MyJourney.swift in Sources */,
@@ -299,8 +442,11 @@
 				217DAF3426CD97D400A395BC /* SpotRowHeader.swift in Sources */,
 				21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */,
 				219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */,
+				214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */,
+				21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */,
 				217DA74126CCAFDD0039A145 /* UserDotView.swift in Sources */,
 				217DA72A26CC8F8B0039A145 /* HomeView.swift in Sources */,
+				217884F926E17B870066C719 /* SignInWithApple.swift in Sources */,
 				217C08D726D1AFF400751933 /* MapContainer.swift in Sources */,
 				21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */,
 				21793FC726D919D9001ACD1A /* SettingsEditImageView.swift in Sources */,
@@ -310,6 +456,8 @@
 				217DA73A26CC95A50039A145 /* Extensions.swift in Sources */,
 				217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */,
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,
+				217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */,
+				217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */,
 				217DAF3026CD7A1C00A395BC /* SecretSpotView.swift in Sources */,
 				217C08DC26D1C38E00751933 /* OnboardingView.swift in Sources */,
 				21785D9626D547AC0049CE2D /* SettingsRowView.swift in Sources */,
@@ -440,9 +588,11 @@
 		};
 		217DA73426CC8F8C0039A145 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D55E8FAFE7D475B0B8F4DBF2 /* Pods-CityXcape.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CityXcape/CityXcape.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"CityXcape/Preview Content\"";
 				DEVELOPMENT_TEAM = M85RTB7279;
@@ -453,7 +603,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.cityXcape.CityXcape;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -462,9 +612,11 @@
 		};
 		217DA73526CC8F8C0039A145 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 03633A38349C026A52CC221D /* Pods-CityXcape.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = CityXcape/CityXcape.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"CityXcape/Preview Content\"";
 				DEVELOPMENT_TEAM = M85RTB7279;
@@ -475,7 +627,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.cityXcape.CityXcape;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

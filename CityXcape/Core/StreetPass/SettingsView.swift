@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     
     @Environment(\.presentationMode) var presentationMode
-    
+    @State private var showSignoutError = false
   
     
     var body: some View {
@@ -59,8 +59,14 @@ struct SettingsView: View {
                             SettingsRowView(text: "Profile Picture", leftIcon: "photo", color: .cx_blue)
                         })
                     
-                    
-                    SettingsRowView(text: "Sign out", leftIcon: "figure.walk", color: .cx_blue)
+                    Button(action: {
+                        signOut()
+                    }, label: {
+                        SettingsRowView(text: "Sign out", leftIcon: "figure.walk", color: .cx_blue)
+                    })
+                    .alert(isPresented: $showSignoutError, content: {
+                        return Alert(title: Text("Error signing out 🥵"))
+                    })
 
                 })
                 .background(Color.white)
@@ -86,6 +92,7 @@ struct SettingsView: View {
                     }, label: {
                         SettingsRowView(text: "Scout Merchandise", leftIcon: "globe", color: .yellow)
                     })
+                 
                   
                 })
                 .padding()
@@ -93,7 +100,7 @@ struct SettingsView: View {
                 //MARK: SECTION 4: COPYRIGHTS
                 
                 GroupBox {
-                    Text("Made by James Allan. \n All Rights Reserved \n CityXcape Inc. \n Copyright 2021" )
+                    Text("Produced by James Allan. \n All Rights Reserved \n CityXcape Inc. \n Copyright 2021" )
                         .foregroundColor(.black)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity)
@@ -116,6 +123,7 @@ struct SettingsView: View {
                     })
                     .accentColor(.black)
             )
+            
            
         }
     }
@@ -129,6 +137,19 @@ struct SettingsView: View {
             UIApplication.shared.open(url)
         }
         
+    }
+    
+    func signOut() {
+        AuthService.instance.logOutUser { (success) in
+            if success {
+                print("Successfully signed out user")
+                self.presentationMode.wrappedValue.dismiss()
+
+            } else {
+                print("Error signout user")
+                self.showSignoutError.toggle()
+            }
+        }
     }
 }
 

@@ -17,12 +17,7 @@ struct MyJourney: View {
         SecretSpot(username: "Cinquain", name: "Eicher Home", imageUrl: "Eichler", distance: 5, address: "656 Explorer avenenue"),
         SecretSpot(username: "Cinquain", name: "Ark Encounter", imageUrl: "Ark Encounter", distance: 300, address: "1 Ark Encounter Dr, Williamstown, KY")
     ]
-    
-    let captions: [String] = [
-        "Welcome to CityXcape",
-        "Find Secret Spots",
-        "Keep Exploring!"
-    ]
+  
     
     @State private var isPresented: Bool = false
     @State var currentSpot: SecretSpot? {
@@ -33,6 +28,11 @@ struct MyJourney: View {
     
     var body: some View {
         
+        let captions: [String] = [
+            "CityXcape",
+            "\(spots.count) Spots to Visit",
+            "Explore to Meet New People"
+        ]
         
         GeometryReader { geo in
             ZStack {
@@ -46,7 +46,8 @@ struct MyJourney: View {
                     SpotRowHeader()
                
                         List {
-                            ForEach(spots, id: \.self) { spot in
+                            ForEach(spots.sorted(by: {$0.distance < $1.distance}), id: \.self) { spot in
+                                
                                 SpotRowView(imageUrl: spot.imageUrl, name: spot.name, distance: spot.distance)
                                     .onTapGesture {
                                         self.currentSpot = spot

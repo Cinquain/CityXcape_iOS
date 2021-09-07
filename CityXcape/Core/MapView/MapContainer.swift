@@ -14,7 +14,7 @@ struct MapContainer: View {
     @ObservedObject var vm: MapSearchViewModel = MapSearchViewModel()
     @State private var showForm: Bool = false
     @State private var opacity: Double = 0
-    
+    @State private var refresh: Bool = false
     @State var coordinates: CLLocationCoordinate2D = CLLocationCoordinate2D()
     @State var address: String = ""
     
@@ -22,7 +22,7 @@ struct MapContainer: View {
         
         ZStack(alignment: .top) {
             MapView(selectedMapItem: vm.selectedMapItem, currentLocation: vm.currentLocation, annotations: vm.annotations)
-                
+        
             
             VStack(spacing: 12) {
                 HStack(spacing: 10) {
@@ -105,9 +105,12 @@ struct MapContainer: View {
             
         }
         .edgesIgnoringSafeArea(.all)
-        .sheet(isPresented: $showForm, content: {
+        .sheet(isPresented: $showForm, onDismiss: {
+            refresh.toggle()
+        }, content: {
             CreateSpotFormView(coordinate: $coordinates, address: $address)
         })
+       
 
     }
     

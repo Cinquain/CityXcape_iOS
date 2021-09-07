@@ -10,12 +10,15 @@ import CoreLocation
 
 struct CreateSpotFormView: View {
     
+    @Environment(\.presentationMode) var presentationMode
+
     
     @State private var spotName: String = ""
     @State private var description: String = ""
     @State private var showPicker: Bool = false
     @State private var addedImage: Bool = false
     @State private var opacity: Double = 0
+    @State private var presentCompletion: Bool = false
    
     @State var selectedImage: UIImage = UIImage()
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
@@ -113,7 +116,7 @@ struct CreateSpotFormView: View {
 
                 
                     Button(action: {
-                        
+                        presentCompletion.toggle()
                     }, label: {
                         HStack {
                             Image(Icon.pin.rawValue)
@@ -132,6 +135,8 @@ struct CreateSpotFormView: View {
 
                     })
                     .animation(.easeOut(duration: 0.5))
+                    .disabled(!isReady())
+
    
             
             Spacer()
@@ -143,6 +148,12 @@ struct CreateSpotFormView: View {
             ImagePicker(imageSelected: $selectedImage, sourceType: $sourceType)
                 .colorScheme(.dark)
         })
+        .fullScreenCover(isPresented: $presentCompletion, onDismiss: {
+            presentationMode.wrappedValue.dismiss()
+        }, content: {
+            CongratsView()
+        })
+        
         }
     }
     

@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import FirebaseAuth
 
 struct OnboardingView: View {
     
-    @State var showOnboarding: Bool = false
+    @State var showError: Bool = false
+    @State var showOnboardingII: Bool = false
     @Environment(\.presentationMode) var presentationMode
     
     @State var email: String = ""
@@ -42,7 +44,7 @@ struct OnboardingView: View {
                 Spacer()
                     .frame(height: 40)
                 Button(action: {
-                    showOnboarding.toggle()
+                    SignInWithApple.instance.startSignInWithAppleFlow(view: self)
                 }, label: {
                     SignInWithAppleButton()
                         .frame(height: 60)
@@ -51,7 +53,7 @@ struct OnboardingView: View {
                 })
                 
                 Button(action: {
-                    showOnboarding.toggle()
+                    SignInWithGoogle.instance.startSignInWithGoogleFlow(view: self)
                 }, label: {
                     HStack {
                         Image(Icon.globe.rawValue)
@@ -84,13 +86,71 @@ struct OnboardingView: View {
             }
             .background(Color.black)
             .edgesIgnoringSafeArea(.all)
-            .fullScreenCover(isPresented: $showOnboarding, content: {
+            .fullScreenCover(isPresented: $showOnboardingII, onDismiss: {
+                self.presentationMode.wrappedValue.dismiss()
+            }, content: {
                 OnboardingViewII(email: $email, name: $name, providerId: $providerId, provider: $provider)
             })
-            
+            .alert(isPresented: $showError, content: {
+                return Alert(title: Text("Error Signing In 😭"))
+            })
         }
      
     }
+    
+    //MARK: FUNCTIONS
+    func connectToFirebase(name: String, email: String, provider: String, credential: AuthCredential) {
+        
+        AuthService.instance.loginUserToFirebase(credential: credential) { (providerId, isError, isNewUser, returnedUserId) in
+            
+            if let newUser = isNewUser {
+                
+                
+                if newUser {
+                    //True means New User
+                    if let providerId = providerId, !isError {
+                        
+                        self.name = name
+                        self.email = email
+                        self.providerId = providerId
+                        self.provider = provider
+                        self.showOnboardingII.toggle()
+                    } else {
+                        print("Error getting provider ID from login user to Firebase")
+                        self.showError.toggle()
+                    }
+                    
+                } else {
+                    //False means Existing User
+                    if let userId = returnedUserId {
+                        
+                        AuthService.instance.loginUserToApp(userId: userId) { (success) in
+                            if success {
+                                print("Successfully logged in existing user")
+                                self.presentationMode.wrappedValue.dismiss()
+                            } else {
+                                print("Error logging in existing user into app")
+                                self.showError.toggle()
+                            }
+                        }
+                    } else {
+                        print("Error getting User ID from existing user to Firebase")
+                    }
+                    
+                }
+                
+            } else {
+                print("Error getting into from log in user to Firebase")
+                self.showError.toggle()
+            }
+            
+            
+      
+            
+        }
+    }
+    
+    
 }
 
 struct OnboardingView_Previews: PreviewProvider {

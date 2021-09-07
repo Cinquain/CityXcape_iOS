@@ -9,6 +9,26 @@ import Foundation
 import SwiftUI
 
 
+struct UserField {
+    static let displayName = "displayName"
+    static let email = "email"
+    static let providerId = "provider_id"
+    static let provider = "provider"
+    static let bio = "bio"
+    static let dataCreated = "dataCreated"
+    static let profileImageUrl = "profileImageUrl"
+}
+
+struct CurrentUserDefaults {
+    
+    static let displayName = "displayName"
+    static let bio = "bio"
+    static let userId = "userId"
+    static let profileUrl = "profileImageUrl"
+    
+    
+}
+
 enum Icon: String {
     case pin = "pin_blue"
     case dot = "dot"
@@ -35,4 +55,32 @@ enum Labels: String {
     case headerName = "Name"
     case headerDistance = "Distance"
     case headerPhoto = "Spot Image"
+}
+
+
+struct StandardButton: ViewModifier {
+    
+    let textColor: Color
+    let color: Color
+    
+    func body(content: Content) -> some View {
+        content
+            .font(.headline)
+            .foregroundColor(textColor)
+            .frame(height: 55)
+            .frame(maxWidth: .infinity)
+            .background(color)
+            .cornerRadius(8)
+            .shadow(radius: 10)
+            .padding()
+    }
+}
+
+struct StandardPressStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
+            .brightness(configuration.isPressed ? 1.2 : 1.0)
+        
+    }
 }

@@ -12,6 +12,8 @@ struct SignUpView: View {
     @State private var showOnboarding: Bool = false
     var body: some View {
         ZStack(alignment: .bottom) {
+            AnimationView()
+                .edgesIgnoringSafeArea(.all)
             GeometryReader { geo in
                 VStack(spacing: 0) {
                     Spacer()
@@ -21,7 +23,7 @@ struct SignUpView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: geo.size.width - 50)
                         .padding()
-                    Text("Save Your Secret Spots in One Place")
+                    Text("Find Secret Spots")
                         .font(.title3)
                         .fontWeight(.thin)
                         .foregroundColor(.accent)
@@ -31,22 +33,15 @@ struct SignUpView: View {
                         showOnboarding.toggle()
                     }, label: {
                         Text("Login / Signup")
-                            .font(.headline)
-                            .foregroundColor(.black)
-                            .padding()
-                            .frame(height: 60)
-                            .frame(maxWidth: .infinity)
-                            .background(Color.white)
-                            .cornerRadius(12)
-                            .shadow(color: .white, radius: 2, x: 0, y: 0)
+                            .standardButtonFormatting(textColor: .black, color: .white)
 
                     })
                     .padding(.top, 50)
                 
                     Spacer()
                 }
-                .background(Color.background)
-                .edgesIgnoringSafeArea(.all)
+               
+                
                 
             }
        
