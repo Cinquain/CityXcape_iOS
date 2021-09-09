@@ -47,7 +47,9 @@ struct MapContainer: View {
                             Button(action: {
 
                                 vm.selectedMapItem = mapItem
-                                opacity = 1
+                                withAnimation {
+                                    opacity = 1
+                                }
                                 self.coordinates = mapItem.placemark.coordinate
                                 self.address = mapItem.getAddress()
                             }, label: {
@@ -106,9 +108,11 @@ struct MapContainer: View {
         }
         .edgesIgnoringSafeArea(.all)
         .sheet(isPresented: $showForm, onDismiss: {
-            refresh.toggle()
+            withAnimation {
+                opacity = 0
+            }
         }, content: {
-            CreateSpotFormView(coordinate: $coordinates, address: $address)
+            CreateSpotFormView(opacity: $opacity, coordinate: $coordinates, address: $address)
         })
        
 
@@ -123,17 +127,22 @@ struct MapView: UIViewRepresentable {
     }
     
     let mapView = MKMapView()
-
+   
     var centerCoordinate: CLLocationCoordinate2D?
     var selectedMapItem: MKMapItem?
     var currentLocation: CLLocationCoordinate2D?
     
     
     var annotations: [MKPointAnnotation]
+    @State var gestureAnnotation: MKPointAnnotation?
     
     func makeUIView(context: Context) -> MKMapView {
         setupRegionForMap()
         mapView.showsUserLocation = true
+        mapView.delegate = context.coordinator
+        let longPressed = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.addPinBasedOnGesture(_:)))
+        longPressed.minimumPressDuration = 3
+        mapView.addGestureRecognizer(longPressed)
         return mapView
     }
     
@@ -141,6 +150,10 @@ struct MapView: UIViewRepresentable {
         
         uiView.delegate = context.coordinator
        
+//        if let pressedAnnotion = gestureAnnotation {
+//            uiView.addAnnotation(pressedAnnotion)
+//            return
+//        }
 
         if annotations.count == 0 {
             uiView.removeAnnotations(uiView.annotations)
@@ -153,6 +166,7 @@ struct MapView: UIViewRepresentable {
             return
         }
         
+      
         
         uiView.removeAnnotations(uiView.annotations)
         annotations.forEach { annotation in
@@ -160,6 +174,7 @@ struct MapView: UIViewRepresentable {
         }
         uiView.showAnnotations(uiView.annotations.filter({$0 is MKPointAnnotation}), animated: true)
         
+      
         
         uiView.annotations.forEach { annotation in
             if annotation.title == selectedMapItem?.name {
@@ -209,6 +224,16 @@ struct MapView: UIViewRepresentable {
         
         static let regionChangedNofication = NSNotification.Name(rawValue: "regionChangedNotification")
         
+        
+        @objc func addPinBasedOnGesture(_ gestureRecognizer: UIGestureRecognizer) {
+            print("Pressing long gesture")
+            let touchPoint = gestureRecognizer.location(in: gestureRecognizer.view)
+            let newCoordinates = (gestureRecognizer.view as? MKMapView)?.convert(touchPoint, toCoordinateFrom: gestureRecognizer.view)
+            let annotation = MKPointAnnotation()
+            guard let newCoordinate = newCoordinates else {return}
+            annotation.coordinate = newCoordinate
+            parent.gestureAnnotation = annotation
+        }
     }
     
 }

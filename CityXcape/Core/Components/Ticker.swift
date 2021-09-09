@@ -10,6 +10,7 @@ import SwiftUI
 struct Ticker: View {
     
     @State private var selection: Int = 2
+    @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     let captions: [String]
     
     var body: some View {
@@ -27,7 +28,7 @@ struct Ticker: View {
                     )
                 
                 if selection == 2 {
-                    UserDotView(imageUrl: "User", width: 60, height: 60)
+                    UserDotView(imageUrl: profileUrl ?? "", width: 60, height: 60)
                 } else {
                     Circle()
                         .stroke(Color.accent, lineWidth: selection == 2 ? 0 : 1)

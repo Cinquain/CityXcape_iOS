@@ -38,23 +38,33 @@ extension MKMapItem {
         
         let placemark = self.placemark
         var addressString : String = ""
-        if placemark.subLocality != nil {
-            addressString = addressString + placemark.subLocality! + ", "
-       }
+        
+        if placemark.subThoroughfare != nil {
+            addressString = addressString + placemark.subThoroughfare! + " "
+        }
+        
         if placemark.thoroughfare != nil {
             addressString = addressString + placemark.thoroughfare! + ", "
        }
         if placemark.locality != nil {
             addressString = addressString + placemark.locality! + ", "
        }
-        if placemark.country != nil {
-            addressString = addressString + placemark.country! + ", "
-       }
+     
         if placemark.postalCode != nil {
             addressString = addressString + placemark.postalCode! + " "
        }
         
         return addressString
+    }
+    
+    func getCity() -> String {
+        let placemark = self.placemark
+        var city: String = ""
+        
+        if placemark.locality != nil {
+            city = placemark.locality!
+        }
+        return city
     }
 }
 

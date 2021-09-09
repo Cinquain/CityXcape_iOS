@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseStorage
 
+let imageCache = NSCache<AnyObject, UIImage>()
 
 class ImageManager {
     
@@ -28,12 +29,38 @@ class ImageManager {
         
     }
     
+    func uploadSecretSpotImage(image: UIImage, postId: String, completion: @escaping (_ url: String?) -> ()) {
+        
+        let path = getSpotImagePath(spotId: postId)
+        
+        uploadImage(path: path, image: image) { (success, downloadUrl) in
+            if success {
+                completion(downloadUrl)
+            }
+        }
+    }
+    
+    func downloadProfileImage(userId: String, completion: @escaping (_ image: UIImage?) -> ()) {
+        
+        let path = getProfileImagePath(uid: userId)
+        
+        downloadImage(path: path) { foundImage in
+            completion(foundImage)
+        }
+        
+    }
+    
     //MARK: PRIVATE FUNCTIONS
     fileprivate func getProfileImagePath(uid: String) -> StorageReference {
         
         let userPath = "users/\(uid)/profileImage"
         let storagePath = REF_STORE.reference(withPath: userPath)
-        
+        return storagePath
+    }
+    
+    fileprivate func getSpotImagePath(spotId: String) -> StorageReference {
+        let postPath = "posts/\(spotId)/1"
+        let storagePath = REF_STORE.reference(withPath: postPath)
         return storagePath
     }
     
@@ -84,6 +111,31 @@ class ImageManager {
                 }
             }
         
+        }
+        
+    }
+    
+    fileprivate func downloadImage(path: StorageReference, completion: @escaping (_ image: UIImage?) -> ()) {
+        
+        if let cachedImage = imageCache.object(forKey: path) {
+            completion(cachedImage)
+            print("Image is found in cahce")
+            return
+        }
+        
+        path.getData(maxSize: 27 * 1024 * 1024) { (data, error) in
+            
+            if let imageData = data,
+               let image = UIImage(data: imageData) {
+                imageCache.setObject(image, forKey: path)
+                completion(image)
+                return
+            } else {
+                print("Error getting data from path for image")
+                completion(nil)
+                return
+            }
+            
         }
         
     }

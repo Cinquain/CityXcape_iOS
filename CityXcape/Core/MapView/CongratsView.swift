@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Shimmer
 
 struct CongratsView: View {
     
@@ -33,10 +34,12 @@ struct CongratsView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: geo.size.width, height: geo.size.width / 1.8)
+                        .shimmering()
                     
                     Text("You posted a Secret Spot")
                         .font(.caption)
                         .fontWeight(.thin)
+
                     Spacer()
                         .frame(maxHeight: geo.size.height / 9)
                     
@@ -59,7 +62,8 @@ struct CongratsView: View {
                     
                 }
                 .foregroundColor(.white)
-             
+                
+            
                 
             }
         }

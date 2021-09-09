@@ -18,7 +18,7 @@ struct MyJourney: View {
         SecretSpot(username: "Cinquain", name: "Ark Encounter", imageUrl: "Ark Encounter", distance: 300, address: "1 Ark Encounter Dr, Williamstown, KY")
     ]
   
-    
+    @State private var currentIndex = 0
     @State private var isPresented: Bool = false
     @State var currentSpot: SecretSpot? {
         didSet {
@@ -49,9 +49,11 @@ struct MyJourney: View {
                             ForEach(spots.sorted(by: {$0.distance < $1.distance}), id: \.self) { spot in
                                 
                                 SpotRowView(imageUrl: spot.imageUrl, name: spot.name, distance: spot.distance)
-                                    .onTapGesture {
-                                        self.currentSpot = spot
-                                    }
+                                    .onTapGesture(perform: {
+                                        guard let index = spots.firstIndex(of: spot) else {return}
+                                        self.currentIndex = index
+                                        self.isPresented.toggle()
+                                    })
                             }
                             
                         }
@@ -64,11 +66,7 @@ struct MyJourney: View {
         }
         .sheet(isPresented: $isPresented, content: {
             
-            if let spot = currentSpot {
-                SpotDetailsView(spot: spot)
-            } else {
-                Text("No Spot Found")
-            }
+             SpotDetailsView(spot: spots[currentIndex])
             
         })
         

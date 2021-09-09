@@ -10,6 +10,8 @@ import UIKit
 
 struct StreetPass: View {
     
+    @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
+    
     @State var userImage: UIImage = UIImage()
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State var isPresented: Bool = false
@@ -42,7 +44,7 @@ struct StreetPass: View {
                             Button(action: {
                                 isPresented.toggle()
                             }, label: {
-                                UserDotView(imageUrl: "User", width: 250, height: 250)
+                                UserDotView(imageUrl: profileUrl ?? "", width: 250, height: 250)
                                     .shadow(radius: 5)
                                     .shadow(color: .orange, radius: 30, x: 0, y: 0)
                             })

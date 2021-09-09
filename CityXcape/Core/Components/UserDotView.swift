@@ -6,13 +6,16 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct UserDotView: View {
-    
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
+
     let imageUrl: String
     let width: CGFloat
     let height: CGFloat
     let ratio : CGFloat = 1.3
+    @State var userProfileImage = UIImage()
     
     var body: some View {
         
@@ -21,13 +24,27 @@ struct UserDotView: View {
                 .resizable()
                 .frame(width: width, height: height, alignment: .center)
                 .overlay(
-                    Image(imageUrl)
+                    WebImage(url: URL(string: imageUrl))
                         .resizable()
-                        .frame(width: width / ratio, height: height / ratio, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                        .clipShape(Circle())
+                        .frame(width: width / ratio, height: height / ratio)
                     
                 )
             
         }
+    }
+    
+    fileprivate func getProfileImage() {
+        if let uid = userId {
+            ImageManager.instance.downloadProfileImage(userId: uid) { profileImage in
+                if let image = profileImage {
+                    userProfileImage = image
+                } else {
+                    print("Profile Image is Nil")
+                }
+            }
+        }
+       
     }
 }
 

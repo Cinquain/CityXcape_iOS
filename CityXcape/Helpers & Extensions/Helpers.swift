@@ -15,10 +15,25 @@ struct UserField {
     static let providerId = "provider_id"
     static let provider = "provider"
     static let bio = "bio"
-    static let dataCreated = "dataCreated"
+    static let dataCreated = "dateCreated"
     static let profileImageUrl = "profileImageUrl"
 }
 
+struct SecretSpotField {
+    
+    static let spotName = "spot_name"
+    static let description = "description"
+    static let imageUrl = "image_url"
+    static let address = "address"
+    static let spotId = "spot_id"
+    static let ownerId = "owner_id"
+    static let latitude = "latitude"
+    static let longitude = "longitude"
+    static let dateCreated = "date_created"
+    static let price = "price"
+    static let saveCount = "save_count"
+    static let viewCount = "view_count"
+}
 struct CurrentUserDefaults {
     
     static let displayName = "displayName"
@@ -73,6 +88,7 @@ struct StandardButton: ViewModifier {
             .cornerRadius(8)
             .shadow(radius: 10)
             .padding()
+            .padding(.horizontal, 40)
     }
 }
 
@@ -84,3 +100,5 @@ struct StandardPressStyle: ButtonStyle {
         
     }
 }
+
+let spotCompleteNotification = Notification.Name(rawValue: "completeSpot")

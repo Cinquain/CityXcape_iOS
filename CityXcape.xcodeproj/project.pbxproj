@@ -45,6 +45,9 @@
 		21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA28DF26D13BB40001A02E /* StreetPass.swift */; };
 		21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */; };
 		21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BBB06026E596C2000B40B3 /* AnimationController.swift */; };
+		21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */; };
+		21D85F5326EACF0E00502636 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F5226EACF0E00502636 /* Shimmer */; };
+		21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F8D9C526E8D7CC0016DF9D /* DataService.swift */; };
 		B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +93,7 @@
 		21AA28DF26D13BB40001A02E /* StreetPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetPass.swift; sourceTree = "<group>"; };
 		21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailsView.swift; sourceTree = "<group>"; };
 		21BBB06026E596C2000B40B3 /* AnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
+		21F8D9C526E8D7CC0016DF9D /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		D55E8FAFE7D475B0B8F4DBF2 /* Pods-CityXcape.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.debug.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.debug.xcconfig"; sourceTree = "<group>"; };
 		DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CityXcape.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -99,6 +103,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21D85F5326EACF0E00502636 /* Shimmer in Frameworks */,
+				21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */,
 				219842A326CF3A680089CE03 /* LBTATools in Frameworks */,
 				B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */,
 			);
@@ -138,6 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				217884FD26E18CEA0066C719 /* AuthService.swift */,
+				21F8D9C526E8D7CC0016DF9D /* DataService.swift */,
 			);
 			path = Firebase;
 			sourceTree = "<group>";
@@ -313,6 +320,8 @@
 			name = CityXcape;
 			packageProductDependencies = (
 				219842A226CF3A680089CE03 /* LBTATools */,
+				21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */,
+				21D85F5226EACF0E00502636 /* Shimmer */,
 			);
 			productName = CityXcape;
 			productReference = 217DA72426CC8F8B0039A145 /* CityXcape.app */;
@@ -343,6 +352,8 @@
 			mainGroup = 217DA71B26CC8F8B0039A145;
 			packageReferences = (
 				219842A126CF3A680089CE03 /* XCRemoteSwiftPackageReference "LBTATools" */,
+				21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				21D85F5126EACF0E00502636 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 			);
 			productRefGroup = 217DA72526CC8F8B0039A145 /* Products */;
 			projectDirPath = "";
@@ -464,6 +475,7 @@
 				217C08DE26D1C58000751933 /* SignInWithAppleButton.swift in Sources */,
 				217DA72826CC8F8B0039A145 /* CityXcapeApp.swift in Sources */,
 				21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */,
+				21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -666,6 +678,22 @@
 				minimumVersion = 1.0.17;
 			};
 		};
+		21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.2;
+			};
+		};
+		21D85F5126EACF0E00502636 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -673,6 +701,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 219842A126CF3A680089CE03 /* XCRemoteSwiftPackageReference "LBTATools" */;
 			productName = LBTATools;
+		};
+		21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+		21D85F5226EACF0E00502636 /* Shimmer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21D85F5126EACF0E00502636 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
+			productName = Shimmer;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

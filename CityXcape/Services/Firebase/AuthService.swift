@@ -89,7 +89,7 @@ class AuthService {
         
         completion(true)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             let dictionary = UserDefaults.standard.dictionaryRepresentation()
             
             dictionary.keys.forEach { (key) in
@@ -141,9 +141,11 @@ class AuthService {
                snapshot.count > 0,
                let document = snapshot.documents.first {
                 let existingUserId = document.documentID
+                print("Found User")
                 completion(existingUserId)
             } else {
                 completion(nil)
+                print("Did not find user")
                 return
             }
             
@@ -153,6 +155,7 @@ class AuthService {
     func getUserInfo(forUserID userId: String, completion: @escaping (_ name: String?, _ bio: String?, _ imageUrl: String?) -> ()) {
         
         REF_USERS.document(userId).getDocument { (snapshot, error) in
+                        
             if let document = snapshot,
                let name = document.get(UserField.displayName) as? String,
                let bio = document.get(UserField.bio) as? String,
@@ -160,7 +163,7 @@ class AuthService {
                 completion(name, bio, imageUrl)
                 return
             } else {
-                print("Error getting user info")
+                print("Error getting user info", error?.localizedDescription)
                 completion(nil, nil, nil)
                 return
             }

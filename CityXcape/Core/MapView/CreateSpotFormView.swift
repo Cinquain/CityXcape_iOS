@@ -11,15 +11,15 @@ import CoreLocation
 struct CreateSpotFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
-
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
     
     @State private var spotName: String = ""
     @State private var description: String = ""
     @State private var showPicker: Bool = false
     @State private var addedImage: Bool = false
-    @State private var opacity: Double = 0
+    @Binding var opacity: Double
     @State private var presentCompletion: Bool = false
-   
+    @State private var showAlert: Bool = false
     @State var selectedImage: UIImage = UIImage()
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
@@ -32,11 +32,10 @@ struct CreateSpotFormView: View {
         GeometryReader { geo in
         VStack {
             Text("Create New Spot")
-                .fontWeight(.semibold)
                 .font(.title)
                 .foregroundColor(.white)
                 .frame(maxWidth: .infinity)
-                .padding(.bottom, 20)
+                .padding(.vertical, 40)
             
             TextField("Secret Spot Name", text: $spotName)
                 .padding()
@@ -83,6 +82,8 @@ struct CreateSpotFormView: View {
                     .frame(width: 25, height: 25)
                 
                 Text(address)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3)
             }
             .foregroundColor(.white)
             .padding()
@@ -116,7 +117,7 @@ struct CreateSpotFormView: View {
 
                 
                     Button(action: {
-                        presentCompletion.toggle()
+                        postSecretSpot()
                     }, label: {
                         HStack {
                             Image(Icon.pin.rawValue)
@@ -149,9 +150,17 @@ struct CreateSpotFormView: View {
                 .colorScheme(.dark)
         })
         .fullScreenCover(isPresented: $presentCompletion, onDismiss: {
-            presentationMode.wrappedValue.dismiss()
+            
+            NotificationCenter.default.post(name: spotCompleteNotification, object: nil)
+            opacity = 0
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.presentationMode.wrappedValue.dismiss()
+            }
         }, content: {
             CongratsView()
+        })
+        .alert(isPresented: $showAlert, content: {
+            Alert(title: Text("Error posting Secret Spot 😤"))
         })
         
         }
@@ -166,6 +175,19 @@ struct CreateSpotFormView: View {
         }
     }
     
+    fileprivate func postSecretSpot() {
+        guard let userId = userId else {return}
+
+        DataService.instance.uploadSecretSpot(spotName: spotName, address: address, image: selectedImage, coordinates: coordinate, uid: userId) { (success) in
+            
+            if success {
+                presentCompletion.toggle()
+            } else {
+                showAlert.toggle()
+            }
+        }
+    }
+    
 }
 
 struct CreateSpotFormView_Previews: PreviewProvider {
@@ -173,7 +195,8 @@ struct CreateSpotFormView_Previews: PreviewProvider {
      @State static var coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 39.75879282513146, longitude: -86.1373309437772)
     
     static var previews: some View {
-        CreateSpotFormView(coordinate: $coordinate, address: $address)
+
+        CreateSpotFormView(opacity: .constant(0), coordinate: $coordinate, address: $address)
     }
     
 }

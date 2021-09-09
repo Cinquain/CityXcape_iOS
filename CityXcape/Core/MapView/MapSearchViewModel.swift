@@ -66,6 +66,12 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
             
             self?.region = notification.object as? MKCoordinateRegion
         }
+        
+        
+        NotificationCenter.default.addObserver(forName: Notification.Name(rawValue: "completeSpot"), object: nil, queue: .main) { [weak self] _ in
+            
+            self?.searchQuery = ""
+        }
     }
         
    func performSearch(query: String) {
