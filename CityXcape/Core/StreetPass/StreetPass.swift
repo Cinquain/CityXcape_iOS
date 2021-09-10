@@ -11,6 +11,7 @@ import UIKit
 struct StreetPass: View {
     
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
     
     @State var userImage: UIImage = UIImage()
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
@@ -73,7 +74,9 @@ struct StreetPass: View {
                         .padding(.trailing, 20)
                     }
                 }
-                .sheet(isPresented: $isPresented, content: {
+                .sheet(isPresented: $isPresented, onDismiss: {
+                    updateProfielImage()
+                }, content: {
                     ImagePicker(imageSelected: $userImage, sourceType: $sourceType)
                         .colorScheme(.dark)
                 })
@@ -85,6 +88,19 @@ struct StreetPass: View {
          
         }
     
+
+    }
+    fileprivate func updateProfielImage() {
+        
+        if let uid = userId {
+            ImageManager.instance.uploadProfileImage(uid: uid, image: userImage) { (imageUrl) in
+                guard let url = imageUrl else {return}
+                UserDefaults.standard.set(url, forKey: CurrentUserDefaults.profileUrl)
+                
+                DataService.instance.updateProfileImage(userId: uid, profileUrl: url)
+
+            }
+        }
         
     }
 }

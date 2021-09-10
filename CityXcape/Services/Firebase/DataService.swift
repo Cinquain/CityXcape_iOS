@@ -65,4 +65,13 @@ class DataService {
         
         
     }
+    
+    
+    private var REF_USERS = DB_BASE.collection("users")
+    
+    
+    func updateProfileImage(userId: String, profileUrl: String) {
+        
+        REF_USERS.document(userId).setData([UserField.profileImageUrl: profileUrl], merge: true)
+    }
 }
