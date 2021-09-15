@@ -47,7 +47,7 @@ struct SpotDetailsView: View {
                         .padding()
                     
                     Button(action: {
-                        
+                        openGoogleMap()
                     }, label: {
                         HStack {
                             Image("pin_blue")
@@ -93,9 +93,24 @@ struct SpotDetailsView: View {
             })
             .colorScheme(.dark)
         }
-       
     }
     
+    func openGoogleMap() {
+        
+        if (UIApplication.shared.canOpenURL(URL(string: "comgooglemaps://")!)) {
+            if let url = URL(string: "comgooglemaps-x-callback://?saddr=&daddr=\(spot!.latitude),\(spot!.longitude)&directionsmode=driving") {
+                UIApplication.shared.open(url, options: [:])
+            }
+            
+        } else {
+            //Open in brower
+            if let url = URL(string: "https://www.google.co.in/maps/dir/?saddr=&daddr=\(spot!.latitude),\(spot!.longitude)&directionsmode=driving") {
+                UIApplication.shared.open(url)
+            }
+            
+        }
+
+    }
   
     
 }
@@ -103,7 +118,7 @@ struct SpotDetailsView: View {
 //struct SpotDetailsView_Previews: PreviewProvider {
 //    static var previews: some View {
 //
-//        let spot = SecretSpot(postId: UUID().uuidString, username: "Cinquain", name: "The Big Duck", imageUrl: "donut", distance: 0.5, address: "3402 avenue I, Brooklyn, NY")
+//        let spot = SecretSpot(from: postId: UUID().uuidString, username: "Cinquain", name: "The Big Duck", imageUrl: "donut", distance: 0.5, address: "3402 avenue I, Brooklyn, NY")
 //
 //        SpotDetailsView(spot: spot)
 //    }

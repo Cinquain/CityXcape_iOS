@@ -56,7 +56,7 @@ struct SecretSpot:  Hashable, Codable {
         let manager = CLLocationManager()
         let destination = CLLocation(latitude: latitude, longitude: longitude)
         let userlocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
-        return userlocation.distance(from: destination)
+        return userlocation.distance(from: destination) * 0.000621
     }
  
     
