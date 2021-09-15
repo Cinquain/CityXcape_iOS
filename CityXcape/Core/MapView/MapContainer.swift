@@ -11,12 +11,12 @@ import UIKit
 
 struct MapContainer: View {
     
-    @ObservedObject var vm: MapSearchViewModel = MapSearchViewModel()
+    @ObservedObject var vm = MapSearchViewModel()
     @State private var showForm: Bool = false
     @State private var opacity: Double = 0
     @State private var refresh: Bool = false
-    @State var coordinates: CLLocationCoordinate2D = CLLocationCoordinate2D()
-    @State var address: String = ""
+    
+    @State var mapItem: MKMapItem = MKMapItem()
     
     var body: some View {
         
@@ -47,11 +47,11 @@ struct MapContainer: View {
                             Button(action: {
 
                                 vm.selectedMapItem = mapItem
+                                self.mapItem = mapItem
                                 withAnimation {
                                     opacity = 1
                                 }
-                                self.coordinates = mapItem.placemark.coordinate
-                                self.address = mapItem.getAddress()
+                                
                             }, label: {
                                 
                                 VStack(alignment: .leading, spacing: 4) {
@@ -112,7 +112,7 @@ struct MapContainer: View {
                 opacity = 0
             }
         }, content: {
-            CreateSpotFormView(opacity: $opacity, coordinate: $coordinates, address: $address)
+            CreateSpotFormView(opacity: $opacity, mapItem: mapItem)
         })
        
 
@@ -154,7 +154,6 @@ struct MapView: UIViewRepresentable {
 //            uiView.addAnnotation(pressedAnnotion)
 //            return
 //        }
-
         if annotations.count == 0 {
             uiView.removeAnnotations(uiView.annotations)
             if let location = currentLocation {

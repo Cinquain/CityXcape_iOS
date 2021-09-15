@@ -66,7 +66,18 @@ extension MKMapItem {
         }
         return city
     }
+    
+    func getPostCode() -> Int {
+        let placemark = self.placemark
+        var zipcode: Int = 0
+        if placemark.postalCode != nil {
+            zipcode = Int(placemark.postalCode!) ?? 0
+        }
+        return zipcode
+    }
 }
+
+
 
 extension View {
     func standardButtonFormatting(textColor: Color, color: Color) -> some View {

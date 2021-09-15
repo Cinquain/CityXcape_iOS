@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2106253726EDA07C000210E2 /* JourneyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* JourneyViewModel.swift */; };
 		214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214FAC6C26E2F16300F37B80 /* ImageManager.swift */; };
 		21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */; };
 		21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9326D536B30049CE2D /* SettingsLabelView.swift */; };
@@ -53,6 +54,7 @@
 
 /* Begin PBXFileReference section */
 		03633A38349C026A52CC221D /* Pods-CityXcape.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.release.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.release.xcconfig"; sourceTree = "<group>"; };
+		2106253626EDA07C000210E2 /* JourneyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyViewModel.swift; sourceTree = "<group>"; };
 		214FAC6C26E2F16300F37B80 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewModel.swift; sourceTree = "<group>"; };
 		21785D9326D536B30049CE2D /* SettingsLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLabelView.swift; sourceTree = "<group>"; };
@@ -248,6 +250,7 @@
 			isa = PBXGroup;
 			children = (
 				217DA73C26CC96A30039A145 /* MyJourney.swift */,
+				2106253626EDA07C000210E2 /* JourneyViewModel.swift */,
 			);
 			path = "My Journey";
 			sourceTree = "<group>";
@@ -464,6 +467,7 @@
 				218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */,
 				217DA73F26CC972C0039A145 /* Ticker.swift in Sources */,
 				217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */,
+				2106253726EDA07C000210E2 /* JourneyViewModel.swift in Sources */,
 				217DA73A26CC95A50039A145 /* Extensions.swift in Sources */,
 				217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */,
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,

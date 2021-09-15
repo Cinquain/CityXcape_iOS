@@ -23,24 +23,30 @@ struct SecretSpotField {
     
     static let spotName = "spot_name"
     static let description = "description"
-    static let imageUrl = "image_url"
+    static let spotImageUrl = "spot_image_url"
     static let address = "address"
     static let spotId = "spot_id"
     static let ownerId = "owner_id"
+    static let ownerDisplayName = "ownerDisplayName"
+    static let ownerImageUrl = "ownerImageUrl"
     static let latitude = "latitude"
     static let longitude = "longitude"
     static let dateCreated = "date_created"
     static let price = "price"
     static let saveCount = "save_count"
     static let viewCount = "view_count"
+    static let city = "city"
+    static let zipcode = "zip_code"
 }
+
+
 struct CurrentUserDefaults {
     
     static let displayName = "displayName"
     static let bio = "bio"
     static let userId = "userId"
     static let profileUrl = "profileImageUrl"
-    
+    static let userLocation = "userLocation"
     
 }
 

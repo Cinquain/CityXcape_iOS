@@ -6,15 +6,58 @@
 //
 
 import Foundation
+import MapKit
+import CoreLocation
 
 
-struct SecretSpot: Identifiable, Hashable, Codable {
+struct SecretSpot:  Hashable, Codable {
     
-    var id: String = UUID().uuidString
-    let username: String
-    let name: String
+    var postId: String
+    let spotName: String
     let imageUrl: String
-    let distance: Double
+    let longitude: Double
+    let latitude: Double
     let address: String
+    let city: String
+    let zipcode: Int
+    
+    let dateCreated: Date
+    let viewCount: Int
+    let price: Int
+    let saveCounts: Int
+    
+    let description: String?
+    
+    let ownerId: String
+    let ownerDisplayName: String
+    let ownerImageUrl: String
+    
+
+    enum CodingKeys: String, CodingKey {
+        case postId = "spot_id"
+        case spotName = "spot_name"
+        case imageUrl = "spot_image_url"
+        case longitude = "longitude"
+        case latitude = "latitude"
+        case description = "description"
+        case city = "city"
+        case dateCreated = "date_created"
+        case ownerId = "owner_id"
+        case ownerDisplayName = "ownerDisplayName"
+        case ownerImageUrl = "ownerImageUrl"
+        case address = "address"
+        case zipcode = "zipcode"
+        case saveCounts = "save_count"
+        case viewCount = "view_count"
+        case price = "price"
+    }
+    
+    var distanceFromUser: Double {
+        let manager = CLLocationManager()
+        let destination = CLLocation(latitude: latitude, longitude: longitude)
+        let userlocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
+        return userlocation.distance(from: destination)
+    }
+ 
     
 }

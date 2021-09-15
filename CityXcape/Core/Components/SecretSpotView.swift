@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct SecretSpotView: View {
     
@@ -20,10 +21,10 @@ struct SecretSpotView: View {
             .aspectRatio(contentMode: .fit)
             .frame(width: width, height: height)
             .overlay(
-                Image(imageUrl)
+                WebImage(url: URL(string: imageUrl))
                     .resizable()
                     .frame(width: width / 1.35, height: height / 1.35)
-                    .cornerRadius(40)
+                    .clipShape(Circle())
                     .offset(.init(width: -0.3, height: -5))
             )
             .shadow(radius: 3)

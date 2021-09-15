@@ -6,17 +6,14 @@
 //
 
 import SwiftUI
+import CoreLocation
+import Combine
 
 struct MyJourney: View {
     
     
-    let spots: [SecretSpot] = [
-        SecretSpot(username: "Cinquain", name: "The Big Duck", imageUrl: "big duck", distance: 0.5, address: "3402 avenue I, Brooklyn, NY"),
-        SecretSpot(username: "JamesAllan", name: "Graffiti Pier", imageUrl: "graffiti pier", distance: 2, address: "230 Court St, Philly, PA"),
-        SecretSpot(username: "IceHistory", name: "Donut Pub", imageUrl: "donut", distance: 10, address: "45 Wall St, NY, NY"),
-        SecretSpot(username: "Cinquain", name: "Eicher Home", imageUrl: "Eichler", distance: 5, address: "656 Explorer avenenue"),
-        SecretSpot(username: "Cinquain", name: "Ark Encounter", imageUrl: "Ark Encounter", distance: 300, address: "1 Ark Encounter Dr, Williamstown, KY")
-    ]
+    private var cancellables = Set<AnyCancellable>()
+    @ObservedObject var vm = JourneyViewModel()
   
     @State private var currentIndex = 0
     @State private var isPresented: Bool = false
@@ -30,7 +27,7 @@ struct MyJourney: View {
         
         let captions: [String] = [
             "CityXcape",
-            "\(spots.count) Spots to Visit",
+            "\(vm.secretspots.count) Spots to Visit",
             "Explore to Meet New People"
         ]
         
@@ -46,11 +43,11 @@ struct MyJourney: View {
                     SpotRowHeader()
                
                         List {
-                            ForEach(spots.sorted(by: {$0.distance < $1.distance}), id: \.self) { spot in
+                            ForEach(vm.secretspots, id: \.self) { spot in
                                 
-                                SpotRowView(imageUrl: spot.imageUrl, name: spot.name, distance: spot.distance)
+                                SpotRowView(imageUrl: spot.imageUrl, name: spot.spotName, distance: spot.distanceFromUser)
                                     .onTapGesture(perform: {
-                                        guard let index = spots.firstIndex(of: spot) else {return}
+                                        guard let index = self.vm.secretspots.firstIndex(of: spot) else {return}
                                         self.currentIndex = index
                                         self.isPresented.toggle()
                                     })
@@ -66,11 +63,13 @@ struct MyJourney: View {
         }
         .sheet(isPresented: $isPresented, content: {
             
-             SpotDetailsView(spot: spots[currentIndex])
+            SpotDetailsView(spot: vm.secretspots[currentIndex])
             
         })
-        
+     
     }
+ 
+  
 }
 
 struct MyJourney_Previews: PreviewProvider {

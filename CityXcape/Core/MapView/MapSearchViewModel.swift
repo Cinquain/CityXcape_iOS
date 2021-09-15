@@ -47,6 +47,7 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
             let keyboardFrame = value.cgRectValue
             let window = UIApplication.shared.windows.filter({$0.isKeyWindow}).first
             
+            print("Keyboard changing value")
             withAnimation(.easeOut(duration: 0.3)) {
                 self.keyboardHeight = keyboardFrame.height - (window!.safeAreaInsets.bottom + 20)
             }
@@ -56,6 +57,7 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { [weak self] notification in
             guard let self = self else {return}
             
+            print("Keyboard resigning value")
             withAnimation(.easeOut(duration: 0.5)) {
                 self.keyboardHeight = 0
             }
@@ -134,5 +136,6 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let firstLocation = locations.first else {return}
         self.currentLocation = firstLocation.coordinate
+        
     }
 }
