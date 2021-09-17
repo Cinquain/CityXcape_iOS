@@ -9,15 +9,25 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct SpotDetailsView: View {
+    
     @Environment(\.presentationMode) var presentationMode
-    @State var passed: Bool = false
+    @State private var showDelete: Bool = false
+    @State private var alertmessage: String = ""
+    @State private var alertTitle: String = ""
     var captions: [String] = [String]()
     var spot: SecretSpot?
+    
+    @State private var showActionSheet: Bool = false
+    @State private var reportAlert: Bool = false
+    @State private var actionSheetType: SpotActionSheetType = .general
+
+    
     
     init(spot: SecretSpot) {
         self.spot = spot
         let name = spot.spotName
-        let distance = "\(spot.latitude) miles away"
+        let distanceString = String(format: "%.1f", spot.distanceFromUser)
+        let distance = spot.distanceFromUser > 1 ? "\(distanceString) miles away" : "\(distanceString) mile away"
         let postedby = "Posted by \(spot.ownerDisplayName)"
         
         self.captions.append(name)
@@ -62,29 +72,24 @@ struct SpotDetailsView: View {
                     
                     
                     HStack {
-                        Spacer()
                         Button(action: {
-                            passed.toggle()
+                            showActionSheet.toggle()
                         }, label: {
-                            VStack {
-                                Image(Icon.pass.rawValue)
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
-                                Text("Delete")
-                                    .font(.caption)
-                                    .foregroundColor(.white)
-                            }
-                           
+                            Image(systemName: "ellipsis")
+                                .font(.title)
+                                .foregroundColor(.white)
                         })
-                        .padding(.trailing, 50)
+                        .padding()
                     
+                        
+                        Spacer()
                     }
                     
                 }
                 .foregroundColor(.accent)
                 
             }
-            .alert(isPresented: $passed, content: {
+            .alert(isPresented: $showDelete, content: {
                 Alert(title: Text("Delete \(spot?.spotName ?? "")"),
                       message: Text("Are you sure you want to delete this spot"),
                       primaryButton: .default(Text("Yes"), action: {
@@ -92,7 +97,14 @@ struct SpotDetailsView: View {
                       }), secondaryButton: .cancel())
             })
             .colorScheme(.dark)
+            .alert(isPresented: $reportAlert, content: {
+                return Alert(title: Text(alertTitle), message: Text(alertmessage), dismissButton: .default(Text("Ok")))
+            })
+            .actionSheet(isPresented: $showActionSheet, content: {
+                getActionSheet()
+            })
         }
+        
     }
     
     func openGoogleMap() {
@@ -111,14 +123,65 @@ struct SpotDetailsView: View {
         }
 
     }
+    
+    func getActionSheet() -> ActionSheet {
+        switch actionSheetType {
+            case .general:
+            return ActionSheet(title: Text("What would you like to do"), message: nil, buttons: [
+                .default(Text("Report"), action: {
+                    self.actionSheetType = .report
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.showActionSheet.toggle()
+                    }
+                }),
+                
+                .default(Text("Delete"), action: {
+                    showDelete.toggle()
+                }),
+                
+                .cancel()
+            ])
+        case .report:
+            return ActionSheet(title: Text("Why are you reporting this post"), message: nil, buttons: [
+                .destructive(Text("This is innapropriate"), action: {
+                    reportPost(reason: "This is innapropriate")
+                }),
+                .destructive(Text("This is spam"), action: {
+                    reportPost(reason: "This is spam")
+                }),
+                .destructive(Text("It made me uncomfortable"), action: {
+                    reportPost(reason: "It made me uncomfortable")
+                }),
+                .cancel( {
+                    self.actionSheetType = .general
+                })
+            ])
+        }
+    }
   
+    func reportPost(reason: String) {
+        print("Reporting post")
+        guard let postId = spot?.postId else {return}
+        DataService.instance.uploadReports(reason: reason, postId: postId) { success in
+            
+            if success {
+                self.alertTitle = "Successfully Reported"
+                self.alertmessage = "Thank you for reporting this spot. We will review it shortly!"
+                self.reportAlert.toggle()
+            } else {
+                self.alertTitle = "Error Reporting Spot"
+                self.alertmessage = "There was an error reporting this secret spot. Please restart the app and try again."
+                self.reportAlert.toggle()
+            }
+        }
+    }
     
 }
 
 //struct SpotDetailsView_Previews: PreviewProvider {
 //    static var previews: some View {
 //
-//        let spot = SecretSpot(from: postId: UUID().uuidString, username: "Cinquain", name: "The Big Duck", imageUrl: "donut", distance: 0.5, address: "3402 avenue I, Brooklyn, NY")
+//        let spot = SecretSpot(postId: "disnf", spotName: "The Big Duck", imageUrl: "big", longitude: 1010, latitude: 01202, address: "1229 Spann avenue", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), viewCount: 1, price: 1, saveCounts: 1, description: "The best spot", ownerId: "wjffh", ownerDisplayName: "Cinquain", ownerImageUrl: "Eichler")
 //
 //        SpotDetailsView(spot: spot)
 //    }

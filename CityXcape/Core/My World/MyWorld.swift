@@ -9,11 +9,11 @@ import SwiftUI
 import CoreLocation
 import Combine
 
-struct MyJourney: View {
+struct MyWorld: View {
     
     
     private var cancellables = Set<AnyCancellable>()
-    @ObservedObject var vm = JourneyViewModel()
+    @ObservedObject var vm = MyWorldViewModel()
   
     @State private var currentIndex = 0
     @State private var isPresented: Bool = false
@@ -28,7 +28,7 @@ struct MyJourney: View {
         let captions: [String] = [
             "CityXcape",
             "\(vm.secretspots.count) Spots to Visit",
-            "Explore to Meet New People"
+            "Explore & Meet New People"
         ]
         
         GeometryReader { geo in
@@ -43,7 +43,7 @@ struct MyJourney: View {
                     SpotRowHeader()
                
                         List {
-                            ForEach(vm.secretspots, id: \.self) { spot in
+                            ForEach(vm.secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.self) { spot in
                                 
                                 SpotRowView(imageUrl: spot.imageUrl, name: spot.spotName, distance: spot.distanceFromUser)
                                     .onTapGesture(perform: {
@@ -74,6 +74,6 @@ struct MyJourney: View {
 
 struct MyJourney_Previews: PreviewProvider {
     static var previews: some View {
-        MyJourney()
+        MyWorld()
     }
 }

@@ -14,8 +14,10 @@ struct CreateSpotFormView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var spotName: String = ""
     @State private var description: String = ""
+    @State private var world: String = ""
     @State private var showPicker: Bool = false
     @State private var addedImage: Bool = false
+    @State private var presentPopover: Bool = false
     @Binding var opacity: Double
     @State private var presentCompletion: Bool = false
     @State private var showAlert: Bool = false
@@ -30,7 +32,7 @@ struct CreateSpotFormView: View {
         
             GeometryReader { geo in
                 VStack {
-                    Text("Create New Spot")
+                    Text("Post New Spot")
                         .font(.title)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
@@ -70,6 +72,26 @@ struct CreateSpotFormView: View {
                             .cornerRadius(4)
                     }
                     .padding()
+                    
+                    HStack {
+                        Button(action: {
+                            presentPopover.toggle()
+                        }, label: {
+                            Image(systemName: "lock.fill")
+                                .foregroundColor(.yellow)
+                                .font(.largeTitle)
+                        })
+                        
+                        TextField("World Name", text: $world) {
+                           converToHashTag()
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .accentColor(.black)
+                        .foregroundColor(.black)
+                        .frame(maxWidth: geo.size.width / 2)
+                    }
+                    .padding(.bottom, 10)
                     
                         
                         VStack{
@@ -159,6 +181,9 @@ struct CreateSpotFormView: View {
                 .alert(isPresented: $showAlert, content: {
                     Alert(title: Text("Error posting Secret Spot 😤"))
                 })
+                .popover(isPresented: $presentPopover, content: {
+                    Text("Different World Different Spots")
+                })
                         
             }
             .background(Color.black.edgesIgnoringSafeArea(.all))
@@ -169,7 +194,10 @@ struct CreateSpotFormView: View {
     
     fileprivate func isReady() -> Bool {
         
-        if spotName.count > 3 && addedImage == true && description.count > 10 {
+        if spotName.count > 4
+            && addedImage == true
+            && description.count > 10
+            && world.count > 4 {
             return true
         } else {
             return false
@@ -178,7 +206,7 @@ struct CreateSpotFormView: View {
     
     fileprivate func postSecretSpot() {
 
-        DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, mapItem: mapItem) { (success) in
+        DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, world: world, mapItem: mapItem) { (success) in
             
             if success {
                 presentCompletion.toggle()
@@ -186,6 +214,19 @@ struct CreateSpotFormView: View {
                 showAlert.toggle()
             }
         }
+    }
+    
+    fileprivate func converToHashTag() {
+        var newWords = [String]()
+        let wordsArray = world.components(separatedBy:" ")
+        for word in wordsArray {
+            if word.count > 0 {
+                let newWord = "#\(word.lowercased())"
+                newWords.append(newWord)
+                print(newWord)
+            }
+        }
+        world = newWords.joined(separator:" ")
     }
     
 }

@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class JourneyViewModel: ObservableObject {
+class MyWorldViewModel: ObservableObject {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     
     @Published var secretspots: [SecretSpot] = [SecretSpot]()

@@ -9,7 +9,6 @@ import Foundation
 import MapKit
 import CoreLocation
 
-
 struct SecretSpot:  Hashable, Codable {
     
     var postId: String
@@ -20,6 +19,7 @@ struct SecretSpot:  Hashable, Codable {
     let address: String
     let city: String
     let zipcode: Int
+    let world: String
     
     let dateCreated: Date
     let viewCount: Int
@@ -50,6 +50,7 @@ struct SecretSpot:  Hashable, Codable {
         case saveCounts = "save_count"
         case viewCount = "view_count"
         case price = "price"
+        case world = "world"
     }
     
     var distanceFromUser: Double {

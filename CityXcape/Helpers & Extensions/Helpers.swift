@@ -37,9 +37,17 @@ struct SecretSpotField {
     static let viewCount = "view_count"
     static let city = "city"
     static let zipcode = "zip_code"
+    static let verified = "verified"
+    static let world = "world"
 }
 
-
+struct DatabaseReportField {
+    
+    static let content = "content"
+    static let postId = "post_id"
+    static let dateCreated = "date_created"
+    static let ownerId = "owner_id"
+}
 struct CurrentUserDefaults {
     
     static let displayName = "displayName"
@@ -62,20 +70,25 @@ enum Icon: String {
     case unknown = "silhouette"
     case back = "back_arrow"
     case compass = "compass"
-    case tabItemI = "tab1"
+    case tabItemI = "my_world"
     case tabItemII = "tab2"
     case tabItemIII = "tab3"
     case history = "history"
 }
 
 enum Labels: String {
-    case tab1 = "My Journey"
+    case tab1 = "My World"
     case tab2 = "Post Spot"
     case tab3 = "StreetPass"
 
     case headerName = "Name"
     case headerDistance = "Distance"
     case headerPhoto = "Spot Image"
+}
+
+enum SpotActionSheetType {
+    case general
+    case report
 }
 
 

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct SettingsEditImageView: View {
     
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    
     @State var title: String
     @State var description: String
     @State var selectedImage: UIImage = UIImage(named: "User")!
@@ -78,6 +80,19 @@ struct SettingsEditImageView: View {
         .frame(maxWidth: .infinity)
         .navigationBarTitle(title)
 
+    }
+    
+    fileprivate func saveProfileImage() {
+        guard let uid = userId else {return}
+        
+        ImageManager.instance.uploadProfileImage(uid: uid, image: selectedImage) { imageurl in
+            
+            guard let url = imageurl else {return}
+            UserDefaults.standard.set(url, forKey: CurrentUserDefaults.profileUrl)
+            
+            DataService.instance.updateProfileImage(userId: uid, profileImageUrl: url)
+            
+        }
     }
 }
 

@@ -18,7 +18,7 @@ struct HomeView: View {
        
         TabView {
     
-                MyJourney()
+                MyWorld()
                 .tabItem {
                     Image(Icon.tabItemI.rawValue)
                         .renderingMode(.template)

@@ -97,7 +97,7 @@ struct StreetPass: View {
                 guard let url = imageUrl else {return}
                 UserDefaults.standard.set(url, forKey: CurrentUserDefaults.profileUrl)
                 
-                DataService.instance.updateProfileImage(userId: uid, profileUrl: url)
+                DataService.instance.updateProfileImage(userId: uid, profileImageUrl: url)
 
             }
         }

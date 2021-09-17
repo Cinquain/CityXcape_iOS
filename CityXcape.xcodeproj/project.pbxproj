@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2106253726EDA07C000210E2 /* JourneyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* JourneyViewModel.swift */; };
+		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
 		214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214FAC6C26E2F16300F37B80 /* ImageManager.swift */; };
 		21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */; };
 		21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9326D536B30049CE2D /* SettingsLabelView.swift */; };
@@ -28,7 +28,7 @@
 		217DA72C26CC8F8C0039A145 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 217DA72B26CC8F8C0039A145 /* Assets.xcassets */; };
 		217DA72F26CC8F8C0039A145 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 217DA72E26CC8F8C0039A145 /* Preview Assets.xcassets */; };
 		217DA73A26CC95A50039A145 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DA73926CC95A50039A145 /* Extensions.swift */; };
-		217DA73D26CC96A30039A145 /* MyJourney.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DA73C26CC96A30039A145 /* MyJourney.swift */; };
+		217DA73D26CC96A30039A145 /* MyWorld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DA73C26CC96A30039A145 /* MyWorld.swift */; };
 		217DA73F26CC972C0039A145 /* Ticker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DA73E26CC972C0039A145 /* Ticker.swift */; };
 		217DA74126CCAFDD0039A145 /* UserDotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DA74026CCAFDD0039A145 /* UserDotView.swift */; };
 		217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DAF2D26CD789300A395BC /* SpotRowView.swift */; };
@@ -54,7 +54,7 @@
 
 /* Begin PBXFileReference section */
 		03633A38349C026A52CC221D /* Pods-CityXcape.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.release.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.release.xcconfig"; sourceTree = "<group>"; };
-		2106253626EDA07C000210E2 /* JourneyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyViewModel.swift; sourceTree = "<group>"; };
+		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
 		214FAC6C26E2F16300F37B80 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewModel.swift; sourceTree = "<group>"; };
 		21785D9326D536B30049CE2D /* SettingsLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLabelView.swift; sourceTree = "<group>"; };
@@ -78,7 +78,7 @@
 		217DA72E26CC8F8C0039A145 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		217DA73026CC8F8C0039A145 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		217DA73926CC95A50039A145 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
-		217DA73C26CC96A30039A145 /* MyJourney.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyJourney.swift; sourceTree = "<group>"; };
+		217DA73C26CC96A30039A145 /* MyWorld.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorld.swift; sourceTree = "<group>"; };
 		217DA73E26CC972C0039A145 /* Ticker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ticker.swift; sourceTree = "<group>"; };
 		217DA74026CCAFDD0039A145 /* UserDotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDotView.swift; sourceTree = "<group>"; };
 		217DAF2D26CD789300A395BC /* SpotRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotRowView.swift; sourceTree = "<group>"; };
@@ -222,7 +222,7 @@
 				21AA28DE26D13BA50001A02E /* StreetPass */,
 				219842A426CF4E120089CE03 /* Models */,
 				2198429E26CF396E0089CE03 /* MapView */,
-				217DA73B26CC96850039A145 /* My Journey */,
+				217DA73B26CC96850039A145 /* My World */,
 				217DA73826CC90FB0039A145 /* Components */,
 			);
 			path = Core;
@@ -246,13 +246,13 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
-		217DA73B26CC96850039A145 /* My Journey */ = {
+		217DA73B26CC96850039A145 /* My World */ = {
 			isa = PBXGroup;
 			children = (
-				217DA73C26CC96A30039A145 /* MyJourney.swift */,
-				2106253626EDA07C000210E2 /* JourneyViewModel.swift */,
+				217DA73C26CC96A30039A145 /* MyWorld.swift */,
+				2106253626EDA07C000210E2 /* MyWorldViewModel.swift */,
 			);
-			path = "My Journey";
+			path = "My World";
 			sourceTree = "<group>";
 		};
 		2198429E26CF396E0089CE03 /* MapView */ = {
@@ -449,7 +449,7 @@
 				217884FE26E18CEA0066C719 /* AuthService.swift in Sources */,
 				218CADBE26D5C94300496884 /* SettingsView.swift in Sources */,
 				219842A826CF57740089CE03 /* ImagePicker.swift in Sources */,
-				217DA73D26CC96A30039A145 /* MyJourney.swift in Sources */,
+				217DA73D26CC96A30039A145 /* MyWorld.swift in Sources */,
 				217B770B26DD007C000A78C9 /* CreateSpotFormView.swift in Sources */,
 				218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */,
 				21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */,
@@ -467,7 +467,7 @@
 				218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */,
 				217DA73F26CC972C0039A145 /* Ticker.swift in Sources */,
 				217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */,
-				2106253726EDA07C000210E2 /* JourneyViewModel.swift in Sources */,
+				2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */,
 				217DA73A26CC95A50039A145 /* Extensions.swift in Sources */,
 				217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */,
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,
