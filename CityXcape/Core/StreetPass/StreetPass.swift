@@ -10,9 +10,12 @@ import UIKit
 
 struct StreetPass: View {
     
-    @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @State private var username: String = ""
+    @State private var userbio: String = ""
+    @State private var profileUrl = ""
     
+    @State var refresh: Bool = false
     @State var userImage: UIImage = UIImage()
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State var isPresented: Bool = false
@@ -45,13 +48,13 @@ struct StreetPass: View {
                             Button(action: {
                                 isPresented.toggle()
                             }, label: {
-                                UserDotView(imageUrl: profileUrl ?? "", width: 250, height: 250)
+                                UserDotView(imageUrl: profileUrl, width: 250, height: 250)
                                     .shadow(radius: 5)
                                     .shadow(color: .orange, radius: 30, x: 0, y: 0)
                             })
                           
                             
-                            Text("Cinquain")
+                            Text(username)
                                 .fontWeight(.thin)
                                 .foregroundColor(.accent)
                                 .tracking(2)
@@ -81,11 +84,13 @@ struct StreetPass: View {
                         .colorScheme(.dark)
                 })
                 .fullScreenCover(isPresented: $presentSettings, content: {
-                    SettingsView()
+                    SettingsView(displayName: $username, userBio: $userbio, profileUrl: $profileUrl)
                 })
               
             }
-         
+            .onAppear(perform: {
+                getAdditionalProfileInfo()
+            })
         }
     
 
@@ -98,10 +103,32 @@ struct StreetPass: View {
                 UserDefaults.standard.set(url, forKey: CurrentUserDefaults.profileUrl)
                 
                 DataService.instance.updateProfileImage(userId: uid, profileImageUrl: url)
+                
+                self.profileUrl = url
 
             }
         }
         
+    }
+    
+    
+    func getAdditionalProfileInfo() {
+        guard let uid = userId else {return}
+        AuthService.instance.getUserInfo(forUserID: uid) { username, bio, profileUrl in
+            
+            if let name = username {
+                self.username = name
+            }
+            
+            if let bio = bio {
+                self.userbio = bio
+            }
+            
+            if let url = profileUrl {
+                self.profileUrl = url
+            }
+            
+        }
     }
 }
 

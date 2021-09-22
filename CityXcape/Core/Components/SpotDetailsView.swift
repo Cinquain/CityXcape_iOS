@@ -18,7 +18,7 @@ struct SpotDetailsView: View {
     var spot: SecretSpot?
     
     @State private var showActionSheet: Bool = false
-    @State private var reportAlert: Bool = false
+    @State private var genericAlert: Bool = false
     @State private var actionSheetType: SpotActionSheetType = .general
 
     
@@ -90,14 +90,15 @@ struct SpotDetailsView: View {
                 
             }
             .alert(isPresented: $showDelete, content: {
-                Alert(title: Text("Delete \(spot?.spotName ?? "")"),
+                return Alert(title: Text("Delete \(spot?.spotName ?? "")"),
                       message: Text("Are you sure you want to delete this spot"),
                       primaryButton: .default(Text("Yes"), action: {
+                        deletePost()
                         presentationMode.wrappedValue.dismiss()
                       }), secondaryButton: .cancel())
             })
             .colorScheme(.dark)
-            .alert(isPresented: $reportAlert, content: {
+            .alert(isPresented: $genericAlert, content: {
                 return Alert(title: Text(alertTitle), message: Text(alertmessage), dismissButton: .default(Text("Ok")))
             })
             .actionSheet(isPresented: $showActionSheet, content: {
@@ -136,7 +137,10 @@ struct SpotDetailsView: View {
                 }),
                 
                 .default(Text("Delete"), action: {
-                    showDelete.toggle()
+                    self.actionSheetType = .delete
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.showActionSheet.toggle()
+                    }
                 }),
                 
                 .cancel()
@@ -156,6 +160,14 @@ struct SpotDetailsView: View {
                     self.actionSheetType = .general
                 })
             ])
+        case .delete:
+            return ActionSheet(title: Text("Are You sure you want to delete this post?"), message: nil, buttons: [
+                .destructive(Text("Yes"), action: {
+                    deletePost()
+                }),
+                
+                .cancel(Text("No"))
+            ])
         }
     }
   
@@ -167,11 +179,29 @@ struct SpotDetailsView: View {
             if success {
                 self.alertTitle = "Successfully Reported"
                 self.alertmessage = "Thank you for reporting this spot. We will review it shortly!"
-                self.reportAlert.toggle()
+                self.genericAlert.toggle()
             } else {
                 self.alertTitle = "Error Reporting Spot"
                 self.alertmessage = "There was an error reporting this secret spot. Please restart the app and try again."
-                self.reportAlert.toggle()
+                self.genericAlert.toggle()
+            }
+        }
+    }
+    
+    func deletePost() {
+        guard let postId = spot?.postId else {return}
+        
+        DataService.instance.deleteSecretSpot(spotId: postId) { success in
+            
+            if success {
+                self.alertTitle = "Successfully Deleted"
+                self.alertmessage = "This secret spot has been removed from your world"
+                self.genericAlert.toggle()
+                self.presentationMode.wrappedValue.dismiss()
+            } else {
+                self.alertTitle = "Error"
+                self.alertmessage = "There was an error in deleting this spot. Restart the app and try again"
+                self.genericAlert.toggle()
             }
         }
     }

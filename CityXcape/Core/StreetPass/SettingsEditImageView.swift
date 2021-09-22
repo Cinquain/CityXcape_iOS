@@ -6,16 +6,20 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct SettingsEditImageView: View {
-    
+    @Environment(\.presentationMode) var presentationMode
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     
+    @Binding var profileUrl: String
     @State var title: String
     @State var description: String
-    @State var selectedImage: UIImage = UIImage(named: "User")!
+    @State var selectedImage: UIImage = UIImage(named: "silhouette")!
     @State var showImagePicker: Bool = false
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @State private var showSuccessAlert: Bool = false
+    
     
     var body: some View {
         
@@ -61,7 +65,7 @@ struct SettingsEditImageView: View {
             })
             
             Button(action: {
-                
+                saveProfileImage()
             }, label: {
                 Text("Save".uppercased())
                     .font(.title3)
@@ -79,6 +83,11 @@ struct SettingsEditImageView: View {
         .padding()
         .frame(maxWidth: .infinity)
         .navigationBarTitle(title)
+        .alert(isPresented: $showSuccessAlert, content: {
+            return Alert(title: Text("Success 🥳"), message: nil, dismissButton: .default(Text("Ok"), action: {
+                presentationMode.wrappedValue.dismiss()
+            }))
+        })
 
     }
     
@@ -88,18 +97,20 @@ struct SettingsEditImageView: View {
         ImageManager.instance.uploadProfileImage(uid: uid, image: selectedImage) { imageurl in
             
             guard let url = imageurl else {return}
+            profileUrl = url
             UserDefaults.standard.set(url, forKey: CurrentUserDefaults.profileUrl)
             
             DataService.instance.updateProfileImage(userId: uid, profileImageUrl: url)
-            
+            self.showSuccessAlert.toggle()
         }
     }
 }
 
 struct SettingsEditImageView_Previews: PreviewProvider {
+    @State static var teststring = ""
     static var previews: some View {
         NavigationView {
-            SettingsEditImageView(title: "Title", description: "Description", selectedImage: UIImage(named: "User")!)
+            SettingsEditImageView(profileUrl: $teststring, title: "Title", description: "Description", selectedImage: UIImage(named: "User")!)
         }
     }
 }

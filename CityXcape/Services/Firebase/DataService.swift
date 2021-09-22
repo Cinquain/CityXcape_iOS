@@ -191,4 +191,45 @@ class DataService {
         REF_USERS.document(userId).setData([UserField.displayName : displayName], merge: true)
     }
     
+    func updateDisplayNameOnPosts(userId: String, displayName: String) {
+        
+        downloadSavedPostForUser(userId: userId) { [weak self] secretSpots in
+            
+            for spot in secretSpots {
+                self?.updatePostDisplayName(postID: spot.postId, displayName: displayName)
+            }
+        }
+    }
+    
+    private func updatePostDisplayName(postID: String, displayName: String) {
+        guard let uid = userId else {return}
+        let data: [String : Any] = [
+            SecretSpotField.ownerDisplayName: displayName
+        ]
+        
+        REF_POST.document(postID).updateData(data)
+        REF_USERS.document(uid).collection("world").document(postID).updateData(data)
+    }
+    
+    //MARK: DELETE FUNCTIONS
+    
+    func deleteSecretSpot(spotId: String, completion: @escaping (_ success: Bool) -> ()) {
+        guard let uid = userId else {return}
+        
+        REF_POST.document(spotId).delete()
+        REF_USERS.document(uid).collection("world").document(spotId).delete { error in
+            
+            if let error = error {
+                print("Error deleting secret spot", error.localizedDescription)
+                return
+            } else {
+                print("Success deleting secret spot")
+                completion(true)
+                return
+            }
+            
+            
+        }
+    }
+    
 }

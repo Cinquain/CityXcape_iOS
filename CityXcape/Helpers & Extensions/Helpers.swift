@@ -48,6 +48,8 @@ struct DatabaseReportField {
     static let dateCreated = "date_created"
     static let ownerId = "owner_id"
 }
+
+
 struct CurrentUserDefaults {
     
     static let displayName = "displayName"
@@ -89,8 +91,14 @@ enum Labels: String {
 enum SpotActionSheetType {
     case general
     case report
+    case delete
 }
 
+
+enum SettingsEditTextOption {
+    case displayName
+    case bio
+}
 
 struct StandardButton: ViewModifier {
     

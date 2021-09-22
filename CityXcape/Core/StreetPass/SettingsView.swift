@@ -12,6 +12,9 @@ struct SettingsView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var showSignoutError = false
   
+    @Binding var displayName: String
+    @Binding var userBio: String
+    @Binding var profileUrl: String
     
     var body: some View {
         
@@ -41,20 +44,20 @@ struct SettingsView: View {
                 GroupBox(label: SettingsLabelView(labelText: "Profile", labelImage: "person.fill"), content: {
                     
                     NavigationLink(
-                        destination: SettingsEditTextView(submissionText: "Current Street Name", title: "Streetname", description: "Edit your Street Name here. Your Streetname is searchable by other users.", placeHolder: "Your street name here..."),
+                        destination: SettingsEditTextView(submissionText: displayName, title: "Streetname", description: "Edit your Street Name here. Your Streetname is searchable by other users.", placeHolder: "Your street name here...", options: .displayName, profileText: $displayName),
                         label: {
                             SettingsRowView(text: "Display Name", leftIcon: "pencil", color: .cx_blue)
                         })
 
                     
                     NavigationLink(
-                        destination: SettingsEditTextView(submissionText: "Current Bio", title: "Profile Bio", description: "Your bio is a great place to let other users know a little bit about you.", placeHolder: "Your bio here..."),
+                        destination: SettingsEditTextView(submissionText: userBio, title: "Profile Bio", description: "Your bio is a great place to let other users know a little bit about you.", placeHolder: "Your bio here...", options: .bio, profileText: $userBio),
                         label: {
                             SettingsRowView(text: "Bio", leftIcon: "text.quote", color: .cx_blue)
                         })
                     
                     NavigationLink(
-                        destination: SettingsEditImageView(title: "Profile Picture", description: "Your profile picture will be shown on your streetpass and on the secret spots you post. Please make it an image of yourself", selectedImage: UIImage(named: "User")!),
+                        destination: SettingsEditImageView(profileUrl: $profileUrl, title: "Profile Picture", description: "Your profile picture will be shown on your streetpass and on the secret spots you post. Please make it an image of yourself", selectedImage: UIImage(named: "User")!),
                         label: {
                             SettingsRowView(text: "Profile Picture", leftIcon: "photo", color: .cx_blue)
                         })
@@ -169,8 +172,10 @@ struct NavigationConfigurator: UIViewControllerRepresentable {
 }
 
 struct SettingsView_Previews: PreviewProvider {
+    
+    @State static var testString: String = ""
+    @State static var refresh: Bool = false
     static var previews: some View {
-        SettingsView()
-
+        SettingsView(displayName: $testString, userBio: $testString, profileUrl: $testString)
     }
 }

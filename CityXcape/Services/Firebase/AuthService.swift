@@ -170,4 +170,42 @@ class AuthService {
                
         }
     }
+    
+    //MARK: UPDATE USER FUNCTIONS
+    
+    func updateUserDisplayName(userId: String, displayName: String, completion: @escaping (_ success: Bool) -> ()) {
+        let data : [String:Any] = [
+            UserField.displayName: displayName
+        ]
+        
+        REF_USERS.document(userId).updateData(data) { error in
+            
+            if let error = error {
+                print("Error updating user display nane", error.localizedDescription)
+                completion(false)
+                return
+            } else {
+                completion(true)
+                return
+            }
+        }
+    }
+    
+    func updateUserBio(userId: String, bio: String, completion: @escaping (_ success: Bool) -> ()) {
+        let data : [String:Any] = [
+            UserField.bio: bio
+        ]
+        
+        REF_USERS.document(userId).updateData(data) { error in
+            
+            if let error = error {
+                print("Error updating user display nane", error.localizedDescription)
+                completion(false)
+                return
+            } else {
+                completion(true)
+                return
+            }
+        }
+    }
 }

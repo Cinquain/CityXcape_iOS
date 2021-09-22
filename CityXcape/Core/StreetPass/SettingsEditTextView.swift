@@ -9,10 +9,19 @@ import SwiftUI
 
 struct SettingsEditTextView: View {
     
+    
+    @Environment(\.presentationMode) var presentationMode
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
+
+    
     @State var submissionText: String = ""
     @State var title: String
     @State var description: String
     @State var placeHolder: String
+    @State var options: SettingsEditTextOption
+    @State private var showSuccessAlert: Bool = false
+    @Binding var profileText: String
+    
     
     var body: some View {
         
@@ -34,7 +43,7 @@ struct SettingsEditTextView: View {
             
             
             Button(action: {
-                
+                saveText()
             }, label: {
                 Text("Save".uppercased())
                     .font(.title3)
@@ -55,14 +64,56 @@ struct SettingsEditTextView: View {
         .navigationBarTitle(title)
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarTitleDisplayMode(.large)
+        .alert(isPresented: $showSuccessAlert, content: {
+            return Alert(title: Text("Saved! 🥳"), message: Text(""), dismissButton: .default(Text("Ok"), action: {
+                presentationMode.wrappedValue.dismiss()
+            }))
+        })
         
+    }
+    
+    fileprivate func saveText() {
+        
+        switch options {
+        case .displayName:
+            
+            //Update the UI on the profile
+            self.profileText = submissionText
+            //Update user defaults
+            UserDefaults.standard.setValue(submissionText, forKey: CurrentUserDefaults.displayName)
+            
+            //Update the displayNames on DB user's spots
+            guard let uid = userId else {return}
+            DataService.instance.updateDisplayNameOnPosts(userId: uid, displayName: submissionText)
+            //Update the displayName on user profile
+            AuthService.instance.updateUserDisplayName(userId: uid, displayName: submissionText) { success in
+                
+                if success {
+                    self.showSuccessAlert.toggle()
+                }
+                
+            }
+            
+            break
+        case .bio:
+            guard let uid = userId else {return}
+            self.profileText = submissionText
+            UserDefaults.standard.set(submissionText, forKey: CurrentUserDefaults.bio)
+            AuthService.instance.updateUserBio(userId: uid, bio: submissionText) { success in
+                if success {
+                    self.showSuccessAlert.toggle()
+                }
+            }
+        }
+    
     }
 }
 
 struct SettingsEditTextView_Previews: PreviewProvider {
+    @State static var teststring: String = ""
     static var previews: some View {
         NavigationView {
-            SettingsEditTextView(title: "Edit Username", description: "Change Your Username", placeHolder: "Cinquain")
+            SettingsEditTextView(title: "Edit Username", description: "Change Your Username", placeHolder: "Cinquain", options: .bio, profileText: $teststring)
         }
       
     }

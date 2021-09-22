@@ -151,7 +151,7 @@
 			path = Firebase;
 			sourceTree = "<group>";
 		};
-		217C08D826D1B9E600751933 /* Onboarding */ = {
+		217C08D826D1B9E600751933 /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
 				217C08D926D1B9FE00751933 /* SignUpView.swift */,
@@ -159,7 +159,7 @@
 				217C08DF26D1CC4500751933 /* OnboardingViewII.swift */,
 				21BBB06026E596C2000B40B3 /* AnimationController.swift */,
 			);
-			path = Onboarding;
+			path = SignUp;
 			sourceTree = "<group>";
 		};
 		217DA71B26CC8F8B0039A145 = {
@@ -218,7 +218,7 @@
 		217DA73726CC90F60039A145 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				217C08D826D1B9E600751933 /* Onboarding */,
+				217C08D826D1B9E600751933 /* SignUp */,
 				21AA28DE26D13BA50001A02E /* StreetPass */,
 				219842A426CF4E120089CE03 /* Models */,
 				2198429E26CF396E0089CE03 /* MapView */,
