@@ -72,6 +72,7 @@ enum Icon: String {
     case unknown = "silhouette"
     case back = "back_arrow"
     case compass = "compass"
+    case tabItem0 = "mission"
     case tabItemI = "my_world"
     case tabItemII = "tab2"
     case tabItemIII = "tab3"
@@ -79,6 +80,7 @@ enum Icon: String {
 }
 
 enum Labels: String {
+    case tab0 = "Missions"
     case tab1 = "My World"
     case tab2 = "Post Spot"
     case tab3 = "StreetPass"

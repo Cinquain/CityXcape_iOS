@@ -11,6 +11,8 @@ import UIKit
 struct StreetPass: View {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @AppStorage(CurrentUserDefaults.bio) var bio: String?
+
     @State private var username: String = ""
     @State private var userbio: String = ""
     @State private var profileUrl = ""
@@ -58,6 +60,13 @@ struct StreetPass: View {
                                 .fontWeight(.thin)
                                 .foregroundColor(.accent)
                                 .tracking(2)
+                                .padding()
+                            
+                            //Need a text liner for the bio
+                            Text(userbio)
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                                
                         }
                         Spacer()
                     }
@@ -104,8 +113,11 @@ struct StreetPass: View {
                 
                 DataService.instance.updateProfileImage(userId: uid, profileImageUrl: url)
                 
+                
                 self.profileUrl = url
-
+                
+                //Update image url at every user's secret spot post
+                DataService.instance.updatePostProfileImageUrl(profileUrl: url)
             }
         }
         
@@ -126,6 +138,10 @@ struct StreetPass: View {
             
             if let url = profileUrl {
                 self.profileUrl = url
+            }
+            
+            if let userBio = bio {
+                self.userbio = userbio
             }
             
         }

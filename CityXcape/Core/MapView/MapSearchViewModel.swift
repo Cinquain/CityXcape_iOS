@@ -26,7 +26,7 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     
     var cancellable: AnyCancellable?
     
-    let locationManager = CLLocationManager()
+    let locationManager = LocationService.instance.manager
     
     override init() {
         super.init()
@@ -138,4 +138,13 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         self.currentLocation = firstLocation.coordinate
         
     }
+}
+
+
+class LocationService: NSObject, CLLocationManagerDelegate {
+    
+    static let instance = LocationService()
+    
+    let manager = CLLocationManager()
+    
 }

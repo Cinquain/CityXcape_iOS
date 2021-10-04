@@ -24,9 +24,10 @@ class DataService {
     private var REF_POST = DB_BASE.collection("posts")
     private var REF_USERS = DB_BASE.collection("users")
     private var REF_REPORTS = DB_BASE.collection("reports")
+    private var REF_SAVES = DB_BASE.collection("saves")
     //MARK: CREATE FUNCTIONS
     
-    func uploadSecretSpot(spotName: String, description: String, image: UIImage, world: String, mapItem: MKMapItem, completion: @escaping (_ success: Bool) -> ()) {
+    func uploadSecretSpot(spotName: String, description: String, image: UIImage, world: String, mapItem: MKMapItem, isPrivate: Bool, completion: @escaping (_ success: Bool) -> ()) {
         
         let document = REF_POST.document()
         let spotId = document.documentID
@@ -73,26 +74,26 @@ class DataService {
                 ]
                 
                 userWorldRef.setData(spotData)
-                document.setData(spotData) { [weak self ](error) in
-                    if let err = error {
-                        print("Error uploading secret spot to database", err.localizedDescription)
-                        completion(false)
-                        return
-                    } else {
-                    completion(true)
-                        let savedData: [String: Any] = [
-                            "userId": uid,
-                            "profileUrl": ownerImageUrl,
-                            "displayName": ownerDisplayName,
-                            "dateSaved": FieldValue.serverTimestamp()
-                        ]
-                        self?.REF_POST.document(spotId).collection("savedBy").document(uid).setData(savedData)
+                completion(true)
+                
+                if isPrivate {
                     return
                 }
-                
+                if !isPrivate {
+                    document.setData(spotData) { (error) in
+                        if let err = error {
+                            print("Error uploading secret spot to database", err.localizedDescription)
+                            completion(false)
+                            return
+                        } else {
+                        completion(true)
+                        print("Successfully saved secret spots to public world")
+                        return
+                    }
+                    
+                    }
                 }
             } else {
-                
                 print("Error uploading spot photo to Firestore")
                 completion(false)
                 return
@@ -211,12 +212,29 @@ class DataService {
         REF_USERS.document(uid).collection("world").document(postID).updateData(data)
     }
     
+     func updatePostProfileImageUrl(profileUrl: String) {
+        guard let uid = userId else {return}
+        let data: [String: Any] = [
+            SecretSpotField.ownerImageUrl: profileUrl
+        ]
+        
+        downloadSavedPostForUser(userId: uid) { [weak self] secretspots in
+            
+            for spot in secretspots {
+                self?.REF_POST.document(spot.postId).updateData(data)
+                self?.REF_USERS.document(uid).collection("world").document(spot.postId).updateData(data)
+            }
+        }
+        
+    }
+    
     //MARK: DELETE FUNCTIONS
     
     func deleteSecretSpot(spotId: String, completion: @escaping (_ success: Bool) -> ()) {
         guard let uid = userId else {return}
-        
+        REF_POST.document(spotId).collection("savedBy")
         REF_POST.document(spotId).delete()
+        
         REF_USERS.document(uid).collection("world").document(spotId).delete { error in
             
             if let error = error {

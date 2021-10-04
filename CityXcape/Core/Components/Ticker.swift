@@ -10,7 +10,7 @@ import SwiftUI
 struct Ticker: View {
     
     @State private var selection: Int = 2
-    @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
+    var profileUrl: String
     let captions: [String]
     
     var body: some View {
@@ -92,7 +92,7 @@ struct Ticker_Previews: PreviewProvider {
             "Keep Exploring!"
         ]
         
-        Ticker(captions: captions)
+        Ticker(profileUrl: "", captions: captions)
             .preferredColorScheme(.dark)
             .previewLayout(.sizeThatFits)
     }

@@ -17,6 +17,8 @@
 		217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217884FA26E181CE0066C719 /* SignInWithGoogle.swift */; };
 		217884FE26E18CEA0066C719 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217884FD26E18CEA0066C719 /* AuthService.swift */; };
 		21793FC726D919D9001ACD1A /* SettingsEditImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21793FC626D919D9001ACD1A /* SettingsEditImageView.swift */; };
+		217AA0C226FB5C5300B994B3 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217AA0C126FB5C5300B994B3 /* Onboarding.swift */; };
+		217AA0C426FB660100B994B3 /* OnboardScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217AA0C326FB660100B994B3 /* OnboardScreen.swift */; };
 		217B770B26DD007C000A78C9 /* CreateSpotFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217B770A26DD007C000A78C9 /* CreateSpotFormView.swift */; };
 		217C08D726D1AFF400751933 /* MapContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217C08D626D1AFF400751933 /* MapContainer.swift */; };
 		217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217C08D926D1B9FE00751933 /* SignUpView.swift */; };
@@ -25,7 +27,6 @@
 		217C08E026D1CC4500751933 /* OnboardingViewII.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217C08DF26D1CC4500751933 /* OnboardingViewII.swift */; };
 		217DA72826CC8F8B0039A145 /* CityXcapeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DA72726CC8F8B0039A145 /* CityXcapeApp.swift */; };
 		217DA72A26CC8F8B0039A145 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DA72926CC8F8B0039A145 /* HomeView.swift */; };
-		217DA72C26CC8F8C0039A145 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 217DA72B26CC8F8C0039A145 /* Assets.xcassets */; };
 		217DA72F26CC8F8C0039A145 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 217DA72E26CC8F8C0039A145 /* Preview Assets.xcassets */; };
 		217DA73A26CC95A50039A145 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DA73926CC95A50039A145 /* Extensions.swift */; };
 		217DA73D26CC96A30039A145 /* MyWorld.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DA73C26CC96A30039A145 /* MyWorld.swift */; };
@@ -35,17 +36,24 @@
 		217DAF3026CD7A1C00A395BC /* SecretSpotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DAF2F26CD7A1C00A395BC /* SecretSpotView.swift */; };
 		217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DAF3126CD7D5600A395BC /* Helpers.swift */; };
 		217DAF3426CD97D400A395BC /* SpotRowHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217DAF3326CD97D400A395BC /* SpotRowHeader.swift */; };
+		217E9AA6270B404500F45077 /* Mission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E9AA5270B404500F45077 /* Mission.swift */; };
+		217E9AA8270B6EC400F45077 /* MissionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E9AA7270B6EC400F45077 /* MissionViewModel.swift */; };
+		217E9AAB270B757500F45077 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 217E9AAA270B757500F45077 /* Assets.xcassets */; };
 		217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217EFE8926DEAB1F005C7C88 /* CongratsView.swift */; };
 		218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218980A626DC54C500A6FD23 /* LikeAnimationView.swift */; };
 		218CADBE26D5C94300496884 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CADBD26D5C94300496884 /* SettingsView.swift */; };
 		218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CADBF26D5D7E400496884 /* SettingsEditTextView.swift */; };
 		218E76F326DBB08A00F720F1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 218E76F226DBB08A00F720F1 /* LaunchScreen.storyboard */; };
+		218ECBBF2709328E00D06603 /* MissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218ECBBE2709328E00D06603 /* MissionsView.swift */; };
 		219842A326CF3A680089CE03 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = 219842A226CF3A680089CE03 /* LBTATools */; };
 		219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A526CF4E3D0089CE03 /* SecretSpot.swift */; };
 		219842A826CF57740089CE03 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A726CF57740089CE03 /* ImagePicker.swift */; };
 		21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA28DF26D13BB40001A02E /* StreetPass.swift */; };
 		21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */; };
 		21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BBB06026E596C2000B40B3 /* AnimationController.swift */; };
+		21D03594270938400071C643 /* MissionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D03593270938400071C643 /* MissionRowView.swift */; };
+		21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0359527093B770071C643 /* MissionRowHeader.swift */; };
+		21D03598270945930071C643 /* MissionDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D03597270945930071C643 /* MissionDetails.swift */; };
 		21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */; };
 		21D85F5326EACF0E00502636 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F5226EACF0E00502636 /* Shimmer */; };
 		21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F8D9C526E8D7CC0016DF9D /* DataService.swift */; };
@@ -65,6 +73,8 @@
 		217884FA26E181CE0066C719 /* SignInWithGoogle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithGoogle.swift; sourceTree = "<group>"; };
 		217884FD26E18CEA0066C719 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		21793FC626D919D9001ACD1A /* SettingsEditImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditImageView.swift; sourceTree = "<group>"; };
+		217AA0C126FB5C5300B994B3 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
+		217AA0C326FB660100B994B3 /* OnboardScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardScreen.swift; sourceTree = "<group>"; };
 		217B770A26DD007C000A78C9 /* CreateSpotFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSpotFormView.swift; sourceTree = "<group>"; };
 		217C08D626D1AFF400751933 /* MapContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContainer.swift; sourceTree = "<group>"; };
 		217C08D926D1B9FE00751933 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
@@ -74,7 +84,6 @@
 		217DA72426CC8F8B0039A145 /* CityXcape.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CityXcape.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		217DA72726CC8F8B0039A145 /* CityXcapeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityXcapeApp.swift; sourceTree = "<group>"; };
 		217DA72926CC8F8B0039A145 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
-		217DA72B26CC8F8C0039A145 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		217DA72E26CC8F8C0039A145 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		217DA73026CC8F8C0039A145 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		217DA73926CC95A50039A145 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -85,16 +94,23 @@
 		217DAF2F26CD7A1C00A395BC /* SecretSpotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretSpotView.swift; sourceTree = "<group>"; };
 		217DAF3126CD7D5600A395BC /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		217DAF3326CD97D400A395BC /* SpotRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotRowHeader.swift; sourceTree = "<group>"; };
+		217E9AA5270B404500F45077 /* Mission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mission.swift; sourceTree = "<group>"; };
+		217E9AA7270B6EC400F45077 /* MissionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionViewModel.swift; sourceTree = "<group>"; };
+		217E9AAA270B757500F45077 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		217EFE8926DEAB1F005C7C88 /* CongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongratsView.swift; sourceTree = "<group>"; };
 		218980A626DC54C500A6FD23 /* LikeAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAnimationView.swift; sourceTree = "<group>"; };
 		218CADBD26D5C94300496884 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		218CADBF26D5D7E400496884 /* SettingsEditTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditTextView.swift; sourceTree = "<group>"; };
 		218E76F226DBB08A00F720F1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		218ECBBE2709328E00D06603 /* MissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionsView.swift; sourceTree = "<group>"; };
 		219842A526CF4E3D0089CE03 /* SecretSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretSpot.swift; sourceTree = "<group>"; };
 		219842A726CF57740089CE03 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		21AA28DF26D13BB40001A02E /* StreetPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetPass.swift; sourceTree = "<group>"; };
 		21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailsView.swift; sourceTree = "<group>"; };
 		21BBB06026E596C2000B40B3 /* AnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
+		21D03593270938400071C643 /* MissionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowView.swift; sourceTree = "<group>"; };
+		21D0359527093B770071C643 /* MissionRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowHeader.swift; sourceTree = "<group>"; };
+		21D03597270945930071C643 /* MissionDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetails.swift; sourceTree = "<group>"; };
 		21F8D9C526E8D7CC0016DF9D /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		D55E8FAFE7D475B0B8F4DBF2 /* Pods-CityXcape.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.debug.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.debug.xcconfig"; sourceTree = "<group>"; };
 		DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CityXcape.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -151,6 +167,15 @@
 			path = Firebase;
 			sourceTree = "<group>";
 		};
+		217AA0C026FB5BFB00B994B3 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				217AA0C126FB5C5300B994B3 /* Onboarding.swift */,
+				217AA0C326FB660100B994B3 /* OnboardScreen.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		217C08D826D1B9E600751933 /* SignUp */ = {
 			isa = PBXGroup;
 			children = (
@@ -189,8 +214,8 @@
 				217DA72726CC8F8B0039A145 /* CityXcapeApp.swift */,
 				217DA72926CC8F8B0039A145 /* HomeView.swift */,
 				217DA73726CC90F60039A145 /* Core */,
-				217DA72B26CC8F8C0039A145 /* Assets.xcassets */,
 				218E76F226DBB08A00F720F1 /* LaunchScreen.storyboard */,
+				217E9AAA270B757500F45077 /* Assets.xcassets */,
 				217884F426E1796A0066C719 /* GoogleService-Info.plist */,
 				217DA73026CC8F8C0039A145 /* Info.plist */,
 				217DA72D26CC8F8C0039A145 /* Preview Content */,
@@ -218,6 +243,8 @@
 		217DA73726CC90F60039A145 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				218ECBBD2709325E00D06603 /* Missions */,
+				217AA0C026FB5BFB00B994B3 /* Onboarding */,
 				217C08D826D1B9E600751933 /* SignUp */,
 				21AA28DE26D13BA50001A02E /* StreetPass */,
 				219842A426CF4E120089CE03 /* Models */,
@@ -242,6 +269,8 @@
 				21785D9326D536B30049CE2D /* SettingsLabelView.swift */,
 				21785D9526D547AC0049CE2D /* SettingsRowView.swift */,
 				218980A626DC54C500A6FD23 /* LikeAnimationView.swift */,
+				21D03593270938400071C643 /* MissionRowView.swift */,
+				21D0359527093B770071C643 /* MissionRowHeader.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -253,6 +282,16 @@
 				2106253626EDA07C000210E2 /* MyWorldViewModel.swift */,
 			);
 			path = "My World";
+			sourceTree = "<group>";
+		};
+		218ECBBD2709325E00D06603 /* Missions */ = {
+			isa = PBXGroup;
+			children = (
+				218ECBBE2709328E00D06603 /* MissionsView.swift */,
+				21D03597270945930071C643 /* MissionDetails.swift */,
+				217E9AA7270B6EC400F45077 /* MissionViewModel.swift */,
+			);
+			path = Missions;
 			sourceTree = "<group>";
 		};
 		2198429E26CF396E0089CE03 /* MapView */ = {
@@ -270,6 +309,7 @@
 			isa = PBXGroup;
 			children = (
 				219842A526CF4E3D0089CE03 /* SecretSpot.swift */,
+				217E9AA5270B404500F45077 /* Mission.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -374,8 +414,8 @@
 			files = (
 				218E76F326DBB08A00F720F1 /* LaunchScreen.storyboard in Resources */,
 				217884F526E1796A0066C719 /* GoogleService-Info.plist in Resources */,
+				217E9AAB270B757500F45077 /* Assets.xcassets in Resources */,
 				217DA72F26CC8F8C0039A145 /* Preview Assets.xcassets in Resources */,
-				217DA72C26CC8F8C0039A145 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,6 +489,7 @@
 				217884FE26E18CEA0066C719 /* AuthService.swift in Sources */,
 				218CADBE26D5C94300496884 /* SettingsView.swift in Sources */,
 				219842A826CF57740089CE03 /* ImagePicker.swift in Sources */,
+				21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */,
 				217DA73D26CC96A30039A145 /* MyWorld.swift in Sources */,
 				217B770B26DD007C000A78C9 /* CreateSpotFormView.swift in Sources */,
 				218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */,
@@ -456,23 +497,30 @@
 				217DAF3426CD97D400A395BC /* SpotRowHeader.swift in Sources */,
 				21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */,
 				219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */,
+				217E9AA6270B404500F45077 /* Mission.swift in Sources */,
 				214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */,
 				21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */,
 				217DA74126CCAFDD0039A145 /* UserDotView.swift in Sources */,
 				217DA72A26CC8F8B0039A145 /* HomeView.swift in Sources */,
+				21D03594270938400071C643 /* MissionRowView.swift in Sources */,
 				217884F926E17B870066C719 /* SignInWithApple.swift in Sources */,
 				217C08D726D1AFF400751933 /* MapContainer.swift in Sources */,
 				21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */,
+				217AA0C226FB5C5300B994B3 /* Onboarding.swift in Sources */,
 				21793FC726D919D9001ACD1A /* SettingsEditImageView.swift in Sources */,
+				217E9AA8270B6EC400F45077 /* MissionViewModel.swift in Sources */,
 				218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */,
+				218ECBBF2709328E00D06603 /* MissionsView.swift in Sources */,
 				217DA73F26CC972C0039A145 /* Ticker.swift in Sources */,
 				217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */,
+				21D03598270945930071C643 /* MissionDetails.swift in Sources */,
 				2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */,
 				217DA73A26CC95A50039A145 /* Extensions.swift in Sources */,
 				217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */,
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,
 				217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */,
 				217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */,
+				217AA0C426FB660100B994B3 /* OnboardScreen.swift in Sources */,
 				217DAF3026CD7A1C00A395BC /* SecretSpotView.swift in Sources */,
 				217C08DC26D1C38E00751933 /* OnboardingView.swift in Sources */,
 				21785D9626D547AC0049CE2D /* SettingsRowView.swift in Sources */,
@@ -619,6 +667,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -643,6 +692,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

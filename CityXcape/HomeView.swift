@@ -17,6 +17,14 @@ struct HomeView: View {
     var body: some View {
        
         TabView {
+            
+                MissionsView()
+                    .tabItem {
+                        Image(Icon.tabItem0.rawValue)
+                            .renderingMode(.template)
+                        Text(Labels.tab0.rawValue)
+                    }
+                    
     
                 MyWorld()
                 .tabItem {
@@ -43,6 +51,7 @@ struct HomeView: View {
         }
         .accentColor(.orange)
         .colorScheme(.dark)
+        
     }
 }
 

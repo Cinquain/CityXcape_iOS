@@ -29,6 +29,10 @@ extension Color {
         return Color("cx_blue")
     }
     
+    static var cx_green: Color {
+        return Color("cx_green")
+    }
+    
 }
 
 

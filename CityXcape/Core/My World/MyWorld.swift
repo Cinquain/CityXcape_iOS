@@ -11,7 +11,7 @@ import Combine
 
 struct MyWorld: View {
     
-    
+    @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     private var cancellables = Set<AnyCancellable>()
     @ObservedObject var vm = MyWorldViewModel()
   
@@ -37,7 +37,7 @@ struct MyWorld: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack {
-                    Ticker(captions: captions)
+                    Ticker(profileUrl: profileUrl ?? "", captions: captions)
                         .frame(height: 150)
                     
                     SpotRowHeader()

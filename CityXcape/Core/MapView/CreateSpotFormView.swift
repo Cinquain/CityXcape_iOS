@@ -12,11 +12,13 @@ import CoreLocation
 struct CreateSpotFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
+
     @State private var spotName: String = ""
     @State private var description: String = ""
     @State private var world: String = ""
     @State private var showPicker: Bool = false
     @State private var addedImage: Bool = false
+    @State private var isPrivate: Bool = false
     @State private var presentPopover: Bool = false
     @Binding var opacity: Double
     @State private var presentCompletion: Bool = false
@@ -32,7 +34,7 @@ struct CreateSpotFormView: View {
         
             GeometryReader { geo in
                 VStack {
-                    Text("Post New Spot")
+                    Text("Post Spot")
                         .font(.title)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
@@ -75,21 +77,36 @@ struct CreateSpotFormView: View {
                     
                     HStack {
                         Button(action: {
-                            presentPopover.toggle()
+                            isPrivate.toggle()
                         }, label: {
-                            Image(systemName: "lock.fill")
-                                .foregroundColor(.yellow)
-                                .font(.largeTitle)
+                            if !isPrivate {
+                                Image("globe")
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 40, height: 40)
+                            } else {
+                                Image(systemName: "lock.fill")
+                                    .font(.largeTitle)
+                                    .foregroundColor(.yellow)
+                            }
+                         
                         })
                         
-                        TextField("World Name", text: $world) {
-                           converToHashTag()
+                        if !isPrivate {
+                            TextField("What world is this visible to?", text: $world) {
+                               converToHashTag()
+                            }
+                            .padding()
+                            .background(Color.white)
+                            .accentColor(.black)
+                            .foregroundColor(.black)
+                            .frame(maxWidth: geo.size.width / 1.5)
+                        } else {
+                            Text("Secret Spot is Private")
+                                .foregroundColor(.white)
+                               
                         }
-                        .padding()
-                        .background(Color.white)
-                        .accentColor(.black)
-                        .foregroundColor(.black)
-                        .frame(maxWidth: geo.size.width / 2)
+                        
                     }
                     .padding(.bottom, 10)
                     
@@ -99,7 +116,7 @@ struct CreateSpotFormView: View {
                             Button(action: {
                                 
                                 showPicker.toggle()
-                                addedImage = true
+                                
                                 
                             }, label: {
                                 HStack {
@@ -164,7 +181,9 @@ struct CreateSpotFormView: View {
                     
             
                 }
-                .sheet(isPresented: $showPicker, content: {
+                .sheet(isPresented: $showPicker, onDismiss: {
+                    addedImage.toggle()
+                }, content: {
                     ImagePicker(imageSelected: $selectedImage, sourceType: $sourceType)
                         .colorScheme(.dark)
                 })
@@ -197,7 +216,7 @@ struct CreateSpotFormView: View {
         if spotName.count > 4
             && addedImage == true
             && description.count > 10
-            && world.count > 4 {
+            && world.count > 4 || isPrivate {
             return true
         } else {
             return false
@@ -206,7 +225,7 @@ struct CreateSpotFormView: View {
     
     fileprivate func postSecretSpot() {
 
-        DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, world: world, mapItem: mapItem) { (success) in
+        DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, world: world, mapItem: mapItem, isPrivate: isPrivate) { (success) in
             
             if success {
                 presentCompletion.toggle()

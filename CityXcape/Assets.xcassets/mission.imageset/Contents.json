@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "mission.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

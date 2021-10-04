@@ -25,7 +25,7 @@ struct SecretSpot:  Hashable, Codable {
     let viewCount: Int
     let price: Int
     let saveCounts: Int
-    
+
     let description: String?
     
     let ownerId: String
@@ -54,10 +54,17 @@ struct SecretSpot:  Hashable, Codable {
     }
     
     var distanceFromUser: Double {
-        let manager = CLLocationManager()
-        let destination = CLLocation(latitude: latitude, longitude: longitude)
-        let userlocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
-        return userlocation.distance(from: destination) * 0.000621
+        let manager = LocationService.instance.manager
+        
+        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedWhenInUse {
+            let destination = CLLocation(latitude: latitude, longitude: longitude)
+            let userlocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
+            return userlocation.distance(from: destination) * 0.000621
+        } else {
+            manager.requestWhenInUseAuthorization()
+            return 0
+        }
+
     }
  
     

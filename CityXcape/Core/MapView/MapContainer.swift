@@ -33,6 +33,8 @@ struct MapContainer: View {
                         .padding()
                         .background(Color.white)
                         .cornerRadius(3)
+                        .foregroundColor(.black)
+                    .accentColor(.black)
                 }
                 .padding()
                 .padding(.vertical,20)

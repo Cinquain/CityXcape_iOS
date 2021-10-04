@@ -11,7 +11,6 @@ import SDWebImageSwiftUI
 struct SpotDetailsView: View {
     
     @Environment(\.presentationMode) var presentationMode
-    @State private var showDelete: Bool = false
     @State private var alertmessage: String = ""
     @State private var alertTitle: String = ""
     var captions: [String] = [String]()
@@ -30,9 +29,7 @@ struct SpotDetailsView: View {
         let distance = spot.distanceFromUser > 1 ? "\(distanceString) miles away" : "\(distanceString) mile away"
         let postedby = "Posted by \(spot.ownerDisplayName)"
         
-        self.captions.append(name)
-        self.captions.append(distance)
-        self.captions.append(postedby)
+        captions.append(contentsOf: [name, distance, postedby])
     }
     
     var body: some View {
@@ -42,18 +39,20 @@ struct SpotDetailsView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack(alignment: .leading) {
-                    Ticker(captions: captions)
+                    Ticker(profileUrl: spot?.ownerImageUrl ?? "", captions: captions)
                         .frame(height: 120)
                     
                     WebImage(url: URL(string: spot?.imageUrl ?? ""))
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: .infinity, height: geo.size.height / 2)
+                        .frame(width: .infinity)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .padding(.top, 20)
                     
-                    Text("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.")
+                    Text(spot?.description ?? "")
                         .multilineTextAlignment(.leading)
                         .font(.body)
+                        .lineLimit(.none)
                         .padding()
                     
                     Button(action: {
@@ -89,14 +88,6 @@ struct SpotDetailsView: View {
                 .foregroundColor(.accent)
                 
             }
-            .alert(isPresented: $showDelete, content: {
-                return Alert(title: Text("Delete \(spot?.spotName ?? "")"),
-                      message: Text("Are you sure you want to delete this spot"),
-                      primaryButton: .default(Text("Yes"), action: {
-                        deletePost()
-                        presentationMode.wrappedValue.dismiss()
-                      }), secondaryButton: .cancel())
-            })
             .colorScheme(.dark)
             .alert(isPresented: $genericAlert, content: {
                 return Alert(title: Text(alertTitle), message: Text(alertmessage), dismissButton: .default(Text("Ok")))
