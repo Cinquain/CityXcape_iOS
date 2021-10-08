@@ -17,11 +17,7 @@ struct MyWorld: View {
   
     @State private var currentIndex = 0
     @State private var isPresented: Bool = false
-    @State var currentSpot: SecretSpot? {
-        didSet {
-            isPresented.toggle()
-        }
-    }
+
     
     var body: some View {
         
@@ -43,13 +39,13 @@ struct MyWorld: View {
                     SpotRowHeader()
                
                         List {
-                            ForEach(vm.secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.self) { spot in
+                            ForEach(vm.secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.postId) { spot in
                                 
                                 SpotRowView(imageUrl: spot.imageUrl, name: spot.spotName, distance: spot.distanceFromUser)
                                     .onTapGesture(perform: {
                                         guard let index = self.vm.secretspots.firstIndex(of: spot) else {return}
                                         self.currentIndex = index
-                                        self.isPresented.toggle()
+                                        isPresented.toggle()
                                     })
                             }
                             
@@ -61,9 +57,13 @@ struct MyWorld: View {
                     
             }
         }
-        .sheet(isPresented: $isPresented, content: {
-            
-            SpotDetailsView(spot: vm.secretspots[currentIndex])
+        .sheet(isPresented: $isPresented, onDismiss: {
+            currentIndex = 0
+        } ,content: {
+    
+            if let spot = vm.secretspots[currentIndex] {
+                SpotDetailsView(spot: spot)
+            } 
             
         })
      

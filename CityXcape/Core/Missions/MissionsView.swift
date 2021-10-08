@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct MissionsView: View {
+    
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @State private var isPresented: Bool = false
+    @State private var mission: Mission?
+    @State private var currentIndex: Int = 0
+    @Binding var selectedTab: Int 
     @StateObject var vm: MissionViewModel = MissionViewModel()
 
     var body: some View {
@@ -23,7 +27,7 @@ struct MissionsView: View {
         VStack(spacing: 0) {
             
             Ticker(profileUrl: profileUrl ?? "", captions: captions)
-                .padding(.top, 20)
+                .padding(.top, 50)
                 .frame(height: 100)
             
             Image("Scout")
@@ -41,6 +45,10 @@ struct MissionsView: View {
                 ForEach(vm.standardMissions, id: \.self) { mission in 
                     MissionRowView(name: mission.title, bounty: mission.bounty)
                         .onTapGesture {
+                            guard let index = vm.standardMissions.firstIndex(of: mission)
+                            else {return}
+                            self.currentIndex = index
+                            self.mission = mission
                             self.isPresented.toggle()
                         }
                 }
@@ -57,14 +65,18 @@ struct MissionsView: View {
         .foregroundColor(.white)
         .background(Color.black)
         .edgesIgnoringSafeArea(.all)
-        .sheet(isPresented: $isPresented, content: {
-            MissionDetails(mission: vm.standardMissions.first!)
+        .fullScreenCover(isPresented: $isPresented, content: {
+            
+            if let mission = vm.standardMissions[currentIndex] {
+                MissionDetails(mission: mission, parent: self)
+            }
         })
     }
 }
 
 struct MissionsView_Previews: PreviewProvider {
+    @State static var selection: Int = 0
     static var previews: some View {
-        MissionsView()
+        MissionsView(selectedTab: $selection)
     }
 }

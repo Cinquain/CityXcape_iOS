@@ -264,7 +264,6 @@
 				217DAF2F26CD7A1C00A395BC /* SecretSpotView.swift */,
 				217DAF3326CD97D400A395BC /* SpotRowHeader.swift */,
 				219842A726CF57740089CE03 /* ImagePicker.swift */,
-				21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */,
 				217C08DD26D1C58000751933 /* SignInWithAppleButton.swift */,
 				21785D9326D536B30049CE2D /* SettingsLabelView.swift */,
 				21785D9526D547AC0049CE2D /* SettingsRowView.swift */,
@@ -280,6 +279,7 @@
 			children = (
 				217DA73C26CC96A30039A145 /* MyWorld.swift */,
 				2106253626EDA07C000210E2 /* MyWorldViewModel.swift */,
+				21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */,
 			);
 			path = "My World";
 			sourceTree = "<group>";

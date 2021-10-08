@@ -20,6 +20,7 @@ class DataService {
     
     
     static let instance = DataService()
+    private init() {}
     
     private var REF_POST = DB_BASE.collection("posts")
     private var REF_USERS = DB_BASE.collection("users")

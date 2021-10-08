@@ -11,15 +11,19 @@ import SDWebImageSwiftUI
 struct MissionDetails: View {
     
     @Environment(\.presentationMode) var presentationMode
+    @State private var showMap: Bool = false
+    @State private var buttonTile: String = "Post Spot"
+    @State private var buttonColor: Color = Color.cx_green
+    var parent: MissionsView?
     var captions: [String] = []
     
-    init(mission: Mission) {
+    init(mission: Mission, parent: MissionsView) {
         self.mission = mission
         let name = "Mission is to \(mission.title)"
         let reward = "Reward is \(mission.bounty) StreetCred"
         let owner = "Posted by \(mission.owner)"
-        
         captions.append(contentsOf: [name, reward, owner])
+        self.parent = parent
     }
     
     var mission: Mission
@@ -90,11 +94,16 @@ struct MissionDetails: View {
             
             VStack(spacing: 20) {
                 Button(action: {
-
+//
+                    parent?.selectedTab = 2
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
                 }, label: {
-                    Text("Post Spot")
+                    Text(buttonTile)
                         .padding()
-                        .background(Color.cx_green)
+                        .frame(maxWidth: .infinity)
+                        .background(buttonColor)
                         .foregroundColor(.black)
                         .cornerRadius(8)
                 })
@@ -102,7 +111,7 @@ struct MissionDetails: View {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
                 }, label: {
-                    Text("Maybe later")
+                    Text("Dismiss")
                         .foregroundColor(.red)
                 })
             }
@@ -115,14 +124,16 @@ struct MissionDetails: View {
         .foregroundColor(.white)
         .background(Color.black)
         .edgesIgnoringSafeArea(.all)
+        
     }
 }
 
 struct MissionDetails_Previews: PreviewProvider {
     
     static let missionOne = Mission(title: "Post a Secret Spot", imageurl: "explore", description: "Help the scout community grow by posting a secret spot. Secret Spots are cool places not known by most people", world: "ScoutLife", region: "United States", bounty: 5, owner: "CityXcape", ownerImageUrl: "cx")
-    
+    @State static var selection: Int = 0
+
     static var previews: some View {
-        MissionDetails(mission: missionOne )
+        MissionDetails(mission: missionOne, parent: MissionsView(selectedTab: $selection))
     }
 }

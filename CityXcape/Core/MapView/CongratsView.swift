@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Shimmer
 
 struct CongratsView: View {
     
@@ -34,7 +33,6 @@ struct CongratsView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: geo.size.width, height: geo.size.width / 1.8)
-                        .shimmering()
                     
                     Text("You posted a Secret Spot")
                         .font(.caption)
@@ -44,7 +42,9 @@ struct CongratsView: View {
                         .frame(maxHeight: geo.size.height / 9)
                     
                     Button(action: {
-                        presentationMode.wrappedValue.dismiss()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            presentationMode.wrappedValue.dismiss()
+                        }
                     }, label: {
                         HStack {
                             Image(Icon.check.rawValue)

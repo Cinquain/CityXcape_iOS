@@ -179,7 +179,7 @@ struct SpotDetailsView: View {
         }
     }
     
-    func deletePost() {
+     func deletePost() {
         guard let postId = spot?.postId else {return}
         
         DataService.instance.deleteSecretSpot(spotId: postId) { success in

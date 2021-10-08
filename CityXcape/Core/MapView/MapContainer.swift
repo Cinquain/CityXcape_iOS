@@ -10,11 +10,13 @@ import MapKit
 import UIKit
 
 struct MapContainer: View {
-    
+    @Environment(\.presentationMode) var presentationMode
+
     @ObservedObject var vm = MapSearchViewModel()
     @State private var showForm: Bool = false
     @State private var opacity: Double = 0
     @State private var refresh: Bool = false
+    @State var isMission: Bool
     
     @State var mapItem: MKMapItem = MKMapItem()
     
@@ -112,11 +114,14 @@ struct MapContainer: View {
         .sheet(isPresented: $showForm, onDismiss: {
             withAnimation {
                 opacity = 0
+                self.isMission = false
             }
         }, content: {
             CreateSpotFormView(opacity: $opacity, mapItem: mapItem)
         })
        
+      
+        
 
     }
     
@@ -241,7 +246,7 @@ struct MapView: UIViewRepresentable {
 
 struct MapView_Previews: PreviewProvider {
     static var previews: some View {
-        MapContainer()
+        MapContainer(isMission: false)
             .colorScheme(.dark)
     }
 }

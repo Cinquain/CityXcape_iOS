@@ -17,6 +17,8 @@ class AuthService {
     
     
     static let instance = AuthService()
+    private init() {}
+    
     private var REF_USERS = DB_BASE.collection("users")
     
     func loginUserToFirebase(credential: AuthCredential, completion: @escaping (_ providerId: String?, _ error: Bool, _ isNewUser: Bool?, _ userId: String?) -> ()) {

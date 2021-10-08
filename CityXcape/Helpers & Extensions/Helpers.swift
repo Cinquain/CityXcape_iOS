@@ -65,7 +65,7 @@ enum Icon: String {
     case dot = "dot"
     case save = "save"
     case pass = "pass"
-    case gear = "gears"
+    case gear = "Gears"
     case logo = "logo"
     case check = "checkmark"
     case globe = "globe"

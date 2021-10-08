@@ -18,7 +18,7 @@ struct MissionRowHeader: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(height: 25)
                 .padding(.leading, 40)
-            Text("Mission")
+            Text("Missions")
                 .fontWeight(.thin)
 
             Spacer()

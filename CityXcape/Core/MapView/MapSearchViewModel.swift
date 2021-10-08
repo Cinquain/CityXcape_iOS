@@ -21,6 +21,7 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     @Published var selectedMapItem: MKMapItem?
     @Published var keyboardHeight: CGFloat = 0
     @Published var currentLocation: CLLocationCoordinate2D?
+    @Published var spotComplete: Bool = false
     
     private var region: MKCoordinateRegion?
     
@@ -73,6 +74,7 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         NotificationCenter.default.addObserver(forName: Notification.Name(rawValue: "completeSpot"), object: nil, queue: .main) { [weak self] _ in
             
             self?.searchQuery = ""
+            self?.spotComplete = true
         }
     }
         
@@ -147,4 +149,5 @@ class LocationService: NSObject, CLLocationManagerDelegate {
     
     let manager = CLLocationManager()
     
+    private override init() {}
 }

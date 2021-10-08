@@ -36,7 +36,7 @@ struct StreetPass: View {
             GeometryReader { geo in
                 VStack(alignment: .leading) {
                     Text("StreetPass".uppercased())
-                        .foregroundColor(.accent)
+                        .foregroundColor(.white)
                         .fontWeight(.thin)
                         .tracking(5)
                         .font(.title)
@@ -79,6 +79,7 @@ struct StreetPass: View {
                         }, label: {
                             Image(Icon.gear.rawValue)
                                 .resizable()
+                                .foregroundColor(.white)
                                 .frame(width: 50, height: 50)
                                 .shadow(color: .black, radius: 10, x: 0.0, y: 0.0)
                         })
