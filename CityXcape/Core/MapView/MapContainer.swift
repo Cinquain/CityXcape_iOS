@@ -32,10 +32,10 @@ struct MapContainer: View {
                         UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.endEditing(true)
                         opacity = 0
                     })
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(3)
-                        .foregroundColor(.black)
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(3)
+                    .foregroundColor(.black)
                     .accentColor(.black)
                 }
                 .padding()

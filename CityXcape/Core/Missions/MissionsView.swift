@@ -15,7 +15,7 @@ struct MissionsView: View {
     @State private var currentIndex: Int = 0
     @Binding var selectedTab: Int 
     @StateObject var vm: MissionViewModel = MissionViewModel()
-
+    
     var body: some View {
         
         let captions: [String] = [
@@ -70,6 +70,11 @@ struct MissionsView: View {
             if let mission = vm.standardMissions[currentIndex] {
                 MissionDetails(mission: mission, parent: self)
             }
+        })
+        .fullScreenCover(isPresented: $vm.hasUserMissions, onDismiss: {
+            selectedTab = 0
+        }, content: {
+            SwipeView()
         })
     }
 }

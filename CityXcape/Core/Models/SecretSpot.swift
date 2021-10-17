@@ -10,7 +10,7 @@ import MapKit
 import CoreLocation
 
 struct SecretSpot:  Hashable, Codable {
-    
+   
     var postId: String
     let spotName: String
     let imageUrl: String
@@ -25,6 +25,7 @@ struct SecretSpot:  Hashable, Codable {
     let viewCount: Int
     let price: Int
     let saveCounts: Int
+    let isPublic: Bool
 
     let description: String?
     
@@ -51,7 +52,9 @@ struct SecretSpot:  Hashable, Codable {
         case viewCount = "view_count"
         case price = "price"
         case world = "world"
+        case isPublic = "public"
     }
+    
     
     var distanceFromUser: Double {
         let manager = LocationService.instance.manager

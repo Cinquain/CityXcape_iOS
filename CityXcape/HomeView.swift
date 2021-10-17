@@ -19,14 +19,6 @@ struct HomeView: View {
     var body: some View {
        
         TabView(selection: $selectedTab) {
-            
-            MissionsView(selectedTab: $selectedTab)
-                    .tabItem {
-                        Image(Icon.tabItem0.rawValue)
-                            .renderingMode(.template)
-                        Text(Labels.tab0.rawValue)
-                    }
-                    .tag(0)
     
                 MyWorld()
                 .tabItem {
@@ -34,7 +26,15 @@ struct HomeView: View {
                         .renderingMode(.template)
                     Text(Labels.tab1.rawValue)
                 }
-                .tag(1)
+                .tag(0)
+            
+            MissionsView(selectedTab: $selectedTab)
+                    .tabItem {
+                        Image(Icon.tabItem0.rawValue)
+                            .renderingMode(.template)
+                        Text(Labels.tab0.rawValue)
+                    }
+                    .tag(1)
             
             MapContainer(isMission: false)
                 .edgesIgnoringSafeArea(.top)

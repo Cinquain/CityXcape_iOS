@@ -25,10 +25,11 @@ class DataService {
     private var REF_POST = DB_BASE.collection("posts")
     private var REF_USERS = DB_BASE.collection("users")
     private var REF_REPORTS = DB_BASE.collection("reports")
-    private var REF_SAVES = DB_BASE.collection("saves")
+    private var REF_WORLD = DB_BASE.collection("world")
+    
     //MARK: CREATE FUNCTIONS
     
-    func uploadSecretSpot(spotName: String, description: String, image: UIImage, world: String, mapItem: MKMapItem, isPrivate: Bool, completion: @escaping (_ success: Bool) -> ()) {
+    func uploadSecretSpot(spotName: String, description: String, image: UIImage, world: String, mapItem: MKMapItem, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
         
         let document = REF_POST.document()
         let spotId = document.documentID
@@ -46,9 +47,7 @@ class DataService {
             return
         }
         
-        let userWorldRef = REF_USERS.document(uid).collection("world").document(spotId)
-   
-
+        let userWorldRef = REF_WORLD.document("private").collection(uid).document(spotId)
         ImageManager.instance.uploadSecretSpotImage(image: image, postId: spotId) { (urlString) in
             
             if let downloadUrl = urlString {
@@ -71,35 +70,95 @@ class DataService {
                     SecretSpotField.city: city,
                     SecretSpotField.zipcode: zipCode,
                     SecretSpotField.world: world,
+                    SecretSpotField.isPublic: isPublic,
                     SecretSpotField.dateCreated: FieldValue.serverTimestamp()
                 ]
                 
-                userWorldRef.setData(spotData)
-                completion(true)
-                
-                if isPrivate {
+                document.setData(spotData) { (error) in
+                    if let err = error {
+                        print("Error uploading secret spot to database", err.localizedDescription)
+                        completion(false)
+                        return
+                    } else {
+                        
+                    print("Successfully saved secret spots to public world")
+                    let savedData: [String: Any] =
+                        ["savedOn": FieldValue.serverTimestamp()]
+                    userWorldRef.setData(savedData)
+                    completion(true)
                     return
                 }
-                if !isPrivate {
-                    document.setData(spotData) { (error) in
-                        if let err = error {
-                            print("Error uploading secret spot to database", err.localizedDescription)
-                            completion(false)
-                            return
-                        } else {
-                        completion(true)
-                        print("Successfully saved secret spots to public world")
-                        return
-                    }
-                    
-                    }
+                
                 }
-            } else {
-                print("Error uploading spot photo to Firestore")
+        }
+    }
+        
+}
+    
+    func saveToUserWorld(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
+        
+        //Increment view and save count by one
+        let increment: Int64 = 1
+        let data: [String: Any] = [
+            SecretSpotField.viewCount: FieldValue.increment(increment),
+            SecretSpotField.saveCount : FieldValue.increment(increment)
+        ]
+        REF_POST.document(spot.postId).updateData(data)
+        
+
+        //Save post id in user's world
+        guard let uid = userId else {return}
+        
+        //Add user to saved collection in spot
+        let savedData: [String: Any] =
+            ["savedOn": FieldValue.serverTimestamp()]
+        REF_WORLD.document("private").collection(uid).document(spot.postId).setData(savedData)
+        REF_POST.document(spot.postId).collection("savedBy").document(uid).setData(savedData) { error in
+            if let error = error {
+                print("Error saving user to saved collection of secret spot")
                 completion(false)
                 return
             }
+            print("Successful saved user to saved collection of secret spot")
+            completion(true)
         }
+        
+    }
+    
+    func dismissCard(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
+      
+        //save list on local storage
+        let spotId = spot.postId
+        if var passedSpots = UserDefaults.standard.value(forKey: "passedSpots") as? [String] {
+            passedSpots.append(spotId)
+        } else {
+            let passedSpots: [String] = [spotId]
+            UserDefaults.standard.set(passedSpots, forKey: "passedSpots")
+        }
+        
+        //save list of cards dismissed
+        let passeddData: [String: Any] =
+            ["passedOn": FieldValue.serverTimestamp()]
+        guard let uid = userId else {return}
+        REF_WORLD.document("dismissed").collection(uid).document(spotId).setData(passeddData)
+        
+        //Increment view by one
+        let increment: Int64 = 1
+        let data: [String: Any] = [
+            SecretSpotField.viewCount: FieldValue.increment(increment)
+        ]
+        
+        REF_POST.document(spot.postId).updateData(data) { error in
+            if let error = error {
+                print("There was an error updating view card while dismissing card")
+                completion(false)
+                return
+            }
+            
+            print("Successfully updated view count while dismissing card")
+            completion(true)
+        }
+        
     }
     
     func uploadReports(reason: String, postId: String, completion: @escaping (_ success: Bool) -> ()) {
@@ -129,12 +188,87 @@ class DataService {
     
     //MARK: GET FUNCTIONS
     
-    func downloadSavedPostForUser(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
-        REF_USERS.document(userId).collection("world").addSnapshotListener { [self] (querysnapshot, error) in
-            completion(self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot))
-        }
-    }
+//    func downloadSavedPostForUser(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
+//        REF_USERS.document(userId).collection("world").addSnapshotListener { [self] (querysnapshot, error) in
+//            completion(self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot))
+//        }
+//    }
     
+    
+    func getSpotsFromWorld(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
+        REF_WORLD.document("private").collection(userId).getDocuments { snapshot, error in
+            var secretSpots = [SecretSpot]()
+
+            if let error = error {
+                print("Error fetching the secret spots from user's branch", error.localizedDescription)
+                return
+            }
+
+
+            if let snapshot = snapshot, snapshot.documents.count > 0 {
+                print("Found Secret Spots in User's World")
+                snapshot.documents.forEach { document in
+                    print("Found document")
+                    let spotId = document.documentID
+                    self.REF_POST.document(spotId).getDocument { document, error in
+                        let data = document?.data()
+                        if
+                        let name = data?[SecretSpotField.spotName] as? String,
+                        let imageUrl = data?[SecretSpotField.spotImageUrl] as? String,
+                        let longitude = data?[SecretSpotField.longitude] as? Double,
+                        let latitude = data?[SecretSpotField.latitude] as? Double,
+                        let description = data?[SecretSpotField.description] as? String,
+                        let city = data?[SecretSpotField.city] as? String,
+                        let dateCreated = data?[SecretSpotField.dateCreated] as? Timestamp,
+                        let ownerId = data?[SecretSpotField.ownerId] as? String,
+                        let postId = data?[SecretSpotField.spotId] as? String,
+                        let ownerDisplayName = data?[SecretSpotField.ownerDisplayName] as? String,
+                        let ownerImageUrl = data?[SecretSpotField.ownerImageUrl] as? String,
+                        let address = data?[SecretSpotField.address] as? String,
+                        let zipcode = data?[SecretSpotField.zipcode] as? Int,
+                        let saveCounts = data?[SecretSpotField.saveCount] as? Int,
+                        let viewCount = data?[SecretSpotField.viewCount] as? Int,
+                        let isPublic = data?[SecretSpotField.isPublic] as? Bool,
+                        let world = data?[SecretSpotField.world] as? String,
+                        let price = data?[SecretSpotField.price] as? Int {
+                            let date = dateCreated.dateValue()
+
+                            let secretSpot = SecretSpot(postId: postId, spotName: name, imageUrl: imageUrl, longitude: longitude, latitude: latitude, address: address, city: city, zipcode: zipcode, world: world, dateCreated: date, viewCount: viewCount, price: price, saveCounts: saveCounts, isPublic: isPublic, description: description, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
+                            secretSpots.append(secretSpot)
+//
+                        }
+                        
+                        DispatchQueue.main.async {
+                            print("Placing array in completion")
+                            print(secretSpots)
+                            completion(secretSpots)
+                        }
+                }
+            }
+               
+            } else {
+                completion([])
+                print("No secret spot found in user's private world")
+            }
+    }
+}
+    
+    func getNewSecretSpots(lastSecretSpot: String?, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
+        
+        guard let uid = userId else {return}
+        
+        REF_POST
+            .order(by: SecretSpotField.dateCreated, descending: true)
+            .start(after: [lastSecretSpot ?? ""])
+            .getDocuments { querysnapshot, error in
+                let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
+                let filteredResults = results.filter({$0.isPublic == true && $0.ownerId != uid})
+                completion(filteredResults)
+            }
+        
+//            .limit(to: 12)
+    }
+
     
     
     func getSecretSpotsFromSnapshot(querysnapshot: QuerySnapshot?) -> [SecretSpot] {
@@ -156,6 +290,7 @@ class DataService {
                 let ownerImageUrl = document.get(SecretSpotField.ownerImageUrl) as? String,
                 let address = document.get(SecretSpotField.address) as? String,
                 let zipcode = document.get(SecretSpotField.zipcode) as? Int,
+                let isPublic = document.get(SecretSpotField.isPublic) as? Bool,
                 let saveCounts = document.get(SecretSpotField.saveCount) as? Int,
                 let viewCount = document.get(SecretSpotField.viewCount) as? Int,
                 let world = document.get(SecretSpotField.world) as? String,
@@ -164,7 +299,7 @@ class DataService {
                     let postId = document.documentID
                     let date = dateCreated.dateValue()
 
-                    let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrl: imageUrl, longitude: longitude, latitude: latitude, address: address, city: city, zipcode: zipcode, world: world, dateCreated: date, viewCount: viewCount, price: price, saveCounts: saveCounts, description: description, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
+                    let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrl: imageUrl, longitude: longitude, latitude: latitude, address: address, city: city, zipcode: zipcode, world: world, dateCreated: date, viewCount: viewCount, price: price, saveCounts: saveCounts, isPublic: isPublic, description: description, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
                     secretSpots.append(secretSpot)
                 }
             }
@@ -192,15 +327,20 @@ class DataService {
         
         REF_USERS.document(userId).setData([UserField.displayName : displayName], merge: true)
     }
-    
+//
     func updateDisplayNameOnPosts(userId: String, displayName: String) {
-        
-        downloadSavedPostForUser(userId: userId) { [weak self] secretSpots in
-            
-            for spot in secretSpots {
-                self?.updatePostDisplayName(postID: spot.postId, displayName: displayName)
+
+        getSpotsFromWorld(userId: userId) { secretSpots in
+            let filteredSpots = secretSpots.filter({$0.ownerId == userId})
+
+            for spot in filteredSpots {
+                self.updatePostDisplayName(postID: spot.postId, displayName: displayName)
             }
+
+
         }
+
+
     }
     
     private func updatePostDisplayName(postID: String, displayName: String) {
@@ -210,7 +350,6 @@ class DataService {
         ]
         
         REF_POST.document(postID).updateData(data)
-        REF_USERS.document(uid).collection("world").document(postID).updateData(data)
     }
     
      func updatePostProfileImageUrl(profileUrl: String) {
@@ -218,16 +357,19 @@ class DataService {
         let data: [String: Any] = [
             SecretSpotField.ownerImageUrl: profileUrl
         ]
-        
-        downloadSavedPostForUser(userId: uid) { [weak self] secretspots in
-            
-            for spot in secretspots {
+
+        getSpotsFromWorld(userId: uid) { secretspots in
+
+            let filteredSpots = secretspots.filter({$0.ownerId == uid})
+
+            filteredSpots.forEach { [weak self] spot in
+
                 self?.REF_POST.document(spot.postId).updateData(data)
-                self?.REF_USERS.document(uid).collection("world").document(spot.postId).updateData(data)
             }
         }
-        
+
     }
+//
     
     //MARK: DELETE FUNCTIONS
     

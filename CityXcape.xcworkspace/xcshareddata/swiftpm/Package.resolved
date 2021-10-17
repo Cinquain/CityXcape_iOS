@@ -29,6 +29,24 @@
         }
       },
       {
+        "package": "SnapshotTesting",
+        "repositoryURL": "https://github.com/pointfreeco/swift-snapshot-testing.git",
+        "state": {
+          "branch": null,
+          "revision": "f8a9c997c3c1dab4e216a8ec9014e23144cbab37",
+          "version": "1.9.0"
+        }
+      },
+      {
+        "package": "CardStack",
+        "repositoryURL": "https://github.com/dadalar/SwiftUI-CardStackView.git",
+        "state": {
+          "branch": null,
+          "revision": "30f1b5d72a9c9e200080590e10eec852073487c1",
+          "version": "0.0.5"
+        }
+      },
+      {
         "package": "SwiftUI-Shimmer",
         "repositoryURL": "https://github.com/markiv/SwiftUI-Shimmer",
         "state": {

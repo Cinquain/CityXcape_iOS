@@ -11,20 +11,26 @@ import SwiftUI
 class MyWorldViewModel: ObservableObject {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     
-    @Published var secretspots: [SecretSpot] = [SecretSpot]()
+    @Published var secretspots: [SecretSpot] = []
     
     init() {
         guard let userId = userId else {return}
         self.getSavedSpotsForUser(uid: userId)
+        
     }
     
     
     func getSavedSpotsForUser(uid: String) {
         
-        DataService.instance.downloadSavedPostForUser(userId: uid) { [weak self] returnedSpots in
-            
+        DataService.instance.getSpotsFromWorld(userId: uid) { [weak self] returnedSpots in
+            if returnedSpots.isEmpty {
+
+                print("No Secret Spots in array")
+            }
             self?.secretspots = returnedSpots
+            print(returnedSpots)
         }
-        
     }
+    
+    
 }

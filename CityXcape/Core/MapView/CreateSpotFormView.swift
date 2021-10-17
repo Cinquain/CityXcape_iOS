@@ -196,6 +196,7 @@ struct CreateSpotFormView: View {
                     }
                 }, content: {
                     CongratsView()
+                    
                 })
                 .alert(isPresented: $showAlert, content: {
                     Alert(title: Text("Error posting Secret Spot 😤"))
@@ -225,7 +226,7 @@ struct CreateSpotFormView: View {
     
     fileprivate func postSecretSpot() {
 
-        DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, world: world, mapItem: mapItem, isPrivate: isPrivate) { (success) in
+        DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, world: world, mapItem: mapItem, isPublic: isPrivate) { (success) in
             
             if success {
                 presentCompletion.toggle()

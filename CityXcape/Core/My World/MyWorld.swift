@@ -13,7 +13,7 @@ struct MyWorld: View {
     
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     private var cancellables = Set<AnyCancellable>()
-    @ObservedObject var vm = MyWorldViewModel()
+    @StateObject var vm = MyWorldViewModel()
   
     @State private var currentIndex = 0
     @State private var isPresented: Bool = false

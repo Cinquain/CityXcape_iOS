@@ -39,6 +39,7 @@ struct SecretSpotField {
     static let zipcode = "zip_code"
     static let verified = "verified"
     static let world = "world"
+    static let isPublic = "isPublic"
 }
 
 struct DatabaseReportField {
