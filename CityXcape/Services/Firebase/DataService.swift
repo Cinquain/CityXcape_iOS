@@ -17,7 +17,9 @@ class DataService {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
-    
+    @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
+
+
     
     static let instance = DataService()
     private init() {}
@@ -97,6 +99,13 @@ class DataService {
     
     func saveToUserWorld(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
         
+        let spotId = spot.postId
+        //Save swipe to history
+        let historyData: [String: Any] =
+            ["savedOn": FieldValue.serverTimestamp()]
+        guard let uid = userId else {return}
+        REF_WORLD.document("history").collection(uid).document(spotId).setData(historyData)
+        
         //Increment view and save count by one
         let increment: Int64 = 1
         let data: [String: Any] = [
@@ -108,12 +117,12 @@ class DataService {
 
         //Save post id in user's world
         guard let uid = userId else {return}
-        
-        //Add user to saved collection in spot
         let savedData: [String: Any] =
             ["savedOn": FieldValue.serverTimestamp()]
-        REF_WORLD.document("private").collection(uid).document(spot.postId).setData(savedData)
-        REF_POST.document(spot.postId).collection("savedBy").document(uid).setData(savedData) { error in
+        REF_WORLD.document("private").collection(uid).document(spotId).setData(savedData)
+
+        //Add user to saved collection in spot
+        REF_POST.document(spotId).collection("savedBy").document(uid).setData(savedData) { error in
             if let error = error {
                 print("Error saving user to saved collection of secret spot")
                 completion(false)
@@ -123,24 +132,32 @@ class DataService {
             completion(true)
         }
         
+        //Decrement buyer wallet
+        let decrement: Int64 = -1
+        let walletData : [String: Any] = [
+            UserField.streetCred : FieldValue.increment(decrement)
+        ]
+        AuthService.instance.updateUserField(uid: uid, data: walletData)
+        
+        //Increment owner wallet
+        let ownerId = spot.ownerId
+        let ownerWalletData: [String: Any] = [
+            UserField.streetCred : FieldValue.increment(increment)
+        ]
+        AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
+        
     }
     
     func dismissCard(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
       
-        //save list on local storage
         let spotId = spot.postId
-        if var passedSpots = UserDefaults.standard.value(forKey: "passedSpots") as? [String] {
-            passedSpots.append(spotId)
-        } else {
-            let passedSpots: [String] = [spotId]
-            UserDefaults.standard.set(passedSpots, forKey: "passedSpots")
-        }
         
-        //save list of cards dismissed
-        let passeddData: [String: Any] =
+        //save swipe to history
+        let historyData: [String: Any] =
             ["passedOn": FieldValue.serverTimestamp()]
         guard let uid = userId else {return}
-        REF_WORLD.document("dismissed").collection(uid).document(spotId).setData(passeddData)
+        REF_WORLD.document("history").collection(uid).document(spotId).setData(historyData)
+        
         
         //Increment view by one
         let increment: Int64 = 1
@@ -186,6 +203,7 @@ class DataService {
     }
     
     
+    
     //MARK: GET FUNCTIONS
     
 //    func downloadSavedPostForUser(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
@@ -196,7 +214,7 @@ class DataService {
     
     
     func getSpotsFromWorld(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
-        REF_WORLD.document("private").collection(userId).getDocuments { snapshot, error in
+        REF_WORLD.document("private").collection(userId).addSnapshotListener { snapshot, error in
             var secretSpots = [SecretSpot]()
 
             if let error = error {
@@ -239,8 +257,6 @@ class DataService {
                         }
                         
                         DispatchQueue.main.async {
-                            print("Placing array in completion")
-                            print(secretSpots)
                             completion(secretSpots)
                         }
                 }
@@ -254,18 +270,24 @@ class DataService {
 }
     
     func getNewSecretSpots(lastSecretSpot: String?, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
-        
         guard let uid = userId else {return}
+        var history : [String] = []
+        
+        getUserHistory { returnedHistory in
+            history = returnedHistory
+            print("printing history inside new spots", history)
+        }
         
         REF_POST
             .order(by: SecretSpotField.dateCreated, descending: true)
-            .start(after: [lastSecretSpot ?? ""])
             .getDocuments { querysnapshot, error in
                 let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
-                let filteredResults = results.filter({$0.isPublic == true && $0.ownerId != uid})
+                let filteredResults = results.filter({$0.isPublic == true
+                                                        && $0.ownerId != uid
+                                                        && !history.contains($0.postId)})
                 completion(filteredResults)
             }
-        
+            
 //            .limit(to: 12)
     }
 
@@ -311,6 +333,23 @@ class DataService {
     }
     
     
+    func getUserHistory(completion: @escaping ([String]) -> ())  {
+        var history: [String] = []
+        guard let uid = userId else { return }
+           
+        REF_WORLD.document("history").collection(uid).getDocuments { querysnapshot, error in
+            
+            if let error = error {
+                print("Erorr fetching user spots", error.localizedDescription)
+            }
+            querysnapshot?.documents.forEach({ document in
+                history.append(document.documentID)
+            })
+            print("printing history inside function", history)
+            completion(history)
+        }
+        
+    }
     //MARK: UPDATE FUNCTIONS
     
     

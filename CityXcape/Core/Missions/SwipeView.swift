@@ -9,6 +9,8 @@ import SwiftUI
 import CardStack
 
 struct SwipeView: View {
+    
+    @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @Environment(\.presentationMode) var presentationMode
 
@@ -20,7 +22,9 @@ struct SwipeView: View {
     @State private var passed: Bool = false
     @State private var saved: Bool = false
     @State private var complete: Bool = false
-    private var threshold: CGFloat = 155
+    @State private var showAlert: Bool = false
+    
+    
     var body: some View {
         let captions: [String] = [
             "Save the spots you want to visit",
@@ -72,11 +76,25 @@ struct SwipeView: View {
                 }
                 .offset(x: 40)
             
+            Button(action: {
+                self.presentationMode.wrappedValue.dismiss()
+            }, label: {
+                Image(systemName: "xmark.seal")
+                    .font(.largeTitle)
+            })
+            .padding(.bottom, 20)
+            
             Spacer()
             
         }
         .background(Color.dark_grey)
         .edgesIgnoringSafeArea(.all)
+        .alert(isPresented: $showAlert, content: {
+            guard let wallet = wallet else {return Alert(title: Text("Error Finding Wallet"))}
+            let title = Text("Insufficient StreetCred")
+            let message = Text("Your wallet has a balance of \(wallet) StreetCred. \n Post a secret spot to earn more streetCred")
+            return Alert(title: title, message: message, dismissButton: .default(Text("Ok")))
+        })
     }
     
     
@@ -97,35 +115,53 @@ struct SwipeView: View {
     }
     
     fileprivate func saveCardToUserWorld(spot: SecretSpot) {
-        print("Saving to user's world")
-        saved = true
+        guard let wallet = wallet else {return}
         
-        guard let index = vm.userMissions.firstIndex(of: spot) else {return}
-        if index  == vm.userMissions.count - 1 {
-            opacity = 1
-            complete.toggle()
-            vm.hasUserMissions = false
-            vm.lastSecretSpot = vm.userMissions.last?.postId ?? ""
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                self.presentationMode.wrappedValue.dismiss()
-            }
-        }
-      
-        DataService.instance.saveToUserWorld(spot: spot) { success in
-            
-            if !success {
-                print("Error saving to user's world")
+        if wallet > spot.price {
+            print("Saving to user's world")
+            saved = true
+            //Save to DB
+            DataService.instance.saveToUserWorld(spot: spot) { success in
+                
+                if !success {
+                    print("Error saving to user's world")
+                    saved.toggle()
+                    return
+                }
+                print("successfully saved spot to user's world")
                 saved.toggle()
-                return
             }
             
-            saved.toggle()
+            //Check if spot is last, if true dismiss view
+            guard let index = vm.userMissions.firstIndex(of: spot) else {return}
+            if index  == vm.userMissions.count - 1 {
+                opacity = 1
+                complete.toggle()
+                vm.hasUserMissions = false
+                //Use the last secret spot to start the next query
+                vm.lastSecretSpot = vm.userMissions.last?.postId ?? ""
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
+        } else {
+            showAlert.toggle()
         }
     }
     
     fileprivate func dismissCard(spot: SecretSpot) {
         print("Removing from user's world")
         passed = true
+        
+        DataService.instance.dismissCard(spot: spot) { success in
+            if !success {
+                print("Error dismissing card")
+                passed.toggle()
+                return
+            }
+            print("successfully saved dismissed card to DB")
+            passed.toggle()
+        }
         
         guard let index = vm.userMissions.firstIndex(of: spot) else {return}
         if index  == vm.userMissions.count - 1{
@@ -137,19 +173,10 @@ struct SwipeView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }
         }
-      
-        DataService.instance.dismissCard(spot: spot) { success in
-            if !success {
-                print("Error dismissing card")
-                passed.toggle()
-                return
-            }
-            
-            passed.toggle()
-            
-        }
         
     }
+    
+   
     
     
 

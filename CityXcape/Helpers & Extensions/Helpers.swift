@@ -17,6 +17,7 @@ struct UserField {
     static let bio = "bio"
     static let dataCreated = "dateCreated"
     static let profileImageUrl = "profileImageUrl"
+    static let streetCred = "streetCred"
 }
 
 struct SecretSpotField {
@@ -58,6 +59,7 @@ struct CurrentUserDefaults {
     static let userId = "userId"
     static let profileUrl = "profileImageUrl"
     static let userLocation = "userLocation"
+    static let wallet = "wallet"
     
 }
 

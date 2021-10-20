@@ -12,6 +12,8 @@ struct StreetPass: View {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.bio) var bio: String?
+    @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
+
 
     @State private var username: String = ""
     @State private var userbio: String = ""
@@ -127,7 +129,7 @@ struct StreetPass: View {
     
     func getAdditionalProfileInfo() {
         guard let uid = userId else {return}
-        AuthService.instance.getUserInfo(forUserID: uid) { username, bio, profileUrl in
+        AuthService.instance.getUserInfo(forUserID: uid) { username, bio, streetcred, profileUrl in
             
             if let name = username {
                 self.username = name
@@ -141,8 +143,8 @@ struct StreetPass: View {
                 self.profileUrl = url
             }
             
-            if let userBio = bio {
-                self.userbio = userbio
+            if let streetCred = streetcred {
+                self.wallet = streetCred
             }
             
         }

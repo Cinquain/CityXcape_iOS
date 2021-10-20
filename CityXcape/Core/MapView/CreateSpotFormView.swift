@@ -18,7 +18,7 @@ struct CreateSpotFormView: View {
     @State private var world: String = ""
     @State private var showPicker: Bool = false
     @State private var addedImage: Bool = false
-    @State private var isPrivate: Bool = false
+    @State private var isPublic: Bool = true
     @State private var presentPopover: Bool = false
     @Binding var opacity: Double
     @State private var presentCompletion: Bool = false
@@ -77,9 +77,9 @@ struct CreateSpotFormView: View {
                     
                     HStack {
                         Button(action: {
-                            isPrivate.toggle()
+                            isPublic.toggle()
                         }, label: {
-                            if !isPrivate {
+                            if isPublic {
                                 Image("globe")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
@@ -92,7 +92,7 @@ struct CreateSpotFormView: View {
                          
                         })
                         
-                        if !isPrivate {
+                        if isPublic {
                             TextField("What world is this visible to?", text: $world) {
                                converToHashTag()
                             }
@@ -217,7 +217,7 @@ struct CreateSpotFormView: View {
         if spotName.count > 4
             && addedImage == true
             && description.count > 10
-            && world.count > 4 || isPrivate {
+            && world.count > 4 || isPublic {
             return true
         } else {
             return false
@@ -226,7 +226,7 @@ struct CreateSpotFormView: View {
     
     fileprivate func postSecretSpot() {
 
-        DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, world: world, mapItem: mapItem, isPublic: isPrivate) { (success) in
+        DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, world: world, mapItem: mapItem, isPublic: isPublic) { (success) in
             
             if success {
                 presentCompletion.toggle()

@@ -54,9 +54,10 @@ class AuthService {
     
     func loginUserToApp(userId: String, completion: @escaping (_ success: Bool) -> ()) {
         
-        getUserInfo(forUserID: userId) { (name, bio, profileUrl) in
+        getUserInfo(forUserID: userId) { (name, bio, streetcred, profileUrl) in
             if let name = name,
                let bio = bio,
+               let streetcred = streetcred,
                let profileurl = profileUrl {
                 print("Success getting user info while logging in")
                 completion(true)
@@ -66,6 +67,7 @@ class AuthService {
                     UserDefaults.standard.set(userId, forKey: CurrentUserDefaults.userId)
                     UserDefaults.standard.set(name, forKey: CurrentUserDefaults.displayName)
                     UserDefaults.standard.set(bio, forKey: CurrentUserDefaults.bio)
+                    UserDefaults.standard.set(streetcred, forKey: CurrentUserDefaults.wallet)
                     UserDefaults.standard.set(profileurl, forKey: CurrentUserDefaults.profileUrl)
                     
                 }
@@ -116,6 +118,7 @@ class AuthService {
                 UserField.email: email,
                 UserField.providerId: providerId,
                 UserField.provider: userId,
+                UserField.streetCred: 10,
                 UserField.bio: "",
                 UserField.profileImageUrl: profileImageUrl,
                 UserField.dataCreated: FieldValue.serverTimestamp()
@@ -154,19 +157,20 @@ class AuthService {
         }
     }
     
-    func getUserInfo(forUserID userId: String, completion: @escaping (_ name: String?, _ bio: String?, _ imageUrl: String?) -> ()) {
+    func getUserInfo(forUserID userId: String, completion: @escaping (_ name: String?, _ bio: String?,_ streetcred: Int?, _ imageUrl: String?) -> ()) {
         
         REF_USERS.document(userId).getDocument { (snapshot, error) in
                         
             if let document = snapshot,
                let name = document.get(UserField.displayName) as? String,
                let bio = document.get(UserField.bio) as? String,
+               let streetCred = document.get(UserField.streetCred) as? Int,
                let imageUrl = document.get(UserField.profileImageUrl) as? String {
-                completion(name, bio, imageUrl)
+                completion(name, bio, streetCred, imageUrl)
                 return
             } else {
                 print("Error getting user info", error?.localizedDescription)
-                completion(nil, nil, nil)
+                completion(nil, nil,nil, nil)
                 return
             }
                
@@ -191,6 +195,10 @@ class AuthService {
                 return
             }
         }
+    }
+    
+    func updateUserField(uid: String, data: [String: Any]) {
+        REF_USERS.document(uid).updateData(data)
     }
     
     func updateUserBio(userId: String, bio: String, completion: @escaping (_ success: Bool) -> ()) {

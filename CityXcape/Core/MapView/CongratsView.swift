@@ -29,14 +29,20 @@ struct CongratsView: View {
                         .font(.title)
                         .fontWeight(.thin)
                     
+                    Text("You posted a Secret Spot")
+                        .font(.caption)
+                        .fontWeight(.thin)
+                    
                     Image(Icon.pin.rawValue)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: geo.size.width, height: geo.size.width / 1.8)
+                  
                     
-                    Text("You posted a Secret Spot")
-                        .font(.caption)
+                    Text("You earn StreetCred as people save your spot")
+                        .font(.subheadline)
                         .fontWeight(.thin)
+                        .shimmering()
 
                     Spacer()
                         .frame(maxHeight: geo.size.height / 9)
