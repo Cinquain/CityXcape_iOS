@@ -12,6 +12,7 @@ class MyWorldViewModel: ObservableObject {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     
     @Published var secretspots: [SecretSpot] = []
+    @Published var showOnboarding: Bool = false
     
     init() {
         guard let userId = userId else {return}
@@ -26,6 +27,7 @@ class MyWorldViewModel: ObservableObject {
             if returnedSpots.isEmpty {
 
                 print("No Secret Spots in array")
+                self?.showOnboarding = true
             }
             self?.secretspots = returnedSpots
             print(returnedSpots)

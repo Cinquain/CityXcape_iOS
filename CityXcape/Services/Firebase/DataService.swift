@@ -87,7 +87,16 @@ class DataService {
                     let savedData: [String: Any] =
                         ["savedOn": FieldValue.serverTimestamp()]
                     userWorldRef.setData(savedData)
+                    
+                    //Increment User StreetCred
+                    let increment: Int64 = 1
+                    let walletData : [String: Any] = [
+                        UserField.streetCred : FieldValue.increment(increment)
+                    ]
+                    AuthService.instance.updateUserField(uid: uid, data: walletData)
+                        
                     completion(true)
+
                     return
                 }
                 
@@ -132,12 +141,14 @@ class DataService {
             completion(true)
         }
         
-        //Decrement buyer wallet
+        
+        //Decrement buyer wallet remotely
         let decrement: Int64 = -1
         let walletData : [String: Any] = [
             UserField.streetCred : FieldValue.increment(decrement)
         ]
         AuthService.instance.updateUserField(uid: uid, data: walletData)
+        
         
         //Increment owner wallet
         let ownerId = spot.ownerId
@@ -211,6 +222,41 @@ class DataService {
 //            completion(self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot))
 //        }
 //    }
+    
+    func checkIfUserHasSpots(uid: String, completion: @escaping (_ true: Bool) -> ()) {
+        
+        REF_WORLD.document("private").collection(uid).getDocuments { querysnapshot, error in
+            
+            if let error = error {
+                print("Error getting user spots", error.localizedDescription)
+                return
+            }
+            
+            if let querysnapshot = querysnapshot, querysnapshot.count > 0 {
+                querysnapshot.documents.forEach { snapshot in
+                    
+                    let spotId  = snapshot.documentID
+                    
+                    self.REF_POST.whereField(SecretSpotField.ownerId, isEqualTo: uid).getDocuments { querySnapshot, err in
+                        
+                        if let error = err {
+                            print("Error checking if user has spots", error.localizedDescription)
+                            return
+                        }
+                        
+                        if let snapshot = querySnapshot, snapshot.count > 0 {
+                            completion(true)
+                            print("User has already posted a Secret Spot")
+                        } else {
+                            completion(false)
+                            print("User has not posted a Secret Spot")
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
     
     
     func getSpotsFromWorld(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {

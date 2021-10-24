@@ -12,6 +12,7 @@ import CoreLocation
 struct CreateSpotFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
+    @Binding var opacity: Double
 
     @State private var spotName: String = ""
     @State private var description: String = ""
@@ -19,14 +20,13 @@ struct CreateSpotFormView: View {
     @State private var showPicker: Bool = false
     @State private var addedImage: Bool = false
     @State private var isPublic: Bool = true
+    @State private var alertMessage: String = ""
     @State private var presentPopover: Bool = false
-    @Binding var opacity: Double
     @State private var presentCompletion: Bool = false
     @State private var showAlert: Bool = false
     @State var selectedImage: UIImage = UIImage()
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
-    var placeHolder: String = "Why is this spot special? Share some history"
     
     var mapItem: MKMapItem
     
@@ -157,7 +157,7 @@ struct CreateSpotFormView: View {
 
                         
                             Button(action: {
-                                postSecretSpot()
+                                isReady()
                             }, label: {
                                 HStack {
                                     Image(Icon.pin.rawValue)
@@ -165,18 +165,17 @@ struct CreateSpotFormView: View {
                                         .renderingMode(.template)
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 30, height: 30)
-                                    Text(isReady() ? "Create Spot" : "Missing Fields")
+                                    Text("Create Spot")
                                         .font(.headline)
                                 }
                                     .padding()
-                                    .foregroundColor(isReady() ? .blue : .red )
-                                    .background(isReady() ? Color.white : Color.gray.opacity(0.5))
+                                    .foregroundColor(.blue)
+                                    .background(Color.white)
                                     .cornerRadius(4)
                                     .padding()
 
                             })
                             .animation(.easeOut(duration: 0.5))
-                            .disabled(!isReady())
 
                     
             
@@ -199,7 +198,7 @@ struct CreateSpotFormView: View {
                     
                 })
                 .alert(isPresented: $showAlert, content: {
-                    Alert(title: Text("Error posting Secret Spot 😤"))
+                    Alert(title: Text(alertMessage))
                 })
                 .popover(isPresented: $presentPopover, content: {
                     Text("Different World Different Spots")
@@ -212,15 +211,40 @@ struct CreateSpotFormView: View {
     
     }
     
-    fileprivate func isReady() -> Bool {
+    fileprivate func isReady()  {
         
         if spotName.count > 4
             && addedImage == true
             && description.count > 10
-            && world.count > 4 || isPublic {
-            return true
+            && world.count > 2
+            && isPublic {
+            postSecretSpot()
         } else {
-            return false
+            
+            if spotName.count < 4 {
+                alertMessage = "Spot needs a title at least four characters long"
+                showAlert.toggle()
+                return
+            }
+            
+            if description.count < 10 {
+                alertMessage = "Description needs to be at least 10 characters long"
+                showAlert.toggle()
+                return
+            }
+            
+            if world.count < 3 {
+                alertMessage = "Please include a World. \n Your spot can only be visible to a community"
+                showAlert.toggle()
+                return
+            }
+            
+            if addedImage == false {
+                alertMessage = "Please add an image for your spot"
+                showAlert.toggle()
+                return
+            }
+            
         }
     }
     
@@ -232,6 +256,7 @@ struct CreateSpotFormView: View {
                 presentCompletion.toggle()
             } else {
                 showAlert.toggle()
+                alertMessage = "Error posting Secret Spot 😤"
             }
         }
     }

@@ -16,9 +16,7 @@ struct SwipeView: View {
 
     
     @StateObject var vm: MissionViewModel = MissionViewModel()
-    @State private var offset: CGSize = .zero
     @State private var opacity: Double = 0
-    @State private var currentSpot: SecretSpot?
     @State private var passed: Bool = false
     @State private var saved: Bool = false
     @State private var complete: Bool = false
@@ -28,8 +26,8 @@ struct SwipeView: View {
     var body: some View {
         let captions: [String] = [
             "Save the spots you want to visit",
-            "Swipe right to save mission",
-            "Swipe left to pass on it",
+            "Swipe right to save spot",
+            "\(wallet ?? 0) StreetCred Remaining",
         ]
     
         VStack {
@@ -37,11 +35,41 @@ struct SwipeView: View {
                 .padding(.top, 25)
                 .frame(height: 120)
  
-            Image("Scout")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 250, height: 100)
-                .opacity(0.1)
+            ZStack {
+                Image("Scout")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 250, height: 100)
+                    .opacity(0.1)
+                
+                if saved {
+                    VStack {
+                        Image(systemName: "heart.fill")
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                        Text("Saved to Your World!")
+                        Text("\(wallet ?? 0) StreetCred Remaining")
+                            .foregroundColor(.red)
+                            .font(.subheadline)
+                            .padding(.top, -10)
+                    }
+                    .foregroundColor(.green)
+                    .animation(.easeInOut)
+                }
+                
+                if passed {
+                    VStack {
+                        Image(systemName: "hand.thumbsdown.fill")
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                        Text("Passed!")
+                    }
+                    .foregroundColor(.red)
+                    .animation(.easeInOut)
+                }
+
+            }
+   
             
             if complete {
                 Image("pin_blue")
@@ -58,7 +86,8 @@ struct SwipeView: View {
                     .shimmering()
                     .animation(.easeInOut)
             }
-
+            
+       
        
             
                 CardStack(direction: LeftRight.direction,
@@ -67,12 +96,15 @@ struct SwipeView: View {
                     switch direction {
                     case .right:
                         saveCardToUserWorld(spot: spot)
+                      
                     case .left:
                         dismissCard(spot: spot)
                     }
                     
                 } content: { spot, direction, isOnTop in
+               
                     CardView(spot: spot)
+                    
                 }
                 .offset(x: 40)
             
@@ -92,32 +124,18 @@ struct SwipeView: View {
         .alert(isPresented: $showAlert, content: {
             guard let wallet = wallet else {return Alert(title: Text("Error Finding Wallet"))}
             let title = Text("Insufficient StreetCred")
-            let message = Text("Your wallet has a balance of \(wallet) StreetCred. \n Post a secret spot to earn more streetCred")
+            let message = Text("Your wallet has a balance of \(wallet) STC. \n Post a secret spot to earn more StreetCred.")
             return Alert(title: title, message: message, dismissButton: .default(Text("Ok")))
         })
     }
     
-    
-    fileprivate func getScaleAmount() -> CGFloat {
-        let max = UIScreen.main.bounds.width / 2
-        let currentAmount = abs(offset.width)
-        let percentage = currentAmount / max
-        return 1.0 - min(percentage, 0.5) * 0.5
-    }
-    
-    fileprivate func getRotationAmount() -> Double {
-        let max = UIScreen.main.bounds.width / 2
-        let currentAmount = offset.width
-        let percentage = currentAmount / max
-        let percentageAsDouble = Double(percentage)
-        let maxAngle: Double = 10
-        return percentageAsDouble * maxAngle
-    }
-    
     fileprivate func saveCardToUserWorld(spot: SecretSpot) {
-        guard let wallet = wallet else {return}
+        guard var wallet = wallet else {return}
         
         if wallet > spot.price {
+            //Decremement wallet locally
+            wallet -= spot.price
+            UserDefaults.standard.set(wallet, forKey: CurrentUserDefaults.wallet)
             print("Saving to user's world")
             saved = true
             //Save to DB
@@ -125,11 +143,15 @@ struct SwipeView: View {
                 
                 if !success {
                     print("Error saving to user's world")
-                    saved.toggle()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        saved.toggle()
+                    }
                     return
                 }
                 print("successfully saved spot to user's world")
-                saved.toggle()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    saved.toggle()
+                }
             }
             
             //Check if spot is last, if true dismiss view
@@ -156,11 +178,15 @@ struct SwipeView: View {
         DataService.instance.dismissCard(spot: spot) { success in
             if !success {
                 print("Error dismissing card")
-                passed.toggle()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    passed.toggle()
+                }
                 return
             }
             print("successfully saved dismissed card to DB")
-            passed.toggle()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                passed.toggle()
+            }
         }
         
         guard let index = vm.userMissions.firstIndex(of: spot) else {return}

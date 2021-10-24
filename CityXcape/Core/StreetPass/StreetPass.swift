@@ -18,12 +18,16 @@ struct StreetPass: View {
     @State private var username: String = ""
     @State private var userbio: String = ""
     @State private var profileUrl = ""
+    @State private var streetCred : Int = 0
+    @State private var showAlert : Bool = false
+    @State private var message: String = ""
     
     @State var refresh: Bool = false
     @State var userImage: UIImage = UIImage()
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State var isPresented: Bool = false
     @State var presentSettings: Bool = false
+    
     
     var body: some View {
         
@@ -65,9 +69,22 @@ struct StreetPass: View {
                                 .padding()
                             
                             //Need a text liner for the bio
-                            Text(userbio)
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
+                            VStack(spacing: 5) {
+                                Text(userbio)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                
+                                Button {
+                                    message = "StreetCred is a currency that lets you save Secret Spots."
+                                    showAlert.toggle()
+                                } label: {
+                                    Text("\(streetCred) StreetCred")
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
+                            }
+            
+                                
                                 
                         }
                         Spacer()
@@ -98,11 +115,15 @@ struct StreetPass: View {
                 .fullScreenCover(isPresented: $presentSettings, content: {
                     SettingsView(displayName: $username, userBio: $userbio, profileUrl: $profileUrl)
                 })
+                
               
             }
             .onAppear(perform: {
                 getAdditionalProfileInfo()
             })
+            .alert(isPresented: $showAlert) {
+                return Alert(title: Text(message))
+            }
         }
     
 
@@ -133,19 +154,26 @@ struct StreetPass: View {
             
             if let name = username {
                 self.username = name
+                UserDefaults.standard.set(name, forKey: CurrentUserDefaults.displayName)
             }
             
             if let bio = bio {
                 self.userbio = bio
+                UserDefaults.standard.set(bio, forKey: CurrentUserDefaults.bio)
             }
             
             if let url = profileUrl {
                 self.profileUrl = url
+                UserDefaults.standard.set(url, forKey: CurrentUserDefaults.profileUrl)
+
             }
             
             if let streetCred = streetcred {
-                self.wallet = streetCred
+                self.streetCred = streetCred
+                UserDefaults.standard.set(streetcred, forKey: CurrentUserDefaults.wallet)
+
             }
+            
             
         }
     }

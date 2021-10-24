@@ -118,7 +118,7 @@ class AuthService {
                 UserField.email: email,
                 UserField.providerId: providerId,
                 UserField.provider: userId,
-                UserField.streetCred: 10,
+                UserField.streetCred: 0,
                 UserField.bio: "",
                 UserField.profileImageUrl: profileImageUrl,
                 UserField.dataCreated: FieldValue.serverTimestamp()

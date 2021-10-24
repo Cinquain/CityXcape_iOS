@@ -19,9 +19,9 @@ struct MissionsView: View {
     var body: some View {
         
         let captions: [String] = [
-            "Choose a Mission",
+            "Missions are exploration jobs",
             "1 Mission pending",
-            "Your Rank is Observer"
+            "Choose a Mission"
         ]
         
         VStack(spacing: 0) {

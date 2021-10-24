@@ -29,9 +29,10 @@ struct CongratsView: View {
                         .font(.title)
                         .fontWeight(.thin)
                     
-                    Text("You posted a Secret Spot")
+                    Text("You Earned 1 StreetCred")
                         .font(.caption)
                         .fontWeight(.thin)
+                        .shimmering()
                     
                     Image(Icon.pin.rawValue)
                         .resizable()
@@ -39,11 +40,7 @@ struct CongratsView: View {
                         .frame(width: geo.size.width, height: geo.size.width / 1.8)
                   
                     
-                    Text("You earn StreetCred as people save your spot")
-                        .font(.subheadline)
-                        .fontWeight(.thin)
-                        .shimmering()
-
+                  
                     Spacer()
                         .frame(maxHeight: geo.size.height / 9)
                     
