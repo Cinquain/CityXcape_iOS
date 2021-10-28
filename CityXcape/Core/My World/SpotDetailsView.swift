@@ -185,9 +185,9 @@ struct SpotDetailsView: View {
     
      func deletePost() {
         currentIndex = 0
-        guard let postId = spot?.postId else {return}
+        guard let secretSpot = spot else {return}
          
-        DataService.instance.deleteSecretSpot(spotId: postId) { success in
+         DataService.instance.deleteSecretSpot(spot: secretSpot) { success in
             
             if success {
                 self.alertTitle = "Successfully Deleted"

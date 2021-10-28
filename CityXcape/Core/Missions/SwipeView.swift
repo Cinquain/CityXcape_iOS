@@ -49,7 +49,7 @@ struct SwipeView: View {
                             .frame(width: 60, height: 60)
                         Text("Saved to Your World!")
                         Text("\(wallet ?? 0) StreetCred Remaining")
-                            .foregroundColor(.red)
+                            .foregroundColor(.white)
                             .font(.subheadline)
                             .padding(.top, -10)
                     }
@@ -132,7 +132,7 @@ struct SwipeView: View {
     fileprivate func saveCardToUserWorld(spot: SecretSpot) {
         guard var wallet = wallet else {return}
         
-        if wallet > spot.price {
+        if wallet >= spot.price {
             //Decremement wallet locally
             wallet -= spot.price
             UserDefaults.standard.set(wallet, forKey: CurrentUserDefaults.wallet)

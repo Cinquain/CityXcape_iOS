@@ -458,10 +458,14 @@ class DataService {
     
     //MARK: DELETE FUNCTIONS
     
-    func deleteSecretSpot(spotId: String, completion: @escaping (_ success: Bool) -> ()) {
+    func deleteSecretSpot(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
         guard let uid = userId else {return}
-        REF_POST.document(spotId).collection("savedBy")
-        REF_POST.document(spotId).delete()
+        let spotId = spot.postId
+
+        REF_POST.document(spotId).collection("savedBy").document(uid).delete()
+        if spot.ownerId == uid {
+            REF_POST.document(spotId).delete()
+        }
         
         REF_WORLD.document("private").collection(uid).document(spotId).delete { error in
             
@@ -477,5 +481,7 @@ class DataService {
             
         }
     }
+    
+    
     
 }
