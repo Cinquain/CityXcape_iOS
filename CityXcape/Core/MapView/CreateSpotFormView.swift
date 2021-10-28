@@ -93,7 +93,7 @@ struct CreateSpotFormView: View {
                         })
                         
                         if isPublic {
-                            TextField("What world is this visible to?", text: $world) {
+                            TextField("What community is this visible to?", text: $world) {
                                converToHashTag()
                             }
                             .padding()

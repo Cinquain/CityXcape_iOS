@@ -28,9 +28,13 @@ class MyWorldViewModel: ObservableObject {
 
                 print("No Secret Spots in array")
                 self?.showOnboarding = true
+            } else {
+                self?.secretspots = returnedSpots
+                self?.showOnboarding = false
+                print(returnedSpots)
+
             }
-            self?.secretspots = returnedSpots
-            print(returnedSpots)
+          
         }
     }
     

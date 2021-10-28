@@ -16,19 +16,20 @@ struct SpotDetailsView: View {
     var captions: [String] = [String]()
     var spot: SecretSpot?
     
+    
     @State private var showActionSheet: Bool = false
     @State private var genericAlert: Bool = false
     @State private var actionSheetType: SpotActionSheetType = .general
-
+    @Binding var currentIndex: Int
     
     
-    init(spot: SecretSpot) {
+    init(spot: SecretSpot, index: Binding<Int>) {
         self.spot = spot
         let name = spot.spotName
         let distanceString = String(format: "%.1f", spot.distanceFromUser)
         let distance = spot.distanceFromUser > 1 ? "\(distanceString) miles away" : "\(distanceString) mile away"
         let postedby = "Posted by \(spot.ownerDisplayName)"
-        
+        self._currentIndex = index
         captions.append(contentsOf: [name, distance, postedby])
     }
     
@@ -90,7 +91,9 @@ struct SpotDetailsView: View {
             }
             .colorScheme(.dark)
             .alert(isPresented: $genericAlert, content: {
-                return Alert(title: Text(alertTitle), message: Text(alertmessage), dismissButton: .default(Text("Ok")))
+                return Alert(title: Text(alertTitle), message: Text(alertmessage), dismissButton: .default(Text("Ok"), action: {
+                    self.presentationMode.wrappedValue.dismiss()
+                }))
             })
             .actionSheet(isPresented: $showActionSheet, content: {
                 getActionSheet()
@@ -177,11 +180,13 @@ struct SpotDetailsView: View {
                 self.genericAlert.toggle()
             }
         }
+
     }
     
      func deletePost() {
+        currentIndex = 0
         guard let postId = spot?.postId else {return}
-        
+         
         DataService.instance.deleteSecretSpot(spotId: postId) { success in
             
             if success {

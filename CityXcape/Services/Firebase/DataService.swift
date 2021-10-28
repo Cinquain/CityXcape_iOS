@@ -463,7 +463,7 @@ class DataService {
         REF_POST.document(spotId).collection("savedBy")
         REF_POST.document(spotId).delete()
         
-        REF_USERS.document(uid).collection("world").document(spotId).delete { error in
+        REF_WORLD.document("private").collection(uid).document(spotId).delete { error in
             
             if let error = error {
                 print("Error deleting secret spot", error.localizedDescription)

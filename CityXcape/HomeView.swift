@@ -20,7 +20,7 @@ struct HomeView: View {
        
         TabView(selection: $selectedTab) {
     
-                MyWorld()
+                MyWorld(selectedTab: $selectedTab)
                 .tabItem {
                     Image(Icon.tabItemI.rawValue)
                         .renderingMode(.template)

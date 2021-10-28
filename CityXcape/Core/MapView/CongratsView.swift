@@ -28,17 +28,17 @@ struct CongratsView: View {
                     Text("Congratulations!")
                         .font(.title)
                         .fontWeight(.thin)
-                    
-                    Text("You Earned 1 StreetCred")
-                        .font(.caption)
-                        .fontWeight(.thin)
-                        .shimmering()
-                    
+                   
                     Image(Icon.pin.rawValue)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: geo.size.width, height: geo.size.width / 1.8)
-                  
+                    
+                    Text("You Earned 1 StreetCred")
+                        .font(.title3)
+                        .fontWeight(.thin)
+                        .shimmering()
+                    
                     
                   
                     Spacer()

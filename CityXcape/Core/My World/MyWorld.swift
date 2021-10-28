@@ -14,11 +14,12 @@ struct MyWorld: View {
     
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var username: String?
-    private var cancellables = Set<AnyCancellable>()
+
     @StateObject var vm = MyWorldViewModel()
   
     @State private var currentIndex = 0
     @State private var isPresented: Bool = false
+    @Binding var selectedTab: Int
 
     
     var body: some View {
@@ -28,6 +29,7 @@ struct MyWorld: View {
             "\(vm.secretspots.count) Spots to Visit",
             "\(username ?? "")'s World"
         ]
+        
             GeometryReader { geo in
                 
                 ZStack {
@@ -37,6 +39,42 @@ struct MyWorld: View {
                     VStack {
                         Ticker(profileUrl: profileUrl ?? "", captions: captions)
                             .frame(height: 150)
+                        
+                        
+                    if vm.showOnboarding {
+                        
+                        
+                        Text("Your world consist of spots \n you know or want to vist")
+                            .foregroundColor(.white)
+                            .font(.title2)
+                            .fontWeight(.thin)
+                            .multilineTextAlignment(.center)
+                        
+                        Image("marker")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 250)
+                        
+                        Text("Start building your world \n by adding a Secret Spot ")
+                            .foregroundColor(.white)
+                            .font(.title3)
+                            .fontWeight(.thin)
+                        
+                        Button {
+                            selectedTab = 2
+                        } label: {
+                            Text("Post a Spot")
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(5)
+                        }
+                        .foregroundColor(.black)
+                        .padding(.top, 40)
+                        .shimmering(duration: 4)
+
+
+                        Spacer()
+                    } else {
                         
                         SpotRowHeader()
                    
@@ -55,40 +93,9 @@ struct MyWorld: View {
                             .listStyle(PlainListStyle())
                             .colorScheme(.dark)
                         
-                        
-                    if vm.showOnboarding {
-                        
-                        
-                        Text("Your world consist of spots \n you know or want to vist")
-                            .foregroundColor(.white)
-                            .font(.title2)
-                            .fontWeight(.thin)
-                            .multilineTextAlignment(.center)
-                        Image("marker")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 250)
-                        
-                        Text("Start building your world \n by adding a Secret Spot ")
-                            .foregroundColor(.white)
-                            .font(.title3)
-                            .fontWeight(.thin)
-                        
-                        Button {
-                            print("Hello World")
-                        } label: {
-                            Text("Post a Spot")
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(5)
-                        }
-                        .foregroundColor(.black)
-                        .padding(.top, 40)
-                        .shimmering(duration: 4)
-
-
-                        Spacer()
                     }
+                        
+                        
                         
                     }
                         
@@ -99,7 +106,7 @@ struct MyWorld: View {
             } ,content: {
         
                 if let spot = vm.secretspots[currentIndex] {
-                    SpotDetailsView(spot: spot)
+                    SpotDetailsView(spot: spot, index: $currentIndex)
                 }
                 
             })
@@ -113,7 +120,9 @@ struct MyWorld: View {
 }
 
 struct MyJourney_Previews: PreviewProvider {
+    @State static var selection: Int = 0
+
     static var previews: some View {
-        MyWorld()
+        MyWorld(selectedTab: $selection)
     }
 }

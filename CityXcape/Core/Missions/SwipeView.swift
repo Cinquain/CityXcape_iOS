@@ -85,10 +85,10 @@ struct SwipeView: View {
                     .opacity(opacity)
                     .shimmering()
                     .animation(.easeInOut)
+                
+               
             }
             
-       
-       
             
                 CardStack(direction: LeftRight.direction,
                   data: vm.userMissions, id: \.self) { spot, direction in
@@ -123,9 +123,9 @@ struct SwipeView: View {
         .edgesIgnoringSafeArea(.all)
         .alert(isPresented: $showAlert, content: {
             guard let wallet = wallet else {return Alert(title: Text("Error Finding Wallet"))}
-            let title = Text("Insufficient StreetCred")
+            let title = Text("Insufficient StreetCred").foregroundColor(.red)
             let message = Text("Your wallet has a balance of \(wallet) STC. \n Post a secret spot to earn more StreetCred.")
-            return Alert(title: title, message: message, dismissButton: .default(Text("Ok")))
+            return Alert(title: title, message: message, dismissButton: .cancel(Text("Ok")))
         })
     }
     
@@ -154,20 +154,22 @@ struct SwipeView: View {
                 }
             }
             
-            //Check if spot is last, if true dismiss view
-            guard let index = vm.userMissions.firstIndex(of: spot) else {return}
-            if index  == vm.userMissions.count - 1 {
-                opacity = 1
-                complete.toggle()
-                vm.hasUserMissions = false
-                //Use the last secret spot to start the next query
-                vm.lastSecretSpot = vm.userMissions.last?.postId ?? ""
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-                    self.presentationMode.wrappedValue.dismiss()
-                }
-            }
+         
         } else {
             showAlert.toggle()
+        }
+        
+        //Check if spot is last, if true dismiss view
+        guard let index = vm.userMissions.firstIndex(of: spot) else {return}
+        if index  == vm.userMissions.count - 1 {
+            opacity = 1
+            complete.toggle()
+            vm.hasUserMissions = false
+            //Use the last secret spot to start the next query
+            vm.lastSecretSpot = vm.userMissions.last?.postId ?? ""
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                self.presentationMode.wrappedValue.dismiss()
+            }
         }
     }
     
