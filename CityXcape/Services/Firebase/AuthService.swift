@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseMessaging
 
 
 let DB_BASE = Firestore.firestore()
@@ -108,6 +109,7 @@ class AuthService {
         let document = REF_USERS.document()
         let userId = document.documentID
         var profileImageUrl = ""
+        let fcmToken = Messaging.messaging().fcmToken ?? ""
         
         ImageManager.instance.uploadProfileImage(uid: userId, image: profileImage) { (imageUrl) in
             guard let url = imageUrl else {return}
@@ -119,6 +121,7 @@ class AuthService {
                 UserField.providerId: providerId,
                 UserField.provider: userId,
                 UserField.streetCred: 0,
+                UserField.fcmToken: fcmToken,
                 UserField.bio: "",
                 UserField.profileImageUrl: profileImageUrl,
                 UserField.dataCreated: FieldValue.serverTimestamp()

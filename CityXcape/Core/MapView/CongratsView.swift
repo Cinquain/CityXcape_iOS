@@ -6,10 +6,14 @@
 //
 
 import SwiftUI
+import FirebaseMessaging
 
 struct CongratsView: View {
     
     @Environment(\.presentationMode) var presentationMode
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @State private var presentAlert: Bool  = false
+
     
 
     var body: some View {
@@ -46,6 +50,7 @@ struct CongratsView: View {
                     
                     Button(action: {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            checkforNotifications()
                             presentationMode.wrappedValue.dismiss()
                         }
                     }, label: {
@@ -70,8 +75,59 @@ struct CongratsView: View {
                 
             }
         }
-     
     }
+    
+    
+    fileprivate func checkforNotifications() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .authorized, .provisional:
+                print("Notification is authorized")
+                return
+            case .denied:
+                //request notification & save FCM token to DB
+                print("Authorization Denied!")
+                requestForNotification()
+            case .notDetermined:
+                //request notification & save FCM token to DB
+                requestForNotification()
+                print("Authorization Not determined")
+            case .ephemeral:
+                print("Notificaiton is ephemeral")
+                return
+            @unknown default:
+                return
+            }
+            
+            
+        }
+    }
+    
+    fileprivate func requestForNotification() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            
+            if let error = error {
+                print("Error getting notification permission", error.localizedDescription)
+            }
+            
+            
+            if granted {
+                print("Notification access granted")
+                let fcmToken = Messaging.messaging().fcmToken ?? ""
+                guard let uid = userId else {return}
+
+                let data = [
+                    UserField.fcmToken: fcmToken
+                ]
+                
+                AuthService.instance.updateUserField(uid: uid, data: data)
+            } else {
+                print("Notification Authorization denied")
+            }
+            
+        }
+    }
+    
 }
 
 struct CongratsView_Previews: PreviewProvider {

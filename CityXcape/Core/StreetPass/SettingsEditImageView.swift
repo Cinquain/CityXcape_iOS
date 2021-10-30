@@ -11,6 +11,7 @@ import SDWebImageSwiftUI
 struct SettingsEditImageView: View {
     @Environment(\.presentationMode) var presentationMode
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
+
     
     @Binding var profileUrl: String
     @State var title: String
@@ -33,16 +34,9 @@ struct SettingsEditImageView: View {
                     Button(action: {
                         showImagePicker.toggle()
                     }, label: {
-                            Image(Icon.dot.rawValue)
-                                .resizable()
-                                .frame(width: 300 , height: 300)
-                                .shadow(color: .orange, radius: 30, x: 0, y: 0)
-                                .overlay(
-                                    Image(uiImage: selectedImage)
-                                        .resizable()
-                                        .frame(width: 200, height: 200)
-                                        .cornerRadius(150)
-                                )
+                        UserDotView(imageUrl: profileUrl, width: 250, height: 250)
+                            .shadow(radius: 5)
+                            .shadow(color: .orange, radius: 30, x: 0, y: 0)
                     })
            
         

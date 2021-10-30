@@ -12,6 +12,7 @@ pod 'Firebase/Auth'
 pod 'Firebase/Firestore'
 pod 'FirebaseFirestoreSwift'
 pod 'Firebase/Storage'
+pod 'Firebase/Messaging'
 
 pod 'GoogleSignIn'
 pod 'GooglePlaces'

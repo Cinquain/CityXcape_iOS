@@ -18,6 +18,7 @@ struct UserField {
     static let dataCreated = "dateCreated"
     static let profileImageUrl = "profileImageUrl"
     static let streetCred = "streetCred"
+    static let fcmToken = "fcmToken"
 }
 
 struct SecretSpotField {
