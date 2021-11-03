@@ -42,9 +42,12 @@
 		217E9AA8270B6EC400F45077 /* MissionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E9AA7270B6EC400F45077 /* MissionViewModel.swift */; };
 		217E9AAB270B757500F45077 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 217E9AAA270B757500F45077 /* Assets.xcassets */; };
 		217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217EFE8926DEAB1F005C7C88 /* CongratsView.swift */; };
+		218115EB27315E9400026AAD /* NotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218115EA27315E9400026AAD /* NotificationsManager.swift */; };
+		218115ED2731860700026AAD /* PublicStreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218115EC2731860700026AAD /* PublicStreetPass.swift */; };
 		218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218980A626DC54C500A6FD23 /* LikeAnimationView.swift */; };
 		218CADBE26D5C94300496884 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CADBD26D5C94300496884 /* SettingsView.swift */; };
 		218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CADBF26D5D7E400496884 /* SettingsEditTextView.swift */; };
+		218D904D2731D4F5000FB407 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218D904C2731D4F5000FB407 /* AnalyticsService.swift */; };
 		218E76F326DBB08A00F720F1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 218E76F226DBB08A00F720F1 /* LaunchScreen.storyboard */; };
 		218ECBBF2709328E00D06603 /* MissionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218ECBBE2709328E00D06603 /* MissionsView.swift */; };
 		219842A326CF3A680089CE03 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = 219842A226CF3A680089CE03 /* LBTATools */; };
@@ -103,9 +106,12 @@
 		217E9AA7270B6EC400F45077 /* MissionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionViewModel.swift; sourceTree = "<group>"; };
 		217E9AAA270B757500F45077 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		217EFE8926DEAB1F005C7C88 /* CongratsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongratsView.swift; sourceTree = "<group>"; };
+		218115EA27315E9400026AAD /* NotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsManager.swift; sourceTree = "<group>"; };
+		218115EC2731860700026AAD /* PublicStreetPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStreetPass.swift; sourceTree = "<group>"; };
 		218980A626DC54C500A6FD23 /* LikeAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAnimationView.swift; sourceTree = "<group>"; };
 		218CADBD26D5C94300496884 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		218CADBF26D5D7E400496884 /* SettingsEditTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditTextView.swift; sourceTree = "<group>"; };
+		218D904C2731D4F5000FB407 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		218E76F226DBB08A00F720F1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		218ECBBE2709328E00D06603 /* MissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionsView.swift; sourceTree = "<group>"; };
 		219842A526CF4E3D0089CE03 /* SecretSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretSpot.swift; sourceTree = "<group>"; };
@@ -171,6 +177,7 @@
 			children = (
 				217884FD26E18CEA0066C719 /* AuthService.swift */,
 				21F8D9C526E8D7CC0016DF9D /* DataService.swift */,
+				218D904C2731D4F5000FB407 /* AnalyticsService.swift */,
 			);
 			path = Firebase;
 			sourceTree = "<group>";
@@ -290,6 +297,7 @@
 				217DA73C26CC96A30039A145 /* MyWorld.swift */,
 				2106253626EDA07C000210E2 /* MyWorldViewModel.swift */,
 				21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */,
+				218115EA27315E9400026AAD /* NotificationsManager.swift */,
 			);
 			path = "My World";
 			sourceTree = "<group>";
@@ -332,6 +340,7 @@
 				218CADBF26D5D7E400496884 /* SettingsEditTextView.swift */,
 				218CADBD26D5C94300496884 /* SettingsView.swift */,
 				21793FC626D919D9001ACD1A /* SettingsEditImageView.swift */,
+				218115EC2731860700026AAD /* PublicStreetPass.swift */,
 			);
 			path = StreetPass;
 			sourceTree = "<group>";
@@ -451,7 +460,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"\n";
+			shellScript = "\nif [ $ENABLE_PREVIEWS == \"NO\" ]\nthen\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"\nelse\n  echo \"Skipping the script because of preview mode\"\nfi\n";
 		};
 		2F2CAF926CFDC93990959A9E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -542,6 +551,7 @@
 				21793FC726D919D9001ACD1A /* SettingsEditImageView.swift in Sources */,
 				217E9AA8270B6EC400F45077 /* MissionViewModel.swift in Sources */,
 				218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */,
+				218D904D2731D4F5000FB407 /* AnalyticsService.swift in Sources */,
 				218ECBBF2709328E00D06603 /* MissionsView.swift in Sources */,
 				217DA73F26CC972C0039A145 /* Ticker.swift in Sources */,
 				217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */,
@@ -556,11 +566,13 @@
 				217AA0C426FB660100B994B3 /* OnboardScreen.swift in Sources */,
 				217DAF3026CD7A1C00A395BC /* SecretSpotView.swift in Sources */,
 				217C08DC26D1C38E00751933 /* OnboardingView.swift in Sources */,
+				218115EB27315E9400026AAD /* NotificationsManager.swift in Sources */,
 				21785D9626D547AC0049CE2D /* SettingsRowView.swift in Sources */,
 				217C08DE26D1C58000751933 /* SignInWithAppleButton.swift in Sources */,
 				217DA72826CC8F8B0039A145 /* CityXcapeApp.swift in Sources */,
 				21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */,
 				21C85939271122C9008224E5 /* CardView.swift in Sources */,
+				218115ED2731860700026AAD /* PublicStreetPass.swift in Sources */,
 				21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

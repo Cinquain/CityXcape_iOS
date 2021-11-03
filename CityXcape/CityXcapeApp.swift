@@ -31,7 +31,8 @@ struct CityXcapeApp: App {
 }
 
 class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
-  
+    
+    var notificationManager = NotificationsManager()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         print("Welcome to CityXcape")
@@ -54,6 +55,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         print("Registered with FCM with token", fcmToken)
     }
     
+
+  
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         
         if #available(iOS 14.0, *) {
@@ -61,6 +64,31 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         } else {
             completionHandler(.alert)
         }
+    }
+        
+    
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        
+        let userInfo = response.notification.request.content.userInfo
+        
+//        guard let followerId = userInfo["followerId"] as? String,
+//              let profileUrl = userInfo["profileUrl"] as? String,
+//              let username = userInfo["userDisplayName"] as? String,
+//              let streetcred = userInfo["streetCred"] as? Int,
+//              let bio = userInfo["bio"] as? String
+//        else {return}
+//        
+//        notificationManager.streetcred = streetcred
+//        notificationManager.username = username
+//        notificationManager.userImageUrl = profileUrl
+//        notificationManager.uid = followerId
+//        notificationManager.userBio = bio
+//        notificationManager.hasNotification = true
+//        print(followerId, profileUrl, username, streetcred, bio)
+        
+    
+        
     }
     
     

@@ -15,7 +15,7 @@ struct SwipeView: View {
     @Environment(\.presentationMode) var presentationMode
 
     
-    @StateObject var vm: MissionViewModel = MissionViewModel()
+    var vm: MissionViewModel
     @State private var opacity: Double = 0
     @State private var passed: Bool = false
     @State private var saved: Bool = false
@@ -149,6 +149,7 @@ struct SwipeView: View {
                     return
                 }
                 print("successfully saved spot to user's world")
+                AnalyticsService.instance.savedSecretSpot()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     saved.toggle()
                 }
@@ -186,6 +187,7 @@ struct SwipeView: View {
                 return
             }
             print("successfully saved dismissed card to DB")
+            AnalyticsService.instance.passedSecretSpot()
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 passed.toggle()
             }
@@ -212,6 +214,6 @@ struct SwipeView: View {
 
 struct SwipeView_Previews: PreviewProvider {
     static var previews: some View {
-        SwipeView()
+        SwipeView(vm: MissionViewModel())
     }
 }

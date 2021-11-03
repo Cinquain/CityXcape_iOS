@@ -74,7 +74,7 @@ struct MissionsView: View {
         .fullScreenCover(isPresented: $vm.hasUserMissions, onDismiss: {
             selectedTab = 0
         }, content: {
-            SwipeView()
+            SwipeView(vm: vm)
         })
     }
 }

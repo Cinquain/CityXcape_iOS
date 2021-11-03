@@ -10,10 +10,17 @@ import SwiftUI
 struct HomeView: View {
     
     @State var selectedTab: Int = 0
+//    @ObservedObject var manager: NotificationsManager
+    @State private var hasNotification: Bool = false
+    
     
     init() {
         UITabBar.appearance().isTranslucent = false
         UITabBar.appearance().barTintColor = .black
+//        self.manager = manager
+//        if manager.hasNotification == true {
+//            hasNotification = true
+//        }
     }
     
     var body: some View {
@@ -55,7 +62,13 @@ struct HomeView: View {
                 
         }
         .accentColor(.orange)
-        .colorScheme(.dark)
+//        .colorScheme(.dark)
+//        .sheet(isPresented: $hasNotification) {
+//            hasNotification = false
+//        } content: {
+//            PublicStreetPass(profileUrl: manager.userImageUrl, username: manager.username, userbio: manager.userBio, streetCred: manager.streetcred)
+//        }
+
         
     }
 }

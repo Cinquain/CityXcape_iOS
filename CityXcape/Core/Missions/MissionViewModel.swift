@@ -29,7 +29,10 @@ class MissionViewModel: ObservableObject {
             self?.userMissions = secretspots
             
             if self?.userMissions.count ?? 0 > 0 {
+                print("User has new missions of \(self?.userMissions.count ?? 0)")
                 self?.hasUserMissions = true
+            } else {
+                self?.hasUserMissions = false
             }
         }
         

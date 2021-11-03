@@ -51,6 +51,7 @@ struct CongratsView: View {
                     Button(action: {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             checkforNotifications()
+                            AnalyticsService.instance.postSecretSpot()
                             presentationMode.wrappedValue.dismiss()
                         }
                     }, label: {
