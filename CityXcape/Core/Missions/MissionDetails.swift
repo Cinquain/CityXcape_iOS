@@ -94,7 +94,7 @@ struct MissionDetails: View {
             
             VStack(spacing: 20) {
                 Button(action: {
-//
+                    AnalyticsService.instance.acceptedMission()
                     parent?.selectedTab = 2
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         self.presentationMode.wrappedValue.dismiss()
@@ -109,6 +109,7 @@ struct MissionDetails: View {
                 })
                 
                 Button(action: {
+                    AnalyticsService.instance.dismissedMission()
                     presentationMode.wrappedValue.dismiss()
                 }, label: {
                     Text("Dismiss")

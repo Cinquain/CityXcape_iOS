@@ -90,6 +90,11 @@ struct SpotDetailsView: View {
                 
             }
             .colorScheme(.dark)
+            .onAppear(perform: {
+                AnalyticsService.instance.viewedSecretSpot()
+                guard let postId = spot?.postId else {return}
+                DataService.instance.updatePostViewCount(postId: postId)
+            })
             .alert(isPresented: $genericAlert, content: {
                 return Alert(title: Text(alertTitle), message: Text(alertmessage), dismissButton: .default(Text("Ok"), action: {
                     self.presentationMode.wrappedValue.dismiss()

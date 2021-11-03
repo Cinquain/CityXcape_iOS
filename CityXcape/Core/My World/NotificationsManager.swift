@@ -12,14 +12,18 @@ import SwiftUI
 
 class NotificationsManager: ObservableObject {
     
-    @Published var hasNotification: Bool = false
+    
+    static let instance = NotificationsManager()
+    private init() {}
+    
+     @Published var hasNotification: Bool = false
 
     
-     @State var username: String = ""
-     @State var userImageUrl: String = ""
-     @State var userBio: String = ""
-     @State var uid: String = ""
-     @State var streetcred: Int = 0
+     @Published var username: String = ""
+     @Published  var userImageUrl: String = ""
+     @Published var userBio: String = ""
+     @Published var uid: String = ""
+     @Published var streetcred: String = ""
     
     
 }

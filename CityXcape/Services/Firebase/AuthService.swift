@@ -55,6 +55,14 @@ class AuthService {
     
     func loginUserToApp(userId: String, completion: @escaping (_ success: Bool) -> ()) {
         
+        let fcmToken = Messaging.messaging().fcmToken ?? ""
+
+        let data = [
+            UserField.fcmToken: fcmToken
+        ]
+        
+        AuthService.instance.updateUserField(uid: userId, data: data)
+        
         getUserInfo(forUserID: userId) { (name, bio, streetcred, profileUrl) in
             if let name = name,
                let bio = bio,

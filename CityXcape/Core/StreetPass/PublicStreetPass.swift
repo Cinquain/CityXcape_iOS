@@ -12,7 +12,7 @@ struct PublicStreetPass: View {
     let profileUrl: String
     let username: String
     let userbio: String
-    let streetCred: Int
+    let streetCred: String
     
     let width: CGFloat = UIScreen.main.bounds.size.width / 5
     var body: some View {
@@ -121,6 +121,6 @@ struct PublicStreetPass_Previews: PreviewProvider {
     static let amount: Int = 10
     
     static var previews: some View {
-        PublicStreetPass(profileUrl: text, username: text, userbio: text, streetCred: amount)
+        PublicStreetPass(profileUrl: text, username: text, userbio: text, streetCred: text)
     }
 }

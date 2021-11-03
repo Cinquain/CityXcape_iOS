@@ -76,6 +76,7 @@ struct StreetPass: View {
                                 
                                 Button {
                                     message = "StreetCred is a currency that lets you save Secret Spots."
+                                    AnalyticsService.instance.touchedStreetCred()
                                     showAlert.toggle()
                                 } label: {
                                     Text("\(streetCred) StreetCred")
@@ -94,6 +95,7 @@ struct StreetPass: View {
                     HStack {
                         Spacer()
                         Button(action: {
+                            AnalyticsService.instance.touchedSettings()
                             presentSettings.toggle()
                         }, label: {
                             Image(Icon.gear.rawValue)

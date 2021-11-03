@@ -32,14 +32,12 @@ struct CityXcapeApp: App {
 
 class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
     
-    var notificationManager = NotificationsManager()
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
         print("Welcome to CityXcape")
         FirebaseApp.configure()
         
         registerForNotifications(app: application)
-        
         return true
     }
     
@@ -65,29 +63,47 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
             completionHandler(.alert)
         }
     }
-        
+    
+    func application(application: UIApplication,  didReceiveRemoteNotification userInfo: [NSObject : AnyObject],  fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+
+       print("Recived notification: \(userInfo)")
+
+        completionHandler(.newData)
+
+   }
     
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
         let userInfo = response.notification.request.content.userInfo
+        print("the user info is", userInfo)
         
-//        guard let followerId = userInfo["followerId"] as? String,
-//              let profileUrl = userInfo["profileUrl"] as? String,
-//              let username = userInfo["userDisplayName"] as? String,
-//              let streetcred = userInfo["streetCred"] as? Int,
-//              let bio = userInfo["bio"] as? String
-//        else {return}
-//        
-//        notificationManager.streetcred = streetcred
-//        notificationManager.username = username
-//        notificationManager.userImageUrl = profileUrl
-//        notificationManager.uid = followerId
-//        notificationManager.userBio = bio
-//        notificationManager.hasNotification = true
-//        print(followerId, profileUrl, username, streetcred, bio)
+        if let followerId = userInfo["followerId"] as? String,
+           let profileUrl = userInfo["profileUrl"] as? String,
+           let username = userInfo["userDisplayName"] as? String,
+           let streetcred = userInfo["streetCred"] as? String,
+           let bio = userInfo["biography"] as? String
+        {
+            NotificationsManager.instance.streetcred = streetcred
+            NotificationsManager.instance.username = username
+            NotificationsManager.instance.userImageUrl = profileUrl
+            NotificationsManager.instance.uid = followerId
+            NotificationsManager.instance.userBio = bio
+            NotificationsManager.instance.hasNotification = true
+            print("successfully converted data to string",followerId, profileUrl, username, streetcred, bio)
+
+        } else {
+            print("Failed getting follower id")
+        }
+        
+      
         
     
+       
+     
+        
+    
+        completionHandler()
         
     }
     
@@ -108,7 +124,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
             
             if granted {
                 print("Authorization granted")
-                
+                UNUserNotificationCenter.current().delegate = self
+
                 
             } else {
                 print("Authorization request was Denied")

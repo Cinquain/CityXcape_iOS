@@ -101,6 +101,7 @@ struct SettingsEditTextView: View {
             UserDefaults.standard.set(submissionText, forKey: CurrentUserDefaults.bio)
             AuthService.instance.updateUserBio(userId: uid, bio: submissionText) { success in
                 if success {
+                    AnalyticsService.instance.createdBio()
                     self.showSuccessAlert.toggle()
                 }
             }

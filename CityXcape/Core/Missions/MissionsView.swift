@@ -49,6 +49,7 @@ struct MissionsView: View {
                             else {return}
                             self.currentIndex = index
                             self.mission = mission
+                            AnalyticsService.instance.viewedMission()
                             self.isPresented.toggle()
                         }
                 }

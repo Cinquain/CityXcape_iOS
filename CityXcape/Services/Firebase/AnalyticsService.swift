@@ -30,4 +30,32 @@ class AnalyticsService {
         Analytics.logEvent("pass", parameters: nil)
     }
     
+    func touchedSettings() {
+        Analytics.logEvent("touched_settings", parameters: nil)
+    }
+    
+    func createdBio() {
+        Analytics.logEvent("created_bio", parameters: nil)
+    }
+    
+    func touchedStreetCred() {
+        Analytics.logEvent("touched_streetcrd", parameters: nil)
+    }
+    
+    func viewedMission() {
+        Analytics.logEvent("viewed_mission", parameters: nil)
+    }
+    
+    func acceptedMission() {
+        Analytics.logEvent("accepted_mission", parameters: nil)
+    }
+    
+    func dismissedMission() {
+        Analytics.logEvent("dismissed_mission", parameters: nil)
+    }
+    
+    func viewedSecretSpot() {
+        Analytics.logEvent("viewed_spot", parameters: nil)
+    }
+    
 }

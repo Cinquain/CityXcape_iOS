@@ -319,20 +319,23 @@ class DataService {
         guard let uid = userId else {return}
         var history : [String] = []
         
-        getUserHistory { returnedHistory in
+        getUserHistory { [self] returnedHistory in
             history = returnedHistory
             print("printing history inside new spots", history)
+            
+            
+            self.REF_POST
+                .order(by: SecretSpotField.dateCreated, descending: true)
+                .getDocuments { querysnapshot, error in
+                    let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
+                    let filteredResults = results.filter({$0.isPublic == true
+                                                            && $0.ownerId != uid
+                                                            && !history.contains($0.postId)})
+                    completion(filteredResults)
+                }
         }
         
-        REF_POST
-            .order(by: SecretSpotField.dateCreated, descending: true)
-            .getDocuments { querysnapshot, error in
-                let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
-                let filteredResults = results.filter({$0.isPublic == true
-                                                        && $0.ownerId != uid
-                                                        && !history.contains($0.postId)})
-                completion(filteredResults)
-            }
+     
             
 //            .limit(to: 12)
     }
@@ -429,12 +432,22 @@ class DataService {
     }
     
     private func updatePostDisplayName(postID: String, displayName: String) {
-        guard let uid = userId else {return}
         let data: [String : Any] = [
             SecretSpotField.ownerDisplayName: displayName
         ]
         
         REF_POST.document(postID).updateData(data)
+    }
+    
+    func updatePostViewCount(postId: String) {
+        
+        let increment: Int64 = 1
+        
+        let data: [String: Any] = [
+            SecretSpotField.viewCount: FieldValue.increment(increment)
+        ]
+        
+        REF_POST.document(postId).updateData(data)
     }
     
      func updatePostProfileImageUrl(profileUrl: String) {

@@ -9,18 +9,14 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @State var selectedTab: Int = 0
-//    @ObservedObject var manager: NotificationsManager
-    @State private var hasNotification: Bool = false
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
     
+    @State var selectedTab: Int = 0
+    @StateObject var manager = NotificationsManager.instance
     
     init() {
         UITabBar.appearance().isTranslucent = false
         UITabBar.appearance().barTintColor = .black
-//        self.manager = manager
-//        if manager.hasNotification == true {
-//            hasNotification = true
-//        }
     }
     
     var body: some View {
@@ -62,15 +58,36 @@ struct HomeView: View {
                 
         }
         .accentColor(.orange)
-//        .colorScheme(.dark)
-//        .sheet(isPresented: $hasNotification) {
-//            hasNotification = false
-//        } content: {
-//            PublicStreetPass(profileUrl: manager.userImageUrl, username: manager.username, userbio: manager.userBio, streetCred: manager.streetcred)
-//        }
+        .onAppear(perform: {
+            
+        })
+        .colorScheme(.dark)
+        .sheet(isPresented: $manager.hasNotification) {
+
+        } content: {
+            PublicStreetPass(profileUrl: manager.userImageUrl,
+                             username: manager.username,
+                             userbio: manager.userBio,
+                             streetCred: manager.streetcred)
+        }
 
         
     }
+    
+    func getAdditionalProfileInfo() {
+        guard let uid = userId else {return}
+        AuthService.instance.getUserInfo(forUserID: uid) { username, bio, streetcred, profileUrl in
+            
+            if let streetCred = streetcred {
+                UserDefaults.standard.set(streetCred, forKey: CurrentUserDefaults.wallet)
+
+            }
+            
+            
+        }
+    }
+    
+    
 }
 
 struct ContentView_Previews: PreviewProvider {
