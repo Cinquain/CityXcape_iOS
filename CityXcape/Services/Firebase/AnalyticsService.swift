@@ -58,4 +58,8 @@ class AnalyticsService {
         Analytics.logEvent("viewed_spot", parameters: nil)
     }
     
+    func triedMessagingUser() {
+        Analytics.logEvent("messaged_user", parameters: nil)
+    }
+    
 }

@@ -13,6 +13,7 @@ struct PublicStreetPass: View {
     let username: String
     let userbio: String
     let streetCred: String
+    @State private var showAlert: Bool = false
     
     let width: CGFloat = UIScreen.main.bounds.size.width / 5
     var body: some View {
@@ -86,6 +87,7 @@ struct PublicStreetPass: View {
                 
                 Button {
                     print("Message User")
+                    showAlert.toggle()
                 } label: {
                     VStack {
                         Text("Message")
@@ -104,6 +106,10 @@ struct PublicStreetPass: View {
                 
                 Spacer()
                 
+            }
+            .alert(isPresented: $showAlert) {
+                AnalyticsService.instance.triedMessagingUser()
+                return Alert(title: Text("Feature not yet available"))
             }
             
         }

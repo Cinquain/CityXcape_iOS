@@ -128,7 +128,7 @@ class AuthService {
                 UserField.email: email,
                 UserField.providerId: providerId,
                 UserField.provider: userId,
-                UserField.streetCred: 0,
+                UserField.streetCred: 3,
                 UserField.fcmToken: fcmToken,
                 UserField.bio: "",
                 UserField.profileImageUrl: profileImageUrl,
