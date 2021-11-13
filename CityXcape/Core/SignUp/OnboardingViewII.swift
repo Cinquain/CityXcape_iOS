@@ -16,7 +16,9 @@ struct OnboardingViewII: View {
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     @State private var opacity: Double = 0
+    @State private var disableInteraction = false
     @State var showError: Bool = false
+    
     
     @Binding var email: String
     @Binding var name: String
@@ -59,6 +61,9 @@ struct OnboardingViewII: View {
                 }
             
                 TextField("Create a Username", text: $displayName)
+                    .placeholder(when: displayName.isEmpty) {
+                        Text("Create a Username").foregroundColor(.black)
+                }
                     .padding()
                     .frame(height: 60)
                     .frame(maxWidth: .infinity)
@@ -100,6 +105,7 @@ struct OnboardingViewII: View {
                             .font(.title3)
                             .foregroundColor(.black)
                             .fontWeight(.light)
+                            
                     }
                     .padding()
                     .background(Color.white)
@@ -108,6 +114,7 @@ struct OnboardingViewII: View {
                 })
                 .opacity(opacity)
                 .animation(.easeOut(duration: 0.5))
+                .disabled(disableInteraction)
 
                 
                 Spacer()
@@ -130,7 +137,9 @@ struct OnboardingViewII: View {
     }
     
     fileprivate func createProfile() {
+        
         print("Create Profile")
+        disableInteraction.toggle()
         
         AuthService.instance.createNewUserInDatabase(name: displayName, email: email, providerId: providerId, provider: provider, profileImage: userImage) { (uid) in
             
@@ -146,6 +155,7 @@ struct OnboardingViewII: View {
                     } else {
                         print("Error logging in")
                         self.showError.toggle()
+                        disableInteraction.toggle()
                     }
                    
                 }
@@ -156,6 +166,7 @@ struct OnboardingViewII: View {
             } else {
                 print("Error creating user in database")
                 self.showError.toggle()
+                disableInteraction.toggle()
                 
             }
             

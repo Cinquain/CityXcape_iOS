@@ -32,6 +32,9 @@ struct MapContainer: View {
                         UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.endEditing(true)
                         opacity = 0
                     })
+                        .placeholder(when: vm.searchQuery.isEmpty) {
+                            Text("Search address or location").foregroundColor(.black)
+                    }
                     .padding()
                     .background(Color.white)
                     .cornerRadius(3)

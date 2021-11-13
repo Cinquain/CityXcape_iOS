@@ -12,6 +12,7 @@ import CoreLocation
 struct CreateSpotFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.colorScheme) var colorScheme
     @Binding var opacity: Double
 
     @State private var spotName: String = ""
@@ -41,6 +42,9 @@ struct CreateSpotFormView: View {
                         .padding(.vertical, 40)
                     
                     TextField("Secret Spot Name", text: $spotName)
+                        .placeholder(when: spotName.isEmpty) {
+                            Text("Secret Spot Name").foregroundColor(.black)
+                    }
                         .padding()
                         .background(Color.white)
                         .accentColor(.black)
@@ -70,7 +74,6 @@ struct CreateSpotFormView: View {
                             .frame(maxWidth: .infinity)
                             .frame(height: 100)
                             .multilineTextAlignment(.leading)
-                            .background(Color.white)
                             .cornerRadius(4)
                     }
                     .padding()
@@ -93,9 +96,12 @@ struct CreateSpotFormView: View {
                         })
                         
                         if isPublic {
-                            TextField("What community is this visible to?", text: $world) {
+                            TextField("What community is this for?", text: $world) {
                                converToHashTag()
                             }
+                            .placeholder(when: world.isEmpty) {
+                                Text("What community is this for?").foregroundColor(.black)
+                        }
                             .padding()
                             .background(Color.white)
                             .accentColor(.black)
