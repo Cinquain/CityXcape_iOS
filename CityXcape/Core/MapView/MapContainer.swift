@@ -24,6 +24,7 @@ struct MapContainer: View {
         
         ZStack(alignment: .top) {
             MapView(viewModel: vm)
+                
         
             
             VStack(spacing: 12) {
@@ -164,11 +165,10 @@ struct MapView: UIViewRepresentable {
         uiView.delegate = context.coordinator
        
         if let pressedAnnotion = gestureAnnotation {
+            print("adding dropped annotation")
+            uiView.removeAnnotations(uiView.annotations)
             uiView.addAnnotation(pressedAnnotion)
-            let addedPlacemark = MKPlacemark(coordinate: pressedAnnotion.coordinate)
-            let mapItem = MKMapItem(placemark: addedPlacemark)
-            viewModel.selectedMapItem = mapItem
-            viewModel.addedPin = true
+         
             return
         }
 
@@ -244,12 +244,20 @@ struct MapView: UIViewRepresentable {
         
         @objc func addPinBasedOnGesture(_ gestureRecognizer: UIGestureRecognizer) {
             print("Pressing long gesture")
+            
             let touchPoint = gestureRecognizer.location(in: gestureRecognizer.view)
             let newCoordinates = (gestureRecognizer.view as? MKMapView)?.convert(touchPoint, toCoordinateFrom: gestureRecognizer.view)
+            
             let annotation = MKPointAnnotation()
             guard let newCoordinate = newCoordinates else {return}
             annotation.coordinate = newCoordinate
             parent.gestureAnnotation = annotation
+            
+            let addedPlacemark = MKPlacemark(coordinate: newCoordinate)
+            let mapItem = MKMapItem(placemark: addedPlacemark)
+            parent.viewModel.selectedMapItem = mapItem
+            parent.viewModel.addedPin = true
+           
         }
     }
     

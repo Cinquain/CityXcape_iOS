@@ -60,8 +60,12 @@ extension MKMapItem {
         if placemark.postalCode != nil {
             addressString = addressString + placemark.postalCode! + " "
        }
+        if addressString == "" {
+            return "Long: \(String(format: "%.4f", self.placemark.coordinate.longitude)), Lat:\(String(format: "%.4f", self.placemark.coordinate.latitude))"
+        } else {
+            return addressString
+        }
         
-        return addressString
     }
     
     func getCity() -> String {
