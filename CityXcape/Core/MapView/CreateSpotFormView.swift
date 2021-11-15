@@ -43,7 +43,7 @@ struct CreateSpotFormView: View {
                     
                     TextField("Secret Spot Name", text: $spotName)
                         .placeholder(when: spotName.isEmpty) {
-                            Text("Secret Spot Name").foregroundColor(.black)
+                            Text("Secret Spot Name").foregroundColor(.gray)
                     }
                         .padding()
                         .background(Color.white)
@@ -100,7 +100,7 @@ struct CreateSpotFormView: View {
                                converToHashTag()
                             }
                             .placeholder(when: world.isEmpty) {
-                                Text("What community is this for?").foregroundColor(.black)
+                                Text("What community is this for?").foregroundColor(.gray)
                         }
                             .padding()
                             .background(Color.white)

@@ -62,7 +62,7 @@ struct OnboardingViewII: View {
             
                 TextField("Create a Username", text: $displayName)
                     .placeholder(when: displayName.isEmpty) {
-                        Text("Create a Username").foregroundColor(.black)
+                        Text("Create a Username").foregroundColor(.gray)
                 }
                     .padding()
                     .frame(height: 60)
@@ -124,6 +124,7 @@ struct OnboardingViewII: View {
             .edgesIgnoringSafeArea(.all)
             .fullScreenCover(isPresented: $showPicker, onDismiss: {
                 self.opacity = 1
+                hideKeyboard()
             }, content: {
                 ImagePicker(imageSelected: self.$userImage, sourceType: self.$sourceType)
                     .colorScheme(.dark)

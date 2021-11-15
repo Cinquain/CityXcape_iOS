@@ -33,7 +33,7 @@ struct MapContainer: View {
                         opacity = 0
                     })
                         .placeholder(when: vm.searchQuery.isEmpty) {
-                            Text("Search address or location").foregroundColor(.black)
+                            Text("Search address or location").foregroundColor(.gray)
                     }
                     .padding()
                     .background(Color.white)
@@ -84,6 +84,10 @@ struct MapContainer: View {
                 Spacer()
                 
                 Button(action: {
+                    if vm.addedPin == true {
+                        mapItem = vm.selectedMapItem!
+                        vm.addedPin.toggle()
+                    }
                     showForm.toggle()
                 }, label: {
                     HStack {
@@ -105,7 +109,7 @@ struct MapContainer: View {
                 })
                 .padding()
                 .animation(.easeOut(duration: 0.5))
-                .opacity(opacity)
+                .opacity(vm.addedPin ? 1 : opacity)
              
                 Spacer()
                     .frame(height: vm.keyboardHeight)
@@ -122,6 +126,7 @@ struct MapContainer: View {
         }, content: {
             CreateSpotFormView(opacity: $opacity, mapItem: mapItem)
         })
+      
        
       
         
@@ -148,8 +153,9 @@ struct MapView: UIViewRepresentable {
         mapView.showsUserLocation = true
         mapView.delegate = context.coordinator
         let longPressed = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.addPinBasedOnGesture(_:)))
-        longPressed.minimumPressDuration = 3
+        longPressed.minimumPressDuration = 2
         mapView.addGestureRecognizer(longPressed)
+        mapView.isUserInteractionEnabled = true
         return mapView
     }
     
@@ -157,14 +163,15 @@ struct MapView: UIViewRepresentable {
         
         uiView.delegate = context.coordinator
        
-//        if let pressedAnnotion = gestureAnnotation {
-//            uiView.addAnnotation(pressedAnnotion)
-//            let addedPlacemark = MKPlacemark(coordinate: pressedAnnotion.coordinate)
-//            let mapItem = MKMapItem(placemark: addedPlacemark)
-//            viewModel.selectedMapItem = mapItem
-//            return
-//        }
-//
+        if let pressedAnnotion = gestureAnnotation {
+            uiView.addAnnotation(pressedAnnotion)
+            let addedPlacemark = MKPlacemark(coordinate: pressedAnnotion.coordinate)
+            let mapItem = MKMapItem(placemark: addedPlacemark)
+            viewModel.selectedMapItem = mapItem
+            viewModel.addedPin = true
+            return
+        }
+
         if viewModel.annotations.count == 0 {
             uiView.removeAnnotations(uiView.annotations)
             if let location = viewModel.currentLocation {
