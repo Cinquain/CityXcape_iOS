@@ -23,7 +23,7 @@ struct MapContainer: View {
     var body: some View {
         
         ZStack(alignment: .top) {
-            MapView(selectedMapItem: vm.selectedMapItem, currentLocation: vm.currentLocation, annotations: vm.annotations)
+            MapView(viewModel: vm)
         
             
             VStack(spacing: 12) {
@@ -137,13 +137,10 @@ struct MapView: UIViewRepresentable {
     }
     
     let mapView = MKMapView()
-   
+    var viewModel: MapSearchViewModel
     var centerCoordinate: CLLocationCoordinate2D?
-    var selectedMapItem: MKMapItem?
-    var currentLocation: CLLocationCoordinate2D?
     
     
-    var annotations: [MKPointAnnotation]
     @State var gestureAnnotation: MKPointAnnotation?
     
     func makeUIView(context: Context) -> MKMapView {
@@ -162,11 +159,15 @@ struct MapView: UIViewRepresentable {
        
 //        if let pressedAnnotion = gestureAnnotation {
 //            uiView.addAnnotation(pressedAnnotion)
+//            let addedPlacemark = MKPlacemark(coordinate: pressedAnnotion.coordinate)
+//            let mapItem = MKMapItem(placemark: addedPlacemark)
+//            viewModel.selectedMapItem = mapItem
 //            return
 //        }
-        if annotations.count == 0 {
+//
+        if viewModel.annotations.count == 0 {
             uiView.removeAnnotations(uiView.annotations)
-            if let location = currentLocation {
+            if let location = viewModel.currentLocation {
                 let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
                 let region = MKCoordinateRegion(center: location, span: span)
                 uiView.setRegion(region, animated: true)
@@ -178,7 +179,7 @@ struct MapView: UIViewRepresentable {
       
         
         uiView.removeAnnotations(uiView.annotations)
-        annotations.forEach { annotation in
+        viewModel.annotations.forEach { annotation in
             uiView.addAnnotation(annotation)
         }
         uiView.showAnnotations(uiView.annotations.filter({$0 is MKPointAnnotation}), animated: true)
@@ -186,7 +187,7 @@ struct MapView: UIViewRepresentable {
       
         
         uiView.annotations.forEach { annotation in
-            if annotation.title == selectedMapItem?.name {
+            if annotation.title == viewModel.selectedMapItem?.name {
                 uiView.selectAnnotation(annotation, animated: true)
             }
         }
@@ -196,7 +197,7 @@ struct MapView: UIViewRepresentable {
     
     
     fileprivate func setupRegionForMap() {
-        guard let location = currentLocation else {return}
+        guard let location = viewModel.currentLocation else {return}
         let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
         let region = MKCoordinateRegion(center: location, span: span)
         mapView.setRegion(region, animated: true)
