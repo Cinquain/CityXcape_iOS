@@ -9,6 +9,8 @@ import SwiftUI
 
 struct OnboardingViewII: View {
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.colorScheme) var colorScheme
+
 
     @State private var displayName = ""
     @State private var showPicker: Bool = false
@@ -18,6 +20,7 @@ struct OnboardingViewII: View {
     @State private var opacity: Double = 0
     @State private var disableInteraction = false
     @State var showError: Bool = false
+    @State var message: String = ""
     
     
     @Binding var email: String
@@ -67,7 +70,7 @@ struct OnboardingViewII: View {
                     .padding()
                     .frame(height: 60)
                     .frame(maxWidth: .infinity)
-                    .background(Color.white)
+                    .background(colorScheme == .dark ? Color.orange.opacity(0.5) : .white)
                     .cornerRadius(8)
                     .font(.headline)
                     .autocapitalization(.sentences)
@@ -131,7 +134,7 @@ struct OnboardingViewII: View {
                     
             })
             .alert(isPresented: $showError, content: {
-                return Alert(title: Text("Error creating profile 😤"))
+                return Alert(title: Text(message))
             })
             
         }
@@ -141,6 +144,13 @@ struct OnboardingViewII: View {
         
         print("Create Profile")
         disableInteraction.toggle()
+        
+        if displayName.isEmpty || displayName.count < 3 {
+            showError.toggle()
+            message = "Username should be at least 3 characters 😤"
+            disableInteraction.toggle()
+            return
+        }
         
         AuthService.instance.createNewUserInDatabase(name: displayName, email: email, providerId: providerId, provider: provider, profileImage: userImage) { (uid) in
             
@@ -155,6 +165,7 @@ struct OnboardingViewII: View {
                         }
                     } else {
                         print("Error logging in")
+                        message = "Error creating profile 😤"
                         self.showError.toggle()
                         disableInteraction.toggle()
                     }
@@ -166,6 +177,7 @@ struct OnboardingViewII: View {
                 //Error Creatign User in Database
             } else {
                 print("Error creating user in database")
+                message = "Error creating profile 😤"
                 self.showError.toggle()
                 disableInteraction.toggle()
                 
