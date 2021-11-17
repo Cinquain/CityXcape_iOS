@@ -22,6 +22,7 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     @Published var keyboardHeight: CGFloat = 0
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var spotComplete: Bool = false
+    @Published var addedPin: Bool = false
     
     private var region: MKCoordinateRegion?
     
@@ -102,9 +103,10 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
                 results.append(annotation)
             })
             
-            Thread.sleep(forTimeInterval: 1)
-            self?.isSearching = false
             self?.annotations = results
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self?.isSearching = false
+            }
         }
     }
     

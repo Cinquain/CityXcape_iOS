@@ -66,7 +66,7 @@ struct MapContainer: View {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(mapItem.name ?? "Coordinate Location")
                                         .font(.headline)
-                                    Text(mapItem.placemark.title ?? "")
+                                    Text(mapItem.placemark.title ?? "Some Location")
                                 }
                             })
                                 .foregroundColor(.black)
@@ -150,10 +150,11 @@ struct MapView: UIViewRepresentable {
         setupRegionForMap()
         mapView.showsUserLocation = true
         mapView.delegate = context.coordinator
-        let longPressed = UILongPressGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.addPinBasedOnGesture(_:)))
-        longPressed.minimumPressDuration = 2
-        mapView.addGestureRecognizer(longPressed)
+        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.addPinBasedOnGesture(_:)))
+        tapGesture.numberOfTapsRequired = 2
+        mapView.addGestureRecognizer(tapGesture)
         mapView.isUserInteractionEnabled = true
+        
         return mapView
     }
     
@@ -166,6 +167,8 @@ struct MapView: UIViewRepresentable {
                 uiView.addAnnotation(annotation)
             }
             
+            print("refreshing annotations")
+      
             uiView.showAnnotations(uiView.annotations.filter({$0 is MKPointAnnotation}), animated: true)
         }
         
@@ -185,7 +188,7 @@ struct MapView: UIViewRepresentable {
         }
         
         //User resets the search
-        if viewModel.annotations.count == 0 {
+        if viewModel.annotations.count == 0 && viewModel.isSearching {
             uiView.removeAnnotations(uiView.annotations)
             if let location = viewModel.currentLocation {
                 let span = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
@@ -248,6 +251,8 @@ struct MapView: UIViewRepresentable {
             let touchPoint = gestureRecognizer.location(in: gestureRecognizer.view)
             let newCoordinates = (gestureRecognizer.view as? MKMapView)?.convert(touchPoint, toCoordinateFrom: gestureRecognizer.view)
             
+           
+
             let annotation = MKPointAnnotation()
             guard let newCoordinate = newCoordinates else {return}
             annotation.coordinate = newCoordinate
@@ -255,7 +260,12 @@ struct MapView: UIViewRepresentable {
             let addedPlacemark = MKPlacemark(coordinate: newCoordinate)
             let mapItem = MKMapItem(placemark: addedPlacemark)
             parent.viewModel.mapItems.append(mapItem)
-            parent.viewModel.annotations.append(annotation)        }
+            parent.viewModel.annotations.append(annotation)
+            
+            
+           
+            
+        }
     }
     
 }
