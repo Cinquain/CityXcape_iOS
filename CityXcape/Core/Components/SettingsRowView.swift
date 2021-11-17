@@ -28,12 +28,12 @@ struct SettingsRowView: View {
             .frame(width: 36, height: 36, alignment: .center)
             
             Text(text)
-                .foregroundColor(.black)
+                .foregroundColor(Color.text_Color)
             Spacer()
             
             Image(systemName: "chevron.right")
                 .font(.headline)
-                .foregroundColor(.black)
+                .foregroundColor(Color.text_Color)
         }
     }
 }
@@ -42,5 +42,6 @@ struct SettingsRowView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsRowView(text: "Row Title", leftIcon: "heart.fill", color: .red)
             .previewLayout(.sizeThatFits)
+            .colorScheme(.dark)
     }
 }

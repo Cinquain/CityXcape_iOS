@@ -36,6 +36,10 @@ extension Color {
     static var dark_grey: Color {
         return Color("darkgrey")
     }
+    
+    static var text_Color: Color {
+        return Color("textColor")
+    }
 }
 
 

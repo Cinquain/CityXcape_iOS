@@ -148,6 +148,7 @@ struct MapView: UIViewRepresentable {
     
     
     @State var gestureAnnotation: MKPointAnnotation?
+    @State var previousAnnotation: MKPointAnnotation?
     
     func makeUIView(context: Context) -> MKMapView {
         setupRegionForMap()
@@ -162,16 +163,49 @@ struct MapView: UIViewRepresentable {
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         
-        uiView.delegate = context.coordinator
-       
-        if let pressedAnnotion = gestureAnnotation {
+        //User searches location
+        if viewModel.annotations.count > 0 {
+            uiView.removeAnnotations(uiView.annotations)
+            viewModel.annotations.forEach { annotation in
+                uiView.addAnnotation(annotation)
+            }
+            uiView.showAnnotations(uiView.annotations.filter({$0 is MKPointAnnotation}), animated: true)
+         
+            //User selects a pin
+            uiView.annotations.forEach { annotation in
+                if annotation.title == viewModel.selectedMapItem?.name {
+                    uiView.selectAnnotation(annotation, animated: true)
+                }
+            }
+
+        }
+        
+        //User dropped pin
+        if let pressedAnnotion = gestureAnnotation
+        {
             print("adding dropped annotation")
             uiView.removeAnnotations(uiView.annotations)
-            uiView.addAnnotation(pressedAnnotion)
-         
+            
+            withAnimation {
+                uiView.addAnnotation(pressedAnnotion)
+            }
+            previousAnnotation = pressedAnnotion
+            gestureAnnotation = nil
             return
         }
 
+        
+   
+        //User finished posting a spot
+        if viewModel.spotComplete == true {
+            uiView.removeAnnotations(uiView.annotations)
+            viewModel.spotComplete.toggle()
+            gestureAnnotation = nil
+        }
+        
+//        uiView.delegate = context.coordinator
+//
+        //User resets the search
         if viewModel.annotations.count == 0 {
             uiView.removeAnnotations(uiView.annotations)
             if let location = viewModel.currentLocation {
@@ -183,25 +217,12 @@ struct MapView: UIViewRepresentable {
             return
         }
         
-      
         
-        uiView.removeAnnotations(uiView.annotations)
-        viewModel.annotations.forEach { annotation in
-            uiView.addAnnotation(annotation)
-        }
-        uiView.showAnnotations(uiView.annotations.filter({$0 is MKPointAnnotation}), animated: true)
+  
         
-      
-        
-        uiView.annotations.forEach { annotation in
-            if annotation.title == viewModel.selectedMapItem?.name {
-                uiView.selectAnnotation(annotation, animated: true)
-            }
-        }
     }
     
     typealias UIViewType = MKMapView
-    
     
     fileprivate func setupRegionForMap() {
         guard let location = viewModel.currentLocation else {return}

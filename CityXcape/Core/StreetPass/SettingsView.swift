@@ -28,7 +28,7 @@ struct SettingsView: View {
                         Image("pin_blue")
                             .resizable()
                             .renderingMode(.template)
-                            .foregroundColor(.black)
+                            .foregroundColor(Color.text_Color)
                             .scaledToFit()
                             .frame(width: 80, height: 80, alignment: .center)
                             .padding()
