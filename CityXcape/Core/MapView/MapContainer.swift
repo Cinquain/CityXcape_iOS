@@ -151,7 +151,7 @@ struct MapView: UIViewRepresentable {
         mapView.showsUserLocation = true
         mapView.delegate = context.coordinator
         let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(context.coordinator.addPinBasedOnGesture(_:)))
-        tapGesture.numberOfTapsRequired = 2
+        tapGesture.numberOfTapsRequired = 1
         mapView.addGestureRecognizer(tapGesture)
         mapView.isUserInteractionEnabled = true
         
