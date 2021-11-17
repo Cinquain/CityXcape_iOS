@@ -22,7 +22,6 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     @Published var keyboardHeight: CGFloat = 0
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var spotComplete: Bool = false
-    @Published var addedPin: Bool = false
     
     private var region: MKCoordinateRegion?
     

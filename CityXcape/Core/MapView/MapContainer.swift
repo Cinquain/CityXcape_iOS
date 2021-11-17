@@ -25,6 +25,7 @@ struct MapContainer: View {
         ZStack(alignment: .top) {
             MapView(viewModel: vm)
                 
+                
         
             
             VStack(spacing: 12) {
@@ -63,7 +64,7 @@ struct MapContainer: View {
                             }, label: {
                                 
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(mapItem.name ?? "")
+                                    Text(mapItem.name ?? "Coordinate Location")
                                         .font(.headline)
                                     Text(mapItem.placemark.title ?? "")
                                 }
@@ -85,10 +86,7 @@ struct MapContainer: View {
                 Spacer()
                 
                 Button(action: {
-                    if vm.addedPin == true {
-                        mapItem = vm.selectedMapItem!
-                        vm.addedPin.toggle()
-                    }
+               
                     showForm.toggle()
                 }, label: {
                     HStack {
@@ -110,7 +108,7 @@ struct MapContainer: View {
                 })
                 .padding()
                 .animation(.easeOut(duration: 0.5))
-                .opacity(vm.addedPin ? 1 : opacity)
+                .opacity(opacity)
              
                 Spacer()
                     .frame(height: vm.keyboardHeight)
@@ -147,7 +145,6 @@ struct MapView: UIViewRepresentable {
     var centerCoordinate: CLLocationCoordinate2D?
     
     
-    @State var gestureAnnotation: MKPointAnnotation?
     
     func makeUIView(context: Context) -> MKMapView {
         setupRegionForMap()
@@ -168,29 +165,15 @@ struct MapView: UIViewRepresentable {
             viewModel.annotations.forEach { annotation in
                 uiView.addAnnotation(annotation)
             }
+            
             uiView.showAnnotations(uiView.annotations.filter({$0 is MKPointAnnotation}), animated: true)
-         
-            //User selects a pin
-            uiView.annotations.forEach { annotation in
-                if annotation.title == viewModel.selectedMapItem?.name {
-                    uiView.selectAnnotation(annotation, animated: true)
-                }
-            }
-
         }
         
-        //User dropped pin
-        if let pressedAnnotion = gestureAnnotation
-        {
-//            print("adding dropped annotation")
-//            uiView.removeAnnotations(uiView.annotations)
-//
-//            withAnimation {
-//                uiView.addAnnotation(pressedAnnotion)
-//            }
-            viewModel.annotations.append(pressedAnnotion)
-            gestureAnnotation = nil
-            return
+        //User selects a pin
+        uiView.annotations.forEach { annotation in
+            if annotation.title == viewModel.selectedMapItem?.name {
+                uiView.selectAnnotation(annotation, animated: true)
+            }
         }
 
         
@@ -199,11 +182,8 @@ struct MapView: UIViewRepresentable {
         if viewModel.spotComplete == true {
             uiView.removeAnnotations(uiView.annotations)
             viewModel.spotComplete.toggle()
-            gestureAnnotation = nil
         }
         
-//        uiView.delegate = context.coordinator
-//
         //User resets the search
         if viewModel.annotations.count == 0 {
             uiView.removeAnnotations(uiView.annotations)
@@ -271,14 +251,11 @@ struct MapView: UIViewRepresentable {
             let annotation = MKPointAnnotation()
             guard let newCoordinate = newCoordinates else {return}
             annotation.coordinate = newCoordinate
-            parent.gestureAnnotation = annotation
             
             let addedPlacemark = MKPlacemark(coordinate: newCoordinate)
             let mapItem = MKMapItem(placemark: addedPlacemark)
-            parent.viewModel.selectedMapItem = mapItem
-            parent.viewModel.addedPin = true
-           
-        }
+            parent.viewModel.mapItems.append(mapItem)
+            parent.viewModel.annotations.append(annotation)        }
     }
     
 }
