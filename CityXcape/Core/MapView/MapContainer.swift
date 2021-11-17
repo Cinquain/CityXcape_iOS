@@ -148,7 +148,6 @@ struct MapView: UIViewRepresentable {
     
     
     @State var gestureAnnotation: MKPointAnnotation?
-    @State var previousAnnotation: MKPointAnnotation?
     
     func makeUIView(context: Context) -> MKMapView {
         setupRegionForMap()
@@ -183,13 +182,13 @@ struct MapView: UIViewRepresentable {
         //User dropped pin
         if let pressedAnnotion = gestureAnnotation
         {
-            print("adding dropped annotation")
-            uiView.removeAnnotations(uiView.annotations)
-            
-            withAnimation {
-                uiView.addAnnotation(pressedAnnotion)
-            }
-            previousAnnotation = pressedAnnotion
+//            print("adding dropped annotation")
+//            uiView.removeAnnotations(uiView.annotations)
+//
+//            withAnimation {
+//                uiView.addAnnotation(pressedAnnotion)
+//            }
+            viewModel.annotations.append(pressedAnnotion)
             gestureAnnotation = nil
             return
         }
