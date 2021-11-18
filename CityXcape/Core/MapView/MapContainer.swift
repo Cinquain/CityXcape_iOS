@@ -35,7 +35,7 @@ struct MapContainer: View {
                         opacity = 0
                     })
                         .placeholder(when: vm.searchQuery.isEmpty) {
-                            Text("Search address or location").foregroundColor(.gray)
+                            Text("Search address or tap to drop pin").foregroundColor(.gray)
                     }
                     .padding()
                     .background(Color.white)
@@ -57,16 +57,15 @@ struct MapContainer: View {
 
                                 vm.selectedMapItem = mapItem
                                 self.mapItem = mapItem
-                                withAnimation {
-                                    opacity = 1
-                                }
+                              
+                                showForm.toggle()
                                 
                             }, label: {
                                 
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(mapItem.name ?? "Coordinate Location")
                                         .font(.headline)
-                                    Text(mapItem.placemark.title ?? "Some Location")
+                                    Text("Tap to fillout details")
                                 }
                             })
                                 .foregroundColor(.black)
@@ -86,8 +85,7 @@ struct MapContainer: View {
                 Spacer()
                 
                 Button(action: {
-               
-                    showForm.toggle()
+                    vm.searchQuery = ""
                 }, label: {
                     HStack {
                         Image("marker")
@@ -95,7 +93,7 @@ struct MapContainer: View {
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 25, height: 25)
-                        Text("Fill Out Details")
+                        Text("Clear Map")
                             .font(.headline)
                     }
                     .frame(maxWidth: .infinity)
@@ -108,7 +106,7 @@ struct MapContainer: View {
                 })
                 .padding()
                 .animation(.easeOut(duration: 0.5))
-                .opacity(opacity)
+                .opacity(vm.mapItems.count >= 1 ? 1 : 0)
              
                 Spacer()
                     .frame(height: vm.keyboardHeight)
@@ -119,7 +117,6 @@ struct MapContainer: View {
         .edgesIgnoringSafeArea(.all)
         .sheet(isPresented: $showForm, onDismiss: {
             withAnimation {
-                opacity = 0
                 self.isMission = false
             }
         }, content: {

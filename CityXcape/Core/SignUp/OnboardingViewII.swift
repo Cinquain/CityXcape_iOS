@@ -19,9 +19,10 @@ struct OnboardingViewII: View {
     
     @State private var opacity: Double = 0
     @State private var disableInteraction = false
+    @State private var buttonMessage: String = "Create Account"
+
     @State var showError: Bool = false
     @State var message: String = ""
-    
     
     @Binding var email: String
     @Binding var name: String
@@ -104,7 +105,7 @@ struct OnboardingViewII: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 30, height: 30)
                         
-                        Text("Create Account")
+                        Text(buttonMessage)
                             .font(.title3)
                             .foregroundColor(.black)
                             .fontWeight(.light)
@@ -142,7 +143,7 @@ struct OnboardingViewII: View {
     
     fileprivate func createProfile() {
         
-        print("Create Profile")
+        print("Creating Profile")
         disableInteraction.toggle()
         
         if displayName.isEmpty || displayName.count < 3 {
@@ -153,13 +154,13 @@ struct OnboardingViewII: View {
         }
         
         AuthService.instance.createNewUserInDatabase(name: displayName, email: email, providerId: providerId, provider: provider, profileImage: userImage) { (uid) in
-            
+            buttonMessage = "Creating Account"
             if let userId = uid {
                 
                 AuthService.instance.loginUserToApp(userId: userId) { (success) in
                     if success {
                         print("User logged in")
-                        
+                        buttonMessage = "Account Created!"
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             self.presentationMode.wrappedValue.dismiss()
                         }
@@ -167,6 +168,7 @@ struct OnboardingViewII: View {
                         print("Error logging in")
                         message = "Error creating profile 😤"
                         self.showError.toggle()
+                        buttonMessage = "Create Account"
                         disableInteraction.toggle()
                     }
                    

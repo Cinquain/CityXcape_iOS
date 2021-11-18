@@ -44,21 +44,16 @@ struct MyWorld: View {
                     if vm.showOnboarding {
                         
                         
-                        Text("Your world consist of spots \n you know or want to vist")
-                            .foregroundColor(.white)
-                            .font(.title2)
-                            .fontWeight(.thin)
-                            .multilineTextAlignment(.center)
-                        
                         Image("marker")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(height: 250)
                         
-                        Text("Start building your world \n by adding a Secret Spot ")
+                        Text("Start building your world by adding \n a spot you want to visit ")
                             .foregroundColor(.white)
                             .font(.title3)
                             .fontWeight(.thin)
+                            .multilineTextAlignment(.center)
                         
                         Button {
                             selectedTab = 2
