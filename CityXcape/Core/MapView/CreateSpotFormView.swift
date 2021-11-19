@@ -25,6 +25,8 @@ struct CreateSpotFormView: View {
     @State private var presentPopover: Bool = false
     @State private var presentCompletion: Bool = false
     @State private var showAlert: Bool = false
+    @State private var buttonDisabled: Bool = false
+    
     @State var selectedImage: UIImage = UIImage()
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
@@ -182,6 +184,7 @@ struct CreateSpotFormView: View {
 
                             })
                             .animation(.easeOut(duration: 0.5))
+                            .disabled(buttonDisabled)
 
                     
             
@@ -255,12 +258,15 @@ struct CreateSpotFormView: View {
     }
     
     fileprivate func postSecretSpot() {
+        buttonDisabled = true
 
         DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, world: world, mapItem: mapItem, isPublic: isPublic) { (success) in
             
             if success {
+                buttonDisabled = false
                 presentCompletion.toggle()
             } else {
+                buttonDisabled = false
                 showAlert.toggle()
                 alertMessage = "Error posting Secret Spot 😤"
             }
