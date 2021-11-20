@@ -10,12 +10,12 @@ import Firebase
 import GoogleSignIn
 import UserNotifications
 import FirebaseMessaging
+import JGProgressHUD_SwiftUI
 
 @main
 struct CityXcapeApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    
     @AppStorage(CurrentUserDefaults.userId) var currentUserID: String?
     
     var body: some Scene {
@@ -24,7 +24,9 @@ struct CityXcapeApp: App {
                 SignUpView()
             } else
             {
-                HomeView()
+                JGProgressHUDPresenter {
+                    HomeView()
+                }
             }
         }
     }

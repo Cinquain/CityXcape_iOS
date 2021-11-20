@@ -42,6 +42,7 @@
 		217E9AA8270B6EC400F45077 /* MissionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E9AA7270B6EC400F45077 /* MissionViewModel.swift */; };
 		217E9AAB270B757500F45077 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 217E9AAA270B757500F45077 /* Assets.xcassets */; };
 		217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217EFE8926DEAB1F005C7C88 /* CongratsView.swift */; };
+		21806AD3274955EC00C641C7 /* JGProgressHUD-SwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21806AD2274955EC00C641C7 /* JGProgressHUD-SwiftUI */; };
 		218115EB27315E9400026AAD /* NotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218115EA27315E9400026AAD /* NotificationsManager.swift */; };
 		218115ED2731860700026AAD /* PublicStreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218115EC2731860700026AAD /* PublicStreetPass.swift */; };
 		218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218980A626DC54C500A6FD23 /* LikeAnimationView.swift */; };
@@ -134,6 +135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21806AD3274955EC00C641C7 /* JGProgressHUD-SwiftUI in Frameworks */,
 				21D85F5326EACF0E00502636 /* Shimmer in Frameworks */,
 				21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */,
 				219842A326CF3A680089CE03 /* LBTATools in Frameworks */,
@@ -387,6 +389,7 @@
 				21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */,
 				21D85F5226EACF0E00502636 /* Shimmer */,
 				2178C4502719030600B4C395 /* CardStack */,
+				21806AD2274955EC00C641C7 /* JGProgressHUD-SwiftUI */,
 			);
 			productName = CityXcape;
 			productReference = 217DA72426CC8F8B0039A145 /* CityXcape.app */;
@@ -420,6 +423,7 @@
 				21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				21D85F5126EACF0E00502636 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 				2178C44F2719030600B4C395 /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */,
+				21806AD1274955EC00C641C7 /* XCRemoteSwiftPackageReference "JGProgressHUD-SwiftUI" */,
 			);
 			productRefGroup = 217DA72526CC8F8B0039A145 /* Products */;
 			projectDirPath = "";
@@ -778,6 +782,14 @@
 				minimumVersion = 0.0.5;
 			};
 		};
+		21806AD1274955EC00C641C7 /* XCRemoteSwiftPackageReference "JGProgressHUD-SwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD-SwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.1;
+			};
+		};
 		219842A126CF3A680089CE03 /* XCRemoteSwiftPackageReference "LBTATools" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/bhlvoong/LBTATools.git";
@@ -809,6 +821,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2178C44F2719030600B4C395 /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */;
 			productName = CardStack;
+		};
+		21806AD2274955EC00C641C7 /* JGProgressHUD-SwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21806AD1274955EC00C641C7 /* XCRemoteSwiftPackageReference "JGProgressHUD-SwiftUI" */;
+			productName = "JGProgressHUD-SwiftUI";
 		};
 		219842A226CF3A680089CE03 /* LBTATools */ = {
 			isa = XCSwiftPackageProductDependency;

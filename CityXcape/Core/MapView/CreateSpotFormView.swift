@@ -8,16 +8,21 @@
 import SwiftUI
 import MapKit
 import CoreLocation
+import JGProgressHUD_SwiftUI
 
 struct CreateSpotFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
-    @Binding var opacity: Double
+    @EnvironmentObject var hudCoordinator: JGProgressHUDCoordinator
+
+
+    @Binding var selectedTab: Int
 
     @State private var spotName: String = ""
     @State private var description: String = ""
     @State private var world: String = ""
+    
     @State private var showPicker: Bool = false
     @State private var addedImage: Bool = false
     @State private var isPublic: Bool = true
@@ -26,6 +31,7 @@ struct CreateSpotFormView: View {
     @State private var presentCompletion: Bool = false
     @State private var showAlert: Bool = false
     @State private var buttonDisabled: Bool = false
+    @State private var showActionSheet: Bool = false
     
     @State var selectedImage: UIImage = UIImage()
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
@@ -77,6 +83,7 @@ struct CreateSpotFormView: View {
                             .frame(height: 100)
                             .multilineTextAlignment(.leading)
                             .cornerRadius(4)
+                            .keyboardType(.alphabet)
                     }
                     .padding()
                     
@@ -122,10 +129,7 @@ struct CreateSpotFormView: View {
                         VStack{
                             
                             Button(action: {
-                                
-                                showPicker.toggle()
-                                
-                                
+                                showActionSheet.toggle()
                             }, label: {
                                 HStack {
                                     Image(systemName: "camera.circle.fill")
@@ -190,15 +194,16 @@ struct CreateSpotFormView: View {
             
                 }
                 .sheet(isPresented: $showPicker, onDismiss: {
-                    addedImage.toggle()
+                    addedImage = true
                 }, content: {
                     ImagePicker(imageSelected: $selectedImage, sourceType: $sourceType)
                         .colorScheme(.dark)
                 })
                 .fullScreenCover(isPresented: $presentCompletion, onDismiss: {
                     
+                    selectedTab = 0
                     NotificationCenter.default.post(name: spotCompleteNotification, object: nil)
-                    opacity = 0
+
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         self.presentationMode.wrappedValue.dismiss()
                     }
@@ -212,6 +217,19 @@ struct CreateSpotFormView: View {
                 .popover(isPresented: $presentPopover, content: {
                     Text("Different World Different Spots")
                 })
+                .actionSheet(isPresented: $showActionSheet) {
+                    ActionSheet(title: Text("Source Options"), message: nil, buttons: [
+                        .default(Text("Camera"), action: {
+                            sourceType = .camera
+                            showPicker.toggle()
+                        }),
+                        .default(Text("Photo Library"), action: {
+                            sourceType = .photoLibrary
+                            showPicker.toggle()
+                        })
+                    ])
+                    
+                }
                         
             }
             .background(Color.black.edgesIgnoringSafeArea(.all))
@@ -222,6 +240,14 @@ struct CreateSpotFormView: View {
     
     fileprivate func isReady()  {
         
+        
+        hudCoordinator.showHUD {
+            let hud = JGProgressHUD()
+            hud.style = .dark
+            hud.textLabel.text = "Uploading Secret Spot"
+            return hud
+        }
+    
         if spotName.count > 4
             && addedImage == true
             && description.count > 10
@@ -231,24 +257,28 @@ struct CreateSpotFormView: View {
         } else {
             
             if spotName.count < 4 {
+                hudCoordinator.presentedHUD?.dismiss()
                 alertMessage = "Spot needs a title at least four characters long"
                 showAlert.toggle()
                 return
             }
             
             if description.count < 10 {
+                hudCoordinator.presentedHUD?.dismiss()
                 alertMessage = "Description needs to be at least 10 characters long"
                 showAlert.toggle()
                 return
             }
             
             if world.count < 3 {
+                hudCoordinator.presentedHUD?.dismiss()
                 alertMessage = "Please include a World. \n Your spot can only be visible to a community"
                 showAlert.toggle()
                 return
             }
             
             if addedImage == false {
+                hudCoordinator.presentedHUD?.dismiss()
                 alertMessage = "Please add an image for your spot"
                 showAlert.toggle()
                 return
@@ -258,14 +288,17 @@ struct CreateSpotFormView: View {
     }
     
     fileprivate func postSecretSpot() {
+
         buttonDisabled = true
 
         DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, world: world, mapItem: mapItem, isPublic: isPublic) { (success) in
             
             if success {
+                hudCoordinator.presentedHUD?.dismiss()
                 buttonDisabled = false
                 presentCompletion.toggle()
             } else {
+                hudCoordinator.presentedHUD?.dismiss()
                 buttonDisabled = false
                 showAlert.toggle()
                 alertMessage = "Error posting Secret Spot 😤"
@@ -291,10 +324,9 @@ struct CreateSpotFormView: View {
 struct CreateSpotFormView_Previews: PreviewProvider {
      @State static var address: String = "1229 Spann Ave, Indianapolis, IN, 46203"
      @State static var coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 39.75879282513146, longitude: -86.1373309437772)
-    
+    @State static var tabIndex: Int = 1
     static var previews: some View {
-
-        CreateSpotFormView(opacity: .constant(0), mapItem: MKMapItem())
+        CreateSpotFormView(selectedTab: $tabIndex, mapItem: MKMapItem())
     }
     
 }

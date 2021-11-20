@@ -36,7 +36,7 @@ struct OnboardingViewII: View {
             
             VStack(spacing: 20) {
                 Spacer()
-                    .frame(height: geo.size.width / 4)
+                    .frame(height: geo.size.width / 5)
                 
        
                 
@@ -94,7 +94,7 @@ struct OnboardingViewII: View {
                 })
                 
                 Spacer()
-                    .frame(height: 120)
+                    .frame(height: 60)
                 
                 Button(action: {
                     createProfile()

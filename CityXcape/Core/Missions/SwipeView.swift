@@ -91,7 +91,7 @@ struct SwipeView: View {
             
             
                 CardStack(direction: LeftRight.direction,
-                  data: vm.userMissions, id: \.self) { spot, direction in
+                          data: vm.userMissions.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.self) { spot, direction in
                     
                     switch direction {
                     case .right:

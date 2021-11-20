@@ -84,7 +84,7 @@ enum Icon: String {
 }
 
 enum Labels: String {
-    case tab0 = "Missions"
+    case tab0 = "Discover"
     case tab1 = "My World"
     case tab2 = "Post Spot"
     case tab3 = "StreetPass"

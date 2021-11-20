@@ -8,13 +8,15 @@
 import SwiftUI
 import MapKit
 import UIKit
+import JGProgressHUD_SwiftUI
 
 struct MapContainer: View {
     @Environment(\.presentationMode) var presentationMode
-
+    
+    @Binding var selectedTab: Int
+    
     @ObservedObject var vm = MapSearchViewModel()
     @State private var showForm: Bool = false
-    @State private var opacity: Double = 0
     @State private var refresh: Bool = false
     @State var isMission: Bool
     
@@ -32,7 +34,7 @@ struct MapContainer: View {
                 HStack(spacing: 10) {
                     TextField("Search Location", text: $vm.searchQuery, onCommit: {
                         UIApplication.shared.windows.filter({$0.isKeyWindow}).first?.endEditing(true)
-                        opacity = 0
+
                     })
                         .placeholder(when: vm.searchQuery.isEmpty) {
                             Text("Search address or tap to drop pin").foregroundColor(.gray)
@@ -65,6 +67,8 @@ struct MapContainer: View {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(mapItem.name ?? "Coordinate Location")
                                         .font(.headline)
+                                    Text(mapItem.placemark.title ?? mapItem.getAddress())
+                                        .font(.caption)
                                     Text("Tap to fillout details")
                                 }
                             })
@@ -120,7 +124,8 @@ struct MapContainer: View {
                 self.isMission = false
             }
         }, content: {
-            CreateSpotFormView(opacity: $opacity, mapItem: mapItem)
+            CreateSpotFormView(selectedTab: $selectedTab, mapItem: mapItem)
+
         })
       
        
@@ -268,8 +273,9 @@ struct MapView: UIViewRepresentable {
 }
 
 struct MapView_Previews: PreviewProvider {
+    @State static var isSelected: Int = 0
     static var previews: some View {
-        MapContainer(isMission: false)
+        MapContainer(selectedTab: $isSelected, isMission: false)
             .colorScheme(.dark)
     }
 }

@@ -14,6 +14,8 @@ import MapKit
 class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     
+    
+    
     @Published var annotations: [MKPointAnnotation] = [MKPointAnnotation]()
     @Published var isSearching: Bool = false
     @Published var searchQuery: String = ""

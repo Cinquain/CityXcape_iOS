@@ -13,6 +13,7 @@ struct PublicStreetPass: View {
     let username: String
     let userbio: String
     let streetCred: String
+
     @State private var showAlert: Bool = false
     
     let width: CGFloat = UIScreen.main.bounds.size.width / 5
@@ -100,7 +101,6 @@ struct PublicStreetPass: View {
                 .frame(height: 45)
                 .background(Color.orange.opacity(0.7))
                 .cornerRadius(10)
-                .disabled(true)
 
 
                 
@@ -109,7 +109,7 @@ struct PublicStreetPass: View {
             }
             .alert(isPresented: $showAlert) {
                 AnalyticsService.instance.triedMessagingUser()
-                return Alert(title: Text("Feature not yet available"))
+                return Alert(title: Text("Feature Coming Soon..."))
             }
             
         }
