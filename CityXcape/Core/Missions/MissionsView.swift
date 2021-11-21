@@ -56,6 +56,21 @@ struct MissionsView: View {
             }
             .listStyle(PlainListStyle())
             .colorScheme(.dark)
+            
+            Button {
+                vm.refreshSecretSpots()
+                AnalyticsService.instance.loadedNewSpots()
+            } label: {
+                VStack {
+                    Image(Icon.refresh.rawValue)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                    .frame(height: 50)
+                    Text("Load New Spots")
+                        .font(.caption)
+                        .fontWeight(.light)
+                }
+            }
 
             Spacer()
                 .frame(maxWidth: .infinity)
@@ -72,11 +87,14 @@ struct MissionsView: View {
                 MissionDetails(mission: mission, parent: self)
             }
         })
-        .fullScreenCover(isPresented: $vm.hasUserMissions, onDismiss: {
+        .fullScreenCover(isPresented: $vm.hasNewSpots, onDismiss: {
             selectedTab = 0
         }, content: {
             SwipeView(vm: vm)
         })
+        .alert(isPresented: $vm.showAlert) {
+            return Alert(title: Text("No new spot recently posted 😭"))
+        }
     }
 }
 

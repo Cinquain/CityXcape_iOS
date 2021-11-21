@@ -18,22 +18,15 @@ class MissionViewModel: ObservableObject {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
 
     @Published var standardMissions: [Mission] = []
-    @Published var userMissions: [SecretSpot] = []
+    @Published var newSecretSpots: [SecretSpot] = []
     @Published var lastSecretSpot: String = ""
     @Published var hasPostedSpot : Bool = false
-    @Published var hasUserMissions: Bool = false
+    @Published var hasNewSpots: Bool = false
+    @Published var showAlert: Bool = false
     
     init() {
-        DataService.instance.getNewSecretSpots(lastSecretSpot: lastSecretSpot) { [weak self] secretspots in
-            print("This is secret spots inside mission model", secretspots)
-            self?.userMissions = secretspots
-            
-            if self?.userMissions.count ?? 0 > 0 {
-                print("User has new missions of \(self?.userMissions.count ?? 0)")
-                self?.hasUserMissions = true
-            }
-            
-        }
+       
+        getNewSecretSpots()
         
         guard let uid = userId  else {return}
 
@@ -49,10 +42,36 @@ class MissionViewModel: ObservableObject {
                 self.standardMissions = self.standardMissions.unique()
             }
         }
+    }
+    
+    func getNewSecretSpots() {
         
-     
+        DataService.instance.getNewSecretSpots(lastSecretSpot: lastSecretSpot) { [weak self] secretspots in
+            print("This is secret spots inside mission model", secretspots)
+            self?.newSecretSpots = secretspots
+            
+            if self?.newSecretSpots.count ?? 0 > 0 {
+                print("User has new missions of \(self?.newSecretSpots.count ?? 0)")
+                self?.hasNewSpots = true
+            }
+            
+        }
+    }
+    
+    func refreshSecretSpots() {
         
-       
+        DataService.instance.getNewSecretSpots(lastSecretSpot: lastSecretSpot) { [weak self] secretspots in
+            print("This is secret spots inside mission model", secretspots)
+            self?.newSecretSpots = secretspots
+            
+            if self?.newSecretSpots.count ?? 0 > 0 {
+                print("User has new missions of \(self?.newSecretSpots.count ?? 0)")
+                self?.hasNewSpots = true
+            } else {
+                self?.showAlert = true
+            }
+            
+        }
         
     }
     

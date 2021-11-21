@@ -78,9 +78,15 @@ struct CreateSpotFormView: View {
         
                         }
                         .foregroundColor(.white)
-                        TextEditor(text: $description)
+                        
+                        TextField("Describe what makes this spot is special", text: $description)
+                            .placeholder(when: description.isEmpty) {
+                                Text("Describe what makes this spot is special").foregroundColor(.gray)
+                        }
                             .frame(maxWidth: .infinity)
-                            .frame(height: 100)
+                            .frame(height: 70)
+                            .background(Color.white)
+                            .foregroundColor(.black)
                             .multilineTextAlignment(.leading)
                             .cornerRadius(4)
                             .keyboardType(.alphabet)

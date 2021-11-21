@@ -91,7 +91,7 @@ struct SwipeView: View {
             
             
                 CardStack(direction: LeftRight.direction,
-                          data: vm.userMissions.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.self) { spot, direction in
+                          data: vm.newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.self) { spot, direction in
                     
                     switch direction {
                     case .right:
@@ -161,13 +161,13 @@ struct SwipeView: View {
         }
         
         //Check if spot is last, if true dismiss view
-        guard let index = vm.userMissions.firstIndex(of: spot) else {return}
-        if index  == vm.userMissions.count - 1 {
+        guard let index = vm.newSecretSpots.firstIndex(of: spot) else {return}
+        if index  == vm.newSecretSpots.count - 1 {
             opacity = 1
             complete.toggle()
-            vm.hasUserMissions = false
+            vm.hasNewSpots = false
             //Use the last secret spot to start the next query
-            vm.lastSecretSpot = vm.userMissions.last?.postId ?? ""
+            vm.lastSecretSpot = vm.newSecretSpots.last?.postId ?? ""
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                 self.presentationMode.wrappedValue.dismiss()
             }
@@ -193,12 +193,12 @@ struct SwipeView: View {
             }
         }
         
-        guard let index = vm.userMissions.firstIndex(of: spot) else {return}
-        if index  == vm.userMissions.count - 1{
+        guard let index = vm.newSecretSpots.firstIndex(of: spot) else {return}
+        if index  == vm.newSecretSpots.count - 1{
             opacity = 1
             complete.toggle()
-            vm.lastSecretSpot = vm.userMissions.last?.postId ?? ""
-            vm.hasUserMissions = false
+            vm.lastSecretSpot = vm.newSecretSpots.last?.postId ?? ""
+            vm.hasNewSpots = false
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                 self.presentationMode.wrappedValue.dismiss()
             }

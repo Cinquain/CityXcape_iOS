@@ -62,4 +62,12 @@ class AnalyticsService {
         Analytics.logEvent("messaged_user", parameters: nil)
     }
     
+    func droppedPin() {
+        Analytics.logEvent("dropped_pin", parameters: nil)
+    }
+    
+    func loadedNewSpots() {
+        Analytics.logEvent("loaded_new_spots", parameters: nil)
+    }
+    
 }

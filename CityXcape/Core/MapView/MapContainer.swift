@@ -253,19 +253,16 @@ struct MapView: UIViewRepresentable {
             let touchPoint = gestureRecognizer.location(in: gestureRecognizer.view)
             let newCoordinates = (gestureRecognizer.view as? MKMapView)?.convert(touchPoint, toCoordinateFrom: gestureRecognizer.view)
             
-           
 
             let annotation = MKPointAnnotation()
             guard let newCoordinate = newCoordinates else {return}
-            annotation.coordinate = newCoordinate
+            AnalyticsService.instance.droppedPin()
             
+            annotation.coordinate = newCoordinate
             let addedPlacemark = MKPlacemark(coordinate: newCoordinate)
             let mapItem = MKMapItem(placemark: addedPlacemark)
             parent.viewModel.mapItems.append(mapItem)
             parent.viewModel.annotations.append(annotation)
-            
-            
-           
             
         }
     }
