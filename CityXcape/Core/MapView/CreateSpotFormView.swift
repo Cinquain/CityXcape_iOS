@@ -8,13 +8,11 @@
 import SwiftUI
 import MapKit
 import CoreLocation
-import JGProgressHUD_SwiftUI
 
 struct CreateSpotFormView: View {
     
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
-    @EnvironmentObject var hudCoordinator: JGProgressHUDCoordinator
 
 
     @Binding var selectedTab: Int
@@ -246,13 +244,6 @@ struct CreateSpotFormView: View {
     
     fileprivate func isReady()  {
         
-        
-        hudCoordinator.showHUD {
-            let hud = JGProgressHUD()
-            hud.style = .dark
-            hud.textLabel.text = "Uploading Secret Spot"
-            return hud
-        }
     
         if spotName.count > 4
             && addedImage == true
@@ -263,28 +254,24 @@ struct CreateSpotFormView: View {
         } else {
             
             if spotName.count < 4 {
-                hudCoordinator.presentedHUD?.dismiss()
                 alertMessage = "Spot needs a title at least four characters long"
                 showAlert.toggle()
                 return
             }
             
             if description.count < 10 {
-                hudCoordinator.presentedHUD?.dismiss()
                 alertMessage = "Description needs to be at least 10 characters long"
                 showAlert.toggle()
                 return
             }
             
             if world.count < 3 {
-                hudCoordinator.presentedHUD?.dismiss()
                 alertMessage = "Please include a World. \n Your spot can only be visible to a community"
                 showAlert.toggle()
                 return
             }
             
             if addedImage == false {
-                hudCoordinator.presentedHUD?.dismiss()
                 alertMessage = "Please add an image for your spot"
                 showAlert.toggle()
                 return
@@ -300,11 +287,9 @@ struct CreateSpotFormView: View {
         DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, world: world, mapItem: mapItem, isPublic: isPublic) { (success) in
             
             if success {
-                hudCoordinator.presentedHUD?.dismiss()
                 buttonDisabled = false
                 presentCompletion.toggle()
             } else {
-                hudCoordinator.presentedHUD?.dismiss()
                 buttonDisabled = false
                 showAlert.toggle()
                 alertMessage = "Error posting Secret Spot 😤"

@@ -24,9 +24,7 @@ struct CityXcapeApp: App {
                 SignUpView()
             } else
             {
-                JGProgressHUDPresenter {
-                    HomeView()
-                }
+                HomeView()
             }
         }
     }

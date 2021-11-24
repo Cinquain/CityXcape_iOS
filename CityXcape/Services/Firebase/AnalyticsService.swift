@@ -70,4 +70,16 @@ class AnalyticsService {
         Analytics.logEvent("loaded_new_spots", parameters: nil)
     }
     
+    func checkedIn() {
+        Analytics.logEvent("checked-in", parameters: nil)
+    }
+    
+    func reportPost() {
+        Analytics.logEvent("report_post", parameters: nil)
+    }
+    
+    func deletePost() {
+        Analytics.logEvent("deleted_post", parameters: nil)
+    }
+    
 }

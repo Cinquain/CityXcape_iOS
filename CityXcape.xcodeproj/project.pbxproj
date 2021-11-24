@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */; };
 		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
 		214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214FAC6C26E2F16300F37B80 /* ImageManager.swift */; };
 		21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */; };
@@ -70,6 +71,7 @@
 
 /* Begin PBXFileReference section */
 		03633A38349C026A52CC221D /* Pods-CityXcape.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.release.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.release.xcconfig"; sourceTree = "<group>"; };
+		2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotViewModel.swift; sourceTree = "<group>"; };
 		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
 		214FAC6C26E2F16300F37B80 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewModel.swift; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 				2106253626EDA07C000210E2 /* MyWorldViewModel.swift */,
 				21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */,
 				218115EA27315E9400026AAD /* NotificationsManager.swift */,
+				2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */,
 			);
 			path = "My World";
 			sourceTree = "<group>";
@@ -565,6 +568,7 @@
 				217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */,
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,
 				21C8593B271135EE008224E5 /* SwipeView.swift in Sources */,
+				2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */,
 				217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */,
 				217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */,
 				217AA0C426FB660100B994B3 /* OnboardScreen.swift in Sources */,
@@ -717,7 +721,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -742,7 +746,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

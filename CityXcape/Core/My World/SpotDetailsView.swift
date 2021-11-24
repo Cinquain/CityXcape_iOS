@@ -11,18 +11,17 @@ import SDWebImageSwiftUI
 struct SpotDetailsView: View {
     
     @Environment(\.presentationMode) var presentationMode
-    @State private var alertmessage: String = ""
-    @State private var alertTitle: String = ""
+
     var captions: [String] = [String]()
-    var spot: SecretSpot?
+    var spot: SecretSpot
     
+    @ObservedObject var vm: SpotViewModel = SpotViewModel()
     
     @State private var showActionSheet: Bool = false
-    @State private var genericAlert: Bool = false
     @State private var actionSheetType: SpotActionSheetType = .general
     @Binding var currentIndex: Int
     
-    
+ 
     init(spot: SecretSpot, index: Binding<Int>) {
         self.spot = spot
         let name = spot.spotName
@@ -40,31 +39,31 @@ struct SpotDetailsView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack(alignment: .leading) {
-                    Ticker(profileUrl: spot?.ownerImageUrl ?? "", captions: captions)
+                    Ticker(profileUrl: spot.ownerImageUrl, captions: captions)
                         .frame(height: 120)
                     
-                    WebImage(url: URL(string: spot?.imageUrl ?? ""))
+                    WebImage(url: URL(string: spot.imageUrl))
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: .infinity)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .padding(.top, 20)
                     
-                    Text(spot?.description ?? "")
+                    Text(spot.description ?? "")
                         .multilineTextAlignment(.leading)
                         .font(.body)
                         .lineLimit(.none)
                         .padding()
                     
                     Button(action: {
-                        openGoogleMap()
+                        vm.openGoogleMap(spot: spot)
                     }, label: {
                         HStack {
                             Image("pin_blue")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 20, height: 20)
-                            Text(spot?.address ?? "")
+                            Text(spot.address)
                                 .foregroundColor(.white)
                         }
                     })
@@ -83,6 +82,25 @@ struct SpotDetailsView: View {
                     
                         
                         Spacer()
+                        
+                        Button {
+                            vm.checkInSecretSpot(spot: spot)
+                        } label: {
+                            VStack {
+                                Image(Icon.check.rawValue)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 25)
+                                
+                                Text("check-in")
+                                    .foregroundColor(.white)
+                                    .fontWeight(.light)
+                                    .font(.caption)
+                            }
+                        }
+                        .padding(.trailing, 20)
+                        .disabled(vm.disableCheckin)
+
                     }
                     
                 }
@@ -92,37 +110,22 @@ struct SpotDetailsView: View {
             .colorScheme(.dark)
             .onAppear(perform: {
                 AnalyticsService.instance.viewedSecretSpot()
-                guard let postId = spot?.postId else {return}
-                DataService.instance.updatePostViewCount(postId: postId)
+                DataService.instance.updatePostViewCount(postId: spot.postId)
             })
-            .alert(isPresented: $genericAlert, content: {
-                return Alert(title: Text(alertTitle), message: Text(alertmessage), dismissButton: .default(Text("Ok"), action: {
+            .alert(isPresented: $vm.genericAlert, content: {
+                return Alert(title: Text(vm.alertTitle), message: Text(vm.alertmessage), dismissButton: .default(Text("Ok"), action: {
                     self.presentationMode.wrappedValue.dismiss()
                 }))
             })
             .actionSheet(isPresented: $showActionSheet, content: {
                 getActionSheet()
             })
+            
+
         }
         
     }
     
-    func openGoogleMap() {
-        
-        if (UIApplication.shared.canOpenURL(URL(string: "comgooglemaps://")!)) {
-            if let url = URL(string: "comgooglemaps-x-callback://?saddr=&daddr=\(spot!.latitude),\(spot!.longitude)&directionsmode=driving") {
-                UIApplication.shared.open(url, options: [:])
-            }
-            
-        } else {
-            //Open in brower
-            if let url = URL(string: "https://www.google.co.in/maps/dir/?saddr=&daddr=\(spot!.latitude),\(spot!.longitude)&directionsmode=driving") {
-                UIApplication.shared.open(url)
-            }
-            
-        }
-
-    }
     
     func getActionSheet() -> ActionSheet {
         switch actionSheetType {
@@ -147,13 +150,13 @@ struct SpotDetailsView: View {
         case .report:
             return ActionSheet(title: Text("Why are you reporting this post"), message: nil, buttons: [
                 .destructive(Text("This is innapropriate"), action: {
-                    reportPost(reason: "This is innapropriate")
+                    vm.reportPost(reason: "This is innapropriate", spot: spot)
                 }),
                 .destructive(Text("This is spam"), action: {
-                    reportPost(reason: "This is spam")
+                    vm.reportPost(reason: "This is spam", spot: spot)
                 }),
                 .destructive(Text("It made me uncomfortable"), action: {
-                    reportPost(reason: "It made me uncomfortable")
+                    vm.reportPost(reason: "It made me uncomfortable", spot: spot)
                 }),
                 .cancel( {
                     self.actionSheetType = .general
@@ -162,7 +165,12 @@ struct SpotDetailsView: View {
         case .delete:
             return ActionSheet(title: Text("Are You sure you want to delete this post?"), message: nil, buttons: [
                 .destructive(Text("Yes"), action: {
-                    deletePost()
+                    currentIndex = 0
+                    vm.deletePost(spot: spot) { success in
+                        if success {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                    }
                 }),
                 
                 .cancel(Text("No"))
@@ -170,50 +178,18 @@ struct SpotDetailsView: View {
         }
     }
   
-    func reportPost(reason: String) {
-        print("Reporting post")
-        guard let postId = spot?.postId else {return}
-        DataService.instance.uploadReports(reason: reason, postId: postId) { success in
-            
-            if success {
-                self.alertTitle = "Successfully Reported"
-                self.alertmessage = "Thank you for reporting this spot. We will review it shortly!"
-                self.genericAlert.toggle()
-            } else {
-                self.alertTitle = "Error Reporting Spot"
-                self.alertmessage = "There was an error reporting this secret spot. Please restart the app and try again."
-                self.genericAlert.toggle()
-            }
-        }
-
-    }
-    
-     func deletePost() {
-        currentIndex = 0
-        guard let secretSpot = spot else {return}
-         
-         DataService.instance.deleteSecretSpot(spot: secretSpot) { success in
-            
-            if success {
-                self.alertTitle = "Successfully Deleted"
-                self.alertmessage = "This secret spot has been removed from your world"
-                self.genericAlert.toggle()
-                self.presentationMode.wrappedValue.dismiss()
-            } else {
-                self.alertTitle = "Error"
-                self.alertmessage = "There was an error in deleting this spot. Restart the app and try again"
-                self.genericAlert.toggle()
-            }
-        }
-    }
     
 }
 
-//struct SpotDetailsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//
-//        let spot = SecretSpot(postId: "disnf", spotName: "The Big Duck", imageUrl: "big", longitude: 1010, latitude: 01202, address: "1229 Spann avenue", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), viewCount: 1, price: 1, saveCounts: 1, description: "The best spot", ownerId: "wjffh", ownerDisplayName: "Cinquain", ownerImageUrl: "Eichler")
-//
-//        SpotDetailsView(spot: spot)
-//    }
-//}
+
+struct SpotDetailsView_Previews: PreviewProvider {
+    @State static var integer: Int = 1
+
+    static var previews: some View {
+
+        
+        let spot = SecretSpot(postId: "disnf", spotName: "The Big Duck", imageUrl: "big", longitude: 1010, latitude: 01202, address: "1229 Spann avenue", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), viewCount: 1, price: 1, saveCounts: 1, isPublic: true, description: "The best spot", ownerId: "wjffh", ownerDisplayName: "Cinquain", ownerImageUrl: "https://twitter.com/TEA5E/status/570946413602799617/photo/1")
+
+        SpotDetailsView(spot: spot, index: $integer)
+    }
+}

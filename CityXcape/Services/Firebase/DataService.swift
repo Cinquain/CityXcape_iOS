@@ -133,7 +133,7 @@ class DataService {
         //Add user to saved collection in spot
         REF_POST.document(spotId).collection("savedBy").document(uid).setData(savedData) { error in
             if let error = error {
-                print("Error saving user to saved collection of secret spot")
+                print("Error saving user to saved collection of secret spot", error.localizedDescription)
                 completion(false)
                 return
             }
@@ -159,6 +159,40 @@ class DataService {
         
     }
     
+    
+    func checkinSecretSpot(spot: SecretSpot, completion: @escaping (_ success: Bool) ->()) {
+        guard let uid = userId else {return}
+        let postId = spot.postId
+        
+        let checkinData: [String: Any] = [
+            "checked-in": FieldValue.serverTimestamp()
+        ]
+        
+        REF_WORLD.document("checkin").collection(uid).document(postId).setData(checkinData)
+        
+        
+        REF_POST.document(postId).collection("checkedIn").document(uid).setData(checkinData) { error in
+            
+            if let error = error {
+                print("Error saving check-in to database", error.localizedDescription)
+                completion(false)
+                return
+            }
+            
+            print("Successfully saved checkin to DB")
+            completion(true)
+            
+            let increment: Int64 = 3
+            let ownerWalletData: [String: Any] = [
+                UserField.streetCred : FieldValue.increment(increment)
+            ]
+            
+            AuthService.instance.updateUserField(uid: uid, data: ownerWalletData)
+        }
+        
+    }
+    
+    
     func dismissCard(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
       
         let spotId = spot.postId
@@ -178,7 +212,7 @@ class DataService {
         
         REF_POST.document(spot.postId).updateData(data) { error in
             if let error = error {
-                print("There was an error updating view card while dismissing card")
+                print("There was an error updating view card while dismissing card", error.localizedDescription)
                 completion(false)
                 return
             }
@@ -235,7 +269,6 @@ class DataService {
             if let querysnapshot = querysnapshot, querysnapshot.count > 0 {
                 querysnapshot.documents.forEach { snapshot in
                     
-                    let spotId  = snapshot.documentID
                     
                     self.REF_POST.whereField(SecretSpotField.ownerId, isEqualTo: uid).getDocuments { querySnapshot, err in
                         
