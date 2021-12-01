@@ -8,8 +8,11 @@
 import Foundation
 import MapKit
 import CoreLocation
+import SwiftUI
 
 struct SecretSpot:  Hashable, Codable {
+    
+    
    
     var postId: String
     let spotName: String
@@ -59,7 +62,7 @@ struct SecretSpot:  Hashable, Codable {
     var distanceFromUser: Double {
         let manager = LocationService.instance.manager
         
-        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedWhenInUse {
+        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
             let destination = CLLocation(latitude: latitude, longitude: longitude)
             let userlocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
             return userlocation.distance(from: destination) * 0.000621
@@ -73,5 +76,10 @@ struct SecretSpot:  Hashable, Codable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(postId)
     }
+    
+    static func == (lhs: SecretSpot, rhs: SecretSpot) -> Bool {
+        lhs.postId == rhs.postId
+    }
+    
     
 }

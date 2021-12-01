@@ -153,5 +153,7 @@ class LocationService: NSObject, CLLocationManagerDelegate {
     
     let manager = CLLocationManager()
     
+    
+    
     private override init() {}
 }

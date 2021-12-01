@@ -163,6 +163,7 @@ class DataService {
     func checkinSecretSpot(spot: SecretSpot, completion: @escaping (_ success: Bool) ->()) {
         guard let uid = userId else {return}
         let postId = spot.postId
+        let ownerId = spot.ownerId
         
         let checkinData: [String: Any] = [
             "checked-in": FieldValue.serverTimestamp()
@@ -182,14 +183,44 @@ class DataService {
             print("Successfully saved checkin to DB")
             completion(true)
             
-            let increment: Int64 = 3
-            let ownerWalletData: [String: Any] = [
-                UserField.streetCred : FieldValue.increment(increment)
+            let verifierIncrement: Int64 = 3
+            let verifierWalletData: [String: Any] = [
+                UserField.streetCred : FieldValue.increment(verifierIncrement)
             ]
             
-            AuthService.instance.updateUserField(uid: uid, data: ownerWalletData)
+            AuthService.instance.updateUserField(uid: uid, data: verifierWalletData)
+            
+            let ownerIncrement: Int64 = 1
+            let ownerWalletData: [String: Any] = [
+                UserField.streetCred : FieldValue.increment(ownerIncrement)
+            ]
+                        
+            AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
         }
         
+    }
+    
+    func checkedIfUserAlreadyCheckedIn(spot: SecretSpot, completion: @escaping (_ doesExist: Bool) ->()) {
+        guard let uid = userId else {return}
+        let postId = spot.postId
+        
+        REF_WORLD.document("checkin").collection(uid).document(postId).getDocument { snapshot, error in
+            
+            if let error = error {
+                print("Error getting document", error.localizedDescription)
+                return
+            }
+            
+            guard let data = snapshot else {return}
+            if data.exists {
+                completion(true)
+                return
+            } else {
+                completion(false)
+                return
+            }
+            
+        }
     }
     
     

@@ -11,6 +11,7 @@ import SDWebImageSwiftUI
 struct SpotDetailsView: View {
     
     @Environment(\.presentationMode) var presentationMode
+    @Binding var currentIndex: Int
 
     var captions: [String] = [String]()
     var spot: SecretSpot
@@ -18,8 +19,8 @@ struct SpotDetailsView: View {
     @ObservedObject var vm: SpotViewModel = SpotViewModel()
     
     @State private var showActionSheet: Bool = false
+    @State private var showWorldDef: Bool = false
     @State private var actionSheetType: SpotActionSheetType = .general
-    @Binding var currentIndex: Int
     
  
     init(spot: SecretSpot, index: Binding<Int>) {
@@ -30,6 +31,7 @@ struct SpotDetailsView: View {
         let postedby = "Posted by \(spot.ownerDisplayName)"
         self._currentIndex = index
         captions.append(contentsOf: [name, distance, postedby])
+
     }
     
     var body: some View {
@@ -38,7 +40,7 @@ struct SpotDetailsView: View {
                 Color.background
                     .edgesIgnoringSafeArea(.all)
                 
-                VStack(alignment: .leading) {
+                VStack(alignment: .center) {
                     Ticker(profileUrl: spot.ownerImageUrl, captions: captions)
                         .frame(height: 120)
                     
@@ -49,26 +51,52 @@ struct SpotDetailsView: View {
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .padding(.top, 20)
                     
-                    Text(spot.description ?? "")
-                        .multilineTextAlignment(.leading)
-                        .font(.body)
-                        .lineLimit(.none)
+                    HStack {
+                        Text(spot.description ?? "")
+                            .multilineTextAlignment(.leading)
+                            .font(.body)
+                            .lineLimit(.none)
                         .padding()
+                        
+                        Spacer()
+                    }
                     
-                    Button(action: {
-                        vm.openGoogleMap(spot: spot)
-                    }, label: {
-                        HStack {
-                            Image("pin_blue")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 20, height: 20)
-                            Text(spot.address)
-                                .foregroundColor(.white)
-                        }
-                    })
-                    .padding(.leading, 20)
                     
+                    HStack {
+                        Button(action: {
+                                vm.openGoogleMap(spot: spot)
+                            }, label: {
+                                HStack {
+                                    Image("pin_blue")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 20, height: 20)
+                                    Text(spot.address)
+                                        .foregroundColor(.white)
+                                }
+                            })
+                            .padding()
+                        
+                        Spacer()
+                    }
+                        
+                    HStack {
+                        Button {
+                                vm.showWorldDefinition(spot: spot)
+                            } label: {
+                                HStack {
+                                    Image("globe")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 20)
+                                    
+                                    Text("\(spot.world)")
+                                }
+                            }
+                        .padding()
+                        
+                        Spacer()
+                    }
                     
                     HStack {
                         Button(action: {
@@ -78,7 +106,6 @@ struct SpotDetailsView: View {
                                 .font(.title)
                                 .foregroundColor(.white)
                         })
-                        .padding()
                     
                         
                         Spacer()
@@ -90,18 +117,15 @@ struct SpotDetailsView: View {
                                 Image(Icon.check.rawValue)
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(height: 25)
+                                    .frame(height: 20)
                                 
-                                Text("check-in")
-                                    .foregroundColor(.white)
-                                    .fontWeight(.light)
+                                Text("Checkin")
                                     .font(.caption)
                             }
                         }
-                        .padding(.trailing, 20)
                         .disabled(vm.disableCheckin)
-
                     }
+                    .padding()
                     
                 }
                 .foregroundColor(.accent)
@@ -120,6 +144,16 @@ struct SpotDetailsView: View {
             .actionSheet(isPresented: $showActionSheet, content: {
                 getActionSheet()
             })
+            .alert(isPresented: $vm.showAlert) {
+                return Alert(title: Text(vm.message))
+            }
+            .fullScreenCover(isPresented: $vm.showCheckin) {
+                //Dismiss functions
+            } content: {
+                CheckinView(spot: spot)
+            }
+          
+
             
 
         }
@@ -188,7 +222,7 @@ struct SpotDetailsView_Previews: PreviewProvider {
     static var previews: some View {
 
         
-        let spot = SecretSpot(postId: "disnf", spotName: "The Big Duck", imageUrl: "big", longitude: 1010, latitude: 01202, address: "1229 Spann avenue", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), viewCount: 1, price: 1, saveCounts: 1, isPublic: true, description: "The best spot", ownerId: "wjffh", ownerDisplayName: "Cinquain", ownerImageUrl: "https://twitter.com/TEA5E/status/570946413602799617/photo/1")
+        let spot = SecretSpot(postId: "disnf", spotName: "The Big Duck", imageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2F3rD6bKzwCbOEpfU51sYF%2F1?alt=media&token=2c45942e-5a44-4dd1-aa83-a678bb848c4b", longitude: 1010, latitude: 01202, address: "1229 Spann avenue", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), viewCount: 1, price: 1, saveCounts: 1, isPublic: true, description: "This is the best secret spot in the world. Learn all about fractal mathematics", ownerId: "wjffh", ownerDisplayName: "Cinquain", ownerImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073")
 
         SpotDetailsView(spot: spot, index: $integer)
     }

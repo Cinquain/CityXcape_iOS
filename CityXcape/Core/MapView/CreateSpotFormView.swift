@@ -93,7 +93,7 @@ struct CreateSpotFormView: View {
                     
                     HStack {
                         Button(action: {
-                            isPublic.toggle()
+                            isPublic = false
                         }, label: {
                             if isPublic {
                                 Image("globe")
@@ -248,8 +248,8 @@ struct CreateSpotFormView: View {
         if spotName.count > 4
             && addedImage == true
             && description.count > 10
-            && world.count > 2
-            && isPublic {
+            && world.count > 2 || !isPublic
+              {
             postSecretSpot()
         } else {
             

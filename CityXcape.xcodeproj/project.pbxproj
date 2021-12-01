@@ -65,6 +65,7 @@
 		21D03598270945930071C643 /* MissionDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D03597270945930071C643 /* MissionDetails.swift */; };
 		21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */; };
 		21D85F5326EACF0E00502636 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F5226EACF0E00502636 /* Shimmer */; };
+		21E4DC072753D8D9004276D2 /* CheckinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E4DC062753D8D9004276D2 /* CheckinView.swift */; };
 		21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F8D9C526E8D7CC0016DF9D /* DataService.swift */; };
 		B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */; };
 /* End PBXBuildFile section */
@@ -127,6 +128,7 @@
 		21D03593270938400071C643 /* MissionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowView.swift; sourceTree = "<group>"; };
 		21D0359527093B770071C643 /* MissionRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowHeader.swift; sourceTree = "<group>"; };
 		21D03597270945930071C643 /* MissionDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetails.swift; sourceTree = "<group>"; };
+		21E4DC062753D8D9004276D2 /* CheckinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinView.swift; sourceTree = "<group>"; };
 		21F8D9C526E8D7CC0016DF9D /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		D55E8FAFE7D475B0B8F4DBF2 /* Pods-CityXcape.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.debug.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.debug.xcconfig"; sourceTree = "<group>"; };
 		DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CityXcape.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -291,6 +293,7 @@
 				21D0359527093B770071C643 /* MissionRowHeader.swift */,
 				21C85938271122C9008224E5 /* CardView.swift */,
 				2178C4522719166800B4C395 /* TextFieldView.swift */,
+				21E4DC062753D8D9004276D2 /* CheckinView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -558,6 +561,7 @@
 				21793FC726D919D9001ACD1A /* SettingsEditImageView.swift in Sources */,
 				217E9AA8270B6EC400F45077 /* MissionViewModel.swift in Sources */,
 				218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */,
+				21E4DC072753D8D9004276D2 /* CheckinView.swift in Sources */,
 				218D904D2731D4F5000FB407 /* AnalyticsService.swift in Sources */,
 				218ECBBF2709328E00D06603 /* MissionsView.swift in Sources */,
 				217DA73F26CC972C0039A145 /* Ticker.swift in Sources */,

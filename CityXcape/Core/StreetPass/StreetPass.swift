@@ -130,6 +130,7 @@ struct StreetPass: View {
     
 
     }
+    
     fileprivate func updateProfielImage() {
         
         if let uid = userId {

@@ -144,12 +144,12 @@ struct OnboardingViewII: View {
     fileprivate func createProfile() {
         
         print("Creating Profile")
-        disableInteraction.toggle()
+        disableInteraction = true
         
         if displayName.isEmpty || displayName.count < 3 {
-            showError.toggle()
+            self.showError = true
             message = "Username should be at least 3 characters 😤"
-            disableInteraction.toggle()
+            disableInteraction = false
             return
         }
         
@@ -167,9 +167,9 @@ struct OnboardingViewII: View {
                     } else {
                         print("Error logging in")
                         message = "Error creating profile 😤"
-                        self.showError.toggle()
+                        self.showError = true
                         buttonMessage = "Create Account"
-                        disableInteraction.toggle()
+                        disableInteraction = false
                     }
                    
                 }
@@ -180,8 +180,8 @@ struct OnboardingViewII: View {
             } else {
                 print("Error creating user in database")
                 message = "Error creating profile 😤"
-                self.showError.toggle()
-                disableInteraction.toggle()
+                self.showError = true
+                disableInteraction = false
                 
             }
             

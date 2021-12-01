@@ -15,12 +15,13 @@ class SpotViewModel: NSObject, ObservableObject {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     
+
     @Published var alertmessage: String = ""
     @Published var alertTitle: String = ""
     @Published var genericAlert: Bool = false
     
-    @Published var checkinMessage: String = ""
-    @Published var checkinAlert: Bool = false
+    @Published var message: String = ""
+    @Published var showAlert: Bool = false
     @Published var showCheckin: Bool = false
     @Published var disableCheckin: Bool = false
     
@@ -47,31 +48,43 @@ class SpotViewModel: NSObject, ObservableObject {
         
         let manager = LocationService.instance.manager
         
-        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedWhenInUse {
+        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
             let manager = LocationService.instance.manager
             let spotLocation = CLLocation(latitude: spot.latitude, longitude: spot.longitude)
             let userLocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
             let distance = userLocation.distance(from: spotLocation) * 3.28084
+            let distanceInMiles = distance * 0.000621371
+            let formattedDistance = String(format: "%.0f", distanceInMiles)
             print("\(distance) feet")
             if distance < 50 {
-                showCheckin = true
-                DataService.instance.checkinSecretSpot(spot: spot) { [weak self] success  in
+                DataService.instance.checkedIfUserAlreadyCheckedIn(spot: spot) {  doesExist in
                     
-                    if !success {
-                        print("Error saving checkin to database")
-                        self?.checkinMessage = "Error saving check-in to database"
-                        self?.checkinAlert = true
-                        self?.disableCheckin = false
+                    if doesExist {
+                        self.message = "You've already checkedin this spot"
+                        self.showAlert = true
+                        self.disableCheckin = false
                         return
+                        
+                    } else {
+                        DataService.instance.checkinSecretSpot(spot: spot) { [weak self] success  in
+                            
+                            if !success {
+                                print("Error saving checkin to database")
+                                self?.message = "Error saving check-in to database"
+                                self?.showAlert = true
+                                self?.disableCheckin = false
+                                return
+                            }
+                            
+                            print("Successfully saved checkin to database")
+                            self?.showCheckin = true
+                            
+                        }
                     }
-                    
-                    print("Successfully saved checkin to database")
-                    self?.showCheckin = true
-                    
                 }
             } else {
-                checkinMessage = "You need to be there to check-in. \n You are \(distance) feet away."
-                checkinAlert = true
+                message = "You need to be there to check-in. \n You are \(formattedDistance) miles away."
+                showAlert = true
                 disableCheckin = false
             }
         } else {
@@ -82,6 +95,21 @@ class SpotViewModel: NSObject, ObservableObject {
         
     }
     
+    func spotDistance(spot: SecretSpot) -> Double {
+        
+        let manager = LocationService.instance.manager
+        let spotLocation = CLLocation(latitude: spot.latitude, longitude: spot.longitude)
+        let userLocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
+        let distance = userLocation.distance(from: spotLocation) * 3.28084
+     
+        return distance
+    
+    }
+    
+    func showWorldDefinition(spot: SecretSpot) {
+        message = "This Spot is for the \(spot.world) community"
+        showAlert = true
+    }
     
     
     func reportPost(reason: String, spot: SecretSpot) {
