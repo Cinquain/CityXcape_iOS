@@ -39,7 +39,7 @@ class AnalyticsService {
     }
     
     func touchedStreetCred() {
-        Analytics.logEvent("touched_streetcrd", parameters: nil)
+        Analytics.logEvent("touched_streetcred", parameters: nil)
     }
     
     func viewedMission() {
@@ -70,12 +70,16 @@ class AnalyticsService {
         Analytics.logEvent("loaded_new_spots", parameters: nil)
     }
     
-    func checkedIn() {
-        Analytics.logEvent("checked-in", parameters: nil)
+    func verify() {
+        Analytics.logEvent("verification", parameters: nil)
     }
     
     func reportPost() {
         Analytics.logEvent("report_post", parameters: nil)
+    }
+    
+    func touchedVerification() {
+        Analytics.logEvent("attempt_verification", parameters: nil)
     }
     
     func deletePost() {

@@ -119,7 +119,7 @@ struct SpotDetailsView: View {
                                     .aspectRatio(contentMode: .fit)
                                     .frame(height: 20)
                                 
-                                Text("Checkin")
+                                Text("Verify")
                                     .font(.caption)
                             }
                         }
@@ -150,7 +150,7 @@ struct SpotDetailsView: View {
             .fullScreenCover(isPresented: $vm.showCheckin) {
                 //Dismiss functions
             } content: {
-                CheckinView(spot: spot)
+                VerificationView(spot: spot)
             }
           
 

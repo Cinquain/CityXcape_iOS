@@ -44,8 +44,7 @@ class SpotViewModel: NSObject, ObservableObject {
     
     func checkInSecretSpot(spot: SecretSpot) {
         disableCheckin = true
-        AnalyticsService.instance.checkedIn()
-        
+        AnalyticsService.instance.touchedVerification()
         let manager = LocationService.instance.manager
         
         if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
@@ -57,33 +56,34 @@ class SpotViewModel: NSObject, ObservableObject {
             let formattedDistance = String(format: "%.0f", distanceInMiles)
             print("\(distance) feet")
             if distance < 50 {
-                DataService.instance.checkedIfUserAlreadyCheckedIn(spot: spot) {  doesExist in
+                DataService.instance.checkIfUserAlreadyVerified(spot: spot) {  doesExist in
                     
                     if doesExist {
-                        self.message = "You've already checkedin this spot"
+                        self.message = "You've already verified this spot"
                         self.showAlert = true
                         self.disableCheckin = false
                         return
                         
                     } else {
-                        DataService.instance.checkinSecretSpot(spot: spot) { [weak self] success  in
+                        DataService.instance.verifySecretSpot(spot: spot) { [weak self] success  in
                             
                             if !success {
                                 print("Error saving checkin to database")
-                                self?.message = "Error saving check-in to database"
+                                self?.message = "Error saving verification to database"
                                 self?.showAlert = true
                                 self?.disableCheckin = false
                                 return
                             }
                             
-                            print("Successfully saved checkin to database")
+                            print("Successfully saved verification to database")
+                            AnalyticsService.instance.verify()
                             self?.showCheckin = true
                             
                         }
                     }
                 }
             } else {
-                message = "You need to be there to check-in. \n You are \(formattedDistance) miles away."
+                message = "You need to be there to verify. \n You are \(formattedDistance) miles away."
                 showAlert = true
                 disableCheckin = false
             }
@@ -107,7 +107,7 @@ class SpotViewModel: NSObject, ObservableObject {
     }
     
     func showWorldDefinition(spot: SecretSpot) {
-        message = "This Spot is for the \(spot.world) community"
+        message = "This spot is for the \(spot.world) community"
         showAlert = true
     }
     

@@ -93,7 +93,7 @@ struct CreateSpotFormView: View {
                     
                     HStack {
                         Button(action: {
-                            isPublic = false
+                            isPublic.toggle()
                         }, label: {
                             if isPublic {
                                 Image("globe")
@@ -244,11 +244,14 @@ struct CreateSpotFormView: View {
     
     fileprivate func isReady()  {
         
-    
+        if isPublic == false {
+            world = "Private"
+        }
+        
         if spotName.count > 4
             && addedImage == true
             && description.count > 10
-            && world.count > 2 || !isPublic
+            && world.count > 2
               {
             postSecretSpot()
         } else {
@@ -266,7 +269,7 @@ struct CreateSpotFormView: View {
             }
             
             if world.count < 3 {
-                alertMessage = "Please include a World. \n Your spot can only be visible to a community"
+                alertMessage = "Please include a World. \n Your world should be at least 3 characters long"
                 showAlert.toggle()
                 return
             }
@@ -276,6 +279,8 @@ struct CreateSpotFormView: View {
                 showAlert.toggle()
                 return
             }
+            
+           
             
         }
     }

@@ -41,6 +41,7 @@ class DataService {
         let city = mapItem.getCity()
         let zipCode = mapItem.getPostCode()
         
+        
         guard let uid = userId,
               let ownerImageUrl = profileUrl,
               let ownerDisplayName = displayName
@@ -160,7 +161,7 @@ class DataService {
     }
     
     
-    func checkinSecretSpot(spot: SecretSpot, completion: @escaping (_ success: Bool) ->()) {
+    func verifySecretSpot(spot: SecretSpot, completion: @escaping (_ success: Bool) ->()) {
         guard let uid = userId else {return}
         let postId = spot.postId
         let ownerId = spot.ownerId
@@ -169,19 +170,16 @@ class DataService {
             "checked-in": FieldValue.serverTimestamp()
         ]
         
-        REF_WORLD.document("checkin").collection(uid).document(postId).setData(checkinData)
+        REF_WORLD.document("verified").collection(uid).document(postId).setData(checkinData)
         
         
-        REF_POST.document(postId).collection("checkedIn").document(uid).setData(checkinData) { error in
+        REF_POST.document(postId).collection("verifiers").document(uid).setData(checkinData) { error in
             
             if let error = error {
                 print("Error saving check-in to database", error.localizedDescription)
                 completion(false)
                 return
             }
-            
-            print("Successfully saved checkin to DB")
-            completion(true)
             
             let verifierIncrement: Int64 = 3
             let verifierWalletData: [String: Any] = [
@@ -196,15 +194,18 @@ class DataService {
             ]
                         
             AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
+            
+            print("Successfully saved verification to DB")
+            completion(true)
         }
         
     }
     
-    func checkedIfUserAlreadyCheckedIn(spot: SecretSpot, completion: @escaping (_ doesExist: Bool) ->()) {
+    func checkIfUserAlreadyVerified(spot: SecretSpot, completion: @escaping (_ doesExist: Bool) ->()) {
         guard let uid = userId else {return}
         let postId = spot.postId
         
-        REF_WORLD.document("checkin").collection(uid).document(postId).getDocument { snapshot, error in
+        REF_WORLD.document("verified").collection(uid).document(postId).getDocument { snapshot, error in
             
             if let error = error {
                 print("Error getting document", error.localizedDescription)
