@@ -14,6 +14,7 @@ class MyWorldViewModel: ObservableObject {
     @Published var secretspots: [SecretSpot] = []
     @Published var showOnboarding: Bool = false
     
+    
     init() {
         guard let userId = userId else {return}
         self.getSavedSpotsForUser(uid: userId)
@@ -37,6 +38,8 @@ class MyWorldViewModel: ObservableObject {
           
         }
     }
+    
+
     
     
 }

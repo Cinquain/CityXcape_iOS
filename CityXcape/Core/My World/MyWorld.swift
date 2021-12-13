@@ -107,21 +107,22 @@ struct MyWorld: View {
                 
             })
             .onAppear {
-                guard let streetname = username else {return}
-                let count = vm.secretspots.count
-                let countStatement = "You got \(count) spots to visit"
-                let worldStatement = "\(streetname)'s World"
                 
-                captions[1] = countStatement
-                captions[2] = worldStatement
-                        
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    guard let streetname = username else {return}
+                    let count = vm.secretspots.count
+                    let countStatement = "You got \(count) spots to visit"
+                    let worldStatement = "\(streetname)'s World"
+                    
+                    captions[1] = countStatement
+                    captions[2] = worldStatement
+                }
+              
             }
-        
-        
-      
      
     }
- 
+    
+    
   
 }
 
