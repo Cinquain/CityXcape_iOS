@@ -9,7 +9,7 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct SpotDetailsView: View {
-    
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @Environment(\.presentationMode) var presentationMode
     @Binding var currentIndex: Int
 
@@ -254,12 +254,23 @@ struct SpotDetailsView: View {
     
     
     func getActionSheet() -> ActionSheet {
+        
+        let uid = userId ?? ""
+        
+                
         switch actionSheetType {
             case .general:
-            return ActionSheet(title: Text("What would you like to do"), message: nil, buttons: [
+                return ActionSheet(title: Text("What would you like to do"), message: nil, buttons: [
+                    
+                  
                 .default(Text(isEditing ? "Done" : "Edit"), action: {
-                    isEditing.toggle()
-                }),
+                    if spot.ownerId == uid {
+                        isEditing.toggle()
+                    } else {
+                        vm.alertmessage = "You don't have editing permissions"
+                        vm.showAlert = true
+                    }
+                    }),
             
                 .default(Text("Report"), action: {
                     self.actionSheetType = .report
@@ -303,7 +314,11 @@ struct SpotDetailsView: View {
                     }
                 }),
                 
-                .cancel(Text("No"))
+                .cancel(Text("No"), action: {
+                    if isEditing {
+                        isEditing.toggle()
+                    }
+                })
             ])
         }
     }
