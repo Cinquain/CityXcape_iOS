@@ -134,5 +134,20 @@ extension UIApplication {
     }
 }
 
+extension String {
+    
+    func converToHashTag() -> String {
+        var newWords = [String]()
+        let wordsArray = self.components(separatedBy:" ")
+        for word in wordsArray {
+            if word.count > 0 {
+                let newWord = "#\(word.lowercased())"
+                newWords.append(newWord)
+            }
+        }
+        return newWords.joined(separator:" ")
+    }
+}
+
 
 

@@ -124,11 +124,9 @@ struct MapContainer: View {
                 self.isMission = false
             }
         }, content: {
-            CreateSpotFormView(selectedTab: $selectedTab, mapItem: mapItem)
+            PostSpotForm(selectedTab: $selectedTab, mapItem: mapItem)
 
-        })
-      
-       
+        })       
       
         
 

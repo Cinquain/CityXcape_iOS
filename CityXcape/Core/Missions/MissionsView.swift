@@ -16,17 +16,19 @@ struct MissionsView: View {
     @Binding var selectedTab: Int 
     @StateObject var vm: MissionViewModel = MissionViewModel()
     
+    @State var captions: [String] = [
+        "Missions are exploration jobs",
+        "1 Mission pending",
+        "Choose a Mission"
+    ]
+    
     var body: some View {
         
-        let captions: [String] = [
-            "Missions are exploration jobs",
-            "1 Mission pending",
-            "Choose a Mission"
-        ]
+      
         
         VStack(spacing: 0) {
             
-            Ticker(profileUrl: profileUrl ?? "", captions: captions)
+            Ticker(profileUrl: profileUrl ?? "", captions: $captions)
                 .padding(.top, 50)
                 .frame(height: 100)
             

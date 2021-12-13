@@ -15,7 +15,7 @@ struct MissionDetails: View {
     @State private var buttonTile: String = "Post Spot"
     @State private var buttonColor: Color = Color.cx_green
     var parent: MissionsView?
-    var captions: [String] = []
+    @State var captions: [String] = ["", "", ""]
     
     init(mission: Mission, parent: MissionsView) {
         self.mission = mission
@@ -31,7 +31,7 @@ struct MissionDetails: View {
     
     var body: some View {
         VStack {
-            Ticker(profileUrl: mission.ownerImageUrl, captions: captions)
+            Ticker(profileUrl: mission.ownerImageUrl, captions: $captions)
                 .padding(.top, 20)
                 .frame(height: 100)
 

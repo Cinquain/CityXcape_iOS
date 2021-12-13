@@ -21,14 +21,15 @@ struct MyWorld: View {
     @State private var isPresented: Bool = false
     @Binding var selectedTab: Int
 
+    @State var captions: [String] = [
+        "CityXcape",
+        "You got Spots to Visit",
+        "Your World"
+    ]
     
     var body: some View {
         
-        let captions: [String] = [
-            "CityXcape",
-            "\(vm.secretspots.count) Spots to Visit",
-            "\(username ?? "")'s World"
-        ]
+   
         
             GeometryReader { geo in
                 
@@ -37,7 +38,7 @@ struct MyWorld: View {
                         .edgesIgnoringSafeArea(.all)
                     
                     VStack {
-                        Ticker(profileUrl: profileUrl ?? "", captions: captions)
+                        Ticker(profileUrl: profileUrl ?? "", captions: $captions)
                             .frame(height: 150)
                         
                         
@@ -105,6 +106,16 @@ struct MyWorld: View {
                 }
                 
             })
+            .onAppear {
+                guard let streetname = username else {return}
+                let count = vm.secretspots.count
+                let countStatement = "You got \(count) spots to visit"
+                let worldStatement = "\(streetname)'s World"
+                
+                captions[1] = countStatement
+                captions[2] = worldStatement
+                        
+            }
         
         
       

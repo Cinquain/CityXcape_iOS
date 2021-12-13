@@ -14,27 +14,27 @@ struct SecretSpot:  Hashable, Codable {
     
     
    
-    var postId: String
-    let spotName: String
-    let imageUrl: String
-    let longitude: Double
-    let latitude: Double
-    let address: String
-    let city: String
-    let zipcode: Int
-    let world: String
+    let postId: String
+    var spotName: String
+    var imageUrl: String
+    var longitude: Double
+    var latitude: Double
+    var address: String
+    var city: String
+    var zipcode: Int
+    var world: String
     
     let dateCreated: Date
-    let viewCount: Int
-    let price: Int
-    let saveCounts: Int
-    let isPublic: Bool
+    var viewCount: Int
+    var price: Int
+    var saveCounts: Int
+    var isPublic: Bool
 
-    let description: String?
+    var description: String?
     
     let ownerId: String
-    let ownerDisplayName: String
-    let ownerImageUrl: String
+    var ownerDisplayName: String
+    var ownerImageUrl: String
     
 
     enum CodingKeys: String, CodingKey {

@@ -22,16 +22,17 @@ struct SwipeView: View {
     @State private var complete: Bool = false
     @State private var showAlert: Bool = false
     
+    @State var captions: [String] = [
+        "Save the spots you want to visit",
+        "Swipe right to save spot",
+        "Check Streetpass to see StreetCred",
+    ]
     
     var body: some View {
-        let captions: [String] = [
-            "Save the spots you want to visit",
-            "Swipe right to save spot",
-            "\(wallet ?? 0) StreetCred Remaining",
-        ]
+    
     
         VStack {
-            Ticker(profileUrl: profileUrl ?? "", captions: captions)
+            Ticker(profileUrl: profileUrl ?? "", captions: $captions)
                 .padding(.top, 25)
                 .frame(height: 120)
  
@@ -127,6 +128,11 @@ struct SwipeView: View {
             let message = Text("Your wallet has a balance of \(wallet) STC. \n Post a secret spot to earn more StreetCred.")
             return Alert(title: title, message: message, dismissButton: .cancel(Text("Ok")))
         })
+        .onAppear {
+            guard let wallet = wallet else {return}
+            let walletStatement = "\(wallet) StreetCred Remaining"
+            captions[2] = walletStatement
+        }
     }
     
     fileprivate func saveCardToUserWorld(spot: SecretSpot) {

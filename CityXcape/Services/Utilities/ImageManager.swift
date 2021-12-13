@@ -31,13 +31,25 @@ class ImageManager {
     
     func uploadSecretSpotImage(image: UIImage, postId: String, completion: @escaping (_ url: String?) -> ()) {
         
-        let path = getSpotImagePath(spotId: postId)
+        let path = getSpotImagePath(spotId: postId, imageNum: 1)
         
         uploadImage(path: path, image: image) { (success, downloadUrl) in
             if success {
                 completion(downloadUrl)
             }
         }
+    }
+    
+    func updateSecretSpotImage(image: UIImage, postId: String, number: Int, completion: @escaping (_ url: String?) -> ()) {
+        
+        let path = getSpotImagePath(spotId: postId, imageNum: number)
+        
+        uploadImage(path: path, image: image) { success, imageUrl in
+            if success {
+                completion(imageUrl)
+            }
+        }
+        
     }
     
     func downloadProfileImage(userId: String, completion: @escaping (_ image: UIImage?) -> ()) {
@@ -58,8 +70,8 @@ class ImageManager {
         return storagePath
     }
     
-    fileprivate func getSpotImagePath(spotId: String) -> StorageReference {
-        let postPath = "posts/\(spotId)/1"
+    fileprivate func getSpotImagePath(spotId: String, imageNum: Int) -> StorageReference {
+        let postPath = "posts/\(spotId)/\(imageNum)"
         let storagePath = REF_STORE.reference(withPath: postPath)
         return storagePath
     }

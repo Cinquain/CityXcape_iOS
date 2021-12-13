@@ -1,5 +1,5 @@
 //
-//  CreateSpotFormView.swift
+//  PostSpotFormView.swift
 //  CityXcape
 //
 //  Created by James Allan on 8/30/21.
@@ -9,33 +9,15 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
-struct CreateSpotFormView: View {
+struct PostSpotForm: View {
     
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.colorScheme) var colorScheme
 
-
     @Binding var selectedTab: Int
-
-    @State private var spotName: String = ""
-    @State private var description: String = ""
-    @State private var world: String = ""
-    
-    @State private var showPicker: Bool = false
-    @State private var addedImage: Bool = false
-    @State private var isPublic: Bool = true
-    @State private var alertMessage: String = ""
-    @State private var presentPopover: Bool = false
-    @State private var presentCompletion: Bool = false
-    @State private var showAlert: Bool = false
-    @State private var buttonDisabled: Bool = false
-    @State private var showActionSheet: Bool = false
-    
-    @State var selectedImage: UIImage = UIImage()
-    @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    
-    
+    @StateObject var vm = PostViewModel()
     var mapItem: MKMapItem
+    
     
     var body: some View {
         
@@ -47,8 +29,8 @@ struct CreateSpotFormView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 40)
                     
-                    TextField("Secret Spot Name", text: $spotName)
-                        .placeholder(when: spotName.isEmpty) {
+                    TextField("Secret Spot Name", text: $vm.spotName)
+                        .placeholder(when: vm.spotName.isEmpty) {
                             Text("Secret Spot Name").foregroundColor(.gray)
                     }
                         .padding()
@@ -77,9 +59,9 @@ struct CreateSpotFormView: View {
                         }
                         .foregroundColor(.white)
                         
-                        TextField("Describe what makes this spot is special", text: $description)
-                            .placeholder(when: description.isEmpty) {
-                                Text("Describe what makes this spot is special").foregroundColor(.gray)
+                        TextField(vm.detailsPlaceHolder, text: $vm.details)
+                            .placeholder(when: vm.details.isEmpty) {
+                                Text(vm.detailsPlaceHolder).foregroundColor(.gray)
                         }
                             .frame(maxWidth: .infinity)
                             .frame(height: 70)
@@ -93,9 +75,9 @@ struct CreateSpotFormView: View {
                     
                     HStack {
                         Button(action: {
-                            isPublic.toggle()
+                            vm.isPublic.toggle()
                         }, label: {
-                            if isPublic {
+                            if vm.isPublic {
                                 Image("globe")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
@@ -108,12 +90,12 @@ struct CreateSpotFormView: View {
                          
                         })
                         
-                        if isPublic {
-                            TextField("What community is this for?", text: $world) {
-                               converToHashTag()
-                            }
-                            .placeholder(when: world.isEmpty) {
-                                Text("What community is this for?").foregroundColor(.gray)
+                        if vm.isPublic {
+                            TextField(vm.worldPlaceHolder, text: $vm.world, onCommit:  {
+                                vm.world.converToHashTag()
+                            })
+                            .placeholder(when: vm.world.isEmpty) {
+                                Text(vm.worldPlaceHolder).foregroundColor(.gray)
                         }
                             .padding()
                             .background(Color.white)
@@ -121,7 +103,7 @@ struct CreateSpotFormView: View {
                             .foregroundColor(.black)
                             .frame(maxWidth: geo.size.width / 1.5)
                         } else {
-                            Text("Secret Spot is Private")
+                            Text(vm.privatePlaceHolder)
                                 .foregroundColor(.white)
                                
                         }
@@ -133,7 +115,7 @@ struct CreateSpotFormView: View {
                         VStack{
                             
                             Button(action: {
-                                showActionSheet.toggle()
+                                vm.showActionSheet.toggle()
                             }, label: {
                                 HStack {
                                     Image(systemName: "camera.circle.fill")
@@ -145,7 +127,7 @@ struct CreateSpotFormView: View {
                                 }
                             })
                             
-                            Image(uiImage: selectedImage)
+                            Image(uiImage: vm.selectedImage)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(maxWidth: .infinity)
@@ -167,13 +149,10 @@ struct CreateSpotFormView: View {
                     }
                     .foregroundColor(.white)
                     .padding()
-                    
-           
-                    
-
+                
                         
                             Button(action: {
-                                isReady()
+                                vm.isReady(mapItem: mapItem)
                             }, label: {
                                 HStack {
                                     Image(Icon.pin.rawValue)
@@ -192,18 +171,18 @@ struct CreateSpotFormView: View {
 
                             })
                             .animation(.easeOut(duration: 0.5))
-                            .disabled(buttonDisabled)
+                            .disabled(vm.buttonDisabled)
 
                     
             
                 }
-                .sheet(isPresented: $showPicker, onDismiss: {
-                    addedImage = true
+                .sheet(isPresented: $vm.showPicker, onDismiss: {
+                    vm.addedImage = true
                 }, content: {
-                    ImagePicker(imageSelected: $selectedImage, sourceType: $sourceType)
+                    ImagePicker(imageSelected: $vm.selectedImage, sourceType: $vm.sourceType)
                         .colorScheme(.dark)
                 })
-                .fullScreenCover(isPresented: $presentCompletion, onDismiss: {
+                .fullScreenCover(isPresented: $vm.presentCompletion, onDismiss: {
                     
                     selectedTab = 0
                     NotificationCenter.default.post(name: spotCompleteNotification, object: nil)
@@ -215,21 +194,21 @@ struct CreateSpotFormView: View {
                     CongratsView()
                     
                 })
-                .alert(isPresented: $showAlert, content: {
-                    Alert(title: Text(alertMessage))
+                .alert(isPresented: $vm.showAlert, content: {
+                    Alert(title: Text(vm.alertMessage))
                 })
-                .popover(isPresented: $presentPopover, content: {
-                    Text("Different World Different Spots")
+                .popover(isPresented: $vm.presentPopover, content: {
+                    Text(vm.worldDefinition)
                 })
-                .actionSheet(isPresented: $showActionSheet) {
+                .actionSheet(isPresented: $vm.showActionSheet) {
                     ActionSheet(title: Text("Source Options"), message: nil, buttons: [
                         .default(Text("Camera"), action: {
-                            sourceType = .camera
-                            showPicker.toggle()
+                            vm.sourceType = .camera
+                            vm.showPicker.toggle()
                         }),
                         .default(Text("Photo Library"), action: {
-                            sourceType = .photoLibrary
-                            showPicker.toggle()
+                            vm.sourceType = .photoLibrary
+                            vm.showPicker.toggle()
                         })
                     ])
                     
@@ -242,78 +221,8 @@ struct CreateSpotFormView: View {
     
     }
     
-    fileprivate func isReady()  {
-        
-        if isPublic == false {
-            world = "Private"
-        }
-        
-        if spotName.count > 4
-            && addedImage == true
-            && description.count > 10
-            && world.count > 2
-              {
-            postSecretSpot()
-        } else {
-            
-            if spotName.count < 4 {
-                alertMessage = "Spot needs a title at least four characters long"
-                showAlert.toggle()
-                return
-            }
-            
-            if description.count < 10 {
-                alertMessage = "Description needs to be at least 10 characters long"
-                showAlert.toggle()
-                return
-            }
-            
-            if world.count < 3 {
-                alertMessage = "Please include a World. \n Your world should be at least 3 characters long"
-                showAlert.toggle()
-                return
-            }
-            
-            if addedImage == false {
-                alertMessage = "Please add an image for your spot"
-                showAlert.toggle()
-                return
-            }
-            
-           
-            
-        }
-    }
     
-    fileprivate func postSecretSpot() {
-
-        buttonDisabled = true
-
-        DataService.instance.uploadSecretSpot(spotName: spotName, description: description, image: selectedImage, world: world, mapItem: mapItem, isPublic: isPublic) { (success) in
-            
-            if success {
-                buttonDisabled = false
-                presentCompletion.toggle()
-            } else {
-                buttonDisabled = false
-                showAlert.toggle()
-                alertMessage = "Error posting Secret Spot 😤"
-            }
-        }
-    }
     
-    fileprivate func converToHashTag() {
-        var newWords = [String]()
-        let wordsArray = world.components(separatedBy:" ")
-        for word in wordsArray {
-            if word.count > 0 {
-                let newWord = "#\(word.lowercased())"
-                newWords.append(newWord)
-                print(newWord)
-            }
-        }
-        world = newWords.joined(separator:" ")
-    }
     
 }
 
@@ -322,7 +231,7 @@ struct CreateSpotFormView_Previews: PreviewProvider {
      @State static var coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 39.75879282513146, longitude: -86.1373309437772)
     @State static var tabIndex: Int = 1
     static var previews: some View {
-        CreateSpotFormView(selectedTab: $tabIndex, mapItem: MKMapItem())
+        PostSpotForm(selectedTab: $tabIndex, mapItem: MKMapItem())
     }
     
 }

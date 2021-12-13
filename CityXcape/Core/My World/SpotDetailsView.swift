@@ -13,25 +13,20 @@ struct SpotDetailsView: View {
     @Environment(\.presentationMode) var presentationMode
     @Binding var currentIndex: Int
 
-    var captions: [String] = [String]()
-    var spot: SecretSpot
+    @State var captions: [String] = ["", "", ""]
+    @State var spot: SecretSpot
     
     @ObservedObject var vm: SpotViewModel = SpotViewModel()
     
+    @State private var isEditing: Bool = false
     @State private var showActionSheet: Bool = false
     @State private var showWorldDef: Bool = false
     @State private var actionSheetType: SpotActionSheetType = .general
     
  
     init(spot: SecretSpot, index: Binding<Int>) {
-        self.spot = spot
-        let name = spot.spotName
-        let distanceString = String(format: "%.1f", spot.distanceFromUser)
-        let distance = spot.distanceFromUser > 1 ? "\(distanceString) miles away" : "\(distanceString) mile away"
-        let postedby = "Posted by \(spot.ownerDisplayName)"
+        _spot = State(initialValue: spot)
         self._currentIndex = index
-        captions.append(contentsOf: [name, distance, postedby])
-
     }
     
     var body: some View {
@@ -41,22 +36,82 @@ struct SpotDetailsView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack(alignment: .center) {
-                    Ticker(profileUrl: spot.ownerImageUrl, captions: captions)
-                        .frame(height: 120)
                     
-                    WebImage(url: URL(string: spot.imageUrl))
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: .infinity)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .padding(.top, 20)
+                    ZStack {
+                        Ticker(profileUrl: spot.ownerImageUrl, captions: $captions)
+                            .frame(height: 120)
+                            .opacity(isEditing ? 0 : 1)
+
+                        
+                        TextField(spot.spotName, text: $vm.newSpotName, onCommit: {
+                            if !vm.newSpotName.isEmpty {
+                                vm.editSpotName(postId: spot.postId)
+                                spot.spotName = vm.newSpotName
+                                captions[0] = vm.newSpotName
+                                vm.refresh.toggle()
+                            }
+                        })
+                            .padding(.leading, 20)
+                            .frame(height: 50)
+                            .opacity(isEditing ? 1 : 0)
+                    }
+                    
+                    ZStack {
+                     
+                        WebImage(url: URL(string: spot.imageUrl))
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: .infinity)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .padding(.top, 20)
+                            .opacity(isEditing ? 0 : 1)
+                    
+                        
+                        
+                        Button {
+                            vm.setupImageSubscriber()
+                            vm.showPicker = true
+                            vm.addedImage = false
+                        } label: {
+                            if vm.addedImage {
+                                Image(uiImage: vm.selectedImage)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            } else {
+                                VStack {
+                                    LocationCamera(height: 150, color: .white)
+                                    Text("Replace Main Image")
+                                }
+                            }
+                        }
+                        .opacity(isEditing ? 1 : 0)
+                        
+                    }
                     
                     HStack {
-                        Text(spot.description ?? "")
-                            .multilineTextAlignment(.leading)
-                            .font(.body)
-                            .lineLimit(.none)
-                        .padding()
+                        ZStack {
+                            Text(spot.description ?? "")
+                                .multilineTextAlignment(.leading)
+                                .font(.body)
+                                .lineLimit(.none)
+                                .padding()
+                            .opacity(isEditing ? 0 : 1)
+                            
+                            
+                            TextField(spot.description ?? "", text: $vm.newDescription, onCommit: {
+                                if !vm.description.isEmpty {
+                                    vm.editSpotDescription(postId: spot.postId)
+                                    spot.description = vm.newDescription
+                                    vm.refresh.toggle()
+                                }
+                            })
+                                .multilineTextAlignment(.leading)
+                                .font(.body)
+                                .lineLimit(.none)
+                                .padding()
+                                .opacity(isEditing ? 1 : 0)
+                        }
+                        
                         
                         Spacer()
                     }
@@ -81,21 +136,42 @@ struct SpotDetailsView: View {
                     }
                         
                     HStack {
-                        Button {
-                                vm.showWorldDefinition(spot: spot)
-                            } label: {
-                                HStack {
-                                    Image("globe")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 20)
-                                    
-                                    Text("\(spot.world)")
-                                }
-                            }
-                        .padding()
                         
+                            Button {
+                                    vm.showWorldDefinition(spot: spot)
+                                } label: {
+                                    HStack {
+                                        Image("globe")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 20)
+                                        
+                                        
+                                            Text("\(spot.world)")
+                                           
+                                    }
+                                }
+                            .padding()
+                            .opacity(isEditing ? 0 : 1)
+
+                            
+                           
                         Spacer()
+                    }
+                    .opacity(isEditing ? 0 : 1)
+                    
+                    if isEditing {
+                        TextField(spot.world, text: $vm.newWorld, onCommit:  {
+                            if !vm.newWorld.isEmpty {
+                                vm.editWorldTag(postId: spot.postId)
+                                spot.world = vm.newWorld
+                                vm.refresh.toggle()
+                            }
+                        })
+                            .font(.body)
+                            .lineLimit(.none)
+                            .padding(.leading, 20)
+                            .opacity(isEditing ? 1 : 0)
                     }
                     
                     HStack {
@@ -135,23 +211,39 @@ struct SpotDetailsView: View {
             .onAppear(perform: {
                 AnalyticsService.instance.viewedSecretSpot()
                 DataService.instance.updatePostViewCount(postId: spot.postId)
-            })
-            .alert(isPresented: $vm.genericAlert, content: {
-                return Alert(title: Text(vm.alertTitle), message: Text(vm.alertmessage), dismissButton: .default(Text("Ok"), action: {
-                    self.presentationMode.wrappedValue.dismiss()
-                }))
+                captions.removeAll()
+                let name = spot.spotName
+                let distanceString = String(format: "%.0f", spot.distanceFromUser)
+                let distance = spot.distanceFromUser > 1 ? "\(distanceString) miles away" : "\(distanceString) mile away"
+                let postedby = "Posted by \(spot.ownerDisplayName)"
+                captions.append(contentsOf: [name, distance, postedby])
             })
             .actionSheet(isPresented: $showActionSheet, content: {
                 getActionSheet()
             })
             .alert(isPresented: $vm.showAlert) {
-                return Alert(title: Text(vm.message))
+                return Alert(title: Text(vm.alertmessage), message: nil)
             }
+            .sheet(isPresented: $vm.showPicker, onDismiss: {
+                //TBD
+                if vm.addedImage {
+                    vm.updateMainSpotImage(postId: spot.postId) {  url in
+                        
+                            spot.imageUrl = url
+                            vm.refresh.toggle()
+                        
+                    }
+                }
+                
+            }, content: {
+                ImagePicker(imageSelected: $vm.selectedImage, sourceType: $vm.sourceType)
+            })
             .fullScreenCover(isPresented: $vm.showCheckin) {
                 //Dismiss functions
             } content: {
                 VerificationView(spot: spot)
             }
+            
           
 
             
@@ -165,6 +257,10 @@ struct SpotDetailsView: View {
         switch actionSheetType {
             case .general:
             return ActionSheet(title: Text("What would you like to do"), message: nil, buttons: [
+                .default(Text(isEditing ? "Done" : "Edit"), action: {
+                    isEditing.toggle()
+                }),
+            
                 .default(Text("Report"), action: {
                     self.actionSheetType = .report
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {

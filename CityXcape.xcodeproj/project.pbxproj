@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */; };
 		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
+		2120CE66275FA254006367FE /* LocationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120CE65275FA254006367FE /* LocationCamera.swift */; };
 		214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214FAC6C26E2F16300F37B80 /* ImageManager.swift */; };
 		21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */; };
 		21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9326D536B30049CE2D /* SettingsLabelView.swift */; };
@@ -22,7 +23,7 @@
 		21793FC726D919D9001ACD1A /* SettingsEditImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21793FC626D919D9001ACD1A /* SettingsEditImageView.swift */; };
 		217AA0C226FB5C5300B994B3 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217AA0C126FB5C5300B994B3 /* Onboarding.swift */; };
 		217AA0C426FB660100B994B3 /* OnboardScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217AA0C326FB660100B994B3 /* OnboardScreen.swift */; };
-		217B770B26DD007C000A78C9 /* CreateSpotFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217B770A26DD007C000A78C9 /* CreateSpotFormView.swift */; };
+		217B770B26DD007C000A78C9 /* PostSpotForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217B770A26DD007C000A78C9 /* PostSpotForm.swift */; };
 		217C08D726D1AFF400751933 /* MapContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217C08D626D1AFF400751933 /* MapContainer.swift */; };
 		217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217C08D926D1B9FE00751933 /* SignUpView.swift */; };
 		217C08DC26D1C38E00751933 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217C08DB26D1C38E00751933 /* OnboardingView.swift */; };
@@ -55,6 +56,7 @@
 		219842A326CF3A680089CE03 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = 219842A226CF3A680089CE03 /* LBTATools */; };
 		219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A526CF4E3D0089CE03 /* SecretSpot.swift */; };
 		219842A826CF57740089CE03 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A726CF57740089CE03 /* ImagePicker.swift */; };
+		219CA8F2275A61DD00F1C61E /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CA8F1275A61DD00F1C61E /* PostViewModel.swift */; };
 		21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA28DF26D13BB40001A02E /* StreetPass.swift */; };
 		21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */; };
 		21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BBB06026E596C2000B40B3 /* AnimationController.swift */; };
@@ -74,6 +76,7 @@
 		03633A38349C026A52CC221D /* Pods-CityXcape.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.release.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.release.xcconfig"; sourceTree = "<group>"; };
 		2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotViewModel.swift; sourceTree = "<group>"; };
 		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
+		2120CE65275FA254006367FE /* LocationCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCamera.swift; sourceTree = "<group>"; };
 		214FAC6C26E2F16300F37B80 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewModel.swift; sourceTree = "<group>"; };
 		21785D9326D536B30049CE2D /* SettingsLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLabelView.swift; sourceTree = "<group>"; };
@@ -87,7 +90,7 @@
 		21793FC626D919D9001ACD1A /* SettingsEditImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditImageView.swift; sourceTree = "<group>"; };
 		217AA0C126FB5C5300B994B3 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		217AA0C326FB660100B994B3 /* OnboardScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardScreen.swift; sourceTree = "<group>"; };
-		217B770A26DD007C000A78C9 /* CreateSpotFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateSpotFormView.swift; sourceTree = "<group>"; };
+		217B770A26DD007C000A78C9 /* PostSpotForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSpotForm.swift; sourceTree = "<group>"; };
 		217C08D626D1AFF400751933 /* MapContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContainer.swift; sourceTree = "<group>"; };
 		217C08D926D1B9FE00751933 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		217C08DB26D1C38E00751933 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -120,6 +123,7 @@
 		218ECBBE2709328E00D06603 /* MissionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionsView.swift; sourceTree = "<group>"; };
 		219842A526CF4E3D0089CE03 /* SecretSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretSpot.swift; sourceTree = "<group>"; };
 		219842A726CF57740089CE03 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		219CA8F1275A61DD00F1C61E /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		21AA28DF26D13BB40001A02E /* StreetPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetPass.swift; sourceTree = "<group>"; };
 		21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailsView.swift; sourceTree = "<group>"; };
 		21BBB06026E596C2000B40B3 /* AnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
@@ -294,6 +298,7 @@
 				21C85938271122C9008224E5 /* CardView.swift */,
 				2178C4522719166800B4C395 /* TextFieldView.swift */,
 				21E4DC062753D8D9004276D2 /* VerificationView.swift */,
+				2120CE65275FA254006367FE /* LocationCamera.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -326,8 +331,9 @@
 			children = (
 				217C08D626D1AFF400751933 /* MapContainer.swift */,
 				21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */,
-				217B770A26DD007C000A78C9 /* CreateSpotFormView.swift */,
+				217B770A26DD007C000A78C9 /* PostSpotForm.swift */,
 				217EFE8926DEAB1F005C7C88 /* CongratsView.swift */,
+				219CA8F1275A61DD00F1C61E /* PostViewModel.swift */,
 			);
 			path = MapView;
 			sourceTree = "<group>";
@@ -535,13 +541,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				219CA8F2275A61DD00F1C61E /* PostViewModel.swift in Sources */,
 				217C08E026D1CC4500751933 /* OnboardingViewII.swift in Sources */,
 				217884FE26E18CEA0066C719 /* AuthService.swift in Sources */,
 				218CADBE26D5C94300496884 /* SettingsView.swift in Sources */,
 				219842A826CF57740089CE03 /* ImagePicker.swift in Sources */,
 				21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */,
 				217DA73D26CC96A30039A145 /* MyWorld.swift in Sources */,
-				217B770B26DD007C000A78C9 /* CreateSpotFormView.swift in Sources */,
+				217B770B26DD007C000A78C9 /* PostSpotForm.swift in Sources */,
 				218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */,
 				21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */,
 				217DAF3426CD97D400A395BC /* SpotRowHeader.swift in Sources */,
@@ -563,6 +570,7 @@
 				218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */,
 				21E4DC072753D8D9004276D2 /* VerificationView.swift in Sources */,
 				218D904D2731D4F5000FB407 /* AnalyticsService.swift in Sources */,
+				2120CE66275FA254006367FE /* LocationCamera.swift in Sources */,
 				218ECBBF2709328E00D06603 /* MissionsView.swift in Sources */,
 				217DA73F26CC972C0039A145 /* Ticker.swift in Sources */,
 				217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */,
@@ -725,7 +733,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -750,7 +758,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

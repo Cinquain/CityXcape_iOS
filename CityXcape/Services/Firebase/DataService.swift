@@ -476,6 +476,20 @@ class DataService {
         REF_USERS.document(userId).setData([UserField.bio : bio], merge: true)
     }
     
+    func updateSpotField(postId: String, data: [String: Any], completion: @escaping (_ success: Bool) -> ()) {
+        REF_POST.document(postId).updateData(data) { error in
+            
+            if let error = error {
+                print("Error updating secret spot field", error.localizedDescription)
+                completion(false)
+                return
+            }
+            print("Successfully updated secret spot field")
+            completion(true)
+            return
+        }
+    }
+    
     func updateUserDisplayName(userId: String, displayName: String) {
         
         REF_USERS.document(userId).setData([UserField.displayName : displayName], merge: true)

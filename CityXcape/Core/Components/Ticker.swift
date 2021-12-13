@@ -10,8 +10,13 @@ import SwiftUI
 struct Ticker: View {
     
     @State private var selection: Int = 2
+    @State private var refresh: Bool = false
     var profileUrl: String
-    let captions: [String]
+    @Binding var captions: [String] {
+        willSet {
+            refresh.toggle()
+        }
+    }
     
     var body: some View {
         
@@ -57,7 +62,7 @@ struct Ticker: View {
         }
      
     }
-    
+  
     fileprivate func imageLoop() -> String {
         
         switch selection {
@@ -85,14 +90,17 @@ struct Ticker: View {
 }
 
 struct Ticker_Previews: PreviewProvider {
+    
+    @State static var captions =  [
+        "Welcome to CityXcape",
+        "Find Secret Spots",
+        "Keep Exploring!"
+    ]
+    
+
     static var previews: some View {
-        let captions: [String] = [
-            "Welcome to CityXcape",
-            "Find Secret Spots",
-            "Keep Exploring!"
-        ]
-        
-        Ticker(profileUrl: "", captions: captions)
+     
+        Ticker(profileUrl: "", captions: $captions)
             .preferredColorScheme(.dark)
             .previewLayout(.sizeThatFits)
     }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 import CoreLocation
-
+import Combine
 
 
 
@@ -17,13 +17,32 @@ class SpotViewModel: NSObject, ObservableObject {
     
 
     @Published var alertmessage: String = ""
-    @Published var alertTitle: String = ""
     @Published var genericAlert: Bool = false
     
-    @Published var message: String = ""
+    @Published var alertMessage: String = ""
     @Published var showAlert: Bool = false
     @Published var showCheckin: Bool = false
     @Published var disableCheckin: Bool = false
+    @Published var refresh: Bool = false
+
+    
+    @Published var newDescription: String = ""
+    @Published var newWorld: String = ""
+    @Published var newSpotName: String = ""
+    @Published var newSpotImageUrl: String = ""
+
+    
+    @Published var showPicker: Bool = false
+    @Published var addedImage: Bool = false
+    @Published var selectedImage: UIImage = UIImage() 
+    @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    
+    var cancellables = Set<AnyCancellable>()
+    
+    override init() {
+        super.init()
+        
+    }
     
     func openGoogleMap(spot: SecretSpot) {
         
@@ -39,7 +58,6 @@ class SpotViewModel: NSObject, ObservableObject {
             }
             
         }
-
     }
     
     func checkInSecretSpot(spot: SecretSpot) {
@@ -59,7 +77,7 @@ class SpotViewModel: NSObject, ObservableObject {
                 DataService.instance.checkIfUserAlreadyVerified(spot: spot) {  doesExist in
                     
                     if doesExist {
-                        self.message = "You've already verified this spot"
+                        self.alertMessage = "You've already verified this spot"
                         self.showAlert = true
                         self.disableCheckin = false
                         return
@@ -69,7 +87,7 @@ class SpotViewModel: NSObject, ObservableObject {
                             
                             if !success {
                                 print("Error saving checkin to database")
-                                self?.message = "Error saving verification to database"
+                                self?.alertMessage = "Error saving verification to database"
                                 self?.showAlert = true
                                 self?.disableCheckin = false
                                 return
@@ -83,7 +101,7 @@ class SpotViewModel: NSObject, ObservableObject {
                     }
                 }
             } else {
-                message = "You need to be there to verify. \n You are \(formattedDistance) miles away."
+                alertMessage = "You need to be there to verify. \n You are \(formattedDistance) miles away."
                 showAlert = true
                 disableCheckin = false
             }
@@ -107,10 +125,105 @@ class SpotViewModel: NSObject, ObservableObject {
     }
     
     func showWorldDefinition(spot: SecretSpot) {
-        message = "This spot is for the \(spot.world) community"
+        alertMessage = "This spot is for the \(spot.world) community"
         showAlert = true
     }
     
+    func editSpotDescription(postId: String) {
+        
+        let data: [String: Any] = [
+            SecretSpotField.description : newDescription
+        ]
+        
+        DataService.instance.updateSpotField(postId: postId, data: data) { success in
+            
+            if success {
+                self.alertmessage = "Successfully updated description"
+                self.showAlert = true
+                return
+            } else {
+                self.alertmessage = "Failed to update description"
+                self.showAlert = true
+                return
+            }
+            
+        }
+    }
+    
+    func editWorldTag(postId: String) {
+        let hashtag = newWorld.converToHashTag()
+        
+        let data: [String: Any] = [
+            SecretSpotField.world : hashtag
+        ]
+        
+        DataService.instance.updateSpotField(postId: postId, data: data) { success in
+            
+            if success {
+                self.alertmessage = "Successfully updated World"
+                self.showAlert = true
+                return
+            } else {
+                self.alertmessage = "Failed to update World"
+                self.showAlert = true
+                return
+            }
+        }
+    }
+    
+    func editSpotName(postId: String) {
+        let data: [String: Any] = [
+            SecretSpotField.spotName : newSpotName
+        ]
+        
+        DataService.instance.updateSpotField(postId: postId, data: data) { success in
+            
+            if success {
+                self.alertmessage = "Successfully updated spot name"
+                self.showAlert = true
+                return
+            } else {
+                self.alertmessage = "Failed to update spot name"
+                self.showAlert = true
+                return
+            }
+        }
+    }
+    
+    func updateMainSpotImage(postId: String, completion: @escaping (_ url: String) -> ()) {
+        
+        ImageManager.instance.uploadSecretSpotImage(image: selectedImage, postId: postId) { downloadUrl in
+            
+            guard let url = downloadUrl else {return}
+            completion(url)
+            self.newSpotImageUrl = url
+            
+            let data: [String: Any] = [
+                SecretSpotField.spotImageUrl : url
+            ]
+            
+            DataService.instance.updateSpotField(postId: postId, data: data) { success in
+                if success {
+                    self.alertmessage = "Successfully updated image"
+                    self.showAlert = true
+                    return
+                } else {
+                    self.alertmessage = "Failed to upload image"
+                    self.showAlert = true
+                    return
+                }
+            }
+            
+        }
+    }
+    
+    func setupImageSubscriber() {
+        $selectedImage
+            .sink { [weak self] _ in
+                self?.addedImage = true
+            }
+            .store(in: &cancellables)
+    }
     
     func reportPost(reason: String, spot: SecretSpot) {
           print("Reporting post")
@@ -118,11 +231,9 @@ class SpotViewModel: NSObject, ObservableObject {
           DataService.instance.uploadReports(reason: reason, postId: spot.postId) { success in
               
               if success {
-                  self.alertTitle = "Successfully Reported"
                   self.alertmessage = "Thank you for reporting this spot. We will review it shortly!"
                   self.genericAlert.toggle()
               } else {
-                  self.alertTitle = "Error Reporting Spot"
                   self.alertmessage = "There was an error reporting this secret spot. Please restart the app and try again."
                   self.genericAlert.toggle()
               }
@@ -136,13 +247,11 @@ class SpotViewModel: NSObject, ObservableObject {
         DataService.instance.deleteSecretSpot(spot: spot) { success in
            
            if success {
-               self.alertTitle = "Successfully Deleted"
                self.alertmessage = "This secret spot has been removed from your world"
                self.genericAlert.toggle()
                AnalyticsService.instance.deletePost()
                completion(success)
            } else {
-               self.alertTitle = "Error"
                self.alertmessage = "There was an error in deleting this spot. Restart the app and try again"
                self.genericAlert.toggle()
                completion(success)
