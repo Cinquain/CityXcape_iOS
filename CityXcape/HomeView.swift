@@ -65,7 +65,7 @@ struct HomeView: View {
         .sheet(isPresented: $manager.hasNotification) {
 
         } content: {
-            PublicStreetPass(profileUrl: manager.userImageUrl,
+            PublicStreetPass(uid: manager.uid, profileUrl: manager.userImageUrl,
                              username: manager.username,
                              userbio: manager.userBio,
                              streetCred: manager.streetcred)

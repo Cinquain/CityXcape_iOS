@@ -92,7 +92,7 @@ struct PostSpotForm: View {
                         
                         if vm.isPublic {
                             TextField(vm.worldPlaceHolder, text: $vm.world, onCommit:  {
-                                vm.world.converToHashTag()
+                                vm.converToHashTag()
                             })
                             .placeholder(when: vm.world.isEmpty) {
                                 Text(vm.worldPlaceHolder).foregroundColor(.gray)

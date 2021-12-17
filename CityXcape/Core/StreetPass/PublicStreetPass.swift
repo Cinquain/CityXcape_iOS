@@ -9,10 +9,11 @@ import SwiftUI
 
 struct PublicStreetPass: View {
     
+    let uid: String
     let profileUrl: String
     let username: String
-    let userbio: String
-    let streetCred: String
+    let userbio: String?
+    let streetCred: String?
 
     @State private var showAlert: Bool = false
     
@@ -64,17 +65,21 @@ struct PublicStreetPass: View {
                          
                          //Need a text liner for the bio
                          VStack(spacing: 5) {
-                             Text(userbio)
+                             Text(userbio ?? "")
                                  .font(.subheadline)
                                  .foregroundColor(.gray)
                              
-                             Button {
-                               
-                             } label: {
-                                 Text("\(streetCred) StreetCred")
-                                     .font(.caption)
-                                     .foregroundColor(.gray)
+                             if streetCred != nil {
+                                 Button {
+                                   
+                                 } label: {
+                                    
+                                     Text("\(streetCred ?? "") StreetCred")
+                                         .font(.caption)
+                                         .foregroundColor(.gray)
+                                 }
                              }
+                            
                          }
          
                              
@@ -127,6 +132,6 @@ struct PublicStreetPass_Previews: PreviewProvider {
     static let amount: Int = 10
     
     static var previews: some View {
-        PublicStreetPass(profileUrl: text, username: text, userbio: text, streetCred: text)
+        PublicStreetPass(uid: text, profileUrl: text, username: text, userbio: text, streetCred: text)
     }
 }

@@ -19,6 +19,7 @@ struct SpotDetailsView: View {
     @ObservedObject var vm: SpotViewModel = SpotViewModel()
     
     @State private var isEditing: Bool = false
+    @State private var showStreetPass: Bool = false
     @State private var showActionSheet: Bool = false
     @State private var showWorldDef: Bool = false
     @State private var actionSheetType: SpotActionSheetType = .general
@@ -151,14 +152,29 @@ struct SpotDetailsView: View {
                                            
                                     }
                                 }
-                            .padding()
-                            .opacity(isEditing ? 0 : 1)
-
                             
                            
                         Spacer()
+                        
+                        Button {
+                            vm.checkInSecretSpot(spot: spot)
+                        } label: {
+                            VStack {
+                                Image(Icon.check.rawValue)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: 25)
+                                
+                                Text("Verify")
+                                    .font(.caption)
+                            }
+                        }
+                        .disabled(vm.disableCheckin)
+                      
+
                     }
                     .opacity(isEditing ? 0 : 1)
+                    .padding(.horizontal, 20)
                     
                     if isEditing {
                         TextField(spot.world, text: $vm.newWorld, onCommit:  {
@@ -186,22 +202,28 @@ struct SpotDetailsView: View {
                         
                         Spacer()
                         
+                        
                         Button {
-                            vm.checkInSecretSpot(spot: spot)
+                            showStreetPass.toggle()
+                            AnalyticsService.instance.touchedProfile()
                         } label: {
                             VStack {
-                                Image(Icon.check.rawValue)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(height: 20)
-                                
-                                Text("Verify")
+                                UserDotView(imageUrl: spot.ownerImageUrl, width: 30, height: 30)
+                                Text("Scout")
                                     .font(.caption)
                             }
+                            .padding(.trailing, 20)
+
                         }
-                        .disabled(vm.disableCheckin)
+
                     }
-                    .padding()
+                    .padding(.leading, 20)
+                    .sheet(isPresented: $showStreetPass) {
+                        //TBD
+                    } content: {
+                        PublicStreetPass(uid: spot.ownerId, profileUrl: spot.ownerImageUrl, username: spot.ownerDisplayName, userbio: nil, streetCred: nil)
+                    }
+
                     
                 }
                 .foregroundColor(.accent)

@@ -11,6 +11,7 @@ import SDWebImageSwiftUI
 
 struct CardView: View {
     
+    @State private var showStreetPass: Bool = false
     var spot: SecretSpot
     let insets = EdgeInsets(top: 20, leading: 5, bottom: 40, trailing: 10)
     
@@ -27,13 +28,21 @@ struct CardView: View {
             
             HStack {
                 
-                UserDotView(imageUrl: spot.ownerImageUrl, width: 40, height: 40)
-                    .padding(.leading, 20)
+                Button {
+                    //To be continued
+                    showStreetPass.toggle()
+                    AnalyticsService.instance.touchedProfile()
+                } label: {
+                    UserDotView(imageUrl: spot.ownerImageUrl, width: 40, height: 40)
+                        .padding(.leading, 20)
 
-                
-                Text(spot.ownerDisplayName)
-                    .font(.subheadline)
-                    .fontWeight(.thin)
+                    
+                    Text(spot.ownerDisplayName)
+                        .font(.subheadline)
+                        .fontWeight(.thin)
+                }
+
+               
                 
                 Spacer()
                 Image(systemName: "figure.walk")
@@ -73,6 +82,14 @@ struct CardView: View {
         .background(Color.black)
         .cornerRadius(20)
         .foregroundColor(.white)
+        .sheet(isPresented: $showStreetPass) {
+            //TBD
+            
+        } content: {
+            //TBD
+            PublicStreetPass(uid: spot.ownerId, profileUrl: spot.ownerImageUrl, username: spot.ownerDisplayName, userbio: nil, streetCred: nil)
+        }
+
         
       
     }

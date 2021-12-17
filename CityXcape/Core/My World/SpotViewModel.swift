@@ -73,7 +73,7 @@ class SpotViewModel: NSObject, ObservableObject {
             let distanceInMiles = distance * 0.000621371
             let formattedDistance = String(format: "%.0f", distanceInMiles)
             print("\(distance) feet")
-            if distance < 50 {
+            if distance < 200 {
                 DataService.instance.checkIfUserAlreadyVerified(spot: spot) {  doesExist in
                     
                     if doesExist {
@@ -125,8 +125,8 @@ class SpotViewModel: NSObject, ObservableObject {
     }
     
     func showWorldDefinition(spot: SecretSpot) {
-        alertMessage = "This spot is for the \(spot.world) community"
-        showAlert = true
+        self.alertMessage = "This spot is for the \(spot.world) community"
+        self.showAlert = true
     }
     
     func editSpotDescription(postId: String) {

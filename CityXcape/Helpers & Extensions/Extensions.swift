@@ -145,7 +145,8 @@ extension String {
                 newWords.append(newWord)
             }
         }
-        return newWords.joined(separator:" ")
+        let hashtag = newWords.joined(separator:", ")
+        return hashtag
     }
 }
 

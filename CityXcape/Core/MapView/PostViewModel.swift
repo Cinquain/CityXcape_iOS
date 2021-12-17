@@ -20,6 +20,7 @@ class PostViewModel: NSObject, ObservableObject {
     @Published var details: String = ""
     @Published var world: String = ""
     @Published var isPublic: Bool = true
+    @Published var refresh: Bool = false 
 
     
     @Published var showPicker: Bool = false
@@ -101,6 +102,19 @@ class PostViewModel: NSObject, ObservableObject {
         }
     }
     
+    
+    func converToHashTag() {
+        var newWords = [String]()
+        let wordsArray = world.components(separatedBy:" ")
+        for word in wordsArray {
+            if word.count > 0 {
+                let newWord = "#\(word.lowercased())"
+                newWords.append(newWord)
+            }
+        }
+        world = newWords.joined(separator:", ")
+      
+    }
     
     
 }

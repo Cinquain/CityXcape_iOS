@@ -86,4 +86,8 @@ class AnalyticsService {
         Analytics.logEvent("deleted_post", parameters: nil)
     }
     
+    func touchedProfile() {
+        Analytics.logEvent("touched_user_profile", parameters: nil)
+    }
+    
 }
