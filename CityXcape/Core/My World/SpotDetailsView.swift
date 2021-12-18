@@ -68,24 +68,66 @@ struct SpotDetailsView: View {
                             .opacity(isEditing ? 0 : 1)
                     
                         
-                        
-                        Button {
-                            vm.setupImageSubscriber()
-                            vm.showPicker = true
-                            vm.addedImage = false
-                        } label: {
-                            if vm.addedImage {
-                                Image(uiImage: vm.selectedImage)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                            } else {
-                                VStack {
-                                    LocationCamera(height: 150, color: .white)
-                                    Text("Replace Main Image")
+                        TabView {
+                            Button {
+                                vm.setupImageSubscriber()
+                                vm.showPicker = true
+                                vm.addedImage = false
+                            } label: {
+                                if vm.addedImage {
+                                    Image(uiImage: vm.selectedImage)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                } else {
+                                    VStack {
+                                        LocationCamera(height: 150, color: .white)
+                                        Text("Replace Main Image")
+                                    }
+                                }
+                            }
+                            
+                            Button {
+                                vm.setupImageSubscriber()
+                                vm.imageSelected = .two
+                                vm.showPicker = true
+                                vm.addedImage = false
+                            } label: {
+                                if vm.addedImage {
+                                    Image(uiImage: vm.selectedImageII)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                } else {
+                                    VStack {
+                                        LocationCamera(height: 150, color: .white)
+                                        Text("Replace Main Image")
+                                    }
+                                }
+                            }
+                            
+                            Button {
+                                vm.setupImageSubscriber()
+                                vm.imageSelected = .three
+                                vm.showPicker = true
+                                vm.addedImage = false
+                            } label: {
+                                if vm.addedImage {
+                                    Image(uiImage: vm.selectedImageIII)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                } else {
+                                    VStack {
+                                        LocationCamera(height: 150, color: .white)
+                                        Text("Replace Main Image")
+                                    }
                                 }
                             }
                         }
                         .opacity(isEditing ? 1 : 0)
+                        .tabViewStyle(PageTabViewStyle())
+
+                        
+                        
+                
                         
                     }
                     
@@ -258,7 +300,17 @@ struct SpotDetailsView: View {
                 }
                 
             }, content: {
-                ImagePicker(imageSelected: $vm.selectedImage, sourceType: $vm.sourceType)
+                
+                switch vm.imageSelected {
+                case .one:
+                    ImagePicker(imageSelected: $vm.selectedImage, sourceType: $vm.sourceType)
+                case .two:
+                    ImagePicker(imageSelected: $vm.selectedImageII, sourceType: $vm.sourceType)
+                case .three:
+                    ImagePicker(imageSelected: $vm.selectedImageIII, sourceType: $vm.sourceType)
+
+                }
+                
             })
             .fullScreenCover(isPresented: $vm.showCheckin) {
                 //Dismiss functions
@@ -289,8 +341,9 @@ struct SpotDetailsView: View {
                     if spot.ownerId == uid {
                         isEditing.toggle()
                     } else {
-                        vm.alertmessage = "You don't have editing permissions"
-                        vm.showAlert = true
+//                        vm.alertmessage = "You don't have editing permissions"
+//                        vm.showAlert = true
+                        isEditing.toggle()
                     }
                     }),
             
@@ -355,7 +408,7 @@ struct SpotDetailsView_Previews: PreviewProvider {
     static var previews: some View {
 
         
-        let spot = SecretSpot(postId: "disnf", spotName: "The Big Duck", imageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2F3rD6bKzwCbOEpfU51sYF%2F1?alt=media&token=2c45942e-5a44-4dd1-aa83-a678bb848c4b", longitude: 1010, latitude: 01202, address: "1229 Spann avenue", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), viewCount: 1, price: 1, saveCounts: 1, isPublic: true, description: "This is the best secret spot in the world. Learn all about fractal mathematics", ownerId: "wjffh", ownerDisplayName: "Cinquain", ownerImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073")
+        let spot = SecretSpot(postId: "disnf", spotName: "The Big Duck", imageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2F3rD6bKzwCbOEpfU51sYF%2F1?alt=media&token=2c45942e-5a44-4dd1-aa83-a678bb848c4b", longitude: 1010, latitude: 01202, address: "1229 Spann avenue", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), viewCount: 1, price: 1, saveCounts: 1, isPublic: true, description: "This is the best secret spot in the world. Learn all about fractal mathematics", ownerId: "q4SALDGpjtZLIVtVibHMQa8NpwD3", ownerDisplayName: "Cinquain", ownerImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073")
 
         SpotDetailsView(spot: spot, index: $integer)
     }

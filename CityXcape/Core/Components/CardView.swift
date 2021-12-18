@@ -42,7 +42,6 @@ struct CardView: View {
                         .fontWeight(.thin)
                 }
 
-               
                 
                 Spacer()
                 Image(systemName: "figure.walk")

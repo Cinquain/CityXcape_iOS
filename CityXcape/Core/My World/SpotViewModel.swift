@@ -34,7 +34,10 @@ class SpotViewModel: NSObject, ObservableObject {
     
     @Published var showPicker: Bool = false
     @Published var addedImage: Bool = false
-    @Published var selectedImage: UIImage = UIImage() 
+    @Published var imageSelected: SecretSpotImageNumb = .one
+    @Published var selectedImage: UIImage = UIImage()
+    @Published var selectedImageII: UIImage = UIImage()
+    @Published var selectedImageIII: UIImage = UIImage()
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     var cancellables = Set<AnyCancellable>()

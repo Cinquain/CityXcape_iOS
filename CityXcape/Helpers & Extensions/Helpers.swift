@@ -107,6 +107,12 @@ enum SettingsEditTextOption {
     case bio
 }
 
+enum SecretSpotImageNumb {
+    case one
+    case two
+    case three
+}
+
 struct StandardButton: ViewModifier {
     
     let textColor: Color

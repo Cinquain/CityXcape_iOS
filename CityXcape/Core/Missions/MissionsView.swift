@@ -18,8 +18,8 @@ struct MissionsView: View {
     
     @State var captions: [String] = [
         "Missions are exploration jobs",
-        "1 Mission pending",
-        "Choose a Mission"
+        "Choose a Mission",
+        "Get StreetCred for completing missions"
     ]
     
     var body: some View {
