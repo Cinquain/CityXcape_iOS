@@ -16,7 +16,7 @@ struct SecretSpot:  Hashable, Codable {
    
     let postId: String
     var spotName: String
-    var imageUrl: String
+    var imageUrls: [String]
     var longitude: Double
     var latitude: Double
     var address: String
@@ -35,13 +35,12 @@ struct SecretSpot:  Hashable, Codable {
     let ownerId: String
     var ownerDisplayName: String
     var ownerImageUrl: String
-    var spotImageUrls: [String] 
     
 
     enum CodingKeys: String, CodingKey {
         case postId = "spot_id"
         case spotName = "spot_name"
-        case imageUrl = "spot_image_url"
+        case imageUrls = "spot_image_url"
         case longitude = "longitude"
         case latitude = "latitude"
         case description = "description"
@@ -57,7 +56,6 @@ struct SecretSpot:  Hashable, Codable {
         case price = "price"
         case world = "world"
         case isPublic = "public"
-        case spotImageUrls = "spotImageUrls"
     }
     
     

@@ -251,6 +251,7 @@ class SpotViewModel: NSObject, ObservableObject {
     
     func setupImageSubscriber() {
         $selectedImage
+            .combineLatest($selectedImageII, $selectedImageIII)
             .sink { [weak self] _ in
                 self?.addedImage = true
             }

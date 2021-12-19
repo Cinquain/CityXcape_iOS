@@ -77,7 +77,7 @@ struct MyWorld: View {
                             List {
                                 ForEach(vm.secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.postId) { spot in
                                     
-                                    SpotRowView(imageUrl: spot.imageUrl, name: spot.spotName, distance: spot.distanceFromUser)
+                                    SpotRowView(imageUrl: spot.imageUrls.first ?? "", name: spot.spotName, distance: spot.distanceFromUser)
                                         .onTapGesture(perform: {
                                             guard let index = self.vm.secretspots.firstIndex(of: spot) else {return}
                                             self.currentIndex = index
