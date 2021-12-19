@@ -360,9 +360,11 @@ class DataService {
                         let isPublic = data?[SecretSpotField.isPublic] as? Bool,
                         let world = data?[SecretSpotField.world] as? String,
                         let price = data?[SecretSpotField.price] as? Int {
+                            
                             let date = dateCreated.dateValue()
+                            let spotImageUrls = data?[SecretSpotField.spotImageUrls] as? [String] ?? [String]()
 
-                            let secretSpot = SecretSpot(postId: postId, spotName: name, imageUrl: imageUrl, longitude: longitude, latitude: latitude, address: address, city: city, zipcode: zipcode, world: world, dateCreated: date, viewCount: viewCount, price: price, saveCounts: saveCounts, isPublic: isPublic, description: description, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
+                            let secretSpot = SecretSpot(postId: postId, spotName: name, imageUrl: imageUrl, longitude: longitude, latitude: latitude, address: address, city: city, zipcode: zipcode, world: world, dateCreated: date, viewCount: viewCount, price: price, saveCounts: saveCounts, isPublic: isPublic, description: description, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, spotImageUrls: spotImageUrls)
                             secretSpots.append(secretSpot)
 //
                         }
@@ -434,8 +436,9 @@ class DataService {
                     
                     let postId = document.documentID
                     let date = dateCreated.dateValue()
+                    let spotImageUrls = document.get(SecretSpotField.spotImageUrls) as? [String] ?? [String]()
 
-                    let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrl: imageUrl, longitude: longitude, latitude: latitude, address: address, city: city, zipcode: zipcode, world: world, dateCreated: date, viewCount: viewCount, price: price, saveCounts: saveCounts, isPublic: isPublic, description: description, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
+                    let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrl: imageUrl, longitude: longitude, latitude: latitude, address: address, city: city, zipcode: zipcode, world: world, dateCreated: date, viewCount: viewCount, price: price, saveCounts: saveCounts, isPublic: isPublic, description: description, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, spotImageUrls: spotImageUrls)
                     secretSpots.append(secretSpot)
                 }
             }

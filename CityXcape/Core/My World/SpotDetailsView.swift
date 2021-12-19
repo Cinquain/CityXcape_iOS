@@ -58,33 +58,39 @@ struct SpotDetailsView: View {
                     }
                     
                     ZStack {
-                     
+                        
+            
                         WebImage(url: URL(string: spot.imageUrl))
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: .infinity)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .padding(.top, 20)
-                            .opacity(isEditing ? 0 : 1)
-                    
+                        
+                   
+                        
                         
                         TabView {
-                            Button {
-                                vm.setupImageSubscriber()
-                                vm.showPicker = true
-                                vm.addedImage = false
-                            } label: {
-                                if vm.addedImage {
-                                    Image(uiImage: vm.selectedImage)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                } else {
-                                    VStack {
-                                        LocationCamera(height: 150, color: .white)
-                                        Text("Replace Main Image")
+                            
+                          
+                                Button {
+                                    vm.setupImageSubscriber()
+                                    vm.showPicker = true
+                                    vm.addedImage = false
+                                } label: {
+                                    if vm.addedImage {
+                                        Image(uiImage: vm.selectedImage)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                    } else {
+                                        VStack {
+                                            LocationCamera(height: 150, color: .white)
+                                            Text("Replace Main Image")
+                                        }
                                     }
                                 }
-                            }
+                            
+                        
                             
                             Button {
                                 vm.setupImageSubscriber()
@@ -291,11 +297,26 @@ struct SpotDetailsView: View {
             .sheet(isPresented: $vm.showPicker, onDismiss: {
                 //TBD
                 if vm.addedImage {
-                    vm.updateMainSpotImage(postId: spot.postId) {  url in
-                        
-                            spot.imageUrl = url
+                    switch vm.imageSelected {
+                    case .one:
+                        vm.updateMainSpotImage(postId: spot.postId) {  url in
+                            
+                                spot.imageUrl = url
+                                vm.refresh.toggle()
+                            
+                        }
+                    case .two:
+                        vm.updateAdditonalImage(postId: spot.postId, image: vm.selectedImageII, number: 2) { url in
+                            //I'll be back
+                            spot.spotImageUrls.append(url)
                             vm.refresh.toggle()
-                        
+                        }
+                    case .three:
+                        vm.updateAdditonalImage(postId: spot.postId, image: vm.selectedImageIII, number: 3) { url in
+                            //I'll be back
+                            spot.spotImageUrls.append(url)
+                            vm.refresh.toggle()
+                        }
                     }
                 }
                 
@@ -408,7 +429,7 @@ struct SpotDetailsView_Previews: PreviewProvider {
     static var previews: some View {
 
         
-        let spot = SecretSpot(postId: "disnf", spotName: "The Big Duck", imageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2F3rD6bKzwCbOEpfU51sYF%2F1?alt=media&token=2c45942e-5a44-4dd1-aa83-a678bb848c4b", longitude: 1010, latitude: 01202, address: "1229 Spann avenue", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), viewCount: 1, price: 1, saveCounts: 1, isPublic: true, description: "This is the best secret spot in the world. Learn all about fractal mathematics", ownerId: "q4SALDGpjtZLIVtVibHMQa8NpwD3", ownerDisplayName: "Cinquain", ownerImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073")
+        let spot = SecretSpot(postId: "disnf", spotName: "The Big Duck", imageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2F3rD6bKzwCbOEpfU51sYF%2F1?alt=media&token=2c45942e-5a44-4dd1-aa83-a678bb848c4b", longitude: 1010, latitude: 01202, address: "1229 Spann avenue", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), viewCount: 1, price: 1, saveCounts: 1, isPublic: true, description: "This is the best secret spot in the world. Learn all about fractal mathematics", ownerId: "q4SALDGpjtZLIVtVibHMQa8NpwD3", ownerDisplayName: "Cinquain", ownerImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", spotImageUrls: [""])
 
         SpotDetailsView(spot: spot, index: $integer)
     }

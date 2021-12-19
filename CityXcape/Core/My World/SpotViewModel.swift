@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreLocation
 import Combine
-
+import FirebaseFirestore
 
 
 class SpotViewModel: NSObject, ObservableObject {
@@ -218,6 +218,35 @@ class SpotViewModel: NSObject, ObservableObject {
             }
             
         }
+    }
+    
+    func updateAdditonalImage(postId: String, image: UIImage, number: Int,  completion: @escaping (_ url: String) -> ()) {
+        
+        ImageManager.instance.updateSecretSpotImage(image: image, postId: postId, number: number) { url in
+           
+            guard let downloadUrl = url else {return}
+            completion(downloadUrl)
+            
+            let data: [String: Any] = [
+                SecretSpotField.spotImageUrls : FieldValue.arrayUnion([downloadUrl])
+            ]
+            
+            DataService.instance.updateSpotField(postId: postId, data: data) { success in
+                
+                if success {
+                    self.alertmessage = "Successfully added image"
+                    self.showAlert = true
+                    return
+                } else {
+                    self.alertmessage = "Failed to add new image"
+                    self.showAlert = true
+                    return
+                }
+                
+            }
+            
+        }
+        
     }
     
     func setupImageSubscriber() {

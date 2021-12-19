@@ -35,6 +35,7 @@ struct SecretSpot:  Hashable, Codable {
     let ownerId: String
     var ownerDisplayName: String
     var ownerImageUrl: String
+    var spotImageUrls: [String] 
     
 
     enum CodingKeys: String, CodingKey {
@@ -56,6 +57,7 @@ struct SecretSpot:  Hashable, Codable {
         case price = "price"
         case world = "world"
         case isPublic = "public"
+        case spotImageUrls = "spotImageUrls"
     }
     
     

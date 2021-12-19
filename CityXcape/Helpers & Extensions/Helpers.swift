@@ -42,6 +42,7 @@ struct SecretSpotField {
     static let verified = "verified"
     static let world = "world"
     static let isPublic = "isPublic"
+    static let spotImageUrls = "spotImageUrls"
 }
 
 struct DatabaseReportField {
