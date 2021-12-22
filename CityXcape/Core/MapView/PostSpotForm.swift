@@ -21,7 +21,7 @@ struct PostSpotForm: View {
     
     var body: some View {
         
-            GeometryReader { geo in
+            ScrollView {
                 VStack {
                     Text("Post Spot")
                         .font(.title)
@@ -101,7 +101,7 @@ struct PostSpotForm: View {
                             .background(Color.white)
                             .accentColor(.black)
                             .foregroundColor(.black)
-                            .frame(maxWidth: geo.size.width / 1.5)
+                            .frame(maxWidth: UIScreen.main.bounds.width / 1.5)
                         } else {
                             Text(vm.privatePlaceHolder)
                                 .foregroundColor(.white)
@@ -134,7 +134,7 @@ struct PostSpotForm: View {
                                 .cornerRadius(12)
                             
                         }
-                        .frame(width: geo.size.width, height: geo.size.width / 1.5)
+                        
                         
                     
                     HStack {

@@ -26,6 +26,7 @@ struct SpotDetailsView: View {
     @State private var actionSheetType: SpotActionSheetType = .general
     @State private var currentlyEditing: Bool = false
     
+    
  
     init(spot: SecretSpot, index: Binding<Int>, refresh: Binding<Bool>) {
         _spot = State(initialValue: spot)
@@ -62,15 +63,15 @@ struct SpotDetailsView: View {
                     
                     ZStack {
                         
-                        
                         TabView {
-                            
+                
                             ForEach(spot.imageUrls, id: \.self) { url in
-                                WebImage(url: URL(string: url))
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: .infinity)
-                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                
+                                    WebImage(url: URL(string: url))
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: .infinity)
+                                        .clipShape(RoundedRectangle(cornerRadius: 12))
                                     .padding(.top, 20)
                             }
                       
@@ -309,6 +310,7 @@ struct SpotDetailsView: View {
                 if vm.addedImage {
                     switch vm.imageSelected {
                     case .one:
+                        
                         vm.updateMainSpotImage(postId: spot.postId) {  url in
                             
                             if spot.imageUrls.indices.contains(0) {

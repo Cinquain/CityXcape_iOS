@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1493C3F3277394BA002010A6 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1493C3F2277394BA002010A6 /* ActivityIndicator.swift */; };
 		2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */; };
 		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
 		2120CE66275FA254006367FE /* LocationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120CE65275FA254006367FE /* LocationCamera.swift */; };
@@ -74,6 +75,7 @@
 
 /* Begin PBXFileReference section */
 		03633A38349C026A52CC221D /* Pods-CityXcape.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.release.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.release.xcconfig"; sourceTree = "<group>"; };
+		1493C3F2277394BA002010A6 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotViewModel.swift; sourceTree = "<group>"; };
 		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
 		2120CE65275FA254006367FE /* LocationCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCamera.swift; sourceTree = "<group>"; };
@@ -299,6 +301,7 @@
 				2178C4522719166800B4C395 /* TextFieldView.swift */,
 				21E4DC062753D8D9004276D2 /* VerificationView.swift */,
 				2120CE65275FA254006367FE /* LocationCamera.swift */,
+				1493C3F2277394BA002010A6 /* ActivityIndicator.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -557,6 +560,7 @@
 				219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */,
 				217E9AA6270B404500F45077 /* Mission.swift in Sources */,
 				214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */,
+				1493C3F3277394BA002010A6 /* ActivityIndicator.swift in Sources */,
 				21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */,
 				217DA74126CCAFDD0039A145 /* UserDotView.swift in Sources */,
 				217DA72A26CC8F8B0039A145 /* HomeView.swift in Sources */,

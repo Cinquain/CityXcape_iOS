@@ -40,8 +40,9 @@ class SpotViewModel: NSObject, ObservableObject {
     @Published var selectedImageII: UIImage = UIImage()
     @Published var selectedImageIII: UIImage = UIImage()
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    let hud = JGProgressHUD(style: .dark)
     
+    var amount: Float = 10
+
     
     var cancellables = Set<AnyCancellable>()
     
@@ -199,11 +200,8 @@ class SpotViewModel: NSObject, ObservableObject {
     
     func updateMainSpotImage(postId: String, completion: @escaping (_ url: String) -> ()) {
         
-        hudCoordinator.showHUD {
-            let hud = JGProgressHUD(style: .dark)
-            hud.textLabel.text = "Uploading Main Image"
-            return hud
-        }
+       
+     
         ImageManager.instance.uploadSecretSpotImage(image: selectedImage, postId: postId) { downloadUrl in
             
             guard let url = downloadUrl else {return}
@@ -216,12 +214,10 @@ class SpotViewModel: NSObject, ObservableObject {
             
             DataService.instance.updateSpotField(postId: postId, data: data) { success in
                 if success {
-                    self.hudCoordinator.presentedHUD?.dismiss()
                     self.alertmessage = "Successfully updated image"
                     self.showAlert = true
                     return
                 } else {
-                    self.hudCoordinator.presentedHUD?.dismiss()
                     self.alertmessage = "Failed to upload image"
                     self.showAlert = true
                     return
@@ -232,12 +228,7 @@ class SpotViewModel: NSObject, ObservableObject {
     }
     
     func updateAdditonalImage(postId: String, image: UIImage, number: Int,  completion: @escaping (_ url: String) -> ()) {
-        
-        hudCoordinator.showHUD {
-            let hud = JGProgressHUD(style: .dark)
-            hud.textLabel.text = "Uploading Additional Image"
-            return hud
-        }
+
         ImageManager.instance.updateSecretSpotImage(image: image, postId: postId, number: number) { url in
            
             guard let downloadUrl = url else {return}
@@ -250,12 +241,10 @@ class SpotViewModel: NSObject, ObservableObject {
             DataService.instance.updateSpotField(postId: postId, data: data) { success in
                 
                 if success {
-                    self.hudCoordinator.presentedHUD?.dismiss()
                     self.alertmessage = "Successfully added image"
                     self.showAlert = true
                     return
                 } else {
-                    self.hudCoordinator.presentedHUD?.dismiss()
                     self.alertmessage = "Failed to add new image"
                     self.showAlert = true
                     return
