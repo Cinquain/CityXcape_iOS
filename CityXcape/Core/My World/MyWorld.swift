@@ -9,6 +9,7 @@ import SwiftUI
 import CoreLocation
 import Combine
 import Shimmer
+import JGProgressHUD_SwiftUI
 
 struct MyWorld: View {
     
@@ -20,6 +21,11 @@ struct MyWorld: View {
     @State private var currentIndex = 0
     @State private var isPresented: Bool = false
     @Binding var selectedTab: Int
+    @State var refreshWorld: Bool = false {
+        didSet {
+            vm.secretspots.shuffle()
+        }
+    }
 
     @State var captions: [String] = [
         "CityXcape",
@@ -102,7 +108,7 @@ struct MyWorld: View {
             } ,content: {
         
                 if let spot = vm.secretspots[currentIndex] {
-                    SpotDetailsView(spot: spot, index: $currentIndex)
+                    SpotDetailsView(spot: spot, index: $currentIndex, refresh: $refreshWorld)
                 }
                 
             })
