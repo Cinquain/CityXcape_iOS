@@ -43,7 +43,7 @@ class SpotViewModel: NSObject, ObservableObject {
     
     var amount: Float = 10
 
-    
+    let manager = CoreDataManager.instance
     var cancellables = Set<AnyCancellable>()
     
     override init() {
@@ -142,6 +142,8 @@ class SpotViewModel: NSObject, ObservableObject {
             SecretSpotField.description : newDescription
         ]
         
+        manager.updateDescription(spotId: postId, description: newDescription)
+        
         DataService.instance.updateSpotField(postId: postId, data: data) { success in
             
             if success {
@@ -165,6 +167,8 @@ class SpotViewModel: NSObject, ObservableObject {
             SecretSpotField.world : hashtag
         ]
         
+        manager.updateWorld(spotId: postId, world: hashtag)
+        
         DataService.instance.updateSpotField(postId: postId, data: data) { success in
             
             if success {
@@ -184,6 +188,8 @@ class SpotViewModel: NSObject, ObservableObject {
             SecretSpotField.spotName : newSpotName
         ]
         
+        manager.updateName(spotId: postId, name: newSpotName)
+        
         DataService.instance.updateSpotField(postId: postId, data: data) { success in
             
             if success {
@@ -199,13 +205,12 @@ class SpotViewModel: NSObject, ObservableObject {
     }
     
     func updateMainSpotImage(postId: String, completion: @escaping (_ url: String) -> ()) {
-        
-       
      
         ImageManager.instance.uploadSecretSpotImage(image: selectedImage, postId: postId) { downloadUrl in
             
             guard let url = downloadUrl else {return}
             completion(url)
+            self.manager.updateImage(spotId: postId, index: 0, imageUrl: url)
             self.newSpotImageUrl = url
             
             let data: [String: Any] = [
@@ -233,6 +238,8 @@ class SpotViewModel: NSObject, ObservableObject {
            
             guard let downloadUrl = url else {return}
             completion(downloadUrl)
+            let index = number - 1
+            self.manager.updateImage(spotId: postId, index: index, imageUrl: downloadUrl)
             
             let data: [String: Any] = [
                 SecretSpotField.spotImageUrls : FieldValue.arrayUnion([downloadUrl])

@@ -22,6 +22,7 @@ class DataService {
 
     
     static let instance = DataService()
+    let manager = CoreDataManager.instance
     private init() {}
     
     private var REF_POST = DB_BASE.collection("posts")
@@ -76,6 +77,9 @@ class DataService {
                     SecretSpotField.isPublic: isPublic,
                     SecretSpotField.dateCreated: FieldValue.serverTimestamp()
                 ]
+                
+                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: city)
+                self.manager.fetchSecretSpots()
                 
                 document.setData(spotData) { (error) in
                     if let err = error {
@@ -141,6 +145,10 @@ class DataService {
             print("Successful saved user to saved collection of secret spot")
             completion(true)
         }
+        
+        //Save to Core Data
+        self.manager.addEntity(spotId: spot.postId, spotName: spot.spotName, description: spot.description ?? "", longitude: spot.longitude, latitude: spot.latitude, imageUrls: spot.imageUrls, address: spot.address, uid: spot.ownerId, ownerImageUrl: spot.ownerImageUrl, ownerDisplayName: spot.ownerDisplayName, price: Double(spot.price), viewCount: Double(spot.viewCount), saveCount: Double(spot.saveCounts), zipCode: Double(spot.zipcode), world: spot.world, isPublic: spot.isPublic, dateCreated: spot.dateCreated, city: spot.city)
+        self.manager.fetchSecretSpots()
         
         
         //Decrement buyer wallet remotely
@@ -324,7 +332,7 @@ class DataService {
     }
     
     
-    func getSpotsFromWorld(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
+    func getSpotsFromWorld(userId: String, coreData: Bool, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
         REF_WORLD.document("private").collection(userId).addSnapshotListener { snapshot, error in
             var secretSpots = [SecretSpot]()
 
@@ -366,11 +374,17 @@ class DataService {
                             var spotImageUrls = [imageUrl]
                             
                             if !additionalImages.isEmpty {
-                                spotImageUrls.append(contentsOf: additionalImages)
+                                additionalImages.forEach { url in
+                                    spotImageUrls.append(url)
+                                }
                             }
 
-                            let secretSpot = SecretSpot(postId: postId, spotName: name, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, city: city, zipcode: zipcode, world: world, dateCreated: date, viewCount: viewCount, price: price, saveCounts: saveCounts, isPublic: isPublic, description: description, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
+                            let secretSpot = SecretSpot(postId: postId, spotName: name, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
                             secretSpots.append(secretSpot)
+                            
+                            if coreData {
+                                self.manager.addEntity(spotId: postId, spotName: name, description: description, longitude: longitude, latitude: latitude, imageUrls: spotImageUrls, address: address, uid: ownerId, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: Double(price), viewCount: Double(viewCount), saveCount: Double(saveCounts), zipCode: Double(zipcode), world: world, isPublic: isPublic, dateCreated: date, city: city)
+                            }
 //
                         }
                         
@@ -448,7 +462,7 @@ class DataService {
                         spotImageUrls.append(contentsOf: additionalImages)
                     }
 
-                    let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, city: city, zipcode: zipcode, world: world, dateCreated: date, viewCount: viewCount, price: price, saveCounts: saveCounts, isPublic: isPublic, description: description, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
+                    let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
                     secretSpots.append(secretSpot)
                 }
             }
@@ -510,7 +524,7 @@ class DataService {
 //
     func updateDisplayNameOnPosts(userId: String, displayName: String) {
 
-        getSpotsFromWorld(userId: userId) { secretSpots in
+        getSpotsFromWorld(userId: userId, coreData: false) { secretSpots in
             let filteredSpots = secretSpots.filter({$0.ownerId == userId})
 
             for spot in filteredSpots {
@@ -548,7 +562,7 @@ class DataService {
             SecretSpotField.ownerImageUrl: profileUrl
         ]
 
-        getSpotsFromWorld(userId: uid) { secretspots in
+         getSpotsFromWorld(userId: uid, coreData: false) { secretspots in
 
             let filteredSpots = secretspots.filter({$0.ownerId == uid})
 

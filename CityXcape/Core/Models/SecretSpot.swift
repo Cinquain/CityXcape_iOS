@@ -82,4 +82,48 @@ struct SecretSpot:  Hashable, Codable {
     }
     
     
+    init(postId: String, spotName: String, imageUrls: [String], longitude: Double, latitude: Double, address: String, description: String, city: String, zipcode: Int, world: String, dateCreated: Date, price: Int, viewCount: Int, saveCounts: Int, isPublic: Bool, ownerId: String, ownerDisplayName: String, ownerImageUrl: String) {
+
+            self.postId = postId
+            self.spotName = spotName
+            self.imageUrls = imageUrls
+            self.longitude = longitude
+            self.latitude = latitude
+            self.address = address
+            self.description = description
+            self.city = city
+            self.zipcode = zipcode
+            self.world = world
+            self.dateCreated = dateCreated
+            self.viewCount = viewCount
+            self.saveCounts = saveCounts
+            self.isPublic = isPublic
+            self.ownerId = ownerId
+            self.ownerDisplayName = ownerDisplayName
+            self.ownerImageUrl = ownerImageUrl
+            self.price = price
+        }
+        
+        init(entity: SecretSpotEntity) {
+            postId = entity.spotId ?? ""
+            spotName = entity.spotName ?? ""
+            imageUrls = entity.imageUrls ?? [""]
+            longitude = entity.longitude
+            latitude = entity.latitude
+            description = entity.spotDescription
+            city = entity.city ?? ""
+            dateCreated = entity.dateCreated ?? Date()
+            ownerId = entity.ownerId ?? ""
+            ownerImageUrl = entity.ownerImageUrl ?? ""
+            isPublic = entity.isPublic
+            saveCounts = Int(entity.saveCount)
+            viewCount = Int(entity.viewCount)
+            price = Int(entity.price)
+            world = entity.world ?? ""
+            zipcode = Int(entity.zipCode)
+            address = entity.address ?? ""
+            ownerDisplayName = entity.ownerDisplayName ?? ""
+        }
+    
+    
 }

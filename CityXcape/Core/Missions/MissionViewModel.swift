@@ -30,7 +30,7 @@ class MissionViewModel: ObservableObject {
         
         guard let uid = userId  else {return}
 
-        DataService.instance.getSpotsFromWorld(userId: uid) { spots in
+        DataService.instance.getSpotsFromWorld(userId: uid, coreData: false) { spots in
             
             let filteredSpots = spots.filter({$0.ownerId == uid})
             if filteredSpots.count > 0 {
