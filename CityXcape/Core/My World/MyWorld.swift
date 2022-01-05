@@ -41,7 +41,7 @@ struct MyWorld: View {
                     
                     VStack {
                         Ticker(profileUrl: profileUrl ?? "", captions: $captions)
-                            .frame(height: 150)
+                            .frame(height: 100)
                         
                         
                     if vm.showOnboarding {
@@ -73,22 +73,22 @@ struct MyWorld: View {
 
                         Spacer()
                     } else {
-                        
-                        SpotRowHeader()
-                   
-                            List {
-                                ForEach(vm.secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.postId) { spot in
+                            ScrollView {
+                                VStack(spacing: 25) {
+                                    ForEach(vm.secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.postId) { spot in
+                                        
+                                        PreviewCard(spot: spot)
+                                            .onTapGesture(perform: {
+                                                guard let index = self.vm.secretspots.firstIndex(of: spot) else {return}
+                                                self.currentIndex = index
+                                                isPresented.toggle()
+                                            })
                                     
-                                    SpotRowView(imageUrl: spot.imageUrls.first ?? "", name: spot.spotName, distance: spot.distanceFromUser)
-                                        .onTapGesture(perform: {
-                                            guard let index = self.vm.secretspots.firstIndex(of: spot) else {return}
-                                            self.currentIndex = index
-                                            isPresented.toggle()
-                                        })
+                                        Divider()
+                                    }
                                 }
                                 
                             }
-                            .listStyle(PlainListStyle())
                             .colorScheme(.dark)
                         
                     }

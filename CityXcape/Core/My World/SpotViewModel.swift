@@ -291,6 +291,9 @@ class SpotViewModel: NSObject, ObservableObject {
     
     func deletePost(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
         
+        manager.delete(spotId: spot.postId)
+        manager.fetchSecretSpots()
+        
         DataService.instance.deleteSecretSpot(spot: spot) { success in
            
            if success {
