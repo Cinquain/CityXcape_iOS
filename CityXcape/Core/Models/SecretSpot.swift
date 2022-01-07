@@ -10,11 +10,12 @@ import MapKit
 import CoreLocation
 import SwiftUI
 
-struct SecretSpot:  Hashable, Codable {
+struct SecretSpot:  Hashable, Codable, Identifiable {
+    
     
     
    
-    let postId: String
+    let id: String
     var spotName: String
     var imageUrls: [String]
     var longitude: Double
@@ -38,7 +39,7 @@ struct SecretSpot:  Hashable, Codable {
     
 
     enum CodingKeys: String, CodingKey {
-        case postId = "spot_id"
+        case id = "spot_id"
         case spotName = "spot_name"
         case imageUrls = "spot_image_url"
         case longitude = "longitude"
@@ -74,17 +75,17 @@ struct SecretSpot:  Hashable, Codable {
     }
  
     func hash(into hasher: inout Hasher) {
-        hasher.combine(postId)
+        hasher.combine(id)
     }
     
     static func == (lhs: SecretSpot, rhs: SecretSpot) -> Bool {
-        lhs.postId == rhs.postId
+        lhs.id == rhs.id
     }
     
     
     init(postId: String, spotName: String, imageUrls: [String], longitude: Double, latitude: Double, address: String, description: String, city: String, zipcode: Int, world: String, dateCreated: Date, price: Int, viewCount: Int, saveCounts: Int, isPublic: Bool, ownerId: String, ownerDisplayName: String, ownerImageUrl: String) {
 
-            self.postId = postId
+            self.id = postId
             self.spotName = spotName
             self.imageUrls = imageUrls
             self.longitude = longitude
@@ -105,7 +106,7 @@ struct SecretSpot:  Hashable, Codable {
         }
         
         init(entity: SecretSpotEntity) {
-            postId = entity.spotId ?? ""
+            id = entity.spotId ?? ""
             spotName = entity.spotName ?? ""
             imageUrls = entity.imageUrls ?? [""]
             longitude = entity.longitude

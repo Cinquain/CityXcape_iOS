@@ -113,7 +113,7 @@ class DataService {
     
     func saveToUserWorld(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
         
-        let spotId = spot.postId
+        let spotId = spot.id
         //Save swipe to history
         let historyData: [String: Any] =
             ["savedOn": FieldValue.serverTimestamp()]
@@ -126,7 +126,7 @@ class DataService {
             SecretSpotField.viewCount: FieldValue.increment(increment),
             SecretSpotField.saveCount : FieldValue.increment(increment)
         ]
-        REF_POST.document(spot.postId).updateData(data)
+        REF_POST.document(spot.id).updateData(data)
         
 
         //Save post id in user's world
@@ -147,7 +147,7 @@ class DataService {
         }
         
         //Save to Core Data
-        self.manager.addEntity(spotId: spot.postId, spotName: spot.spotName, description: spot.description ?? "", longitude: spot.longitude, latitude: spot.latitude, imageUrls: spot.imageUrls, address: spot.address, uid: spot.ownerId, ownerImageUrl: spot.ownerImageUrl, ownerDisplayName: spot.ownerDisplayName, price: Double(spot.price), viewCount: Double(spot.viewCount), saveCount: Double(spot.saveCounts), zipCode: Double(spot.zipcode), world: spot.world, isPublic: spot.isPublic, dateCreated: spot.dateCreated, city: spot.city)
+        self.manager.addEntity(spotId: spot.id, spotName: spot.spotName, description: spot.description ?? "", longitude: spot.longitude, latitude: spot.latitude, imageUrls: spot.imageUrls, address: spot.address, uid: spot.ownerId, ownerImageUrl: spot.ownerImageUrl, ownerDisplayName: spot.ownerDisplayName, price: Double(spot.price), viewCount: Double(spot.viewCount), saveCount: Double(spot.saveCounts), zipCode: Double(spot.zipcode), world: spot.world, isPublic: spot.isPublic, dateCreated: spot.dateCreated, city: spot.city)
         self.manager.fetchSecretSpots()
         
         
@@ -171,7 +171,7 @@ class DataService {
     
     func verifySecretSpot(spot: SecretSpot, completion: @escaping (_ success: Bool) ->()) {
         guard let uid = userId else {return}
-        let postId = spot.postId
+        let postId = spot.id
         let ownerId = spot.ownerId
         
         let checkinData: [String: Any] = [
@@ -211,7 +211,7 @@ class DataService {
     
     func checkIfUserAlreadyVerified(spot: SecretSpot, completion: @escaping (_ doesExist: Bool) ->()) {
         guard let uid = userId else {return}
-        let postId = spot.postId
+        let postId = spot.id
         
         REF_WORLD.document("verified").collection(uid).document(postId).getDocument { snapshot, error in
             
@@ -235,7 +235,7 @@ class DataService {
     
     func dismissCard(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
       
-        let spotId = spot.postId
+        let spotId = spot.id
         
         //save swipe to history
         let historyData: [String: Any] =
@@ -250,7 +250,7 @@ class DataService {
             SecretSpotField.viewCount: FieldValue.increment(increment)
         ]
         
-        REF_POST.document(spot.postId).updateData(data) { error in
+        REF_POST.document(spot.id).updateData(data) { error in
             if let error = error {
                 print("There was an error updating view card while dismissing card", error.localizedDescription)
                 completion(false)
@@ -416,7 +416,7 @@ class DataService {
                     let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
                     let filteredResults = results.filter({$0.isPublic == true
                                                             && $0.ownerId != uid
-                                                            && !history.contains($0.postId)})
+                                                            && !history.contains($0.id)})
                     completion(filteredResults)
                 }
         }
@@ -528,7 +528,7 @@ class DataService {
             let filteredSpots = secretSpots.filter({$0.ownerId == userId})
 
             for spot in filteredSpots {
-                self.updatePostDisplayName(postID: spot.postId, displayName: displayName)
+                self.updatePostDisplayName(postID: spot.id, displayName: displayName)
             }
 
 
@@ -568,7 +568,7 @@ class DataService {
 
             filteredSpots.forEach { [weak self] spot in
 
-                self?.REF_POST.document(spot.postId).updateData(data)
+                self?.REF_POST.document(spot.id).updateData(data)
             }
         }
 
@@ -579,7 +579,7 @@ class DataService {
     
     func deleteSecretSpot(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
         guard let uid = userId else {return}
-        let spotId = spot.postId
+        let spotId = spot.id
 
         REF_POST.document(spotId).collection("savedBy").document(uid).delete()
         if spot.ownerId == uid {

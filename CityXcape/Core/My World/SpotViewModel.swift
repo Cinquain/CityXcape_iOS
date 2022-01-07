@@ -275,7 +275,7 @@ class SpotViewModel: NSObject, ObservableObject {
     func reportPost(reason: String, spot: SecretSpot) {
           print("Reporting post")
           AnalyticsService.instance.reportPost()
-          DataService.instance.uploadReports(reason: reason, postId: spot.postId) { success in
+          DataService.instance.uploadReports(reason: reason, postId: spot.id) { success in
               
               if success {
                   self.alertmessage = "Thank you for reporting this spot. We will review it shortly!"
@@ -291,7 +291,7 @@ class SpotViewModel: NSObject, ObservableObject {
     
     func deletePost(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
         
-        manager.delete(spotId: spot.postId)
+        manager.delete(spotId: spot.id)
         manager.fetchSecretSpots()
         
         DataService.instance.deleteSecretSpot(spot: spot) { success in

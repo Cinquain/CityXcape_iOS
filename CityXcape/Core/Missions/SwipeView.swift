@@ -173,7 +173,7 @@ struct SwipeView: View {
             complete.toggle()
             vm.hasNewSpots = false
             //Use the last secret spot to start the next query
-            vm.lastSecretSpot = vm.newSecretSpots.last?.postId ?? ""
+            vm.lastSecretSpot = vm.newSecretSpots.last?.id ?? ""
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                 self.presentationMode.wrappedValue.dismiss()
             }
@@ -203,7 +203,7 @@ struct SwipeView: View {
         if index  == vm.newSecretSpots.count - 1{
             opacity = 1
             complete.toggle()
-            vm.lastSecretSpot = vm.newSecretSpots.last?.postId ?? ""
+            vm.lastSecretSpot = vm.newSecretSpots.last?.id ?? ""
             vm.hasNewSpots = false
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                 self.presentationMode.wrappedValue.dismiss()

@@ -18,9 +18,9 @@ struct MyWorld: View {
 
     @StateObject var vm = MyWorldViewModel()
   
-    @State private var currentIndex = 0
     @State private var isPresented: Bool = false
     @Binding var selectedTab: Int
+    @State var currentSpot: SecretSpot?
 
 
     @State var captions: [String] = [
@@ -75,14 +75,18 @@ struct MyWorld: View {
                     } else {
                             ScrollView {
                                 VStack(spacing: 25) {
-                                    ForEach(vm.secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.postId) { spot in
+                                    ForEach(vm.secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.id) { spot in
                                         
                                         PreviewCard(spot: spot)
                                             .onTapGesture(perform: {
-                                                guard let index = self.vm.secretspots.firstIndex(of: spot) else {return}
-                                                self.currentIndex = index
-                                                isPresented.toggle()
+                                                self.currentSpot = spot
                                             })
+                                            .sheet(item: $currentSpot) {
+                                                //Dismiss Code
+                                            } content: { spot in
+                                                SpotDetailsView(spot: spot)
+                                            }
+
                                     
                                         Divider()
                                     }
@@ -99,15 +103,6 @@ struct MyWorld: View {
                         
                 }
             }
-            .sheet(isPresented: $isPresented, onDismiss: {
-                currentIndex = 0
-            } ,content: {
-        
-                if let spot = vm.secretspots[currentIndex] {
-                    SpotDetailsView(spot: spot, index: $currentIndex)
-                }
-                
-            })
             .onAppear {
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
