@@ -25,7 +25,8 @@ struct SecretSpotView: View {
                     .resizable()
                     .frame(width: width / 1.35, height: height / 1.35)
                     .clipShape(Circle())
-                    .offset(.init(width: -0.3, height: -5))
+                    .offset(.init(width: -0.3, height: -3.6))
+
             )
             .shadow(radius: 3)
     }

@@ -81,27 +81,16 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         if let followerId = userInfo["followerId"] as? String,
            let profileUrl = userInfo["profileUrl"] as? String,
            let username = userInfo["userDisplayName"] as? String,
-           let streetcred = userInfo["streetCred"] as? String,
+           let streetcred = userInfo["streetCred"] as? Int,
            let bio = userInfo["biography"] as? String
         {
-            NotificationsManager.instance.streetcred = streetcred
-            NotificationsManager.instance.username = username
-            NotificationsManager.instance.userImageUrl = profileUrl
-            NotificationsManager.instance.uid = followerId
-            NotificationsManager.instance.userBio = bio
-            NotificationsManager.instance.hasNotification = true
+            let user = User(id: followerId, displayName: username, profileImageUrl: profileUrl, bio: bio, streetCred: streetcred)
+            NotificationsManager.instance.user = user
             print("successfully converted data to string",followerId, profileUrl, username, streetcred, bio)
 
         } else {
             print("Failed getting follower id")
         }
-        
-      
-        
-    
-       
-     
-        
     
         completionHandler()
         

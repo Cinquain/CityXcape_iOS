@@ -9,11 +9,7 @@ import SwiftUI
 
 struct PublicStreetPass: View {
     
-    let uid: String
-    let profileUrl: String
-    let username: String
-    let userbio: String?
-    let streetCred: String?
+    var user: User
 
     @State private var showAlert: Bool = false
     
@@ -51,13 +47,13 @@ struct PublicStreetPass: View {
                          Button(action: {
                              
                          }, label: {
-                             UserDotView(imageUrl: profileUrl, width: 250, height: 250)
+                             UserDotView(imageUrl: user.profileImageUrl, width: 250, height: 250)
                                  .shadow(radius: 5)
                                  .shadow(color: .orange, radius: 30, x: 0, y: 0)
                          })
                        
                          
-                         Text(username)
+                         Text(user.displayName)
                              .fontWeight(.thin)
                              .foregroundColor(.accent)
                              .tracking(2)
@@ -65,16 +61,16 @@ struct PublicStreetPass: View {
                          
                          //Need a text liner for the bio
                          VStack(spacing: 5) {
-                             Text(userbio ?? "")
+                             Text(user.bio ?? "")
                                  .font(.subheadline)
                                  .foregroundColor(.gray)
                              
-                             if streetCred != nil {
+                             if user.streetCred != nil {
                                  Button {
                                    
                                  } label: {
                                     
-                                     Text("\(streetCred ?? "") StreetCred")
+                                     Text("\(user.streetCred ?? 0) StreetCred")
                                          .font(.caption)
                                          .foregroundColor(.gray)
                                  }
@@ -128,10 +124,8 @@ struct PublicStreetPass: View {
 
 struct PublicStreetPass_Previews: PreviewProvider {
     
-    static let text: String = "test"
-    static let amount: Int = 10
-    
     static var previews: some View {
-        PublicStreetPass(uid: text, profileUrl: text, username: text, userbio: text, streetCred: text)
+        let user = User(id: "abc123", displayName: "Cinquain", profileImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", bio: "Yolo!", fcmToken: "xyz456", streetCred: 10)
+       PublicStreetPass(user: user)
     }
 }

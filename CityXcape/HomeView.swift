@@ -65,13 +65,12 @@ struct HomeView: View {
         .sheet(isPresented: $manager.hasNotification) {
 
         } content: {
-            PublicStreetPass(uid: manager.uid, profileUrl: manager.userImageUrl,
-                             username: manager.username,
-                             userbio: manager.userBio,
-                             streetCred: manager.streetcred)
+            
+            if let user = NotificationsManager.instance.user {
+                PublicStreetPass(user: user)
+            }
+            
         }
-
-        
     }
     
     func getAdditionalProfileInfo() {

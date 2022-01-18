@@ -73,6 +73,12 @@ class CoreDataManager {
         save()
     }
     
+    func updateSaveCount(spotId: String, count: Double) {
+        let entity = spotEntities.first(where: {$0.spotId == spotId})
+        entity?.saveCount = count
+        save()
+    }
+    
     
     func updateWorld(spotId: String, world: String) {
         let entity = spotEntities.first(where: {$0.spotId == spotId})

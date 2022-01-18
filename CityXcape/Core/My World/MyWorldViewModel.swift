@@ -15,6 +15,7 @@ class MyWorldViewModel: ObservableObject {
     let manager = CoreDataManager.instance
     
     @Published var secretspots: [SecretSpot] = []
+    @Published var users: [User] = []
     @Published var showOnboarding: Bool = false
     
     var cancellables = Set<AnyCancellable>()
@@ -42,6 +43,47 @@ class MyWorldViewModel: ObservableObject {
 
             }
           
+        }
+    }
+    
+    func openGoogleMap(spot: SecretSpot) {
+        
+        if (UIApplication.shared.canOpenURL(URL(string: "comgooglemaps://")!)) {
+            if let url = URL(string: "comgooglemaps-x-callback://?saddr=&daddr=\(spot.latitude),\(spot.longitude)&directionsmode=driving") {
+                UIApplication.shared.open(url, options: [:])
+            }
+            
+        } else {
+            //Open in brower
+            if let url = URL(string: "https://www.google.co.in/maps/dir/?saddr=&daddr=\(spot.latitude),\(spot.longitude)&directionsmode=driving") {
+                UIApplication.shared.open(url)
+            }
+            
+        }
+    }
+    
+    
+    func getSavedbyUsers(postId: String) {
+        
+        DataService.instance.getUsersForSpot(postId: postId, path: "savedBy") { savedUsers in
+            if savedUsers.isEmpty {
+                print("No users saved this secret spot")
+                self.users = []
+            } else {
+                self.users = savedUsers
+            }
+        }
+    }
+    
+    func getVerifiedUsers(postId: String) {
+        
+        DataService.instance.getUsersForSpot(postId: postId, path: "verifiers") { verifiedUsers in
+            if verifiedUsers.isEmpty {
+                print("No users verified this spot")
+                self.users = []
+            } else {
+                self.users = verifiedUsers
+            }
         }
     }
     

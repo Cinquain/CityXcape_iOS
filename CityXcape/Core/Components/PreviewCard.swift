@@ -42,23 +42,7 @@ struct PreviewCard: View {
                 .cornerRadius(8)
                 .clipped()
             
-            HStack {
-                Image("walking")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: 20)
-                Text(returnDistance())
-                    .fontWeight(.thin)
-
-                Spacer()
-                
-                UserDotView(imageUrl: spot.ownerImageUrl, width: 30, height: 30)
-                
-                Text("\(spot.ownerDisplayName)")
-                    .fontWeight(.thin)
-
-            }
-            .padding(.horizontal, 10)
+  
         
         }
     }

@@ -17,12 +17,13 @@ struct MyWorld: View {
     @AppStorage(CurrentUserDefaults.displayName) var username: String?
 
     @StateObject var vm = MyWorldViewModel()
-  
+    
     @State private var isPresented: Bool = false
     @Binding var selectedTab: Int
     @State var currentSpot: SecretSpot?
+    @State var currentList: SecretSpot?
 
-
+    let manager = CoreDataManager.instance
     @State var captions: [String] = [
         "CityXcape",
         "You got Spots to Visit",
@@ -77,17 +78,63 @@ struct MyWorld: View {
                                 VStack(spacing: 25) {
                                     ForEach(vm.secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.id) { spot in
                                         
-                                        PreviewCard(spot: spot)
-                                            .onTapGesture(perform: {
-                                                self.currentSpot = spot
-                                            })
-                                            .sheet(item: $currentSpot) {
-                                                //Dismiss Code
-                                            } content: { spot in
-                                                SpotDetailsView(spot: spot)
-                                            }
+                                        VStack {
+                                            
+                                            PreviewCard(spot: spot)
+                                                .onTapGesture(perform: {
+                                                    self.currentSpot = spot
+                                                })
+                                                .sheet(item: $currentSpot) {
+                                                    //Dismiss Code
+                                                } content: { spot in
+                                                    SpotDetailsView(spot: spot)
+                                                }
+                                            
+                                            //Action Buttons
+                                            HStack {
+                                                Button {
+                                                    vm.openGoogleMap(spot: spot)
+                                                } label: {
+                                                    Image("walking")
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit)
+                                                        .frame(height: 20)
+                                                    Text("\(spot.distanceFromUser) miles")
+                                                        .fontWeight(.thin)
+                                                }
 
-                                    
+                                                Spacer()
+                                                
+                                                Button {
+                                                    //TBD
+                                                    self.currentList = spot
+                                                    vm.getSavedbyUsers(postId: spot.id)
+                                                } label: {
+                                                   
+                                                   Image("dot")
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fit)
+                                                        .frame(width: 30, height: 30)
+                                                    
+                                                    Text("\(spot.saveCounts) Explorers")
+                                                        .fontWeight(.thin)
+                                        
+                                                }
+                                                .sheet(item: $currentList) {
+                                                    //TBD
+                                                    manager.fetchSecretSpots()
+                                                } content: { spot in
+                                                    SavesView(spot: spot, vm: vm)
+                                                }
+
+                                            
+                                                
+                                                //End of HStack
+                                            }
+                                            .padding(.horizontal, 10)
+                                        }
+                                        
+                                     //End of VStack
                                         Divider()
                                     }
                                 }

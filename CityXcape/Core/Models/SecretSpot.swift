@@ -12,9 +12,6 @@ import SwiftUI
 
 struct SecretSpot:  Hashable, Codable, Identifiable {
     
-    
-    
-   
     let id: String
     var spotName: String
     var imageUrls: [String]

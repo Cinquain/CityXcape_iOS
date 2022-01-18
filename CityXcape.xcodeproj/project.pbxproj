@@ -13,6 +13,7 @@
 		2120CE66275FA254006367FE /* LocationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120CE65275FA254006367FE /* LocationCamera.swift */; };
 		2142EF4627827E6B00EA489D /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2142EF4527827E6B00EA489D /* CoreDataManager.swift */; };
 		2142EF4927827E9700EA489D /* SecretSpotContainer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2142EF4727827E9700EA489D /* SecretSpotContainer.xcdatamodeld */; };
+		214A4A3B278D340300B5950A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214A4A3A278D340300B5950A /* User.swift */; };
 		214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214FAC6C26E2F16300F37B80 /* ImageManager.swift */; };
 		21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */; };
 		21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9326D536B30049CE2D /* SettingsLabelView.swift */; };
@@ -68,6 +69,7 @@
 		21D03594270938400071C643 /* MissionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D03593270938400071C643 /* MissionRowView.swift */; };
 		21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0359527093B770071C643 /* MissionRowHeader.swift */; };
 		21D03598270945930071C643 /* MissionDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D03597270945930071C643 /* MissionDetails.swift */; };
+		21D70FA42796EDC200153AE4 /* SavesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D70FA32796EDC200153AE4 /* SavesView.swift */; };
 		21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */; };
 		21D85F5326EACF0E00502636 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F5226EACF0E00502636 /* Shimmer */; };
 		21E4DC072753D8D9004276D2 /* VerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E4DC062753D8D9004276D2 /* VerificationView.swift */; };
@@ -84,6 +86,7 @@
 		2120CE65275FA254006367FE /* LocationCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCamera.swift; sourceTree = "<group>"; };
 		2142EF4527827E6B00EA489D /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		2142EF4827827E9700EA489D /* SecretSpotContainer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SecretSpotContainer.xcdatamodel; sourceTree = "<group>"; };
+		214A4A3A278D340300B5950A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		214FAC6C26E2F16300F37B80 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewModel.swift; sourceTree = "<group>"; };
 		21785D9326D536B30049CE2D /* SettingsLabelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsLabelView.swift; sourceTree = "<group>"; };
@@ -139,6 +142,7 @@
 		21D03593270938400071C643 /* MissionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowView.swift; sourceTree = "<group>"; };
 		21D0359527093B770071C643 /* MissionRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowHeader.swift; sourceTree = "<group>"; };
 		21D03597270945930071C643 /* MissionDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetails.swift; sourceTree = "<group>"; };
+		21D70FA32796EDC200153AE4 /* SavesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavesView.swift; sourceTree = "<group>"; };
 		21E4DC062753D8D9004276D2 /* VerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationView.swift; sourceTree = "<group>"; };
 		21F8D9C526E8D7CC0016DF9D /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		21FAC217278538550035F07F /* PreviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewCard.swift; sourceTree = "<group>"; };
@@ -311,6 +315,7 @@
 				2120CE65275FA254006367FE /* LocationCamera.swift */,
 				1493C3F2277394BA002010A6 /* ActivityIndicator.swift */,
 				21FAC217278538550035F07F /* PreviewCard.swift */,
+				21D70FA32796EDC200153AE4 /* SavesView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -355,6 +360,7 @@
 			children = (
 				219842A526CF4E3D0089CE03 /* SecretSpot.swift */,
 				217E9AA5270B404500F45077 /* Mission.swift */,
+				214A4A3A278D340300B5950A /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -561,6 +567,7 @@
 				21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */,
 				217DA73D26CC96A30039A145 /* MyWorld.swift in Sources */,
 				217B770B26DD007C000A78C9 /* PostSpotForm.swift in Sources */,
+				214A4A3B278D340300B5950A /* User.swift in Sources */,
 				218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */,
 				21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */,
 				217DAF3426CD97D400A395BC /* SpotRowHeader.swift in Sources */,
@@ -597,6 +604,7 @@
 				21C8593B271135EE008224E5 /* SwipeView.swift in Sources */,
 				2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */,
 				217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */,
+				21D70FA42796EDC200153AE4 /* SavesView.swift in Sources */,
 				217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */,
 				2142EF4627827E6B00EA489D /* CoreDataManager.swift in Sources */,
 				217AA0C426FB660100B994B3 /* OnboardScreen.swift in Sources */,
@@ -749,7 +757,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.3;
+				MARKETING_VERSION = 1.2.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -774,7 +782,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.3;
+				MARKETING_VERSION = 1.2.6;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

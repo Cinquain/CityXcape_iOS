@@ -491,6 +491,58 @@ class DataService {
         }
         
     }
+    
+    
+    func getUsersForSpot(postId: String, path: String, completion: @escaping (_ users: [User]) -> ()) {
+        var savedUsers: [User] = []
+        
+        REF_POST.document(postId).collection(path).getDocuments { snapshot, error in
+            
+            if snapshot?.count == 0 {
+                let count: Double = 0
+                self.manager.updateSaveCount(spotId: postId, count: count)
+                completion(savedUsers)
+                return
+            }
+            
+            if let snapshot = snapshot, snapshot.count > 0 {
+                print("Found users who saved the spot")
+                let count = snapshot.count
+                self.manager.updateSaveCount(spotId: postId, count: Double(count))
+                
+                snapshot.documents.forEach { document in
+                    let id = document.documentID
+                    
+                    self.REF_USERS.document(id).getDocument { snapshot, error in
+                        
+                        if let error = error {
+                            print("Could not find user", error.localizedDescription)
+                        }
+                        let data = snapshot?.data()
+                        
+                        if
+                            let username = data?[UserField.displayName] as? String,
+                            let bio = data?[UserField.bio] as? String,
+                            let fcmToken = data?[UserField.fcmToken] as? String,
+                            let profileUrl = data?[UserField.profileImageUrl] as? String,
+                            let streetCred = data?[UserField.streetCred] as? Int
+                        {
+                            let user = User(id: id, displayName: username, profileImageUrl: profileUrl, bio: bio, fcmToken: fcmToken, streetCred: streetCred)
+                            savedUsers.append(user)
+                        }
+                        
+                        DispatchQueue.main.async {
+                            completion(savedUsers)
+                        }
+                        
+                    }
+                }
+                
+            }
+            
+        }
+    }
+    
     //MARK: UPDATE FUNCTIONS
     
     

@@ -271,7 +271,8 @@ struct SpotDetailsView: View {
                     .sheet(isPresented: $showStreetPass) {
                         //TBD
                     } content: {
-                        PublicStreetPass(uid: spot.ownerId, profileUrl: spot.ownerImageUrl, username: spot.ownerDisplayName, userbio: nil, streetCred: nil)
+                        let user = User(id: spot.ownerId, displayName: spot.ownerDisplayName, profileImageUrl: spot.ownerImageUrl)
+                        PublicStreetPass(user: user)
                     }
 
                     
