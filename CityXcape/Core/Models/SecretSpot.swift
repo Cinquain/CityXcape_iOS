@@ -63,7 +63,8 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
         if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
             let destination = CLLocation(latitude: latitude, longitude: longitude)
             let userlocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
-            return userlocation.distance(from: destination) * 0.000621
+            let calculatedDistance = userlocation.distance(from: destination) * 0.000621
+            return calculatedDistance
         } else {
             manager.requestWhenInUseAuthorization()
             return 0

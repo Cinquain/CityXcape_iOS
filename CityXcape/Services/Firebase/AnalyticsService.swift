@@ -90,4 +90,13 @@ class AnalyticsService {
         Analytics.logEvent("touched_user_profile", parameters: nil)
     }
     
+    func touchedRoute() {
+        Analytics.logEvent("clicked_route", parameters: nil)
+    }
+    
+    func checkSavedUsers() {
+        Analytics.logEvent("viewed_other_explorers", parameters: nil)
+    }
+    
+    
 }

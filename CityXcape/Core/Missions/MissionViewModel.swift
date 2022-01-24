@@ -24,6 +24,9 @@ class MissionViewModel: ObservableObject {
     @Published var hasNewSpots: Bool = false
     @Published var showAlert: Bool = false
     
+    @Published var searchTerm: String = ""
+    @Published var oldResults: [SecretSpot] = []
+    
     init() {
        
         getNewSecretSpots()
@@ -76,7 +79,20 @@ class MissionViewModel: ObservableObject {
     }
     
     
-
+    func performSearch() {
+        if oldResults.isEmpty {
+            oldResults.append(contentsOf: newSecretSpots)
+            let results = newSecretSpots.filter({$0.city.contains(searchTerm)
+                || $0.world.contains(searchTerm.lowercased())})
+            newSecretSpots = results
+            return
+        }
+            let results = oldResults.filter({$0.city.contains(searchTerm)
+                || $0.world.contains(searchTerm.lowercased())})
+            newSecretSpots = results
+        
+    }
+    
     
     
 }

@@ -94,12 +94,14 @@ struct MyWorld: View {
                                             HStack {
                                                 Button {
                                                     vm.openGoogleMap(spot: spot)
+                                                    AnalyticsService.instance.touchedRoute()
                                                 } label: {
                                                     Image("walking")
                                                         .resizable()
                                                         .aspectRatio(contentMode: .fit)
                                                         .frame(height: 20)
-                                                    Text("\(spot.distanceFromUser) miles")
+                                                    
+                                                    Text("\(String(format: "%.2f", spot.distanceFromUser)) miles")
                                                         .fontWeight(.thin)
                                                 }
 
@@ -109,6 +111,7 @@ struct MyWorld: View {
                                                     //TBD
                                                     self.currentList = spot
                                                     vm.getSavedbyUsers(postId: spot.id)
+                                                    AnalyticsService.instance.checkSavedUsers()
                                                 } label: {
                                                    
                                                    Image("dot")

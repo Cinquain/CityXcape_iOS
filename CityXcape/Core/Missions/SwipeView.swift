@@ -15,12 +15,14 @@ struct SwipeView: View {
     @Environment(\.presentationMode) var presentationMode
 
     
-    var vm: MissionViewModel
+    @StateObject var vm: MissionViewModel
+    
     @State private var opacity: Double = 0
     @State private var passed: Bool = false
     @State private var saved: Bool = false
     @State private var complete: Bool = false
     @State private var showAlert: Bool = false
+    @State private var keyboardHeight: CGFloat = 0
     
     @State var captions: [String] = [
         "Save the spots you want to visit",
@@ -31,10 +33,11 @@ struct SwipeView: View {
     var body: some View {
     
     
-        VStack {
+        VStack(spacing: 0) {
             Ticker(profileUrl: profileUrl ?? "", captions: $captions)
                 .padding(.top, 25)
-                .frame(height: 120)
+                .frame(height: 40)
+        
  
             ZStack {
                 Image("Scout")
@@ -90,6 +93,22 @@ struct SwipeView: View {
                
             }
             
+            TextField("  Search by city or world", text: $vm.searchTerm, onCommit:  {
+                vm.performSearch()
+            })
+                .placeholder(when: vm.searchTerm.isEmpty) {
+                    Text("  Search by city or world").foregroundColor(.gray)
+            }
+            .frame(height: 50)
+            .overlay(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(Color.white, lineWidth: 1)
+            )
+            .padding(.horizontal, 20)
+            .padding(.bottom, 20)
+            .animation(.easeOut)
+            
+            
             
                 CardStack(direction: LeftRight.direction,
                           data: vm.newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.self) { spot, direction in
@@ -107,7 +126,9 @@ struct SwipeView: View {
                     CardView(spot: spot)
                     
                 }
-                .offset(x: 40)
+                .offset(x: 20)
+          
+
             
             Button(action: {
                 self.presentationMode.wrappedValue.dismiss()
@@ -115,8 +136,8 @@ struct SwipeView: View {
                 Image(systemName: "xmark.seal")
                     .font(.largeTitle)
             })
-            .padding(.bottom, 20)
-            
+                .padding(.bottom, 10)
+
             Spacer()
             
         }
@@ -133,6 +154,7 @@ struct SwipeView: View {
             let walletStatement = "\(wallet) StreetCred Remaining"
             captions[2] = walletStatement
         }
+        //End of Body
     }
     
     fileprivate func saveCardToUserWorld(spot: SecretSpot) {
