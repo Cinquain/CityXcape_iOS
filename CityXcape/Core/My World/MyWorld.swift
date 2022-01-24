@@ -119,7 +119,7 @@ struct MyWorld: View {
                                                         .aspectRatio(contentMode: .fit)
                                                         .frame(width: 30, height: 30)
                                                     
-                                                    Text("\(spot.saveCounts) Explorers")
+                                                    Text(getExplorerMessage(spot: spot))
                                                         .fontWeight(.thin)
                                         
                                                 }
@@ -167,6 +167,14 @@ struct MyWorld: View {
               
             }
      
+    }
+    
+    fileprivate func getExplorerMessage(spot: SecretSpot) -> String {
+        if spot.saveCounts > 1 {
+            return "\(spot.saveCounts) Explorers"
+        } else {
+            return "\(spot.saveCounts) Explorer"
+        }
     }
     
     
