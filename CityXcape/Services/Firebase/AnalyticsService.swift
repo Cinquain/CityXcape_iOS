@@ -98,5 +98,8 @@ class AnalyticsService {
         Analytics.logEvent("viewed_other_explorers", parameters: nil)
     }
     
+    func viewedComments() {
+        Analytics.logEvent("viewed_comments", parameters: nil)
+    }
     
 }

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class MyWorldViewModel: ObservableObject {
+class MyWorldViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     
     let manager = CoreDataManager.instance
@@ -20,7 +20,8 @@ class MyWorldViewModel: ObservableObject {
     
     var cancellables = Set<AnyCancellable>()
     
-    init() {
+    override init() {
+        super.init()
         
         manager.fetchSecretSpots()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -65,6 +66,7 @@ class MyWorldViewModel: ObservableObject {
     
     func getSavedbyUsers(postId: String) {
         
+        
         DataService.instance.getUsersForSpot(postId: postId, path: "savedBy") { savedUsers in
             if savedUsers.isEmpty {
                 print("No users saved this secret spot")
@@ -76,6 +78,7 @@ class MyWorldViewModel: ObservableObject {
     }
     
     func getVerifiedUsers(postId: String) {
+        
         
         DataService.instance.getUsersForSpot(postId: postId, path: "verifiers") { verifiedUsers in
             if verifiedUsers.isEmpty {
@@ -103,5 +106,15 @@ class MyWorldViewModel: ObservableObject {
             .store(in: &cancellables)
         
     }
+    
+    func getDistanceMessage(spot: SecretSpot) -> String {
+        
+        if spot.distanceFromUser > 1 {
+            return "\(String(format: "%.1f", spot.distanceFromUser)) miles"
+        } else {
+            return "\(String(format: "%.1f", spot.distanceFromUser)) mile"
+        }
+    }
+    
     
 }

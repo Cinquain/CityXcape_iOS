@@ -65,7 +65,6 @@ struct CardView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 40)
-                    .padding(.leading, 20)
                     .padding(.bottom, 10)
                 
                 Text(spot.spotName)
@@ -75,7 +74,14 @@ struct CardView: View {
                     .padding(.top, 5)
                 
                 Spacer()
+                
+                    Text("#\(spot.world)")
+                    .fontWeight(.thin)
+                    .padding(.top, 10)
+                
             }
+            .padding(.horizontal, 20)
+
         }
         .frame(width: 350, height: 500)
         .background(Color.black)

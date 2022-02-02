@@ -45,6 +45,16 @@ struct SecretSpotField {
     static let spotImageUrls = "spotImageUrls"
 }
 
+struct CommentField {
+    static let id = "id"
+    static let uid = "user_id"
+    static let username = "display_name"
+    static let imageUrl = "profile_image"
+    static let bio = "user_bio"
+    static let content = "message"
+    static let dateCreated = "date_created"
+}
+
 struct DatabaseReportField {
     
     static let content = "content"

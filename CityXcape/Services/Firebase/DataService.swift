@@ -169,6 +169,38 @@ class DataService {
     }
     
     
+    func postComment(postId: String, uid: String, username: String, bio: String, imageUrl: String, content: String, completion: @escaping (_ success: Bool, _ commentId: String?) -> ()) {
+        
+        let document = REF_POST.document(postId).collection("comments").document()
+        let commentId = document.documentID
+        
+        let data: [String: Any] = [
+            CommentField.id : commentId,
+            CommentField.uid : uid,
+            CommentField.username : username,
+            CommentField.bio : bio,
+            CommentField.imageUrl : imageUrl,
+            CommentField.content : content,
+            CommentField.dateCreated : FieldValue.serverTimestamp()
+        ]
+        
+        document.setData(data) { error in
+            if let error = error {
+                print("Error uploading comment to DB", error.localizedDescription)
+                completion(false, nil)
+                return
+            } else {
+                completion(true, commentId)
+                return
+            }
+        }
+        
+        
+    }
+    
+
+    
+    
     func verifySecretSpot(spot: SecretSpot, completion: @escaping (_ success: Bool) ->()) {
         guard let uid = userId else {return}
         let postId = spot.id
@@ -470,6 +502,46 @@ class DataService {
         } else {
             print("No saved secret spots found in snapshot for this user")
             return secretSpots
+        }
+    }
+    
+    
+    func downloadComments(postId: String, completion: @escaping (_ comments: [Comment]) -> ()) {
+        
+        REF_POST.document(postId).collection("comments").order(by: CommentField.dateCreated, descending: false).getDocuments { querysnapshot, error in
+            guard let snapshot = querysnapshot else {return}
+            completion(self.getCommentsFromSnapshot(snapshot: snapshot))
+        }
+        
+    }
+    
+    private func getCommentsFromSnapshot(snapshot: QuerySnapshot?) -> [Comment] {
+        var comments: [Comment] = []
+        
+        if let snapshot = snapshot, snapshot.count > 0 {
+            
+            for document in snapshot.documents {
+                if
+                    let uid = document.get(CommentField.uid) as? String,
+                    let username = document.get(CommentField.username) as? String,
+                    let content = document.get(CommentField.content) as? String,
+                    let timestamp = document.get(CommentField.dateCreated) as? Timestamp,
+                    let imageUrl = document.get(CommentField.imageUrl) as? String,
+                    let bio = document.get(CommentField.bio) as? String {
+                    
+                    let id = document.documentID
+                    let date = timestamp.dateValue()
+                    let comment = Comment(id: id, uid: uid, username: username, imageUrl: imageUrl, bio: bio, content: content, dateCreated: date)
+                    comments.append(comment)
+                    
+                }
+                
+            }
+            return comments
+
+        } else {
+            print("No comments for this spot")
+            return comments
         }
     }
     

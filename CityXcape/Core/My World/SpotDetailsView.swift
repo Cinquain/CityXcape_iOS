@@ -21,9 +21,12 @@ struct SpotDetailsView: View {
     @State private var isEditing: Bool = false
     @State private var showStreetPass: Bool = false
     @State private var showActionSheet: Bool = false
-    @State private var showWorldDef: Bool = false
     @State private var actionSheetType: SpotActionSheetType = .general
     @State private var currentlyEditing: Bool = false
+    @State private var showUsers: Bool = false
+    @State private var showComments: Bool = false
+    @State private var showAlert: Bool = false
+    @State private var alertmessage: String = ""
     
     
  
@@ -33,7 +36,7 @@ struct SpotDetailsView: View {
     
     var body: some View {
                 
-                VStack(alignment: .center) {
+                VStack(alignment: .center, spacing: 0) {
                     
                     ZStack {
                         Ticker(profileUrl: spot.ownerImageUrl, captions: $captions)
@@ -168,63 +171,118 @@ struct SpotDetailsView: View {
                     }
                     
                     
-                    HStack {
+                    HStack(spacing: 12) {
                         Button(action: {
-                                vm.openGoogleMap(spot: spot)
+                            AnalyticsService.instance.touchedRoute()
+                            vm.openGoogleMap(spot: spot)
                             }, label: {
-                                HStack {
-                                    Image("pin_blue")
+                                VStack {
+                                    Image("walking")
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 20, height: 20)
-                                    Text(spot.address)
+                                    Text(vm.getDistanceMessage(spot: spot))
+                                        .font(.subheadline)
+                                        .fontWeight(.thin)
                                         .foregroundColor(.white)
                                 }
                             })
-                            .padding()
-                        
-                        Spacer()
-                    }
-                        
-                    HStack {
-                        
-                            Button {
-                                    vm.showWorldDefinition(spot: spot)
-                                } label: {
-                                    HStack {
-                                        Image("globe")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 20)
-                                        
-                                        
-                                            Text("\(spot.world)")
-                                           
-                                    }
-                                }
-                            
-                           
-                        Spacer()
+                            .opacity(isEditing ? 0 : 1)
                         
                         Button {
-                            vm.checkInSecretSpot(spot: spot)
+                            alertmessage = "This spot is for the \(spot.world) community"
+                            showAlert.toggle()
+                            } label: {
+                                VStack {
+                                    Image("globe")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 20)
+                                    
+                                    
+                                        Text("\(spot.world)")
+                                            .font(.subheadline)
+                                            .fontWeight(.thin)
+                                            .lineLimit(1)
+                                            .frame(width: 65)
+                                       
+                                       
+                                }
+                            }
+                            .opacity(isEditing ? 0 : 1)
+
+                        
+                        
+                        Button {
+                            showUsers.toggle()
+                            vm.getSavedbyUsers(postId: spot.id)
+                            AnalyticsService.instance.checkSavedUsers()
                         } label: {
                             VStack {
-                                Image(Icon.check.rawValue)
+                               Image("dot")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(height: 25)
+                                    .frame(width: 27)
                                 
-                                Text("Verify")
-                                    .font(.caption)
+                                Text(vm.getSaves(spot: spot))
+                                    .font(.subheadline)
+                                    .fontWeight(.thin)
+                                    .offset(y: -3)
                             }
-                        }
-                        .disabled(vm.disableCheckin)
-                      
 
+                        }
+                        .opacity(isEditing ? 0 : 1)
+                        .sheet(isPresented: $showUsers) {
+                            SaveDetailsView(spot: spot, vm: vm)
+                        }
+                        
+                        Button {
+                                //Comment code.
+                            showComments.toggle()
+                            vm.getComments(postId: spot.id)
+                            AnalyticsService.instance.viewedComments()
+                            } label: {
+                                VStack {
+                                    Image(systemName: "bubble.left.fill")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 21)
+                                    
+                                    
+                                        Text("Comments")
+                                        .font(.subheadline)
+                                        .fontWeight(.thin)
+                                       
+                                }
+                            }
+                            .sheet(isPresented: $showComments) {
+                                CommentsView(spot: spot, vm: vm)
+                            }
+                            .opacity(isEditing ? 0 : 1)
+
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            showActionSheet.toggle()
+                        }, label: {
+                            
+                            VStack {
+                                Image(systemName: "ellipsis")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                                .rotationEffect(.init(degrees: 90))
+                                
+                            }
+                        })
+                    
+                        
+                       
                     }
-                    .opacity(isEditing ? 0 : 1)
+                    .padding(.top, 10)
                     .padding(.horizontal, 20)
+                
+                   
                     
                     if isEditing {
                         TextField(spot.world, text: $vm.newWorld, onCommit:  {
@@ -241,33 +299,42 @@ struct SpotDetailsView: View {
                     }
                     
                     HStack {
-                        Button(action: {
-                            showActionSheet.toggle()
-                        }, label: {
-                            Image(systemName: "ellipsis")
-                                .font(.title)
-                                .foregroundColor(.white)
-                        })
                     
+                    
+                        Spacer()
+                        
+                        Button {
+                            vm.checkInSecretSpot(spot: spot, completion: { (exist, success) in
+                                if exist {
+                                    alertmessage = "You've already checkedin this spot"
+                                    showAlert.toggle()
+                                }
+                                
+                                if !success {
+                                    alertmessage = "You need to be there to check in"
+                                    showAlert.toggle()
+                                }
+                            })
+                        } label: {
+                        
+                                Text("Check-in")
+                                    .font(.title3)
+                                    .fontWeight(.thin)
+                                    .frame(width: 120, height: 40)
+                                    .background(Color.cx_orange)
+                                    .opacity(0.6)
+                                    .cornerRadius(5)
+                            
+                        }
+                        .disabled(vm.disableCheckin)
+                        .opacity(isEditing ? 0 : 1)
                         
                         Spacer()
                         
-                        
-                        Button {
-                            showStreetPass.toggle()
-                            AnalyticsService.instance.touchedProfile()
-                        } label: {
-                            VStack {
-                                UserDotView(imageUrl: spot.ownerImageUrl, width: 30, height: 30)
-                                Text("Scout")
-                                    .font(.caption)
-                            }
-                            .padding(.trailing, 20)
-
-                        }
+                   
 
                     }
-                    .padding(.leading, 20)
+                    .padding(.top, 50)
                     .sheet(isPresented: $showStreetPass) {
                         //TBD
                     } content: {
@@ -294,8 +361,8 @@ struct SpotDetailsView: View {
             .actionSheet(isPresented: $showActionSheet, content: {
                 getActionSheet()
             })
-            .alert(isPresented: $vm.showAlert) {
-                return Alert(title: Text(vm.alertmessage), message: nil)
+            .alert(isPresented: $showAlert) {
+                return Alert(title: Text(alertmessage), message: nil)
             }
             .sheet(isPresented: $vm.showPicker, onDismiss: {
                 //TBD
@@ -435,6 +502,7 @@ struct SpotDetailsView: View {
             ])
         }
     }
+    
   
     
 }
@@ -447,7 +515,7 @@ struct SpotDetailsView_Previews: PreviewProvider {
     static var previews: some View {
 
         
-        let spot = SecretSpot(postId: "disnf", spotName: "The Big Duck", imageUrls: ["https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2F3rD6bKzwCbOEpfU51sYF%2F1?alt=media&token=2c45942e-5a44-4dd1-aa83-a678bb848c4b","https://cdn10.phillymag.com/wp-content/uploads/sites/3/2018/07/Emily-Smith-Cory-J-Popp-900x600.jpg", "https://apricotabroaddotco.files.wordpress.com/2019/03/philadelphia-magic-gardens.jpg"], longitude: 1010, latitude: 01202, address: "1229 Spann avenue", description: "This is the best secret spot in the world. Learn all about fractal mathematics", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), price: 1, viewCount: 1, saveCounts: 1, isPublic: true, ownerId: "q4SALDGpjtZLIVtVibHMQa8NpwD3", ownerDisplayName: "Cinquain", ownerImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073")
+        let spot = SecretSpot(postId: "disnf", spotName: "The Magic Garden", imageUrls: ["https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2F3rD6bKzwCbOEpfU51sYF%2F1?alt=media&token=2c45942e-5a44-4dd1-aa83-a678bb848c4b","https://cdn10.phillymag.com/wp-content/uploads/sites/3/2018/07/Emily-Smith-Cory-J-Popp-900x600.jpg", "https://apricotabroaddotco.files.wordpress.com/2019/03/philadelphia-magic-gardens.jpg"], longitude: 1010, latitude: 01202, address: "1229 Spann avenue", description: "This is the best secret spot in the world. Learn all about fractal mathematics", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), price: 1, viewCount: 1, saveCounts: 1, isPublic: true, ownerId: "q4SALDGpjtZLIVtVibHMQa8NpwD3", ownerDisplayName: "Cinquain", ownerImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073")
 
         SpotDetailsView(spot: spot)
     }

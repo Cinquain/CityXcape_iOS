@@ -101,7 +101,7 @@ struct MyWorld: View {
                                                         .aspectRatio(contentMode: .fit)
                                                         .frame(height: 20)
                                                     
-                                                    Text("\(String(format: "%.2f", spot.distanceFromUser)) miles")
+                                                    Text(vm.getDistanceMessage(spot: spot))
                                                         .fontWeight(.thin)
                                                 }
 

@@ -14,6 +14,11 @@ import JGProgressHUD_SwiftUI
 class SpotViewModel: NSObject, ObservableObject {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @AppStorage(CurrentUserDefaults.bio) var bio: String?
+    @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
+    @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
+
+    
     @EnvironmentObject var hudCoordinator: JGProgressHUDCoordinator
 
 
@@ -31,6 +36,7 @@ class SpotViewModel: NSObject, ObservableObject {
     @Published var newWorld: String = ""
     @Published var newSpotName: String = ""
     @Published var newSpotImageUrl: String = ""
+    @Published var commentString: String = ""
 
     
     @Published var showPicker: Bool = false
@@ -40,6 +46,10 @@ class SpotViewModel: NSObject, ObservableObject {
     @Published var selectedImageII: UIImage = UIImage()
     @Published var selectedImageIII: UIImage = UIImage()
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    
+    @Published var submissionText: String = ""
+    @Published var comments: [Comment] = []
+    @Published var users: [User] = []
     
     var amount: Float = 10
 
@@ -67,7 +77,7 @@ class SpotViewModel: NSObject, ObservableObject {
         }
     }
     
-    func checkInSecretSpot(spot: SecretSpot) {
+    func checkInSecretSpot(spot: SecretSpot, completion: @escaping (_ doesExist: Bool, _ success: Bool) -> () ) {
         disableCheckin = true
         AnalyticsService.instance.touchedVerification()
         let manager = LocationService.instance.manager
@@ -84,8 +94,7 @@ class SpotViewModel: NSObject, ObservableObject {
                 DataService.instance.checkIfUserAlreadyVerified(spot: spot) {  doesExist in
                     
                     if doesExist {
-                        self.alertMessage = "You've already verified this spot"
-                        self.showAlert = true
+                        completion(true, false)
                         self.disableCheckin = false
                         return
                         
@@ -94,12 +103,11 @@ class SpotViewModel: NSObject, ObservableObject {
                             
                             if !success {
                                 print("Error saving checkin to database")
-                                self?.alertMessage = "Error saving verification to database"
-                                self?.showAlert = true
+                                completion(false, false)
                                 self?.disableCheckin = false
                                 return
                             }
-                            
+                            completion(false, true)
                             print("Successfully saved verification to database")
                             AnalyticsService.instance.verify()
                             self?.showCheckin = true
@@ -108,6 +116,7 @@ class SpotViewModel: NSObject, ObservableObject {
                     }
                 }
             } else {
+                completion(false, false)
                 alertMessage = "You need to be there to verify. \n You are \(formattedDistance) miles away."
                 showAlert = true
                 disableCheckin = false
@@ -132,8 +141,8 @@ class SpotViewModel: NSObject, ObservableObject {
     }
     
     func showWorldDefinition(spot: SecretSpot) {
-        self.alertMessage = "This spot is for the \(spot.world) community"
         self.showAlert = true
+        self.alertMessage = "This spot is for the \(spot.world) community"
     }
     
     func editSpotDescription(postId: String) {
@@ -308,5 +317,122 @@ class SpotViewModel: NSObject, ObservableObject {
            }
        }
    }
+    
+    func getSavedbyUsers(postId: String) {
+        
+        DataService.instance.getUsersForSpot(postId: postId, path: "savedBy") { savedUsers in
+            if savedUsers.isEmpty {
+                print("No users saved this secret spot")
+                self.users = []
+            } else {
+                self.users = savedUsers
+            }
+        }
+    }
+    
+    func getVerifiedUsers(postId: String) {
+        
+        DataService.instance.getUsersForSpot(postId: postId, path: "verifiers") { verifiedUsers in
+            if verifiedUsers.isEmpty {
+                print("No users verified this spot")
+                self.users = []
+            } else {
+                self.users = verifiedUsers
+            }
+        }
+    }
+    
+    
+    func getDistanceMessage(spot: SecretSpot) -> String {
+        
+        if spot.distanceFromUser > 1 {
+            return "\(String(format: "%.1f", spot.distanceFromUser)) miles"
+        } else {
+            return "\(String(format: "%.1f", spot.distanceFromUser)) mile"
+        }
+    }
+    
+    func getViews(spot: SecretSpot) -> String {
+        if spot.viewCount > 1 {
+            return "\(spot.viewCount) views"
+        } else {
+            return "\(spot.viewCount) view"
+        }
+    }
+    
+   func getSaves(spot: SecretSpot) -> String {
+        if spot.viewCount > 1 {
+            return "\(spot.saveCounts) saves"
+        } else {
+            return "\(spot.saveCounts) save"
+        }
+    }
+    
+    
+    
+    func isTextAppropriate() -> Bool {
+        
+        let badWords = ["shit", "ass", "dick", "fuck", "bitch", "nigger", "cracker", "nigga"]
+        let words = submissionText.components(separatedBy: " ")
+        
+        for word in words {
+            if badWords.contains(word) {
+                return false
+            }
+        }
+        
+        if submissionText.count < 3 {
+            return false
+        }
+        return true
+    }
+    
+    func uploadComment(postId: String) {
+        guard let uid = userId else {return}
+        guard let username = displayName else {return}
+        guard let bio = bio else {return}
+        guard let imageUrl = profileUrl else {return}
+        
+        DataService.instance.postComment(postId: postId, uid: uid, username: username, bio: bio, imageUrl: imageUrl, content: submissionText) { success, commentId in
+            
+            if !success {
+                print("Error saving comment to database")
+                self.submissionText = ""
+                return
+            }
+            print("Successfully uploaded comment to database")
+            guard let id = commentId else {return}
+            let comment = Comment(id: id, uid: uid, username: username, imageUrl: imageUrl, bio: bio, content: self.submissionText, dateCreated: Date())
+            self.comments.append(comment)
+            self.submissionText = ""
+        }
+        
+        
+    }
+    
+    func getComments(postId: String) {
+        
+        
+        DataService.instance.downloadComments(postId: postId) { comments in
+            if comments.isEmpty {
+                print("No Comments Found")
+                self.commentString = "No comment yet posted"
+                return
+            }
+            
+            
+            print("Found comments")
+            self.comments = comments
+            
+            if comments.count <= 1 {
+                self.commentString = "\(comments.count) comment"
+            } else {
+                self.commentString = "\(comments.count) comments"
+            }
+            
+        }
+    }
+  
+    
     
 }

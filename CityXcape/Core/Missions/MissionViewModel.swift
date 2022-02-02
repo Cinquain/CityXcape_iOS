@@ -93,6 +93,15 @@ class MissionViewModel: ObservableObject {
         
     }
     
+    func getDistanceMessage(spot: SecretSpot) -> String {
+        
+        if spot.distanceFromUser > 1 {
+            return "\(String(format: "%.1f", spot.distanceFromUser)) miles"
+        } else {
+            return "\(String(format: "%.1f", spot.distanceFromUser)) mile"
+        }
+    }
+    
     
     
 }
