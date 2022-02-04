@@ -224,7 +224,7 @@ struct SpotDetailsView: View {
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 27)
                                 
-                                Text(vm.getSaves(spot: spot))
+                                Text(vm.getSavesMessage(spot: spot))
                                     .font(.subheadline)
                                     .fontWeight(.thin)
                                     .offset(y: -3)

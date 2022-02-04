@@ -22,6 +22,8 @@ struct SwipeView: View {
     @State private var saved: Bool = false
     @State private var complete: Bool = false
     @State private var showAlert: Bool = false
+    @State private var alertMessage: String = ""
+    @State private var alertTitle: String = ""
     @State private var keyboardHeight: CGFloat = 0
     
     @State var captions: [String] = [
@@ -123,8 +125,8 @@ struct SwipeView: View {
                     
                 } content: { spot, direction, isOnTop in
                
-                    CardView(spot: spot)
-                    
+                    CardView(showAlert: $showAlert, alertTitle: $alertTitle, alertMessage: $alertMessage, spot: spot)
+                      
                 }
                 .offset(x: 20)
           
@@ -144,10 +146,8 @@ struct SwipeView: View {
         .background(Color.dark_grey)
         .edgesIgnoringSafeArea(.all)
         .alert(isPresented: $showAlert, content: {
-            guard let wallet = wallet else {return Alert(title: Text("Error Finding Wallet"))}
-            let title = Text("Insufficient StreetCred").foregroundColor(.red)
-            let message = Text("Your wallet has a balance of \(wallet) STC. \n Post a secret spot to earn more StreetCred.")
-            return Alert(title: title, message: message, dismissButton: .cancel(Text("Ok")))
+            
+            return Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .cancel(Text("Ok")))
         })
         .onAppear {
             guard let wallet = wallet else {return}
@@ -185,6 +185,8 @@ struct SwipeView: View {
             
          
         } else {
+            alertTitle = "Insufficient StreetCred"
+            alertMessage = "Your wallet has a balance of \(wallet) STC. \n Post a secret spot to earn more StreetCred."
             showAlert.toggle()
         }
         

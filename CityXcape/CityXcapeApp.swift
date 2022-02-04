@@ -84,7 +84,7 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         let userInfo = response.notification.request.content.userInfo
         print("the user info is", userInfo)
         
-        if let followerId = userInfo["followerId"] as? String,
+        if let followerId = userInfo["userid"] as? String,
            let profileUrl = userInfo["profileUrl"] as? String,
            let username = userInfo["userDisplayName"] as? String,
            let streetcred = userInfo["streetCred"] as? Int,
@@ -92,10 +92,11 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         {
             let user = User(id: followerId, displayName: username, profileImageUrl: profileUrl, bio: bio, streetCred: streetcred)
             NotificationsManager.instance.user = user
+            NotificationsManager.instance.hasNotification = true
             print("successfully converted data to string",followerId, profileUrl, username, streetcred, bio)
 
         } else {
-            print("Failed getting follower id")
+            print("Failed getting user information")
         }
     
         completionHandler()

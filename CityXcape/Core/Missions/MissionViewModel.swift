@@ -23,6 +23,7 @@ class MissionViewModel: ObservableObject {
     @Published var hasPostedSpot : Bool = false
     @Published var hasNewSpots: Bool = false
     @Published var showAlert: Bool = false
+    @Published var alertMessage: String = ""
     
     @Published var searchTerm: String = ""
     @Published var oldResults: [SecretSpot] = []

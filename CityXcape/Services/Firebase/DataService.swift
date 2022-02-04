@@ -190,6 +190,7 @@ class DataService {
                 completion(false, nil)
                 return
             } else {
+                AnalyticsService.instance.postedComment()
                 completion(true, commentId)
                 return
             }

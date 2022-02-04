@@ -317,7 +317,6 @@
 				218980A626DC54C500A6FD23 /* LikeAnimationView.swift */,
 				21D03593270938400071C643 /* MissionRowView.swift */,
 				21D0359527093B770071C643 /* MissionRowHeader.swift */,
-				21C85938271122C9008224E5 /* CardView.swift */,
 				2178C4522719166800B4C395 /* TextFieldView.swift */,
 				21E4DC062753D8D9004276D2 /* VerificationView.swift */,
 				2120CE65275FA254006367FE /* LocationCamera.swift */,
@@ -350,6 +349,7 @@
 				21D03597270945930071C643 /* MissionDetails.swift */,
 				217E9AA7270B6EC400F45077 /* MissionViewModel.swift */,
 				21C8593A271135EE008224E5 /* SwipeView.swift */,
+				21C85938271122C9008224E5 /* CardView.swift */,
 			);
 			path = Missions;
 			sourceTree = "<group>";
@@ -773,7 +773,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.7;
+				MARKETING_VERSION = 1.2.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -798,7 +798,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.7;
+				MARKETING_VERSION = 1.2.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

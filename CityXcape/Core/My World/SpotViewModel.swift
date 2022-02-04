@@ -13,6 +13,7 @@ import JGProgressHUD_SwiftUI
 
 class SpotViewModel: NSObject, ObservableObject {
     
+    
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.bio) var bio: String?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
@@ -360,7 +361,7 @@ class SpotViewModel: NSObject, ObservableObject {
         }
     }
     
-   func getSaves(spot: SecretSpot) -> String {
+   func getSavesMessage(spot: SecretSpot) -> String {
         if spot.viewCount > 1 {
             return "\(spot.saveCounts) saves"
         } else {

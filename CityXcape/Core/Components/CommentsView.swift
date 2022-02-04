@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CommentsView: View {
     
+    @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @State var spot: SecretSpot
     @StateObject var vm: SpotViewModel
     
@@ -38,11 +39,8 @@ struct CommentsView: View {
             }
             
             HStack {
-                Image("dot")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 30)
-                
+                UserDotView(imageUrl: profileUrl ?? "", width: 30, height: 30)
+                   
                 TextField("Add comment", text: $vm.submissionText)
                     .placeholder(when: vm.submissionText.isEmpty) {
                         Text("Add comment").foregroundColor(.gray)

@@ -102,4 +102,8 @@ class AnalyticsService {
         Analytics.logEvent("viewed_comments", parameters: nil)
     }
     
+    func postedComment() {
+        Analytics.logEvent("posted_comment", parameters: nil)
+    }
+    
 }
