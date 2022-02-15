@@ -38,7 +38,7 @@ class AnalyticsService {
         Analytics.logEvent("created_bio", parameters: nil)
     }
     
-    func touchedStreetCred() {
+    func viewStreetpass() {
         Analytics.logEvent("touched_streetcred", parameters: nil)
     }
     

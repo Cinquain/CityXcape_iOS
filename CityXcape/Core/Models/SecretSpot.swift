@@ -71,6 +71,22 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
         }
 
     }
+    
+    var distanceInFeet: Double {
+        
+        let manager = LocationService.instance.manager
+        
+        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
+            let destination = CLLocation(latitude: latitude, longitude: longitude)
+            let userlocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
+            let distance = userlocation.distance(from: destination) * 3.28084
+            return distance.rounded()
+        } else {
+            manager.requestWhenInUseAuthorization()
+            return 0
+        }
+
+    }
  
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)

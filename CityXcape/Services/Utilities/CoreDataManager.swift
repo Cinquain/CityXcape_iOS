@@ -79,6 +79,12 @@ class CoreDataManager {
         save()
     }
     
+    func updateViewCount(spotId: String, count: Double) {
+        let entity = spotEntities.first(where: {$0.spotId == spotId})
+        entity?.viewCount = count
+        save()
+    }
+    
     
     func updateWorld(spotId: String, world: String) {
         let entity = spotEntities.first(where: {$0.spotId == spotId})
@@ -115,6 +121,50 @@ class CoreDataManager {
         secretSpotEntity.city = city
         save()
         
+    }
+    
+    func updateEntity(spotId: String, spotName: String, description: String, longitude: Double, latitude: Double, imageUrls: [String], address: String, uid: String, ownerImageUrl: String, ownerDisplayName: String, price: Double, viewCount: Double, saveCount: Double, zipCode: Double, world: String, isPublic: Bool, dateCreated: Date, city: String) {
+        
+        let entity = spotEntities.first(where: {$0.spotId == spotId})
+        entity?.spotName = spotName
+        entity?.spotDescription = description
+        entity?.longitude = longitude
+        entity?.latitude = latitude
+        entity?.imageUrls = imageUrls
+        entity?.address = address
+        entity?.ownerImageUrl = ownerImageUrl
+        entity?.ownerDisplayName = ownerDisplayName
+        entity?.price = price
+        entity?.viewCount = viewCount
+        entity?.saveCount = saveCount
+        entity?.zipCode = zipCode
+        entity?.world = world
+        entity?.isPublic = isPublic
+        entity?.city = city
+        save()
+        
+    }
+    
+    func updatewithSpot(spot: SecretSpot) {
+        
+        let entity = spotEntities.first(where: {$0.spotId == spot.id})
+        entity?.spotName = spot.spotName
+        entity?.spotDescription = spot.description
+        entity?.longitude = spot.longitude
+        entity?.latitude = spot.latitude
+        entity?.imageUrls = spot.imageUrls
+        entity?.address = spot.address
+        entity?.ownerImageUrl = spot.ownerImageUrl
+        entity?.ownerDisplayName = spot.ownerDisplayName
+        entity?.price = Double(spot.price)
+        entity?.viewCount = Double(spot.viewCount)
+        entity?.saveCount = Double(spot.saveCounts)
+        entity?.zipCode = Double(spot.zipcode)
+        entity?.world = spot.world
+        entity?.isPublic = spot.isPublic
+        entity?.city = spot.city
+        save()
+        fetchSecretSpots()
     }
     
 }

@@ -9,6 +9,7 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseMessaging
+import UIKit
 
 
 let DB_BASE = Firestore.firestore()
@@ -148,6 +149,70 @@ class AuthService {
         
     }
     
+    func signUpWithEmail(username: String, email: String, password: String, profileImage: UIImage, completion: @escaping (_ uid: String?, _ error: String?) ->()) {
+        
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                print("Error signign up with email", error.localizedDescription)
+                completion(nil, error.localizedDescription)
+                return
+            }
+            
+            print("Successfully signed up with email")
+            guard let uid = authResult?.user.uid else {return}
+            
+            ImageManager.instance.uploadProfileImage(uid: uid, image: profileImage) { imageUrl in
+                guard let url = imageUrl else {return}
+                let fcmToken = Messaging.messaging().fcmToken ?? ""
+                
+                let data: [String: Any] = [
+                    UserField.displayName: username,
+                    UserField.email: email,
+                    UserField.providerId: "Email",
+                    UserField.provider: uid,
+                    UserField.streetCred: 3,
+                    UserField.fcmToken: fcmToken,
+                    UserField.bio: "",
+                    UserField.profileImageUrl: url,
+                    UserField.dataCreated: FieldValue.serverTimestamp()
+                ]
+                
+                self.REF_USERS.document(uid).setData(data) { error in
+                    
+                    if let error = error {
+                        print("Error uploading user data", error.localizedDescription)
+                        completion(nil, error.localizedDescription)
+                    }
+                    
+                    print("Successfully uploaded data to Firestore")
+                    completion(uid, nil)
+                }
+            }
+            
+            
+        }
+    }
+    
+    func signinWIthEmail(email: String, password: String, completion: @escaping (_ success: Bool, _ error: String?) -> ()) {
+        Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+            if let error = error {
+                print("Error signing in user", error.localizedDescription)
+                completion(false, error.localizedDescription)
+            }
+            
+            print("Successfully logged in user")
+            guard let uid = authResult?.user.uid else {return}
+            self.loginUserToApp(userId: uid) { success in
+                if success {
+                    completion(success, nil)
+                } else {
+                    let error = "Failed to login into database"
+                    completion(false, error)
+                }
+            }
+        }
+        
+    }
     
     private func checkIfUserExistsInDatabase(providerID: String, completion: @escaping (_ existingUserId: String?) -> ()) {
         

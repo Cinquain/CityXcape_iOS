@@ -25,7 +25,7 @@ struct SignUpView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: geo.size.width - 50)
                         .padding()
-                    Text("Find Secret Spots")
+                    Text("Find & Share Secret Spots")
                         .font(.title3)
                         .fontWeight(.thin)
                         .foregroundColor(.accent)

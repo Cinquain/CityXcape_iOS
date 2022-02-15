@@ -20,6 +20,7 @@ struct MessageView: View {
             VStack(alignment: .center, spacing: 0) {
                 Button {
                     showStreetPass.toggle()
+                    AnalyticsService.instance.viewStreetpass()
                 } label: {
                     UserDotView(imageUrl: comment.imageUrl, width: 40, height: 40)
                 }

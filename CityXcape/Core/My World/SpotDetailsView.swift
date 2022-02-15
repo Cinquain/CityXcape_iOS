@@ -140,6 +140,37 @@ struct SpotDetailsView: View {
                         
                     }
                     
+                    HStack {
+                        
+                       
+                                    
+                        Text(vm.getViews(spot: spot))
+                            .font(.subheadline)
+                            .fontWeight(.thin)
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                                    
+                            
+                        
+                        Spacer()
+                        
+                        Button {
+                            alertmessage = "This spot belongs to the \(spot.world) community"
+                            showAlert.toggle()
+                            } label: {
+                                
+                                    Text("\(spot.world)")
+                                        .font(.subheadline)
+                                        .fontWeight(.thin)
+                                        .lineLimit(1)
+                                        .frame(width: 60)
+                            
+                            }
+                        
+                    }
+                    .opacity(isEditing ? 0 : 1)
+                    .padding(.horizontal, 20)
+                    
           
                     
                     HStack {
@@ -172,44 +203,8 @@ struct SpotDetailsView: View {
                     
                     
                     HStack(spacing: 12) {
-                        Button(action: {
-                            AnalyticsService.instance.touchedRoute()
-                            vm.openGoogleMap(spot: spot)
-                            }, label: {
-                                VStack {
-                                    Image("walking")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 20, height: 20)
-                                    Text(vm.getDistanceMessage(spot: spot))
-                                        .font(.subheadline)
-                                        .fontWeight(.thin)
-                                        .foregroundColor(.white)
-                                }
-                            })
-                            .opacity(isEditing ? 0 : 1)
                         
-                        Button {
-                            alertmessage = "This spot is for the \(spot.world) community"
-                            showAlert.toggle()
-                            } label: {
-                                VStack {
-                                    Image("globe")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 20)
-                                    
-                                    
-                                        Text("\(spot.world)")
-                                            .font(.subheadline)
-                                            .fontWeight(.thin)
-                                            .lineLimit(1)
-                                            .frame(width: 65)
-                                       
-                                       
-                                }
-                            }
-                            .opacity(isEditing ? 0 : 1)
+                
 
                         
                         
@@ -304,6 +299,7 @@ struct SpotDetailsView: View {
                         Spacer()
                         
                         Button {
+                            spot.distanceInFeet > 200 ? vm.openGoogleMap(spot: spot) :
                             vm.checkInSecretSpot(spot: spot, completion: { (exist, success) in
                                 if exist {
                                     alertmessage = "You've already checkedin this spot"
@@ -316,12 +312,12 @@ struct SpotDetailsView: View {
                                 }
                             })
                         } label: {
-                        
-                                Text("Check-in")
+                                
+                            Text(spot.distanceInFeet > 200 ? "Route" : "Check-in")
                                     .font(.title3)
                                     .fontWeight(.thin)
                                     .frame(width: 120, height: 40)
-                                    .background(Color.cx_orange)
+                                    .background(spot.distanceInFeet > 200 ? Color.green : Color.cx_orange)
                                     .opacity(0.6)
                                     .cornerRadius(5)
                             
@@ -351,6 +347,7 @@ struct SpotDetailsView: View {
             .onAppear(perform: {
                 AnalyticsService.instance.viewedSecretSpot()
                 DataService.instance.updatePostViewCount(postId: spot.id)
+                vm.updateSecretSpot(postId: spot.id)
                 captions.removeAll()
                 let name = spot.spotName
                 let distanceString = String(format: "%.0f", spot.distanceFromUser)

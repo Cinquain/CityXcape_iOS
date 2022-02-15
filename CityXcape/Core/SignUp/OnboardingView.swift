@@ -12,6 +12,7 @@ struct OnboardingView: View {
     
     @State var showError: Bool = false
     @State var showOnboardingII: Bool = false
+    @State var showEmailSignup: Bool = false
     @Environment(\.presentationMode) var presentationMode
     
     @State var email: String = ""
@@ -69,6 +70,27 @@ struct OnboardingView: View {
                     .cornerRadius(8)
                     
                 })
+                
+                Button(action: {
+                    showEmailSignup.toggle()
+                }, label: {
+                    HStack {
+                        Image(systemName: "envelope.badge.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 30)
+                        
+                        Text("Sign in using Email")
+                            .font(.title2)
+                    }
+                    .frame(height: 60)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.dark_grey)
+                    .cornerRadius(8)
+                    
+                })
+                
+                
                 Spacer()
                 HStack {
                     Button(action: {
@@ -90,6 +112,11 @@ struct OnboardingView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }, content: {
                 OnboardingViewII(email: $email, name: $name, providerId: $providerId, provider: $provider)
+            })
+            .fullScreenCover(isPresented: $showEmailSignup, onDismiss: {
+                self.presentationMode.wrappedValue.dismiss()
+            }, content: {
+                SignInWithEmailView()
             })
             .alert(isPresented: $showError, content: {
                 return Alert(title: Text("Error Signing In 😭"))

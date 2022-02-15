@@ -82,7 +82,9 @@ struct MyWorld: View {
                                             
                                             PreviewCard(spot: spot)
                                                 .onTapGesture(perform: {
+                                                    
                                                     self.currentSpot = spot
+                                                    AnalyticsService.instance.viewedSecretSpot()
                                                 })
                                                 .sheet(item: $currentSpot) {
                                                     //Dismiss Code

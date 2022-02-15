@@ -16,6 +16,7 @@
 		212EE33327A4689F00232992 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE33227A4689F00232992 /* Comment.swift */; };
 		2142EF4627827E6B00EA489D /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2142EF4527827E6B00EA489D /* CoreDataManager.swift */; };
 		2142EF4927827E9700EA489D /* SecretSpotContainer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2142EF4727827E9700EA489D /* SecretSpotContainer.xcdatamodeld */; };
+		21469EC327B68B5600626FEE /* EmailSigninViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21469EC227B68B5600626FEE /* EmailSigninViewModel.swift */; };
 		214A4A3B278D340300B5950A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214A4A3A278D340300B5950A /* User.swift */; };
 		214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214FAC6C26E2F16300F37B80 /* ImageManager.swift */; };
 		216A5CDE27AA0F31006AA7B4 /* SaveDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A5CDD27AA0F31006AA7B4 /* SaveDetailsView.swift */; };
@@ -70,6 +71,7 @@
 		21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BBB06026E596C2000B40B3 /* AnimationController.swift */; };
 		21C85939271122C9008224E5 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C85938271122C9008224E5 /* CardView.swift */; };
 		21C8593B271135EE008224E5 /* SwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C8593A271135EE008224E5 /* SwipeView.swift */; };
+		21CBDEC227B3DD9E000F0D85 /* SignInWithEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CBDEC127B3DD9E000F0D85 /* SignInWithEmailView.swift */; };
 		21D03594270938400071C643 /* MissionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D03593270938400071C643 /* MissionRowView.swift */; };
 		21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0359527093B770071C643 /* MissionRowHeader.swift */; };
 		21D03598270945930071C643 /* MissionDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D03597270945930071C643 /* MissionDetails.swift */; };
@@ -93,6 +95,7 @@
 		212EE33227A4689F00232992 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		2142EF4527827E6B00EA489D /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		2142EF4827827E9700EA489D /* SecretSpotContainer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SecretSpotContainer.xcdatamodel; sourceTree = "<group>"; };
+		21469EC227B68B5600626FEE /* EmailSigninViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSigninViewModel.swift; sourceTree = "<group>"; };
 		214A4A3A278D340300B5950A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		214FAC6C26E2F16300F37B80 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		216A5CDD27AA0F31006AA7B4 /* SaveDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveDetailsView.swift; sourceTree = "<group>"; };
@@ -147,6 +150,7 @@
 		21BBB06026E596C2000B40B3 /* AnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
 		21C85938271122C9008224E5 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		21C8593A271135EE008224E5 /* SwipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeView.swift; sourceTree = "<group>"; };
+		21CBDEC127B3DD9E000F0D85 /* SignInWithEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithEmailView.swift; sourceTree = "<group>"; };
 		21D03593270938400071C643 /* MissionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowView.swift; sourceTree = "<group>"; };
 		21D0359527093B770071C643 /* MissionRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowHeader.swift; sourceTree = "<group>"; };
 		21D03597270945930071C643 /* MissionDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetails.swift; sourceTree = "<group>"; };
@@ -199,6 +203,8 @@
 			children = (
 				217884F826E17B870066C719 /* SignInWithApple.swift */,
 				217884FA26E181CE0066C719 /* SignInWithGoogle.swift */,
+				21CBDEC127B3DD9E000F0D85 /* SignInWithEmailView.swift */,
+				21469EC227B68B5600626FEE /* EmailSigninViewModel.swift */,
 			);
 			path = SignInProviders;
 			sourceTree = "<group>";
@@ -586,6 +592,7 @@
 				21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */,
 				217DAF3426CD97D400A395BC /* SpotRowHeader.swift in Sources */,
 				2178C4532719166800B4C395 /* TextFieldView.swift in Sources */,
+				21469EC327B68B5600626FEE /* EmailSigninViewModel.swift in Sources */,
 				21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */,
 				219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */,
 				217E9AA6270B404500F45077 /* Mission.swift in Sources */,
@@ -631,6 +638,7 @@
 				216A5CDE27AA0F31006AA7B4 /* SaveDetailsView.swift in Sources */,
 				217DA72826CC8F8B0039A145 /* CityXcapeApp.swift in Sources */,
 				21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */,
+				21CBDEC227B3DD9E000F0D85 /* SignInWithEmailView.swift in Sources */,
 				21C85939271122C9008224E5 /* CardView.swift in Sources */,
 				218115ED2731860700026AAD /* PublicStreetPass.swift in Sources */,
 				21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */,

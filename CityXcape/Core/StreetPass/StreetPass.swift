@@ -76,7 +76,7 @@ struct StreetPass: View {
                                 
                                 Button {
                                     message = "StreetCred is a currency that lets you save Secret Spots."
-                                    AnalyticsService.instance.touchedStreetCred()
+                                    AnalyticsService.instance.viewStreetpass()
                                     showAlert.toggle()
                                 } label: {
                                     Text("\(streetCred) StreetCred")

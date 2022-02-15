@@ -168,7 +168,7 @@ struct CardView: View {
                 Button {
                     //To be continued
                     showStreetPass.toggle()
-                    AnalyticsService.instance.touchedProfile()
+                    AnalyticsService.instance.viewStreetpass()
                 } label: {
                     
                     VStack(spacing: 0) {

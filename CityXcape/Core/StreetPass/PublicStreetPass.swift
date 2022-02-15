@@ -88,20 +88,19 @@ struct PublicStreetPass: View {
                     .frame(height: width / 1.5)
                 
                 Button {
-                    print("Message User")
                     showAlert.toggle()
                 } label: {
-                    VStack {
-                        Text("Message")
-                            .lineLimit(2)
-                    }
+                    
+                    Text("Message")
+                        .fontWeight(.light)
+                
                    
                 }
                 .padding()
-                .frame(width: 200)
+                .frame(width: 220)
                 .frame(height: 45)
                 .background(Color.orange.opacity(0.7))
-                .cornerRadius(10)
+                .cornerRadius(25)
 
 
                 

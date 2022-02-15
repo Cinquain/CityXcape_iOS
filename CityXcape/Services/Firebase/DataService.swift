@@ -458,6 +458,52 @@ class DataService {
             
 //            .limit(to: 12)
     }
+    
+    func updateSecretSpot(spotId: String, completion: @escaping (_ spot: SecretSpot) -> ()) {
+        
+        REF_POST.document(spotId).getDocument { snaphot, error in
+            
+            if let error = error {
+                print("Error finding secret spot", error.localizedDescription)
+                return
+            }
+            
+            guard let document = snaphot else {return}
+            if
+            let spotName = document.get(SecretSpotField.spotName) as? String,
+            let imageUrl = document.get(SecretSpotField.spotImageUrl) as? String,
+            let longitude = document.get(SecretSpotField.longitude) as? Double,
+            let latitude = document.get(SecretSpotField.latitude) as? Double,
+            let description = document.get(SecretSpotField.description) as? String,
+            let city = document.get(SecretSpotField.city) as? String,
+            let dateCreated = document.get(SecretSpotField.dateCreated) as? Timestamp,
+            let ownerId = document.get(SecretSpotField.ownerId) as? String,
+            let ownerDisplayName = document.get(SecretSpotField.ownerDisplayName) as? String,
+            let ownerImageUrl = document.get(SecretSpotField.ownerImageUrl) as? String,
+            let address = document.get(SecretSpotField.address) as? String,
+            let zipcode = document.get(SecretSpotField.zipcode) as? Int,
+            let isPublic = document.get(SecretSpotField.isPublic) as? Bool,
+            let saveCounts = document.get(SecretSpotField.saveCount) as? Int,
+            let viewCount = document.get(SecretSpotField.viewCount) as? Int,
+            let world = document.get(SecretSpotField.world) as? String,
+            let price = document.get(SecretSpotField.price) as? Int {
+                
+                let postId = document.documentID
+                let date = dateCreated.dateValue()
+                let additionalImages = document.get(SecretSpotField.spotImageUrls) as? [String] ?? []
+                var spotImageUrls = [imageUrl]
+                
+                if !additionalImages.isEmpty {
+                    spotImageUrls.append(contentsOf: additionalImages)
+                }
+
+                let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
+                self.manager.updatewithSpot(spot: secretSpot)
+                completion(secretSpot)
+                
+        }
+    }
+}
 
     
     

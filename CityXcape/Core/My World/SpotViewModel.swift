@@ -63,7 +63,7 @@ class SpotViewModel: NSObject, ObservableObject {
     }
     
     func openGoogleMap(spot: SecretSpot) {
-        
+        AnalyticsService.instance.touchedRoute()
         if (UIApplication.shared.canOpenURL(URL(string: "comgooglemaps://")!)) {
             if let url = URL(string: "comgooglemaps-x-callback://?saddr=&daddr=\(spot.latitude),\(spot.longitude)&directionsmode=driving") {
                 UIApplication.shared.open(url, options: [:])
@@ -432,6 +432,15 @@ class SpotViewModel: NSObject, ObservableObject {
             }
             
         }
+    }
+    
+    
+    func updateSecretSpot(postId: String) {
+        
+        DataService.instance.updateSecretSpot(spotId: postId) { spot in
+            
+        }
+        
     }
   
     
