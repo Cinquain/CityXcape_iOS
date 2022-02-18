@@ -10,7 +10,6 @@ import Firebase
 import GoogleSignIn
 import UserNotifications
 import FirebaseMessaging
-import JGProgressHUD_SwiftUI
 
 @main
 struct CityXcapeApp: App {

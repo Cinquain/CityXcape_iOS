@@ -48,7 +48,7 @@ struct SignInWithEmailView: View {
                         vm.showPicker.toggle()
                     } label: {
                         VStack(spacing: 0) {
-                            Image("dot")
+                            Image("profile")
                                 .resizable()
                                 .aspectRatio( contentMode: .fit)
                                 .frame(width: 150)
@@ -56,10 +56,11 @@ struct SignInWithEmailView: View {
                                     Image(uiImage: vm.userImage)
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
+                                        .frame(width: 130)
                                         .clipShape(Circle())
                             )
                             
-                     Text("Touch dot to add profile image")
+                     Text("Tap to add profile image")
                                 .font(.caption)
                                 .fontWeight(.thin)
                                 .foregroundColor(.white)
