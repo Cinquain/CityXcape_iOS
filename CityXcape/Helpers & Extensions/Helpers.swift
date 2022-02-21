@@ -43,6 +43,8 @@ struct SecretSpotField {
     static let world = "world"
     static let isPublic = "isPublic"
     static let spotImageUrls = "spotImageUrls"
+    static let likeCount = "like_count" //Int
+    static let likedBy = "liked_by" //Array
 }
 
 struct CommentField {

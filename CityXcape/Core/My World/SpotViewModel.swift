@@ -20,18 +20,18 @@ class SpotViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
 
     
-    @EnvironmentObject var hudCoordinator: JGProgressHUDCoordinator
 
 
     @Published var alertmessage: String = ""
     @Published var genericAlert: Bool = false
+    @Published var didLike: Bool = false
     
     @Published var alertMessage: String = ""
     @Published var showAlert: Bool = false
     @Published var showCheckin: Bool = false
     @Published var disableCheckin: Bool = false
     @Published var refresh: Bool = false
-
+    
     
     @Published var newDescription: String = ""
     @Published var newWorld: String = ""
@@ -385,10 +385,12 @@ class SpotViewModel: NSObject, ObservableObject {
         if submissionText.count < 3 {
             return false
         }
+        
         return true
     }
     
     func uploadComment(postId: String) {
+        
         guard let uid = userId else {return}
         guard let username = displayName else {return}
         guard let bio = bio else {return}
@@ -406,8 +408,8 @@ class SpotViewModel: NSObject, ObservableObject {
             let comment = Comment(id: id, uid: uid, username: username, imageUrl: imageUrl, bio: bio, content: self.submissionText, dateCreated: Date())
             self.comments.append(comment)
             self.submissionText = ""
+            
         }
-        
         
     }
     
@@ -441,6 +443,18 @@ class SpotViewModel: NSObject, ObservableObject {
             
         }
         
+    }
+    
+    func pressLike(postId: String) {
+        
+        if didLike {
+            DataService.instance.likeSpot(postId: postId)
+            AnalyticsService.instance.likedSpot()
+        } else {
+            DataService.instance.unliKeSpot(postId: postId)
+        }
+        manager.updateLike(spotId: postId, liked: didLike)
+
     }
   
     

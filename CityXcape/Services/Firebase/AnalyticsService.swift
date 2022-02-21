@@ -106,4 +106,8 @@ class AnalyticsService {
         Analytics.logEvent("posted_comment", parameters: nil)
     }
     
+    func likedSpot() {
+        Analytics.logEvent("liked_spot", parameters: nil)
+    }
+    
 }

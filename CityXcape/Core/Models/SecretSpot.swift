@@ -21,6 +21,8 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
     var city: String
     var zipcode: Int
     var world: String
+    var likedCount: Int
+    var likedByUser: Bool
     
     let dateCreated: Date
     var viewCount: Int
@@ -44,11 +46,13 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
         case description = "description"
         case city = "city"
         case dateCreated = "date_created"
+        case likedCount = "like_count"
         case ownerId = "owner_id"
         case ownerDisplayName = "ownerDisplayName"
         case ownerImageUrl = "ownerImageUrl"
         case address = "address"
         case zipcode = "zipcode"
+        case likedByUser = "did_like"
         case saveCounts = "save_count"
         case viewCount = "view_count"
         case price = "price"
@@ -97,7 +101,7 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
     }
     
     
-    init(postId: String, spotName: String, imageUrls: [String], longitude: Double, latitude: Double, address: String, description: String, city: String, zipcode: Int, world: String, dateCreated: Date, price: Int, viewCount: Int, saveCounts: Int, isPublic: Bool, ownerId: String, ownerDisplayName: String, ownerImageUrl: String) {
+    init(postId: String, spotName: String, imageUrls: [String], longitude: Double, latitude: Double, address: String, description: String, city: String, zipcode: Int, world: String, dateCreated: Date, price: Int, viewCount: Int, saveCounts: Int, isPublic: Bool, ownerId: String, ownerDisplayName: String, ownerImageUrl: String, likeCount: Int, didLike: Bool) {
 
             self.id = postId
             self.spotName = spotName
@@ -117,6 +121,8 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
             self.ownerDisplayName = ownerDisplayName
             self.ownerImageUrl = ownerImageUrl
             self.price = price
+            self.likedCount = likeCount
+            self.likedByUser = didLike
         }
         
         init(entity: SecretSpotEntity) {
@@ -138,6 +144,8 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
             zipcode = Int(entity.zipCode)
             address = entity.address ?? ""
             ownerDisplayName = entity.ownerDisplayName ?? ""
+            likedCount = Int(entity.likedCount)
+            likedByUser = entity.didLike
         }
     
     

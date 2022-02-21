@@ -78,7 +78,7 @@ class DataService {
                     SecretSpotField.dateCreated: FieldValue.serverTimestamp()
                 ]
                 
-                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: city)
+                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: city, didLike: false, likedCount: 0)
                 self.manager.fetchSecretSpots()
                 
                 document.setData(spotData) { (error) in
@@ -147,7 +147,7 @@ class DataService {
         }
         
         //Save to Core Data
-        self.manager.addEntity(spotId: spot.id, spotName: spot.spotName, description: spot.description ?? "", longitude: spot.longitude, latitude: spot.latitude, imageUrls: spot.imageUrls, address: spot.address, uid: spot.ownerId, ownerImageUrl: spot.ownerImageUrl, ownerDisplayName: spot.ownerDisplayName, price: Double(spot.price), viewCount: Double(spot.viewCount), saveCount: Double(spot.saveCounts), zipCode: Double(spot.zipcode), world: spot.world, isPublic: spot.isPublic, dateCreated: spot.dateCreated, city: spot.city)
+        self.manager.addEntity(spotId: spot.id, spotName: spot.spotName, description: spot.description ?? "", longitude: spot.longitude, latitude: spot.latitude, imageUrls: spot.imageUrls, address: spot.address, uid: spot.ownerId, ownerImageUrl: spot.ownerImageUrl, ownerDisplayName: spot.ownerDisplayName, price: Double(spot.price), viewCount: Double(spot.viewCount), saveCount: Double(spot.saveCounts), zipCode: Double(spot.zipcode), world: spot.world, isPublic: spot.isPublic, dateCreated: spot.dateCreated, city: spot.city, didLike: false, likedCount: 0)
         self.manager.fetchSecretSpots()
         
         
@@ -368,7 +368,7 @@ class DataService {
     func getSpotsFromWorld(userId: String, coreData: Bool, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
         REF_WORLD.document("private").collection(userId).addSnapshotListener { snapshot, error in
             var secretSpots = [SecretSpot]()
-
+            let uid = userId
             if let error = error {
                 print("Error fetching the secret spots from user's branch", error.localizedDescription)
                 return
@@ -402,21 +402,26 @@ class DataService {
                         let world = data?[SecretSpotField.world] as? String,
                         let price = data?[SecretSpotField.price] as? Int {
                             
-                            let additionalImages = data?[SecretSpotField.spotImageUrls] as? [String] ?? []
+                            let likedCount = data?[SecretSpotField.likeCount] as? Int ?? 0
+                            var didLike: Bool = false
+                            if let likedArray = data?[SecretSpotField.likedBy] as? [String] {
+                                didLike = likedArray.contains(uid)
+                            }
                             let date = dateCreated.dateValue()
                             var spotImageUrls = [imageUrl]
                             
+                            let additionalImages = data?[SecretSpotField.spotImageUrls] as? [String] ?? []
                             if !additionalImages.isEmpty {
                                 additionalImages.forEach { url in
                                     spotImageUrls.append(url)
                                 }
                             }
 
-                            let secretSpot = SecretSpot(postId: postId, spotName: name, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
+                            let secretSpot = SecretSpot(postId: postId, spotName: name, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likedCount, didLike: didLike)
                             secretSpots.append(secretSpot)
                             
                             if coreData {
-                                self.manager.addEntity(spotId: postId, spotName: name, description: description, longitude: longitude, latitude: latitude, imageUrls: spotImageUrls, address: address, uid: ownerId, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: Double(price), viewCount: Double(viewCount), saveCount: Double(saveCounts), zipCode: Double(zipcode), world: world, isPublic: isPublic, dateCreated: date, city: city)
+                                self.manager.addEntity(spotId: postId, spotName: name, description: description, longitude: longitude, latitude: latitude, imageUrls: spotImageUrls, address: address, uid: ownerId, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: Double(price), viewCount: Double(viewCount), saveCount: Double(saveCounts), zipCode: Double(zipcode), world: world, isPublic: isPublic, dateCreated: date, city: city, didLike: didLike, likedCount: likedCount)
                             }
 //
                         }
@@ -460,7 +465,7 @@ class DataService {
     }
     
     func updateSecretSpot(spotId: String, completion: @escaping (_ spot: SecretSpot) -> ()) {
-        
+        guard let uid = userId else {return}
         REF_POST.document(spotId).getDocument { snaphot, error in
             
             if let error = error {
@@ -490,14 +495,20 @@ class DataService {
                 
                 let postId = document.documentID
                 let date = dateCreated.dateValue()
+                let likeCount = document.get(SecretSpotField.likeCount) as? Int ?? 0
+                var likedByUser: Bool = false
+                if let likedArrays = document.get(SecretSpotField.likedBy) as? [String] {
+                    likedByUser = likedArrays.contains(uid)
+                }
+                
+                
                 let additionalImages = document.get(SecretSpotField.spotImageUrls) as? [String] ?? []
                 var spotImageUrls = [imageUrl]
-                
                 if !additionalImages.isEmpty {
                     spotImageUrls.append(contentsOf: additionalImages)
                 }
 
-                let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
+                let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likeCount, didLike: likedByUser)
                 self.manager.updatewithSpot(spot: secretSpot)
                 completion(secretSpot)
                 
@@ -509,7 +520,7 @@ class DataService {
     
     func getSecretSpotsFromSnapshot(querysnapshot: QuerySnapshot?) -> [SecretSpot] {
         var secretSpots = [SecretSpot]()
-        
+        let uid = userId ?? ""
         if let snapshot = querysnapshot, snapshot.documents.count > 0 {
             print("Found secret spots")
             snapshot.documents.forEach { document in
@@ -536,12 +547,16 @@ class DataService {
                     let date = dateCreated.dateValue()
                     let additionalImages = document.get(SecretSpotField.spotImageUrls) as? [String] ?? []
                     var spotImageUrls = [imageUrl]
-                    
                     if !additionalImages.isEmpty {
                         spotImageUrls.append(contentsOf: additionalImages)
                     }
+                    let likedCount = document.get(SecretSpotField.likeCount) as? Int ?? 0
+                    var didLike: Bool = false
+                    if let likedArray = document.get(SecretSpotField.likedBy) as? [String] {
+                        didLike = likedArray.contains(uid)
+                    }
 
-                    let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl)
+                    let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likedCount, didLike: didLike)
                     secretSpots.append(secretSpot)
                 }
             }
@@ -744,6 +759,34 @@ class DataService {
         }
 
     }
+    
+    
+    func likeSpot(postId: String) {
+        guard let uid = userId else {return}
+        let increment: Int64 = 1
+        let data: [String: Any] = [
+            SecretSpotField.likeCount: FieldValue.increment(increment),
+            SecretSpotField.likedBy: FieldValue.arrayUnion([uid])
+        ]
+        
+        REF_POST.document(postId).updateData(data)
+    }
+    
+    
+    func unliKeSpot(postId: String) {
+        
+        guard let uid = userId else {return}
+        let decrement: Int64 = -1
+        
+        let data: [String: Any] = [
+            SecretSpotField.likeCount: FieldValue.increment(decrement),
+            SecretSpotField.likedBy: FieldValue.arrayRemove([uid])
+        ]
+        
+        REF_POST.document(postId).updateData(data)
+    }
+    
+    
 //
     
     //MARK: DELETE FUNCTIONS

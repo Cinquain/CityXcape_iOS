@@ -49,6 +49,14 @@ extension Color {
     static let dropShadow = Color(hex: "aeaec0").opacity(0.4)
     static let dropLight = Color(hex: "ffffff")
     
+    static var random: Color {
+        return Color(
+            red: .random(in: 0...1),
+            green: .random(in: 0...1),
+            blue: .random(in: 0...1)
+            )
+    }
+    
 }
 
 

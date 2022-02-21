@@ -9,42 +9,48 @@ import SwiftUI
 
 struct LikeAnimationView: View {
     
-    @Binding var animate: Bool
+    @State private var animate: Bool = true
+    @Binding var didLike: Bool {
+        didSet {
+            animate = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                animate = true
+            }
+        }
+    }
+    var size: CGFloat
     
     var body: some View {
         
         ZStack {
             Image(systemName: "heart.fill")
-                .foregroundColor(.red.opacity(0.3))
-                .font(.system(size: 200))
-                .opacity(animate ? 1.0 : 0.0)
+                .foregroundColor(didLike ? .red : .red.opacity(0.3))
+                .font(.system(size: size))
                 .scaleEffect(animate ? 1.0 : 0.0)
             
             Image(systemName: "heart.fill")
-                .foregroundColor(.red.opacity(0.3))
-                .font(.system(size: 150))
-                .opacity(animate ? 1.0 : 0.0)
+                .foregroundColor(didLike ? .red : .red.opacity(0.3))
+                .font(.system(size: size * 0.50))
                 .scaleEffect(animate ? 1.0 : 0.0)
             
             Image(systemName: "heart.fill")
-                .foregroundColor(.red.opacity(0.3))
-                .font(.system(size: 100))
-                .opacity(animate ? 1.0 : 0.0)
+                .foregroundColor(didLike ? .red : .red.opacity(0.3))
+                .font(.system(size: size * 0.25 ))
                 .scaleEffect(animate ? 1.0 : 0.0)
             
         }
-        .animation(Animation.linear(duration: 0.8).repeatForever())
-        .onAppear(perform: {
-            animate.toggle()
-        })
+        .animation(Animation.linear(duration: 0.5).repeatCount(1))
+       
+        
+        
     }
 }
 
 struct LikeAnimationView_Previews: PreviewProvider {
     
-    @State static var animate: Bool = true
+    @State static var animate: Bool = false
     static var previews: some View {
-        LikeAnimationView(animate: $animate)
+        LikeAnimationView(didLike: $animate, size: 200)
             .previewLayout(.sizeThatFits)
     }
 }
