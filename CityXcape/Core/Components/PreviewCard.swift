@@ -35,7 +35,11 @@ struct PreviewCard: View {
                                     .fontWeight(.thin)
                                     .lineLimit(1)
                                 Spacer()
+                             
+                                Text(returnDistance())
+                                    .fontWeight(.thin)
                             }.padding(.horizontal, 10)
+                            .padding(.bottom, 5)
                         }
                     }
                 )
