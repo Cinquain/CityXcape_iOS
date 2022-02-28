@@ -19,8 +19,10 @@ class SpotViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
 
-    
-
+    @Published var comment: String = ""
+    @Published var journeyImage: UIImage = UIImage()
+    @Published var showStamp: Bool = false
+    @Published var showVerifiers: Bool = false
 
     @Published var alertmessage: String = ""
     @Published var genericAlert: Bool = false
@@ -77,58 +79,7 @@ class SpotViewModel: NSObject, ObservableObject {
             
         }
     }
-    
-    func checkInSecretSpot(spot: SecretSpot, completion: @escaping (_ doesExist: Bool, _ success: Bool) -> () ) {
-        disableCheckin = true
-        AnalyticsService.instance.touchedVerification()
-        let manager = LocationService.instance.manager
-        
-        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
-            let manager = LocationService.instance.manager
-            let spotLocation = CLLocation(latitude: spot.latitude, longitude: spot.longitude)
-            let userLocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
-            let distance = userLocation.distance(from: spotLocation) * 3.28084
-            let distanceInMiles = distance * 0.000621371
-            let formattedDistance = String(format: "%.0f", distanceInMiles)
-            print("\(distance) feet")
-            if distance < 200 {
-                DataService.instance.checkIfUserAlreadyVerified(spot: spot) {  doesExist in
-                    
-                    if doesExist {
-                        completion(true, false)
-                        self.disableCheckin = false
-                        return
-                        
-                    } else {
-                        DataService.instance.verifySecretSpot(spot: spot) { [weak self] success  in
-                            
-                            if !success {
-                                print("Error saving checkin to database")
-                                completion(false, false)
-                                self?.disableCheckin = false
-                                return
-                            }
-                            completion(false, true)
-                            print("Successfully saved verification to database")
-                            AnalyticsService.instance.verify()
-                            self?.showCheckin = true
-                            
-                        }
-                    }
-                }
-            } else {
-                completion(false, false)
-                alertMessage = "You need to be there to verify. \n You are \(formattedDistance) miles away."
-                showAlert = true
-                disableCheckin = false
-            }
-        } else {
-            manager.requestWhenInUseAuthorization()
-            disableCheckin = false
-        }
-        
-        
-    }
+
     
     func spotDistance(spot: SecretSpot) -> Double {
         
@@ -333,14 +284,16 @@ class SpotViewModel: NSObject, ObservableObject {
     
     func getVerifiedUsers(postId: String) {
         
-        DataService.instance.getUsersForSpot(postId: postId, path: "verifiers") { verifiedUsers in
-            if verifiedUsers.isEmpty {
-                print("No users verified this spot")
+        DataService.instance.getVerifiersForSpot(postId: postId) { users in
+            if users.isEmpty {
+                print("No users verified this spiot")
                 self.users = []
+                return
             } else {
-                self.users = verifiedUsers
+                self.users = users
             }
         }
+        
     }
     
     
@@ -395,6 +348,7 @@ class SpotViewModel: NSObject, ObservableObject {
         guard let username = displayName else {return}
         guard let bio = bio else {return}
         guard let imageUrl = profileUrl else {return}
+        let comment = submissionText
         
         DataService.instance.postComment(postId: postId, uid: uid, username: username, bio: bio, imageUrl: imageUrl, content: submissionText) { success, commentId in
             
@@ -434,6 +388,20 @@ class SpotViewModel: NSObject, ObservableObject {
             }
             
         }
+    }
+    
+    func getVerificationStamp(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
+        
+        DataService.instance.verifySecretSpot(spot: spot, image: journeyImage, comment: comment) { [weak self] (success, message) in
+            if success {
+                self?.manager.updateVerification(spotId: spot.id, verified: true)
+                completion(success)
+            } else {
+                self?.alertMessage = message ?? ""
+                self?.showAlert = true
+            }
+        }
+        
     }
     
     

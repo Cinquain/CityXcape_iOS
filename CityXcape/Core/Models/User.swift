@@ -19,7 +19,7 @@ struct User: Identifiable, Hashable {
     var fcmToken: String?
     var streetCred: Int?
     
-    var verifed: Date?
+    var verified: Date?
     var membership: Date?
     
 }

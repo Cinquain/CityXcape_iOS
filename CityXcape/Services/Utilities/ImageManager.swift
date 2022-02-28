@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseStorage
+import UIKit
 
 let imageCache = NSCache<AnyObject, UIImage>()
 
@@ -40,6 +41,18 @@ class ImageManager {
         }
     }
     
+    func uploadVerifyImage(image: UIImage, userId: String, postId: String, completion: @escaping (_ url: String?) -> ()) {
+        
+        let path = getVerificationPath(uid: userId, postId: postId)
+        
+        uploadImage(path: path, image: image) { success, imageUrl in
+            if success {
+                completion(imageUrl)
+            }
+        }
+        
+    }
+    
     func updateSecretSpotImage(image: UIImage, postId: String, number: Int, completion: @escaping (_ url: String?) -> ()) {
         
         let path = getSpotImagePath(spotId: postId, imageNum: number)
@@ -67,6 +80,12 @@ class ImageManager {
         
         let userPath = "users/\(uid)/profileImage"
         let storagePath = REF_STORE.reference(withPath: userPath)
+        return storagePath
+    }
+    
+    fileprivate func getVerificationPath(uid: String, postId: String) -> StorageReference {
+        let verifiedPath = "users/\(uid)/\(postId)/verifiedImage"
+        let storagePath = REF_STORE.reference(withPath: verifiedPath)
         return storagePath
     }
     

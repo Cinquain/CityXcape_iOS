@@ -31,7 +31,7 @@ struct HomeView: View {
                 }
                 .tag(0)
             
-            MissionsView(selectedTab: $selectedTab)
+            DiscoverView(selectedTab: $selectedTab)
                     .tabItem {
                         Image(Icon.tabItem0.rawValue)
                             .renderingMode(.template)

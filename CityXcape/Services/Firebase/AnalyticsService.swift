@@ -110,4 +110,8 @@ class AnalyticsService {
         Analytics.logEvent("liked_spot", parameters: nil)
     }
     
+    func checkedVerifiers() {
+        Analytics.logEvent("checked_verifiers", parameters: nil)
+    }
+    
 }

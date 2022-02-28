@@ -27,9 +27,6 @@ struct MapContainer: View {
         ZStack(alignment: .top) {
             MapView(viewModel: vm)
                 
-                
-        
-            
             VStack(spacing: 12) {
                 HStack(spacing: 10) {
                     TextField("Search Location", text: $vm.searchQuery, onCommit: {

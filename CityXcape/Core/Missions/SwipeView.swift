@@ -15,7 +15,7 @@ struct SwipeView: View {
     @Environment(\.presentationMode) var presentationMode
 
     
-    @StateObject var vm: MissionViewModel
+    @StateObject var vm: DiscoverViewModel
     
     @State private var opacity: Double = 0
     @State private var passed: Bool = false
@@ -244,6 +244,6 @@ struct SwipeView: View {
 
 struct SwipeView_Previews: PreviewProvider {
     static var previews: some View {
-        SwipeView(vm: MissionViewModel())
+        SwipeView(vm: DiscoverViewModel())
     }
 }

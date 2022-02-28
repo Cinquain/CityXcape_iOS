@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct MissionsView: View {
+struct DiscoverView: View {
     
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @State private var isPresented: Bool = false
     @State private var mission: Mission?
     @State private var currentIndex: Int = 0
     @Binding var selectedTab: Int 
-    @StateObject var vm: MissionViewModel = MissionViewModel()
+    @StateObject var vm: DiscoverViewModel = DiscoverViewModel()
     
     @State var captions: [String] = [
         "Missions are exploration jobs",
@@ -103,6 +103,6 @@ struct MissionsView: View {
 struct MissionsView_Previews: PreviewProvider {
     @State static var selection: Int = 0
     static var previews: some View {
-        MissionsView(selectedTab: $selection)
+        DiscoverView(selectedTab: $selection)
     }
 }

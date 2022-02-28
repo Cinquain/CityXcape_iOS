@@ -11,10 +11,7 @@ import SwiftUI
 import MapKit
 
 
-
-
-
-class MissionViewModel: ObservableObject {
+class DiscoverViewModel: ObservableObject {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
 
     @Published var standardMissions: [Mission] = []

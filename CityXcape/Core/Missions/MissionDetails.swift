@@ -14,10 +14,10 @@ struct MissionDetails: View {
     @State private var showMap: Bool = false
     @State private var buttonTile: String = "Post Spot"
     @State private var buttonColor: Color = Color.cx_green
-    var parent: MissionsView?
+    var parent: DiscoverView?
     @State var captions: [String] = ["", "", ""]
     
-    init(mission: Mission, parent: MissionsView) {
+    init(mission: Mission, parent: DiscoverView) {
         self.mission = mission
         let name = "Mission is to \(mission.title)"
         let reward = "Reward is \(mission.bounty) StreetCred"
@@ -135,6 +135,6 @@ struct MissionDetails_Previews: PreviewProvider {
     @State static var selection: Int = 0
 
     static var previews: some View {
-        MissionDetails(mission: missionOne, parent: MissionsView(selectedTab: $selection))
+        MissionDetails(mission: missionOne, parent: DiscoverView(selectedTab: $selection))
     }
 }

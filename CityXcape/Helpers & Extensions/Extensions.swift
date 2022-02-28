@@ -41,6 +41,10 @@ extension Color {
         return Color("darkgrey")
     }
     
+    static var map_green: Color {
+        return Color("map_green")
+    }
+    
     static var text_Color: Color {
         return Color("textColor")
     }
@@ -122,6 +126,16 @@ extension MKMapItem {
         }
         return zipcode
     }
+    
+    func getCountry() -> String {
+        let placemark = self.placemark
+        var country: String = ""
+        
+        if placemark.country != nil {
+            country = placemark.country!
+        }
+        return country
+    }
 }
 
 
@@ -187,6 +201,18 @@ extension UIScreen {
     static let screenWidth = UIScreen.main.bounds.size.width
     static let screenHeight = UIScreen.main.bounds.size.height
     static let screenSize = UIScreen.main.bounds.size
+    
+}
+
+extension Date {
+    
+    func formattedDate() -> String {
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy"
+        let date = dateFormatter.string(from: self)
+        return date
+    }
     
 }
 

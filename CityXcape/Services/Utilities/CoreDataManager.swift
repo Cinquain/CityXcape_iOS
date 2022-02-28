@@ -109,6 +109,12 @@ class CoreDataManager {
         save()
     }
     
+    func updateVerification(spotId: String, verified: Bool) {
+        let entity = spotEntities.first(where: {$0.spotId == spotId})
+        entity?.verified = verified
+        save()
+    }
+    
     func addEntity(spotId: String, spotName: String, description: String, longitude: Double, latitude: Double, imageUrls: [String], address: String, uid: String, ownerImageUrl: String, ownerDisplayName: String, price: Double, viewCount: Double, saveCount: Double, zipCode: Double, world: String, isPublic: Bool, dateCreated: Date, city: String, didLike: Bool, likedCount: Int) {
         
         let secretSpotEntity = SecretSpotEntity(context: context)
@@ -132,6 +138,7 @@ class CoreDataManager {
         secretSpotEntity.city = city
         secretSpotEntity.didLike = didLike
         secretSpotEntity.likedCount = Double(likedCount)
+        secretSpotEntity.verified = false
         save()
         
     }

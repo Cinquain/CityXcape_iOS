@@ -202,44 +202,81 @@ class DataService {
 
     
     
-    func verifySecretSpot(spot: SecretSpot, completion: @escaping (_ success: Bool) ->()) {
+    func verifySecretSpot(spot: SecretSpot, image: UIImage, comment: String, completion: @escaping (_ success: Bool, _ error: String?) ->()) {
         guard let uid = userId else {return}
         let postId = spot.id
         let ownerId = spot.ownerId
         
-        let checkinData: [String: Any] = [
-            "checked-in": FieldValue.serverTimestamp()
-        ]
+     
+        ImageManager.instance.uploadVerifyImage(image: image, userId: uid, postId: postId) { [weak self] url in
+            if let imageUrl = url {
+                
+                let checkinData: [String: Any] = [
+                    "comment": comment,
+                    "imageUrl": imageUrl,
+                    "verifierId": uid,
+                    "spotOwnerId": ownerId,
+                    "postId": postId,
+                    "city": spot.city,
+                    "country": spot.country,
+                    "time": FieldValue.serverTimestamp()
+                ]
+                
+                self?.REF_WORLD.document("verified").collection(uid).document(postId).setData(checkinData)
+                
+                self?.REF_POST.document(postId).collection("verifiers").document(uid).setData(checkinData) { error in
+                    
+                    if let error = error {
+                        print("Error saving check-in to database", error.localizedDescription)
+                        completion(false, error.localizedDescription)
+                        return
+                    }
+                    
+                    let verifierIncrement: Int64 = 3
+                    let verifierWalletData: [String: Any] = [
+                        UserField.streetCred : FieldValue.increment(verifierIncrement)
+                    ]
+                    
+                    AuthService.instance.updateUserField(uid: uid, data: verifierWalletData)
+                    
+                    let ownerIncrement: Int64 = 1
+                    let ownerWalletData: [String: Any] = [
+                        UserField.streetCred : FieldValue.increment(ownerIncrement)
+                    ]
+                                
+                    AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
+                    
+                    print("Successfully saved verification to DB")
+                    completion(true, nil)
+                }
+            } else {
+                let message = "Error uploading verification to Database"
+                completion(false, message)
+                print("Error uploading verification image to DB")
+            }
+        }
         
-        REF_WORLD.document("verified").collection(uid).document(postId).setData(checkinData)
-        
-        
-        REF_POST.document(postId).collection("verifiers").document(uid).setData(checkinData) { error in
+    }
+    
+    func getVerifications(uid: String, completion: @escaping (_ verifications: [Verification]) ->()) {
+        REF_WORLD.document("verified").collection(uid).getDocuments { querySnapshot, error in
             
+            var verifications: [Verification] = []
             if let error = error {
-                print("Error saving check-in to database", error.localizedDescription)
-                completion(false)
+                print("Error fetching verifications", error.localizedDescription)
                 return
             }
             
-            let verifierIncrement: Int64 = 3
-            let verifierWalletData: [String: Any] = [
-                UserField.streetCred : FieldValue.increment(verifierIncrement)
-            ]
+            if let snapshot = querySnapshot, snapshot.count > 0 {
+                snapshot.documents.forEach { document in
+                    let data = document.data()
+                    let verification = Verification(data: data)
+                    verifications.append(verification)
+                }
+                completion(verifications)
+            }
             
-            AuthService.instance.updateUserField(uid: uid, data: verifierWalletData)
-            
-            let ownerIncrement: Int64 = 1
-            let ownerWalletData: [String: Any] = [
-                UserField.streetCred : FieldValue.increment(ownerIncrement)
-            ]
-                        
-            AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
-            
-            print("Successfully saved verification to DB")
-            completion(true)
         }
-        
     }
     
     func checkIfUserAlreadyVerified(spot: SecretSpot, completion: @escaping (_ doesExist: Bool) ->()) {
@@ -640,7 +677,7 @@ class DataService {
             }
             
             if let snapshot = snapshot, snapshot.count > 0 {
-                print("Found users who saved the spot")
+                print("Found users")
                 let count = snapshot.count
                 self.manager.updateSaveCount(spotId: postId, count: Double(count))
                 
@@ -650,7 +687,7 @@ class DataService {
                     self.REF_USERS.document(id).getDocument { snapshot, error in
                         
                         if let error = error {
-                            print("Could not find user", error.localizedDescription)
+                            print("Could not find users", error.localizedDescription)
                         }
                         let data = snapshot?.data()
                         
@@ -676,6 +713,56 @@ class DataService {
             
         }
     }
+    
+    func getVerifiersForSpot(postId: String, completion: @escaping (_ users: [User]) -> ()) {
+        var savedUsers: [User] = []
+        
+        REF_POST.document(postId).collection("verifiers").getDocuments { snapshot, error in
+            
+            if snapshot?.count == 0 {
+                print("No verifiers found")
+                completion(savedUsers)
+                return
+            }
+            
+            if let snapshot = snapshot, snapshot.count > 0 {
+                print("Found verifiers")
+                
+                snapshot.documents.forEach { document in
+                    let id = document.documentID
+                    let checkedIn = document.get("checked-in") as? Timestamp
+                    let date = checkedIn?.dateValue()
+                    
+                    self.REF_USERS.document(id).getDocument { snapshot, error in
+                        
+                        if let error = error {
+                            print("Could not find users", error.localizedDescription)
+                        }
+                        let data = snapshot?.data()
+                        
+                        if
+                            let username = data?[UserField.displayName] as? String,
+                            let bio = data?[UserField.bio] as? String,
+                            let fcmToken = data?[UserField.fcmToken] as? String,
+                            let profileUrl = data?[UserField.profileImageUrl] as? String,
+                            let streetCred = data?[UserField.streetCred] as? Int
+                        {
+                            let user = User(id: id, displayName: username, profileImageUrl: profileUrl, bio: bio, fcmToken: fcmToken, streetCred: streetCred, verified: date)
+                            savedUsers.append(user)
+                        }
+                        
+                        DispatchQueue.main.async {
+                            completion(savedUsers)
+                        }
+                        
+                    }
+                }
+                
+            }
+            
+        }
+    }
+    
     
     //MARK: UPDATE FUNCTIONS
     

@@ -21,7 +21,7 @@ struct MyWorld: View {
     @State private var isPresented: Bool = false
     @Binding var selectedTab: Int
     @State var currentSpot: SecretSpot?
-    @State var currentList: SecretSpot?
+    @State private var showMission: Bool = false
 
     let manager = CoreDataManager.instance
     @State var captions: [String] = [
@@ -92,51 +92,6 @@ struct MyWorld: View {
                                                     SpotDetailsView(spot: spot)
                                                 }
                                             
-                                            //Action Buttons
-                                            HStack {
-                                                Button {
-                                                    vm.openGoogleMap(spot: spot)
-                                                    AnalyticsService.instance.touchedRoute()
-                                                } label: {
-                                                    Image("walking")
-                                                        .resizable()
-                                                        .aspectRatio(contentMode: .fit)
-                                                        .frame(height: 20)
-                                                    
-                                                    Text(vm.getDistanceMessage(spot: spot))
-                                                        .fontWeight(.thin)
-                                                }
-
-                                                Spacer()
-                                                
-                                                Button {
-                                                    //TBD
-                                                    self.currentList = spot
-                                                    vm.getSavedbyUsers(postId: spot.id)
-                                                    AnalyticsService.instance.checkSavedUsers()
-                                                } label: {
-                                                   
-                                                   Image("dot")
-                                                        .resizable()
-                                                        .aspectRatio(contentMode: .fit)
-                                                        .frame(width: 30, height: 30)
-                                                    
-                                                    Text(getExplorerMessage(spot: spot))
-                                                        .fontWeight(.thin)
-                                        
-                                                }
-                                                .sheet(item: $currentList) {
-                                                    //TBD
-                                                    manager.fetchSecretSpots()
-                                                } content: { spot in
-                                                    SavesView(spot: spot, vm: vm)
-                                                }
-
-                                            
-                                                
-                                                //End of HStack
-                                            }
-                                            .padding(.horizontal, 10)
                                         }
                                         
                                      //End of VStack

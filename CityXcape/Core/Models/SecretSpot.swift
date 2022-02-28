@@ -29,7 +29,7 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
     var price: Int
     var saveCounts: Int
     var isPublic: Bool
-
+    var verified: Bool = false 
     var description: String?
     
     let ownerId: String
@@ -54,6 +54,7 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
         case zipcode = "zipcode"
         case likedByUser = "did_like"
         case saveCounts = "save_count"
+        case verified = "verified"
         case viewCount = "view_count"
         case price = "price"
         case world = "world"
@@ -74,6 +75,11 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
             return 0
         }
 
+    }
+    
+    var country: String {
+        let placemark = MKPlacemark(coordinate: .init(latitude: latitude, longitude: longitude))
+        return placemark.country ?? ""
     }
     
     var distanceInFeet: Double {
@@ -146,6 +152,7 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
             ownerDisplayName = entity.ownerDisplayName ?? ""
             likedCount = Int(entity.likedCount)
             likedByUser = entity.didLike
+            verified = entity.verified
         }
     
     

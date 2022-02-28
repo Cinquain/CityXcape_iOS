@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "Scout Life.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
