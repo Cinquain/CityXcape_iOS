@@ -74,8 +74,12 @@
 		21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA28DF26D13BB40001A02E /* StreetPass.swift */; };
 		21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */; };
 		21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BBB06026E596C2000B40B3 /* AnimationController.swift */; };
+		21C7D44527CFB1D200A37DFC /* JourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C7D44427CFB1D200A37DFC /* JourneyView.swift */; };
+		21C7D44727CFB2E300A37DFC /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21C7D44627CFB2B000A37DFC /* Lato-Thin.ttf */; };
 		21C85939271122C9008224E5 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C85938271122C9008224E5 /* CardView.swift */; };
 		21C8593B271135EE008224E5 /* SwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C8593A271135EE008224E5 /* SwipeView.swift */; };
+		21C8F64B27CEA3CB00006042 /* PassportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C8F64A27CEA3CB00006042 /* PassportView.swift */; };
+		21C8F64D27CEAEA300006042 /* Savoye LET Plain1.0.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21C8F64C27CEA6AD00006042 /* Savoye LET Plain1.0.ttf */; };
 		21CBDEC227B3DD9E000F0D85 /* SignInWithEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CBDEC127B3DD9E000F0D85 /* SignInWithEmailView.swift */; };
 		21D03594270938400071C643 /* MissionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D03593270938400071C643 /* MissionRowView.swift */; };
 		21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0359527093B770071C643 /* MissionRowHeader.swift */; };
@@ -83,7 +87,9 @@
 		21D2413C27CCFE41004D3150 /* Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D2413B27CCFE41004D3150 /* Verification.swift */; };
 		21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */; };
 		21D85F5326EACF0E00502636 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F5226EACF0E00502636 /* Shimmer */; };
+		21E2861527CE56150068208E /* MyJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E2861427CE56150068208E /* MyJournal.swift */; };
 		21E4DC072753D8D9004276D2 /* CheckinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E4DC062753D8D9004276D2 /* CheckinView.swift */; };
+		21EA999A27D1006D00A13C6C /* JourneyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA999927D1006D00A13C6C /* JourneyViewModel.swift */; };
 		21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F8D9C526E8D7CC0016DF9D /* DataService.swift */; };
 		21FAC218278538550035F07F /* PreviewCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FAC217278538550035F07F /* PreviewCard.swift */; };
 		B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */; };
@@ -158,14 +164,20 @@
 		21AA28DF26D13BB40001A02E /* StreetPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetPass.swift; sourceTree = "<group>"; };
 		21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailsView.swift; sourceTree = "<group>"; };
 		21BBB06026E596C2000B40B3 /* AnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
+		21C7D44427CFB1D200A37DFC /* JourneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyView.swift; sourceTree = "<group>"; };
+		21C7D44627CFB2B000A37DFC /* Lato-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Thin.ttf"; sourceTree = "<group>"; };
 		21C85938271122C9008224E5 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		21C8593A271135EE008224E5 /* SwipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeView.swift; sourceTree = "<group>"; };
+		21C8F64A27CEA3CB00006042 /* PassportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassportView.swift; sourceTree = "<group>"; };
+		21C8F64C27CEA6AD00006042 /* Savoye LET Plain1.0.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Savoye LET Plain1.0.ttf"; sourceTree = "<group>"; };
 		21CBDEC127B3DD9E000F0D85 /* SignInWithEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithEmailView.swift; sourceTree = "<group>"; };
 		21D03593270938400071C643 /* MissionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowView.swift; sourceTree = "<group>"; };
 		21D0359527093B770071C643 /* MissionRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowHeader.swift; sourceTree = "<group>"; };
 		21D03597270945930071C643 /* MissionDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionDetails.swift; sourceTree = "<group>"; };
 		21D2413B27CCFE41004D3150 /* Verification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verification.swift; sourceTree = "<group>"; };
+		21E2861427CE56150068208E /* MyJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyJournal.swift; sourceTree = "<group>"; };
 		21E4DC062753D8D9004276D2 /* CheckinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinView.swift; sourceTree = "<group>"; };
+		21EA999927D1006D00A13C6C /* JourneyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyViewModel.swift; sourceTree = "<group>"; };
 		21F8D9C526E8D7CC0016DF9D /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		21FAC217278538550035F07F /* PreviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewCard.swift; sourceTree = "<group>"; };
 		D55E8FAFE7D475B0B8F4DBF2 /* Pods-CityXcape.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.debug.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.debug.xcconfig"; sourceTree = "<group>"; };
@@ -278,6 +290,8 @@
 				217DA73726CC90F60039A145 /* Core */,
 				218E76F226DBB08A00F720F1 /* LaunchScreen.storyboard */,
 				217E9AAA270B757500F45077 /* Assets.xcassets */,
+				21C7D44627CFB2B000A37DFC /* Lato-Thin.ttf */,
+				21C8F64C27CEA6AD00006042 /* Savoye LET Plain1.0.ttf */,
 				217884F426E1796A0066C719 /* GoogleService-Info.plist */,
 				217DA73026CC8F8C0039A145 /* Info.plist */,
 				2142EF4727827E9700EA489D /* SecretSpotContainer.xcdatamodeld */,
@@ -344,6 +358,7 @@
 				216A5CDD27AA0F31006AA7B4 /* SavesView.swift */,
 				21730A8C27C5B0380036549F /* GetStampedButton.swift */,
 				215B30DC27C860D300D627A4 /* VerificationView.swift */,
+				21C8F64A27CEA3CB00006042 /* PassportView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -406,6 +421,9 @@
 				218CADBD26D5C94300496884 /* SettingsView.swift */,
 				21793FC626D919D9001ACD1A /* SettingsEditImageView.swift */,
 				218115EC2731860700026AAD /* PublicStreetPass.swift */,
+				21E2861427CE56150068208E /* MyJournal.swift */,
+				21C7D44427CFB1D200A37DFC /* JourneyView.swift */,
+				21EA999927D1006D00A13C6C /* JourneyViewModel.swift */,
 			);
 			path = StreetPass;
 			sourceTree = "<group>";
@@ -502,6 +520,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21C7D44727CFB2E300A37DFC /* Lato-Thin.ttf in Resources */,
+				21C8F64D27CEAEA300006042 /* Savoye LET Plain1.0.ttf in Resources */,
 				218E76F326DBB08A00F720F1 /* LaunchScreen.storyboard in Resources */,
 				217884F526E1796A0066C719 /* GoogleService-Info.plist in Resources */,
 				217E9AAB270B757500F45077 /* Assets.xcassets in Resources */,
@@ -596,6 +616,7 @@
 				217C08E026D1CC4500751933 /* OnboardingViewII.swift in Sources */,
 				21730A8D27C5B0380036549F /* GetStampedButton.swift in Sources */,
 				212EE32F27A4640500232992 /* CommentsView.swift in Sources */,
+				21C8F64B27CEA3CB00006042 /* PassportView.swift in Sources */,
 				217884FE26E18CEA0066C719 /* AuthService.swift in Sources */,
 				218CADBE26D5C94300496884 /* SettingsView.swift in Sources */,
 				219842A826CF57740089CE03 /* ImagePicker.swift in Sources */,
@@ -645,6 +666,7 @@
 				2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */,
 				217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */,
 				217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */,
+				21E2861527CE56150068208E /* MyJournal.swift in Sources */,
 				2142EF4627827E6B00EA489D /* CoreDataManager.swift in Sources */,
 				215B30DD27C860D300D627A4 /* VerificationView.swift in Sources */,
 				217AA0C426FB660100B994B3 /* OnboardScreen.swift in Sources */,
@@ -654,12 +676,14 @@
 				21785D9626D547AC0049CE2D /* SettingsRowView.swift in Sources */,
 				21D2413C27CCFE41004D3150 /* Verification.swift in Sources */,
 				217C08DE26D1C58000751933 /* SignInWithAppleButton.swift in Sources */,
+				21C7D44527CFB1D200A37DFC /* JourneyView.swift in Sources */,
 				216A5CDE27AA0F31006AA7B4 /* SavesView.swift in Sources */,
 				217DA72826CC8F8B0039A145 /* CityXcapeApp.swift in Sources */,
 				21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */,
 				21CBDEC227B3DD9E000F0D85 /* SignInWithEmailView.swift in Sources */,
 				21A4697927C12417009F337D /* StampView.swift in Sources */,
 				21C85939271122C9008224E5 /* CardView.swift in Sources */,
+				21EA999A27D1006D00A13C6C /* JourneyViewModel.swift in Sources */,
 				218115ED2731860700026AAD /* PublicStreetPass.swift in Sources */,
 				21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */,
 			);

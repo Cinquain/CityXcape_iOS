@@ -218,6 +218,9 @@ class DataService {
                     "spotOwnerId": ownerId,
                     "postId": postId,
                     "city": spot.city,
+                    "name": spot.spotName,
+                    "latitude": spot.latitude,
+                    "longitude": spot.longitude,
                     "country": spot.country,
                     "time": FieldValue.serverTimestamp()
                 ]

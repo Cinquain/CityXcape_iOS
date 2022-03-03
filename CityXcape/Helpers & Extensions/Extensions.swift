@@ -29,6 +29,14 @@ extension Color {
         return Color("cx_blue")
     }
     
+    static var cx_cream: Color {
+        return Color("cx_cream")
+    }
+    
+    static var stamp_red: Color {
+        return Color("stamp_red")
+    }
+    
     static var cx_orange: Color {
         return Color("cx_orange")
     }

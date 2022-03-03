@@ -22,7 +22,7 @@ struct MissionView: View {
     let missionColor: Color = .map_green.opacity(0.8)
     let missionText: String = "Go to the location to get your stamp, \n press route when you're ready to go"
     @State private var RouteText: String = "Press checkin when you arrive"
-    
+    let insets = EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
     @State private var isRouting: Bool = false
     @State private var heading: Double = 0
  
@@ -35,6 +35,7 @@ struct MissionView: View {
             Map(spot: spot, vm: vm, header: $heading)
                 .frame(width: width, height: isRouting ? routeHeight : height)
             .colorScheme(.dark)
+            .padding(insets)
             .cornerRadius(5)
             .animation(.easeOut)
             .onAppear {
@@ -42,6 +43,7 @@ struct MissionView: View {
                     heading = 180
                 }
             }
+            
             
             Text("\(spot.spotName)")
                 .font(.title)
@@ -59,7 +61,7 @@ struct MissionView: View {
                 if isRouting {
                     vm.checkIfVerifiable(spot: spot)
                 } else {
-                    RouteText = "\(spot.distanceFromUser) miles away. Press checkin when you arrive"
+                    RouteText = "\(String(format: "%.1f", spot.distanceFromUser)) miles away. Press checkin when you arrive"
                     isRouting = true
                     vm.calculateRoute(spot: spot)
                 }

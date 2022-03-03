@@ -13,9 +13,10 @@ struct CheckinView: View {
 
     var spot: SecretSpot
     @StateObject var vm: SpotViewModel
+    
     @State private var showComments: Bool = false
-    @State var sourceType: UIImagePickerController.SourceType = .camera
-    @State var isDone: Bool = false
+    @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
+
     var body: some View {
         ZStack {
             AnimationView()
@@ -34,8 +35,16 @@ struct CheckinView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(height: 200)
                         .opacity(0.2)
+                        .overlay(
+                            Image(uiImage: vm.journeyImage)
+                                .resizable()
+                                .frame(width: 145, height: 145)
+                                .scaledToFit()
+                                .clipShape(Circle())
+                                .padding(.bottom, 25)
+                        )
                     
-                    Text("You've checked in \n Leave comment & photo for memories")
+                    Text("You've checked in! \n Leave a comment & photo")
                         .fontWeight(.thin)
                         .multilineTextAlignment(.center)
                     
@@ -117,6 +126,9 @@ struct CheckinView: View {
             
         }
         .edgesIgnoringSafeArea(.all)
+        .alert(isPresented: $vm.showAlert) {
+            return Alert(title: Text(vm.alertMessage))
+        }
     }
     
 

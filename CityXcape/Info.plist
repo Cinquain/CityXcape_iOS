@@ -30,7 +30,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1002</string>
+	<string>1043</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>comgooglemaps</string>
@@ -46,6 +46,11 @@
 	<string>CityXcape needs your location to find secret spots near you</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>CityXcape needs access to your photo library for secret spot images</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Lato-Thin.ttf</string>
+		<string>Savoye LET Plain1.0.ttf</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

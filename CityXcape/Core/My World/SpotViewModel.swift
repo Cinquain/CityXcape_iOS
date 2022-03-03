@@ -348,7 +348,7 @@ class SpotViewModel: NSObject, ObservableObject {
         guard let username = displayName else {return}
         guard let bio = bio else {return}
         guard let imageUrl = profileUrl else {return}
-        let comment = submissionText
+        self.comment = submissionText
         
         DataService.instance.postComment(postId: postId, uid: uid, username: username, bio: bio, imageUrl: imageUrl, content: submissionText) { success, commentId in
             
@@ -391,6 +391,18 @@ class SpotViewModel: NSObject, ObservableObject {
     }
     
     func getVerificationStamp(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
+        
+        if self.comment.isEmpty {
+            alertMessage = "Leave a comment for your journey"
+            showAlert = true
+            return
+        }
+        
+        if self.showPicker == false {
+            alertMessage = "Take a picture for your journey"
+            showAlert = true
+            return
+        }
         
         DataService.instance.verifySecretSpot(spot: spot, image: journeyImage, comment: comment) { [weak self] (success, message) in
             if success {

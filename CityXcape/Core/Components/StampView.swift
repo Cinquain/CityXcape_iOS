@@ -10,7 +10,6 @@ import SwiftUI
 struct StampView: View {
     
     var spot: SecretSpot
-    var color: Color = Color.random
     var date = Date.formattedDate(Date())
     
     @State private var animate: Bool = true
@@ -20,26 +19,25 @@ struct StampView: View {
         
         VStack {
             Image("Stamp")
-                .renderingMode(.template)
                 .resizable()
                 .scaledToFit()
-                .foregroundColor(color)
                 .frame(width: 300)
                 .overlay(
                     VStack(alignment: .center, spacing: 0) {
                         Text("\(date())")
                             .font(.title)
                             .fontWeight(.medium)
-                            .foregroundColor(color)
+                            .foregroundColor(.stamp_red)
                         
                         Text("\(spot.spotName)")
                             .font(.caption)
                             .fontWeight(.medium)
-                            .foregroundColor(color)
+                            .foregroundColor(.stamp_red)
                     }
-                    .rotationEffect(animate ? Angle(degrees: 0) : Angle(degrees: -2))                )
+                    .rotationEffect(Angle(degrees: -32))
+                    )
                 .rotationEffect(animate ? Angle(degrees: 0) : Angle(degrees: -45))
-                .scaleEffect(animate ? 3 : 0.8)
+                .scaleEffect(animate ? 4 : 1)
                 .animation(.easeIn(duration: 0.4))
                 .animation(.spring())
         }
