@@ -36,6 +36,7 @@ struct PassportView: View {
                     Text(verification.name)
                         .font(Font.custom("Savoye LET", size: 42))
                         .fontWeight(.thin)
+                        .foregroundColor(.black)
                     Spacer()
                 }
         
@@ -47,6 +48,7 @@ struct PassportView: View {
                 HStack {
                     Text("Your Reaction")
                         .font(Font.custom("Savoye LET", size: 35))
+                        .foregroundColor(.black)
                     Spacer()
                 }
                 .padding(.horizontal, 20)
@@ -54,6 +56,8 @@ struct PassportView: View {
                 HStack {
                     Text(verification.comment)
                         .font(Font.custom("Savoye LET", size: 25))
+                        .foregroundColor(.black)
+                    
                     Spacer()
                 }
                 .padding(.horizontal, 20)

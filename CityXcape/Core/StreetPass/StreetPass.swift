@@ -27,7 +27,7 @@ struct StreetPass: View {
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State var isPresented: Bool = false
     @State var presentSettings: Bool = false
-    
+    @State var showJourney: Bool = false
     
     var body: some View {
         
@@ -90,10 +90,45 @@ struct StreetPass: View {
                         }
                         Spacer()
                     }
+                    
+                    HStack{
+                        Spacer()
+                        Button {
+                            //TB
+                            AnalyticsService.instance.checkedJournal()
+                            showJourney.toggle()
+                        } label: {
+                            HStack {
+                                Image("graph")
+                                     .resizable()
+                                     .scaledToFit()
+                                     .frame(width: 35)
+                                VStack(alignment: .leading) {
+                                    Text("STREET")
+                                        .fontWeight(.thin)
+                                        .font(.caption)
+                                        .tracking(5)
+                                    Text("Report Card")
+                                         .font(.title2)
+                                         .fontWeight(.thin)
+                                         .foregroundColor(.white)
+                                }
+                            }
+                        
+                        }
+                        .fullScreenCover(isPresented: $showJourney) {
+                            JourneyView()
+                        }
+                        
+                        Spacer()
+                   
+                    }
+                    .padding(.top, 20)
                     Spacer()
                     
                     HStack {
                         Spacer()
+                        
                         Button(action: {
                             AnalyticsService.instance.touchedSettings()
                             presentSettings.toggle()

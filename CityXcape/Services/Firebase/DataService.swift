@@ -261,7 +261,9 @@ class DataService {
         
     }
     
-    func getVerifications(uid: String, completion: @escaping (_ verifications: [Verification]) ->()) {
+    func getVerifications(completion: @escaping (_ verifications: [Verification]) ->()) {
+        guard let uid = userId else {return}
+        
         REF_WORLD.document("verified").collection(uid).getDocuments { querySnapshot, error in
             
             var verifications: [Verification] = []

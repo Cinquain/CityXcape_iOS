@@ -114,4 +114,18 @@ class AnalyticsService {
         Analytics.logEvent("checked_verifiers", parameters: nil)
     }
     
+    func checkedJournal() {
+        Analytics.logEvent("checked_journal", parameters: nil)
+    }
+    
+    func checkedCityStamp() {
+        Analytics.logEvent("checked_city_stamp", parameters: nil)
+    }
+    
+    func checkReportCard() {
+        Analytics.logEvent("checked_report_card", parameters: nil)
+    }
+    
+  
+    
 }

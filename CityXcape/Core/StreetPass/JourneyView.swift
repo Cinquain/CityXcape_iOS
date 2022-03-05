@@ -9,7 +9,7 @@ import SwiftUI
 import MapKit
 
 struct JourneyView: View {
-    
+    @Environment(\.presentationMode) var presentationMode
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
@@ -28,102 +28,125 @@ struct JourneyView: View {
                         .fontWeight(.thin)
                         .foregroundColor(.white)
                 }
-                Text("My Journey")
-                    .font(Font.custom("Lato", size: 35))
-                    .foregroundColor(.white)
-                    .padding(.bottom, 12)
+                VStack(alignment: .leading, spacing: 0) {
+                    Text("STREET")
+                        .font(Font.custom("Lato", size: 16))
+                        .tracking(5)
+                        .foregroundColor(.white)
+                        
+                        Text("Report Card")
+                        .font(Font.custom("Lato", size: 35))
+                        .foregroundColor(.white)
+                        .padding(.bottom, 10)
+                }
                 
                 Spacer()
             }
             .padding(.horizontal, 20)
             
-            JourneyMap(vm: vm)
-                .frame(width: width, height: height)
-                .colorScheme(.dark)
-                .cornerRadius(5)
-            
+            if vm.showCollection {
+                StampCollectionView(vm: vm)
+                    .animation(.easeOut(duration: 0.5))
+            } else {
+                JourneyMap(vm: vm)
+                    .frame(width: width, height: height)
+                    .colorScheme(.dark)
+                    .cornerRadius(5)
+            }
+       
             Spacer()
                 .frame(height: width * 0.15)
            
             HStack(alignment: .center){
                 
-                VStack {
-                    Image("pin_blue")
-                        .resizable()
-                        .renderingMode(.template)
-                        .foregroundColor(.white)
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                    
-                    Image("city")
-                        .resizable()
-                        .renderingMode(.template)
-                        .foregroundColor(.white)
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                    
-                    Image("globe")
-                        .resizable()
-                        .renderingMode(.template)
-                        .foregroundColor(.white)
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                    
-                    Image("Scout Life")
-                        .resizable()
-                        .renderingMode(.template)
-                        .foregroundColor(.white)
-                        .scaledToFit()
-                        .frame(width: 50, height: 50)
-                }
-                
                 VStack(alignment: .leading) {
                     
                     Button {
                         //TBD
+                        vm.showCollection = false
                     } label: {
                         
-                    Text("90 Locations")
-                        .foregroundColor(.white)
-                        .fontWeight(.thin)
-                        .frame(width: 100, height: 50, alignment: .leading)
+                        HStack {
+                            
+                        Image("pin_blue")
+                            .resizable()
+                            .renderingMode(.template)
+                            .foregroundColor(.white)
+                            .scaledToFit()
+                            .frame(width: 50, height: 50)
+                                
+                            Text(vm.locationMessage())
+                            .foregroundColor(.white)
+                            .fontWeight(.thin)
+                            .frame(width: 100, height: 50, alignment: .leading)
+                        }
                     }
 
                     Button {
                         //TBD
+                        vm.openCollection()
                     } label: {
-                        Text("\(vm.cities.keys.count) Cities")
-                        .foregroundColor(.white)
-                        .fontWeight(.thin)
-                        .frame(width: 100, height: 50, alignment: .leading)
+                        HStack {
+                            Image("city")
+                                .resizable()
+                                .renderingMode(.template)
+                                .foregroundColor(.white)
+                                .scaledToFit()
+                                .frame(width: 50, height: 50)
+                            
+                            Text(vm.cityMessage())
+                            .foregroundColor(.white)
+                            .fontWeight(.thin)
+                            .frame(width: 100, height: 50, alignment: .leading)
+                        }
                     }
 
+  
                     
                     Button {
                         //TBD
+                        vm.openJournal()
                     } label: {
-                    Text("1 Country")
-                        .foregroundColor(.white)
-                        .fontWeight(.thin)
-                        .frame(width: 100, height: 50, alignment: .leading)
+                        HStack {
+                            
+                            Image("diary")
+                                .resizable()
+                                .renderingMode(.template)
+                                .foregroundColor(.white)
+                                .scaledToFit()
+                                .frame(width: 50)
+                                .opacity(0.8)
+                                .padding(.top, 7)
+                            
+                            Text("My Journey")
+                            .foregroundColor(.white)
+                            .fontWeight(.thin)
+                            .frame(width: 100, height: 50, alignment: .leading)
+                        }
                     }
-                    
-                    Button {
-                        //TBD
-                    } label: {
-                    Text("Travel Diary")
-                        .foregroundColor(.white)
-                        .fontWeight(.thin)
-                        .frame(width: 100, height: 50, alignment: .leading)
+                    .padding(.top, 7)
+                    .fullScreenCover(isPresented: $vm.showJournal) {
+                        MyJournal(vm: vm)
                     }
 
                 }
                 //End of button HStack
             }
   
-            
-            
             Spacer()
+            
+            Button {
+                //
+                self.presentationMode.wrappedValue.dismiss()
+            } label: {
+                Image("arrow")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 20)
+                    .opacity(0.5)
+            }
+
+            
             
        
         }
@@ -133,6 +156,9 @@ struct JourneyView: View {
                 Gradient.Stop(color: .cx_orange, location: 3.0),
             ]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
         )
+        .alert(isPresented: $vm.showAlert) {
+            return Alert(title: Text(vm.alertMessage))
+        }
 
     }
 }

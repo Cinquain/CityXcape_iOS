@@ -14,10 +14,14 @@ class JourneyViewModel: NSObject, ObservableObject {
     
     @Published var verifications: [Verification] = []
     @Published var cities: [String: Int] = [:]
+    @Published var showCollection: Bool = false
+    @Published var showJournal: Bool = false
+    @Published var alertMessage: String = ""
+    @Published var showAlert: Bool = false
 
     override init() {
         super.init()
-        createdData()
+        getVerificationForUser()
         getCities()
     }
     
@@ -32,7 +36,48 @@ class JourneyViewModel: NSObject, ObservableObject {
         }
     }
     
+    fileprivate func getVerificationForUser() {
+        DataService.instance.getVerifications { [weak self] verifications in
+            self?.verifications = verifications
+        }
+    }
     
+    
+    func openJournal() {
+        AnalyticsService.instance.checkedJournal()
+        if verifications.isEmpty {
+            alertMessage = "You have no stamps in your journal. \n Go check in a location to get stamped."
+            showAlert = true
+        } else {
+            showJournal = true
+        }
+    }
+    
+    func openCollection() {
+        AnalyticsService.instance.checkedCityStamp()
+        if cities.isEmpty {
+            alertMessage = "You have no cities stamped in your journal. \n Go check into a location to get stamped."
+            showAlert = true
+        } else {
+            showCollection = true
+        }
+    }
+    
+    func locationMessage() -> String {
+        if verifications.count > 1 {
+            return "\(verifications.count) Locations"
+        } else {
+            return "\(verifications.count) Location"
+        }
+    }
+    
+    func cityMessage() -> String {
+        if cities.keys.count > 1 {
+            return "\(cities.keys.count) Cities"
+        } else {
+            return "\(cities.keys.count) City"
+        }
+    }
     
     
     

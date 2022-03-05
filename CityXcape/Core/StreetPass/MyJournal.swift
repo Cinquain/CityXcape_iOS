@@ -20,6 +20,9 @@ struct MyJournal: View {
                 
                 ForEach(vm.verifications) { verification in
                     PassportView(verification: verification)
+                        .onTapGesture {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
                 }
             
             }

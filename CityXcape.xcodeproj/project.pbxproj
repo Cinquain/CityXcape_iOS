@@ -11,6 +11,7 @@
 		2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */; };
 		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
 		211EC5DF27C65EB800F0B0A8 /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211EC5DE27C65EB800F0B0A8 /* MissionView.swift */; };
+		211F664427D247800035DB83 /* StampCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211F664327D247800035DB83 /* StampCollectionView.swift */; };
 		2120CE66275FA254006367FE /* LocationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120CE65275FA254006367FE /* LocationCamera.swift */; };
 		212EE32F27A4640500232992 /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE32E27A4640500232992 /* CommentsView.swift */; };
 		212EE33127A4667500232992 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE33027A4667500232992 /* MessageView.swift */; };
@@ -101,6 +102,7 @@
 		2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotViewModel.swift; sourceTree = "<group>"; };
 		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
 		211EC5DE27C65EB800F0B0A8 /* MissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
+		211F664327D247800035DB83 /* StampCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampCollectionView.swift; sourceTree = "<group>"; };
 		2120CE65275FA254006367FE /* LocationCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCamera.swift; sourceTree = "<group>"; };
 		212EE32E27A4640500232992 /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 		212EE33027A4667500232992 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
@@ -359,6 +361,7 @@
 				21730A8C27C5B0380036549F /* GetStampedButton.swift */,
 				215B30DC27C860D300D627A4 /* VerificationView.swift */,
 				21C8F64A27CEA3CB00006042 /* PassportView.swift */,
+				211F664327D247800035DB83 /* StampCollectionView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -618,6 +621,7 @@
 				212EE32F27A4640500232992 /* CommentsView.swift in Sources */,
 				21C8F64B27CEA3CB00006042 /* PassportView.swift in Sources */,
 				217884FE26E18CEA0066C719 /* AuthService.swift in Sources */,
+				211F664427D247800035DB83 /* StampCollectionView.swift in Sources */,
 				218CADBE26D5C94300496884 /* SettingsView.swift in Sources */,
 				219842A826CF57740089CE03 /* ImagePicker.swift in Sources */,
 				212EE33127A4667500232992 /* MessageView.swift in Sources */,
