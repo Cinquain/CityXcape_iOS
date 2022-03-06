@@ -15,7 +15,7 @@ struct CheckinView: View {
     @StateObject var vm: SpotViewModel
     
     @State private var showComments: Bool = false
-    @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @State var sourceType: UIImagePickerController.SourceType = .camera
 
     var body: some View {
         ZStack {
@@ -44,7 +44,7 @@ struct CheckinView: View {
                                 .padding(.bottom, 25)
                         )
                     
-                    Text("You've checked in! \n Leave a comment & photo")
+                    Text("You've checked in! \n Leave a photo & comment")
                         .fontWeight(.thin)
                         .multilineTextAlignment(.center)
                     
@@ -60,7 +60,9 @@ struct CheckinView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 50)
-                                    .foregroundColor(.cx_blue.opacity(0.5))
+                                    .foregroundColor(
+                                        !vm.comment.isEmpty ?
+                                            .cx_blue.opacity(0.5) : .gray)
 
                             
                             }
@@ -81,13 +83,17 @@ struct CheckinView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 55)
-                                    .foregroundColor(.cx_blue.opacity(0.5))
+                                    .foregroundColor(
+                                        vm.addedImage ?
+                                            .cx_blue.opacity(0.5) : .gray)
                                     .padding(.bottom, 10)
+                                
                                 
                             }
                         })
                             .sheet(isPresented: $vm.showPicker) {
                                 //TBD
+                                vm.addedImage = true
                             } content: {
                                 ImagePicker(imageSelected: $vm.journeyImage, sourceType: $sourceType)
                             }

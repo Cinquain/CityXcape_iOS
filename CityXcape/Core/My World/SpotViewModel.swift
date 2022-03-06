@@ -398,7 +398,7 @@ class SpotViewModel: NSObject, ObservableObject {
             return
         }
         
-        if self.showPicker == false {
+        if self.addedImage == false {
             alertMessage = "Take a picture for your journey"
             showAlert = true
             return

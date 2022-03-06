@@ -12,7 +12,7 @@ struct StampCollectionView: View {
     let width = UIScreen.screenWidth * 0.90
     let height = UIScreen.screenHeight * 0.40
     let color = Color.random
-    
+    @State var rerender: Bool = false
     @StateObject var vm: JourneyViewModel
     
     var body: some View {
@@ -22,6 +22,7 @@ struct StampCollectionView: View {
         TabView {
             
             ForEach(vm.cities.map({$0.key}), id: \.self) { city in
+           
                 Image("Stamp")
                     .resizable()
                     .scaledToFit()
@@ -36,7 +37,6 @@ struct StampCollectionView: View {
                         )
                     
             }
-        
                 
                 
             }

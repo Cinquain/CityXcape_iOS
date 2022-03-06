@@ -22,23 +22,26 @@ class JourneyViewModel: NSObject, ObservableObject {
     override init() {
         super.init()
         getVerificationForUser()
-        getCities()
     }
     
     fileprivate func getCities() {
             
         verifications.forEach { verification in
-            if let count = cities[verification.city] { 
+
+            if let count = cities[verification.city] {
                 cities[verification.city] = count + 1
             } else {
+            
                 cities[verification.city] = 1
             }
         }
+        
     }
     
     fileprivate func getVerificationForUser() {
         DataService.instance.getVerifications { [weak self] verifications in
             self?.verifications = verifications
+            self?.getCities()
         }
     }
     

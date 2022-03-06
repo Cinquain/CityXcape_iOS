@@ -168,24 +168,25 @@ struct JourneyMap: UIViewRepresentable {
         Coordinator(mapview)
     }
     
-    var vm: JourneyViewModel
+    @StateObject var vm: JourneyViewModel
     let mapview = MKMapView()
     
     func makeUIView(context: Context) -> MKMapView {
         mapview.showsCompass = false
         mapview.isUserInteractionEnabled = true
-        
+        mapview.delegate = context.coordinator
         let annotations = vm.verifications.map({MKPointAnnotation(__coordinate: .init(latitude: $0.latitude, longitude: $0.longitude))})
         mapview.addAnnotations(annotations)
         mapview.showAnnotations(mapview.annotations.filter({$0 is MKPointAnnotation}), animated: true)
-        mapview.delegate = context.coordinator
         return mapview
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         //TBD
-        
-        
+        uiView.removeAnnotations(mapview.annotations)
+        let annotations = vm.verifications.map({MKPointAnnotation(__coordinate: .init(latitude: $0.latitude, longitude: $0.longitude))})
+        uiView.addAnnotations(annotations)
+        uiView.showAnnotations(mapview.annotations.filter({$0 is MKPointAnnotation}), animated: true)
     }
     
     

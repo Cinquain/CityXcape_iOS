@@ -224,6 +224,12 @@ struct Map: UIViewRepresentable {
             return renderer
         }
         
+        func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
+            
+            parent.centerCoordinate = userLocation.coordinate
+            
+        }
+        
         
         
     }
