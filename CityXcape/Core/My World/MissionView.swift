@@ -20,8 +20,6 @@ struct MissionView: View {
     let routeHeight = UIScreen.screenHeight * 0.65
     let routeColor: Color = .yellow
     let missionColor: Color = .map_green.opacity(0.8)
-    let missionText: String = "Go to the location to get your stamp, \n press route when you're ready to go"
-    @State private var RouteText: String = "Press checkin when you arrive"
     let insets = EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
     @State private var isRouting: Bool = false
     @State private var heading: Double = 0
@@ -51,7 +49,7 @@ struct MissionView: View {
                 .foregroundColor(.white)
                 .padding(.bottom, 5)
             
-            Text(isRouting ? RouteText : missionText)
+            Text(isRouting ? vm.routeText : vm.missionText)
                 .fontWeight(.thin)
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 30)
@@ -61,7 +59,7 @@ struct MissionView: View {
                 if isRouting {
                     vm.checkIfVerifiable(spot: spot)
                 } else {
-                    RouteText = "\(String(format: "%.1f", spot.distanceFromUser)) miles away. Press checkin when you arrive"
+                    vm.routeText = "\(String(format: "%.1f", spot.distanceFromUser)) miles away. Press checkin when you arrive"
                     isRouting = true
                     vm.calculateRoute(spot: spot)
                 }
@@ -146,7 +144,7 @@ struct Map: UIViewRepresentable {
     
     let manager = LocationService.instance.manager
     func makeCoordinator() -> Coordinator {
-        Coordinator(mapview)
+        Coordinator(self)
     }
     
     let mapview = MKMapView()
@@ -201,8 +199,8 @@ struct Map: UIViewRepresentable {
     //Coordinator pattern
     class Coordinator: NSObject, MKMapViewDelegate {
         
-        var parent: MKMapView
-        init(_ parent: MKMapView) {
+        var parent: Map
+        init(_ parent: Map) {
             self.parent = parent
         }
         
@@ -226,7 +224,7 @@ struct Map: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, didUpdate userLocation: MKUserLocation) {
             
-            parent.centerCoordinate = userLocation.coordinate
+            parent.vm.updateRoute(spot: parent.spot)
             
         }
         

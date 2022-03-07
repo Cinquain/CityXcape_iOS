@@ -17,9 +17,11 @@ class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     @Published var alertMessage: String = ""
     @Published var showAlert: Bool  = false
     @Published var showCheckin: Bool = false
-    
+
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var route: MKRoute?
+    @Published var routeText: String = "Press checkin when you arrive"
+    @Published var missionText: String = "Go to the location to get your stamp, \n press route when you're ready to go"
     
     let locationManager = LocationService.instance.manager
     let coreData = CoreDataManager.instance
@@ -90,6 +92,9 @@ class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
         
     }
     
+    func updateRoute(spot: SecretSpot) {
+       routeText = "\(String(format: "%.1f", spot.distanceFromUser)) miles away. Press checkin when you arrive"
+    }
     
     func checkIfVerifiable(spot: SecretSpot) {
         AnalyticsService.instance.touchedVerification()
@@ -99,11 +104,12 @@ class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
             let manager = LocationService.instance.manager
             let spotLocation = CLLocation(latitude: spot.latitude, longitude: spot.longitude)
             let userLocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
-            let distance = userLocation.distance(from: spotLocation) * 3.28084
+            let distance = userLocation.distance(from: spotLocation)
+            let distanceInFeet = distance * 3.28084
             let distanceInMiles = distance * 0.000621371
-            let formattedDistance = String(format: "%.0f", distanceInMiles)
+            let formattedDistance = String(format: "%.1f", distanceInMiles)
             print("\(distance) feet")
-            if distance < 200 {
+            if distanceInFeet < 200 {
                 showCheckin = true 
             } else {
                 //Distance is greater than 200 feet
