@@ -148,7 +148,6 @@ class DataService {
         
         //Save to Core Data
         self.manager.addEntity(spotId: spot.id, spotName: spot.spotName, description: spot.description ?? "", longitude: spot.longitude, latitude: spot.latitude, imageUrls: spot.imageUrls, address: spot.address, uid: spot.ownerId, ownerImageUrl: spot.ownerImageUrl, ownerDisplayName: spot.ownerDisplayName, price: Double(spot.price), viewCount: Double(spot.viewCount), saveCount: Double(spot.saveCounts), zipCode: Double(spot.zipcode), world: spot.world, isPublic: spot.isPublic, dateCreated: spot.dateCreated, city: spot.city, didLike: false, likedCount: 0)
-        self.manager.fetchSecretSpots()
         
         
         //Decrement buyer wallet remotely
@@ -165,7 +164,8 @@ class DataService {
             UserField.streetCred : FieldValue.increment(increment)
         ]
         AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
-        
+       
+
     }
     
     

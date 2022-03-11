@@ -14,37 +14,57 @@ class MyWorldViewModel: NSObject, ObservableObject {
     
     let manager = CoreDataManager.instance
     
-    @Published var secretspots: [SecretSpot] = []
+    @Published var allSpots: [SecretSpot] = []
+    @Published var currentSpots: [SecretSpot] = []
     @Published var users: [User] = []
     @Published var showOnboarding: Bool = false
+    @Published var showVisited: Bool = false 
     
     var cancellables = Set<AnyCancellable>()
     
     override init() {
         super.init()
         
-        manager.fetchSecretSpots()
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.setupSubscribers()
         }
+        setupToggleObserver()
     }
     
+        
     
     func getSavedSpotsForUser(uid: String) {
         
         DataService.instance.getSpotsFromWorld(userId: uid, coreData: true) { [weak self] returnedSpots in
+            
+            guard let strongself = self else {return}
             if returnedSpots.isEmpty {
 
                 print("No Secret Spots in array")
                 self?.showOnboarding = true
             } else {
-                self?.secretspots = returnedSpots
+                self?.allSpots = returnedSpots
+                self?.currentSpots = strongself.allSpots.filter({$0.verified == false})
                 self?.showOnboarding = false
                 print(returnedSpots)
 
             }
           
         }
+    }
+    
+    func setupToggleObserver() {
+        
+        $showVisited
+            .sink { [weak self] showVisited in
+                guard let strongSelf = self else {return}
+                if showVisited {
+                    strongSelf.currentSpots = strongSelf.allSpots.filter({$0.verified == true})
+                } else {
+                    strongSelf.currentSpots = strongSelf.allSpots.filter({$0.verified == false})
+                }
+            }
+            .store(in: &cancellables)
     }
     
     func openGoogleMap(spot: SecretSpot) {
@@ -93,14 +113,16 @@ class MyWorldViewModel: NSObject, ObservableObject {
     func setupSubscribers() {
         
         manager.$spotEntities
-            .sink { entities in
-                self.secretspots.removeAll()
-                self.secretspots = entities.map({SecretSpot(entity: $0)})
+            .sink { [weak self] entities in
+                guard let strongSelf = self else {return}
+                strongSelf.allSpots.removeAll()
+                strongSelf.allSpots = entities.map({SecretSpot(entity: $0)})
+                strongSelf.currentSpots = strongSelf.allSpots.filter({$0.verified == false})
                 print("Loading from Core Data")
-                if self.secretspots.isEmpty {
+                if strongSelf.allSpots.isEmpty {
                     print("Core Data is Empty")
-                    guard let userId = self.userId else {return}
-                    self.getSavedSpotsForUser(uid: userId)
+                    guard let userId = self?.userId else {return}
+                    self?.getSavedSpotsForUser(uid: userId)
                 }
             }
             .store(in: &cancellables)

@@ -76,18 +76,21 @@ struct PassportView: View {
                 Image("Stamp")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 300)
+                    .frame(width: 325)
                     .overlay(
                         VStack(alignment: .center, spacing: 0) {
+                            
                             Text(verification.time.formattedDate())
                                 .font(.title)
                                 .fontWeight(.medium)
                                 .foregroundColor(.stamp_red)
                             
-                            Text(verification.name)
+                            Text(verification.time.timeFormatter())
                                 .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundColor(.stamp_red)
+                            
+                        
                         }
                         .rotationEffect(Angle(degrees: -30))
                         )

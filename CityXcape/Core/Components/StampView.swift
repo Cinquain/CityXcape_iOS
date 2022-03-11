@@ -11,6 +11,7 @@ struct StampView: View {
     
     var spot: SecretSpot
     var date = Date.formattedDate(Date())
+    var hour = Date.timeFormatter(Date())
     
     @State private var animate: Bool = true
     
@@ -21,18 +22,25 @@ struct StampView: View {
             Image("Stamp")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 300)
+                .frame(width: 325)
                 .overlay(
                     VStack(alignment: .center, spacing: 0) {
-                        Text("\(date())")
-                            .font(.title)
-                            .fontWeight(.medium)
-                            .foregroundColor(.stamp_red)
                         
                         Text("\(spot.spotName)")
                             .font(.caption)
                             .fontWeight(.medium)
                             .foregroundColor(.stamp_red)
+                        
+                        Text("\(date())")
+                            .font(.title2)
+                            .fontWeight(.medium)
+                            .foregroundColor(.stamp_red)
+                        
+                        Text("\(hour())")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.stamp_red)
+                        
                     }
                     .rotationEffect(Angle(degrees: -32))
                     )

@@ -276,6 +276,7 @@ struct SpotDetailsView: View {
                                     .scaledToFit()
                                     .frame(width: 40)
                                     .padding(.leading, 4)
+                                    
                                 
                             }
                             .animation(.easeOut)
@@ -334,7 +335,7 @@ struct SpotDetailsView: View {
                             showMission.toggle()
                             
                         } label: {
-                            GetStampedButton(height: 40, width: 150)
+                            GetStampedButton(height: 50, width: 150)
                         }
                         .opacity(isEditing ? 0 : 1)
                         .fullScreenCover(isPresented: $showMission, onDismiss: {

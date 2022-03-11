@@ -17,7 +17,6 @@ struct MyWorld: View {
     @AppStorage(CurrentUserDefaults.displayName) var username: String?
 
     @StateObject var vm = MyWorldViewModel()
-    
     @State private var isPresented: Bool = false
     @Binding var selectedTab: Int
     @State var currentSpot: SecretSpot?
@@ -67,16 +66,30 @@ struct MyWorld: View {
                                 .background(Color.white)
                                 .cornerRadius(5)
                         }
-                        .foregroundColor(.black)
+                        .foregroundColor(.white)
                         .padding(.top, 40)
                         .shimmering(duration: 4)
 
 
                         Spacer()
                     } else {
+                        
+                        Picker("Picker", selection: $vm.showVisited) {
+                            Text("To Visit")
+                                .tag(false)
+                                .foregroundColor(.white)
+                            
+                            Text("Visited")
+                                .tag(true)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .foregroundColor(.cx_orange)
+                        .colorScheme(.dark)
+                        .padding()
+                        
                             ScrollView {
                                 VStack(spacing: 25) {
-                                    ForEach(vm.secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.id) { spot in
+                                    ForEach(vm.currentSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.id) { spot in
                                         
                                         VStack {
                                             
@@ -112,9 +125,10 @@ struct MyWorld: View {
             }
             .onAppear {
                 
+                manager.fetchSecretSpots()
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                     guard let streetname = username else {return}
-                    let count = vm.secretspots.count
+                    let count = vm.currentSpots.count
                     let countStatement = "You got \(count) spots to visit"
                     let worldStatement = "\(streetname)'s World"
                     
@@ -123,7 +137,7 @@ struct MyWorld: View {
                 }
               
             }
-     
+           
     }
     
     fileprivate func getExplorerMessage(spot: SecretSpot) -> String {
