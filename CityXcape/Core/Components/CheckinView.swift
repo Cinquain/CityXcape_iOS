@@ -106,8 +106,10 @@ struct CheckinView: View {
                         vm.getVerificationStamp(spot: spot) { success in
                             if success {
                                 presentationMode.wrappedValue.dismiss()
-                                vm.showStamp = true
                                 vm.showVerifiers = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                    vm.showStamp = true
+                                }
                             }
                         }
                     } label: {

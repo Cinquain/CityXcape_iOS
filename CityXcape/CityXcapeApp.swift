@@ -90,10 +90,10 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         if let followerId = userInfo["userid"] as? String,
            let profileUrl = userInfo["profileUrl"] as? String,
            let username = userInfo["userDisplayName"] as? String,
-           let streetcred = userInfo["streetCred"] as? Int,
+           let streetcred = userInfo["streetCred"] as? String,
            let bio = userInfo["biography"] as? String
         {
-            let user = User(id: followerId, displayName: username, profileImageUrl: profileUrl, bio: bio, streetCred: streetcred)
+            let user = User(id: followerId, displayName: username, profileImageUrl: profileUrl, bio: bio, streetCred: Int(streetcred))
             NotificationsManager.instance.user = user
             NotificationsManager.instance.hasNotification = true
             print("successfully converted data to string",followerId, profileUrl, username, streetcred, bio)

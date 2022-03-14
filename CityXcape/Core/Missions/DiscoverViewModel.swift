@@ -12,9 +12,12 @@ import MapKit
 
 
 class DiscoverViewModel: ObservableObject {
+    
+    
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
 
-    @Published var standardMissions: [Mission] = []
+    @Published var allspots: [SecretSpot] = []
     @Published var newSecretSpots: [SecretSpot] = []
     @Published var lastSecretSpot: String = ""
     @Published var hasPostedSpot : Bool = false
@@ -22,37 +25,28 @@ class DiscoverViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
     
+    @Published var finished: Bool = false
+    @Published var saved: Bool = false
+    @Published var passed: Bool = false
+    
     @Published var searchTerm: String = ""
     @Published var oldResults: [SecretSpot] = []
     
     init() {
        
         getNewSecretSpots()
-        
-        guard let uid = userId  else {return}
-
-        DataService.instance.getSpotsFromWorld(userId: uid, coreData: false) { spots in
-            
-            let filteredSpots = spots.filter({$0.ownerId == uid})
-            if filteredSpots.count > 0 {
-                self.hasPostedSpot = true
-            } else {
-                let missionOne = Mission(title: "Post a Secret Spot", imageurl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/CityXcape%2Fexplore.png?alt=media&token=ffd05b82-46bf-48a7-8fd7-4d221d5cbf33", description: "Help the scout community grow by posting a secret spot. Secret Spots are cool places not known by most people. You get streetCred each time a user saves your spot.", world: "ScoutLife", region: "United States", bounty: 1, owner: "CityXcape", ownerImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/CityXcape%2Fcx.png?alt=media&token=42a71d38-592b-4879-9cf5-288956240eac")
-                
-                self.standardMissions.append(missionOne)
-                self.standardMissions = self.standardMissions.unique()
-            }
-        }
     }
     
     func getNewSecretSpots() {
         
         DataService.instance.getNewSecretSpots(lastSecretSpot: lastSecretSpot) { [weak self] secretspots in
             print("This is secret spots inside mission model", secretspots)
+            self?.allspots = secretspots
             self?.newSecretSpots = secretspots
+            self?.finished = true
             
             if self?.newSecretSpots.count ?? 0 > 0 {
-                print("User has new missions of \(self?.newSecretSpots.count ?? 0)")
+                print("User has \(self?.newSecretSpots.count ?? 0) new spots")
                 self?.hasNewSpots = true
             }
             
@@ -69,6 +63,7 @@ class DiscoverViewModel: ObservableObject {
                 print("User has new missions of \(self?.newSecretSpots.count ?? 0)")
                 self?.hasNewSpots = true
             } else {
+                self?.alertMessage = "No new spot recently posted 😭"
                 self?.showAlert = true
             }
             
@@ -99,6 +94,80 @@ class DiscoverViewModel: ObservableObject {
             return "\(String(format: "%.1f", spot.distanceFromUser)) mile"
         }
     }
+    
+    
+    
+    func saveCardToUserWorld(spot: SecretSpot) {
+        guard var wallet = wallet else {return}
+        
+        if wallet >= spot.price {
+            //Decremement wallet locally
+            wallet -= spot.price
+            UserDefaults.standard.set(wallet, forKey: CurrentUserDefaults.wallet)
+            print("Saving to user's world")
+            saved = true
+            //Save to DB
+            DataService.instance.saveToUserWorld(spot: spot) { [weak self] success in
+                
+                if !success {
+                    print("Error saving to user's world")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self?.saved = false
+                    }
+                    return
+                }
+                print("successfully saved spot to user's world")
+                AnalyticsService.instance.savedSecretSpot()
+                
+                if let index = self?.newSecretSpots.firstIndex(of: spot) {
+                    self?.newSecretSpots.remove(at: index)
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self?.saved = false
+                }
+            }
+            
+         
+        } else {
+            alertMessage = "Insufficient StreetCred. Your wallet has a balance of \(wallet) STC."
+            showAlert.toggle()
+        }
+        
+    }
+    
+    
+    func dismissCard(spot: SecretSpot) {
+        print("Removing from user's world")
+        passed = true
+        
+        DataService.instance.dismissCard(spot: spot) { [weak self] success in
+            if !success {
+                print("Error dismissing card")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self?.passed.toggle()
+                }
+                return
+            }
+            
+            print("successfully dismissed card to DB")
+            AnalyticsService.instance.passedSecretSpot()
+            
+            if let index = self?.newSecretSpots.firstIndex(of: spot) {
+                self?.newSecretSpots.remove(at: index)
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self?.passed = false
+            }
+        }
+        
+   
+        
+    }
+    
+    
+    
     
     
     

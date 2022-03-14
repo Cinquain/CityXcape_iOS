@@ -335,7 +335,7 @@ struct SpotDetailsView: View {
                             showMission.toggle()
                             
                         } label: {
-                            GetStampedButton(height: 50, width: 150)
+                            GetStampedButton(height: 50, width: 200)
                         }
                         .opacity(isEditing ? 0 : 1)
                         .fullScreenCover(isPresented: $showMission, onDismiss: {

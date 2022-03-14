@@ -15,12 +15,15 @@ class PostViewModel: NSObject, ObservableObject {
     var privatePlaceHolder = "Secret Spot is Private"
     var worldDefinition = "Different World Different Spots"
     var detailsPlaceHolder = "Describe what makes this spot is special"
+    var pricePlaceHolder = " 1"
     
     @Published var spotName: String = ""
     @Published var details: String = ""
     @Published var world: String = ""
     @Published var isPublic: Bool = true
-    @Published var refresh: Bool = false 
+    @Published var refresh: Bool = false
+    @Published var priceString: String = ""
+    var price: Int = 1
 
     
     @Published var showPicker: Bool = false
@@ -41,6 +44,8 @@ class PostViewModel: NSObject, ObservableObject {
     
     
     func isReady(mapItem: MKMapItem)  {
+        
+        price = Int(priceString) ?? 1
         
         if isPublic == false {
             world = "Private"
@@ -89,7 +94,7 @@ class PostViewModel: NSObject, ObservableObject {
 
         buttonDisabled = true
 
-        DataService.instance.uploadSecretSpot(spotName: spotName, description: details, image: selectedImage, world: world, mapItem: mapItem, isPublic: isPublic) { (success) in
+        DataService.instance.uploadSecretSpot(spotName: spotName, description: details, image: selectedImage, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { (success) in
             
             if success {
                 self.buttonDisabled = false

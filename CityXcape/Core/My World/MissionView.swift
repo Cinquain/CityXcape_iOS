@@ -20,7 +20,7 @@ struct MissionView: View {
     let routeHeight = UIScreen.screenHeight * 0.65
     let routeColor: Color = .yellow
     let missionColor: Color = .map_green.opacity(0.8)
-    let insets = EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+    let insets = EdgeInsets(top: 20, leading: 30, bottom: 20, trailing: 30)
     @State private var isRouting: Bool = false
     @State private var heading: Double = 0
  
@@ -62,6 +62,11 @@ struct MissionView: View {
                     vm.routeText = "\(String(format: "%.1f", spot.distanceFromUser)) miles away. Press checkin when you arrive"
                     isRouting = true
                     vm.calculateRoute(spot: spot)
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        spotModel.openGoogleMap(spot: spot)
+                    }
+                    
                 }
              
             } label: {
@@ -92,7 +97,7 @@ struct MissionView: View {
                 }
             } label: {
                 Text("Cancel")
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundColor(.white)
             }
             

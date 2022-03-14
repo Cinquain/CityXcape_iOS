@@ -26,7 +26,7 @@ struct GetStampedButton: View {
             Text("Get Stamped")
                 .foregroundColor(.white)
                 .fontWeight(.thin)
-                .font(.caption)
+                .font(.caption2)
                 .padding()
         }
         .frame(width: width)

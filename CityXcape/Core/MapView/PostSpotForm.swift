@@ -80,6 +80,7 @@ struct PostSpotForm: View {
                             if vm.isPublic {
                                 Image("globe")
                                     .resizable()
+                                    .renderingMode(.template)
                                     .aspectRatio(contentMode: .fit)
                                     .frame(width: 40, height: 40)
                             } else {
@@ -111,21 +112,23 @@ struct PostSpotForm: View {
                     }
                     .padding(.bottom, 10)
                     
-                        
+              
                         VStack{
                             
-                            Button(action: {
-                                vm.showActionSheet.toggle()
-                            }, label: {
-                                HStack {
-                                    Image(systemName: "camera.circle.fill")
-                                        .font(.system(size: 30))
-                                        .foregroundColor(.white)
-                                    Text("Secret Spot Image")
-                                        .fontWeight(.thin)
-                                        .foregroundColor(.white)
-                                }
+                            HStack {
+                                Button(action: {
+                                    vm.showActionSheet.toggle()
+                                }, label: {
+                                    HStack {
+                                        Image(systemName: "camera.circle.fill")
+                                            .font(.system(size: 30))
+                                            .foregroundColor(.white)
+                                        Text("Secret Spot Image")
+                                            .fontWeight(.thin)
+                                            .foregroundColor(.white)
+                                    }
                             })
+                            }
                             
                             Image(uiImage: vm.selectedImage)
                                 .resizable()
@@ -135,7 +138,39 @@ struct PostSpotForm: View {
                             
                         }
                         
+                    HStack {
+                        Text("Price:")
+                            .foregroundColor(.white)
+                        TextField(" 1", text: $vm.priceString)
+                            .padding(.vertical, 5)
+                            .background(Color.white)
+                            .accentColor(.black)
+                            .keyboardType(.alphabet)
+                            .foregroundColor(.black)
+                            .frame(width: 50)
+                            .placeholder(when: vm.priceString.isEmpty) {
+                                Text(vm.pricePlaceHolder).foregroundColor(.gray)
+                        }
                         
+                        Button {
+                            vm.alertMessage = "Set the streetcred amount required for others to save this spot"
+                            vm.showAlert = true
+                        } label: {
+                            VStack(spacing: 0) {
+                                Text("STC")
+                                    .foregroundColor(.white)
+                                    .font(.subheadline)
+                                
+                                Image(systemName:"info.circle")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .foregroundColor(.white)
+                                    .frame(width: 10)
+                            }
+                        }
+
+                   
+                    }
                     
                     HStack {
                         Image(Icon.pin.rawValue)

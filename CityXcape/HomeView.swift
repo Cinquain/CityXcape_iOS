@@ -12,6 +12,7 @@ struct HomeView: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     
     @State var selectedTab: Int = 0
+    @State var newSpotCount: Int = 0
     @StateObject var manager = NotificationsManager.instance
     
     init() {
@@ -31,13 +32,14 @@ struct HomeView: View {
                 }
                 .tag(0)
             
-            DiscoverView(selectedTab: $selectedTab)
+            DiscoverView(selectedTab: $selectedTab, spotCount: $newSpotCount)
                     .tabItem {
                         Image(Icon.tabItem0.rawValue)
                             .renderingMode(.template)
                         Text(Labels.tab0.rawValue)
                     }
                     .tag(1)
+                    
             
             MapContainer(selectedTab: $selectedTab, isMission: false)
                 .edgesIgnoringSafeArea(.top)

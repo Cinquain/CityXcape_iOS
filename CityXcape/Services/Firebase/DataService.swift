@@ -32,7 +32,7 @@ class DataService {
     
     //MARK: CREATE FUNCTIONS
     
-    func uploadSecretSpot(spotName: String, description: String, image: UIImage, world: String, mapItem: MKMapItem, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
+    func uploadSecretSpot(spotName: String, description: String, image: UIImage, price: Int, world: String, mapItem: MKMapItem, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
         
         let document = REF_POST.document()
         let spotId = document.documentID
@@ -68,7 +68,7 @@ class DataService {
                     SecretSpotField.ownerId: uid,
                     SecretSpotField.ownerImageUrl: ownerImageUrl,
                     SecretSpotField.ownerDisplayName: ownerDisplayName,
-                    SecretSpotField.price: 1,
+                    SecretSpotField.price: price,
                     SecretSpotField.viewCount: 1,
                     SecretSpotField.saveCount: 1,
                     SecretSpotField.city: city,

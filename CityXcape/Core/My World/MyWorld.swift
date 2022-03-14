@@ -52,14 +52,14 @@ struct MyWorld: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(height: 250)
                         
-                        Text("Start building your world by adding \n a spot you want to visit ")
+                        Text("Start building your world by saving \n spots you want to visit ")
                             .foregroundColor(.white)
                             .font(.title3)
                             .fontWeight(.thin)
                             .multilineTextAlignment(.center)
                         
                         Button {
-                            selectedTab = 2
+                            selectedTab = 1
                         } label: {
                             Text("Post a Spot")
                                 .padding()

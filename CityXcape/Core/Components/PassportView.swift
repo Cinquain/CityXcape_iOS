@@ -80,12 +80,13 @@ struct PassportView: View {
                     .overlay(
                         VStack(alignment: .center, spacing: 0) {
                             
+                            
                             Text(verification.time.formattedDate())
                                 .font(.title)
                                 .fontWeight(.medium)
                                 .foregroundColor(.stamp_red)
                             
-                            Text(verification.time.timeFormatter())
+                            Text("\(verification.name), \(verification.time.timeFormatter())")
                                 .font(.caption)
                                 .fontWeight(.medium)
                                 .foregroundColor(.stamp_red)

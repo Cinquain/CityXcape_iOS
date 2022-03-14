@@ -50,6 +50,7 @@ struct StampView: View {
                 .animation(.spring())
         }
         .onAppear {
+            SoundManager.instance.playSound()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 animate = false
             }

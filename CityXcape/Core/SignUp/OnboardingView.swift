@@ -59,6 +59,7 @@ struct OnboardingView: View {
                     HStack {
                         Image(Icon.globe.rawValue)
                             .resizable()
+                            .renderingMode(.template)
                             .frame(width: 30, height: 30)
                         
                         Text("Sign in with Google")
