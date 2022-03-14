@@ -20,7 +20,7 @@ struct MissionView: View {
     let routeHeight = UIScreen.screenHeight * 0.65
     let routeColor: Color = .yellow
     let missionColor: Color = .map_green.opacity(0.8)
-    let insets = EdgeInsets(top: 20, leading: 30, bottom: 20, trailing: 30)
+    let insets = EdgeInsets(top: 20, leading: 50, bottom: 20, trailing: 50)
     @State private var isRouting: Bool = false
     @State private var heading: Double = 0
  
@@ -63,7 +63,7 @@ struct MissionView: View {
                     isRouting = true
                     vm.calculateRoute(spot: spot)
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                         spotModel.openGoogleMap(spot: spot)
                     }
                     

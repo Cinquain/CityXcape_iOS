@@ -107,7 +107,7 @@ struct CheckinView: View {
                             if success {
                                 presentationMode.wrappedValue.dismiss()
                                 vm.showVerifiers = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                                     vm.showStamp = true
                                 }
                             }

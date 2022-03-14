@@ -50,6 +50,19 @@ struct DiscoverView: View {
                         
                         Text("No New Spots Were Found!")
                             .fontWeight(.thin)
+                        
+                        Button {
+                            vm.refreshSecretSpots()
+                        } label: {
+                            Text("Refresh")
+                                .fontWeight(.bold)
+                                .padding()
+                                .frame(width: 120, height: 40)
+                                .foregroundColor(.cx_blue)
+                                .background(Color.white)
+                                .cornerRadius(60)
+                        }
+
                      
                     }
                     .opacity(vm.finished ? 1 : 0)
