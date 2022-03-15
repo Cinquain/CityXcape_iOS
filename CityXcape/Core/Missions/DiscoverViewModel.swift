@@ -105,7 +105,6 @@ class DiscoverViewModel: ObservableObject {
             wallet -= spot.price
             UserDefaults.standard.set(wallet, forKey: CurrentUserDefaults.wallet)
             print("Saving to user's world")
-            saved = true
             //Save to DB
             DataService.instance.saveToUserWorld(spot: spot) { [weak self] success in
                 
@@ -118,18 +117,20 @@ class DiscoverViewModel: ObservableObject {
                 }
                 print("successfully saved spot to user's world")
                 AnalyticsService.instance.savedSecretSpot()
-                
-                if let index = self?.newSecretSpots.firstIndex(of: spot) {
-                    self?.newSecretSpots.remove(at: index)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    self?.saved = false
                 }
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self?.saved = false
+                    if let index = self?.newSecretSpots.firstIndex(of: spot) {
+                        self?.newSecretSpots.remove(at: index)
+                    }
                 }
             }
             
          
         } else {
+            saved = false
             alertMessage = "Insufficient StreetCred. Your wallet has a balance of \(wallet) STC."
             showAlert.toggle()
         }
@@ -139,26 +140,25 @@ class DiscoverViewModel: ObservableObject {
     
     func dismissCard(spot: SecretSpot) {
         print("Removing from user's world")
-        passed = true
         
         DataService.instance.dismissCard(spot: spot) { [weak self] success in
             if !success {
                 print("Error dismissing card")
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self?.passed.toggle()
+                    self?.passed = false 
                 }
                 return
             }
             
             print("successfully dismissed card to DB")
             AnalyticsService.instance.passedSecretSpot()
-            
-            if let index = self?.newSecretSpots.firstIndex(of: spot) {
-                self?.newSecretSpots.remove(at: index)
-            }
+            self?.passed = false
+
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self?.passed = false
+                if let index = self?.newSecretSpots.firstIndex(of: spot) {
+                    self?.newSecretSpots.remove(at: index)
+                }
             }
         }
         

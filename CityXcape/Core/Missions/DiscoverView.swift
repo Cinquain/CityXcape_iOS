@@ -11,11 +11,12 @@ struct DiscoverView: View {
     
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @State private var isPresented: Bool = false
-    @State private var spot: SecretSpot?
-    @State private var currentIndex: Int = 0
+    @State private var currentSpot: SecretSpot?
     
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
+    @State private var passed: Bool = false
+    @State private var saved: Bool = false
     
     @Binding var selectedTab: Int
     @Binding var spotCount: Int
@@ -72,15 +73,35 @@ struct DiscoverView: View {
                     withAnimation(_: .easeOut) {
                         ForEach(vm.newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})) { spot in
 
-                            CardView(showAlert: $vm.showAlert, alertMessage: $vm.alertMessage, spot: spot)
+                            ZStack {
+                              
+                                CardView(showAlert: $vm.showAlert, alertMessage: $vm.alertMessage, spot: spot)
+                                    .animation(Animation.linear(duration: 0.4))
+
+                                
+                                LikeAnimationView(color: .cx_green, didLike: $vm.passed, size: 200)
+                                    .opacity(currentSpot == spot && vm.saved ? 1 : 0)
+                                    .animation(Animation.linear(duration: 0.5))
+
+                                    
+                                Image(systemName: "hand.thumbsdown.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 200)
+                                    .foregroundColor(.stamp_red)
+                                    .opacity(currentSpot == spot && vm.passed ? 1 : 0)
+                                    .animation(Animation.linear(duration: 0.5))
+                            }
                             
                             HStack {
                                 Button {
                                     //TBD
+                                    currentSpot = spot
+                                    vm.passed = true
                                     vm.dismissCard(spot: spot)
                                 } label: {
                                     VStack {
-                                        Image(systemName: vm.passed ? "hand.thumbsdown.fill": "hand.thumbsdown")
+                                        Image(systemName: "hand.thumbsdown")
                                             .resizable()
                                             .scaledToFit()
                                             .foregroundColor(.stamp_red)
@@ -97,10 +118,12 @@ struct DiscoverView: View {
                                 
                                 Button {
                                     //TBD
+                                    currentSpot = spot
+                                    vm.saved = true
                                     vm.saveCardToUserWorld(spot: spot)
                                 } label: {
                                     VStack {
-                                        Image(systemName:vm.saved ? "heart.fill" : "heart")
+                                        Image(systemName: "heart")
                                             .resizable()
                                             .scaledToFit()
                                             .foregroundColor(.cx_green)
@@ -117,7 +140,7 @@ struct DiscoverView: View {
                             .padding(.horizontal, 20)
                             
                             Divider()
-                                .frame(height: 1)
+                                .frame(height: 0.5)
                                 .background(Color.white)
                                 .padding(.bottom, 10)
 

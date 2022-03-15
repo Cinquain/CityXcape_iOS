@@ -10,6 +10,8 @@ import SwiftUI
 struct LikeAnimationView: View {
     
     @State private var animate: Bool = true
+    var color: Color
+    
     @Binding var didLike: Bool {
         didSet {
             animate = false
@@ -24,17 +26,17 @@ struct LikeAnimationView: View {
         
         ZStack {
             Image(systemName: "heart.fill")
-                .foregroundColor(didLike ? .red : .red.opacity(0.3))
+                .foregroundColor(didLike ? .red : color.opacity(0.3))
                 .font(.system(size: size))
                 .scaleEffect(animate ? 1.0 : 0.0)
             
             Image(systemName: "heart.fill")
-                .foregroundColor(didLike ? .red : .red.opacity(0.3))
+                .foregroundColor(didLike ? .red : color.opacity(0.3))
                 .font(.system(size: size * 0.50))
                 .scaleEffect(animate ? 1.0 : 0.0)
             
             Image(systemName: "heart.fill")
-                .foregroundColor(didLike ? .red : .red.opacity(0.3))
+                .foregroundColor(didLike ? .red : color.opacity(0.3))
                 .font(.system(size: size * 0.25 ))
                 .scaleEffect(animate ? 1.0 : 0.0)
             
@@ -50,7 +52,7 @@ struct LikeAnimationView_Previews: PreviewProvider {
     
     @State static var animate: Bool = false
     static var previews: some View {
-        LikeAnimationView(didLike: $animate, size: 200)
+        LikeAnimationView(color: .red, didLike: $animate, size: 200)
             .previewLayout(.sizeThatFits)
     }
 }

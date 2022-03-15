@@ -236,7 +236,7 @@ struct SpotDetailsView: View {
                             vm.pressLike(postId: spot.id)
                         } label: {
                             VStack(spacing: 0) {
-                                LikeAnimationView(didLike: $vm.didLike, size: 40)
+                                LikeAnimationView(color: .red, didLike: $vm.didLike, size: 40)
                                     .padding(.top, -3)
                                 
                             }
