@@ -37,6 +37,7 @@
 		2178C4512719030600B4C395 /* CardStack in Frameworks */ = {isa = PBXBuildFile; productRef = 2178C4502719030600B4C395 /* CardStack */; };
 		2178C4532719166800B4C395 /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2178C4522719166800B4C395 /* TextFieldView.swift */; };
 		21793FC726D919D9001ACD1A /* SettingsEditImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21793FC626D919D9001ACD1A /* SettingsEditImageView.swift */; };
+		2179853927E362D40002CEBA /* Leaderboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2179853827E362D40002CEBA /* Leaderboard.swift */; };
 		217AA0C226FB5C5300B994B3 /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217AA0C126FB5C5300B994B3 /* Onboarding.swift */; };
 		217AA0C426FB660100B994B3 /* OnboardScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217AA0C326FB660100B994B3 /* OnboardScreen.swift */; };
 		217B770B26DD007C000A78C9 /* PostSpotForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217B770A26DD007C000A78C9 /* PostSpotForm.swift */; };
@@ -77,6 +78,8 @@
 		21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA28DF26D13BB40001A02E /* StreetPass.swift */; };
 		21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */; };
 		21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BBB06026E596C2000B40B3 /* AnimationController.swift */; };
+		21C1628F27E4B933001DC9BF /* RankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1628E27E4B933001DC9BF /* RankingView.swift */; };
+		21C1629127E4BF1A001DC9BF /* BarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1629027E4BF1A001DC9BF /* BarView.swift */; };
 		21C7D44527CFB1D200A37DFC /* JourneyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C7D44427CFB1D200A37DFC /* JourneyView.swift */; };
 		21C7D44727CFB2E300A37DFC /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21C7D44627CFB2B000A37DFC /* Lato-Thin.ttf */; };
 		21C85939271122C9008224E5 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C85938271122C9008224E5 /* CardView.swift */; };
@@ -88,6 +91,9 @@
 		21D2413C27CCFE41004D3150 /* Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D2413B27CCFE41004D3150 /* Verification.swift */; };
 		21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */; };
 		21D85F5326EACF0E00502636 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F5226EACF0E00502636 /* Shimmer */; };
+		21DCF82327E60906000BD1B3 /* Ranking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82227E60906000BD1B3 /* Ranking.swift */; };
+		21DCF82527E61043000BD1B3 /* StreetReportCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82427E61043000BD1B3 /* StreetReportCard.swift */; };
+		21DCF82727E63090000BD1B3 /* Follower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82627E63090000BD1B3 /* Follower.swift */; };
 		21E2861527CE56150068208E /* MyJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E2861427CE56150068208E /* MyJournal.swift */; };
 		21E4DC072753D8D9004276D2 /* CheckinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E4DC062753D8D9004276D2 /* CheckinView.swift */; };
 		21EA999A27D1006D00A13C6C /* JourneyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA999927D1006D00A13C6C /* JourneyViewModel.swift */; };
@@ -128,6 +134,7 @@
 		217884FD26E18CEA0066C719 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		2178C4522719166800B4C395 /* TextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldView.swift; sourceTree = "<group>"; };
 		21793FC626D919D9001ACD1A /* SettingsEditImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditImageView.swift; sourceTree = "<group>"; };
+		2179853827E362D40002CEBA /* Leaderboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leaderboard.swift; sourceTree = "<group>"; };
 		217AA0C126FB5C5300B994B3 /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		217AA0C326FB660100B994B3 /* OnboardScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardScreen.swift; sourceTree = "<group>"; };
 		217B770A26DD007C000A78C9 /* PostSpotForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostSpotForm.swift; sourceTree = "<group>"; };
@@ -168,6 +175,8 @@
 		21AA28DF26D13BB40001A02E /* StreetPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetPass.swift; sourceTree = "<group>"; };
 		21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailsView.swift; sourceTree = "<group>"; };
 		21BBB06026E596C2000B40B3 /* AnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
+		21C1628E27E4B933001DC9BF /* RankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingView.swift; sourceTree = "<group>"; };
+		21C1629027E4BF1A001DC9BF /* BarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarView.swift; sourceTree = "<group>"; };
 		21C7D44427CFB1D200A37DFC /* JourneyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyView.swift; sourceTree = "<group>"; };
 		21C7D44627CFB2B000A37DFC /* Lato-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Lato-Thin.ttf"; sourceTree = "<group>"; };
 		21C85938271122C9008224E5 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
@@ -177,6 +186,9 @@
 		21D03593270938400071C643 /* MissionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowView.swift; sourceTree = "<group>"; };
 		21D0359527093B770071C643 /* MissionRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowHeader.swift; sourceTree = "<group>"; };
 		21D2413B27CCFE41004D3150 /* Verification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verification.swift; sourceTree = "<group>"; };
+		21DCF82227E60906000BD1B3 /* Ranking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ranking.swift; sourceTree = "<group>"; };
+		21DCF82427E61043000BD1B3 /* StreetReportCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetReportCard.swift; sourceTree = "<group>"; };
+		21DCF82627E63090000BD1B3 /* Follower.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Follower.swift; sourceTree = "<group>"; };
 		21E2861427CE56150068208E /* MyJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyJournal.swift; sourceTree = "<group>"; };
 		21E4DC062753D8D9004276D2 /* CheckinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinView.swift; sourceTree = "<group>"; };
 		21EA999927D1006D00A13C6C /* JourneyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyViewModel.swift; sourceTree = "<group>"; };
@@ -372,6 +384,9 @@
 				215B30DC27C860D300D627A4 /* VerificationView.swift */,
 				21C8F64A27CEA3CB00006042 /* PassportView.swift */,
 				211F664327D247800035DB83 /* StampCollectionView.swift */,
+				2179853827E362D40002CEBA /* Leaderboard.swift */,
+				21C1628E27E4B933001DC9BF /* RankingView.swift */,
+				21C1629027E4BF1A001DC9BF /* BarView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -420,6 +435,8 @@
 				214A4A3A278D340300B5950A /* User.swift */,
 				212EE33227A4689F00232992 /* Comment.swift */,
 				21D2413B27CCFE41004D3150 /* Verification.swift */,
+				21DCF82227E60906000BD1B3 /* Ranking.swift */,
+				21DCF82627E63090000BD1B3 /* Follower.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -435,6 +452,7 @@
 				21E2861427CE56150068208E /* MyJournal.swift */,
 				21C7D44427CFB1D200A37DFC /* JourneyView.swift */,
 				21EA999927D1006D00A13C6C /* JourneyViewModel.swift */,
+				21DCF82427E61043000BD1B3 /* StreetReportCard.swift */,
 			);
 			path = StreetPass;
 			sourceTree = "<group>";
@@ -645,6 +663,7 @@
 				21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */,
 				217DAF3426CD97D400A395BC /* SpotRowHeader.swift in Sources */,
 				2178C4532719166800B4C395 /* TextFieldView.swift in Sources */,
+				21C1628F27E4B933001DC9BF /* RankingView.swift in Sources */,
 				21469EC327B68B5600626FEE /* EmailSigninViewModel.swift in Sources */,
 				21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */,
 				219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */,
@@ -658,6 +677,7 @@
 				217884F926E17B870066C719 /* SignInWithApple.swift in Sources */,
 				212EE33327A4689F00232992 /* Comment.swift in Sources */,
 				217C08D726D1AFF400751933 /* MapContainer.swift in Sources */,
+				2179853927E362D40002CEBA /* Leaderboard.swift in Sources */,
 				21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */,
 				217AA0C226FB5C5300B994B3 /* Onboarding.swift in Sources */,
 				21793FC726D919D9001ACD1A /* SettingsEditImageView.swift in Sources */,
@@ -673,11 +693,13 @@
 				217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */,
 				2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */,
 				217DA73A26CC95A50039A145 /* Extensions.swift in Sources */,
+				21DCF82727E63090000BD1B3 /* Follower.swift in Sources */,
 				217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */,
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,
 				2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */,
 				217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */,
 				217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */,
+				21C1629127E4BF1A001DC9BF /* BarView.swift in Sources */,
 				21E2861527CE56150068208E /* MyJournal.swift in Sources */,
 				2142EF4627827E6B00EA489D /* CoreDataManager.swift in Sources */,
 				215B30DD27C860D300D627A4 /* VerificationView.swift in Sources */,
@@ -687,10 +709,12 @@
 				218115EB27315E9400026AAD /* NotificationsManager.swift in Sources */,
 				21785D9626D547AC0049CE2D /* SettingsRowView.swift in Sources */,
 				21D2413C27CCFE41004D3150 /* Verification.swift in Sources */,
+				21DCF82527E61043000BD1B3 /* StreetReportCard.swift in Sources */,
 				217C08DE26D1C58000751933 /* SignInWithAppleButton.swift in Sources */,
 				21C7D44527CFB1D200A37DFC /* JourneyView.swift in Sources */,
 				216A5CDE27AA0F31006AA7B4 /* SavesView.swift in Sources */,
 				217DA72826CC8F8B0039A145 /* CityXcapeApp.swift in Sources */,
+				21DCF82327E60906000BD1B3 /* Ranking.swift in Sources */,
 				21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */,
 				21CBDEC227B3DD9E000F0D85 /* SignInWithEmailView.swift in Sources */,
 				21A4697927C12417009F337D /* StampView.swift in Sources */,
@@ -837,7 +861,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -862,7 +886,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.1;
+				MARKETING_VERSION = 1.3.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

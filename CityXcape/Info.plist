@@ -28,9 +28,10 @@
 				<string>com.googleusercontent.apps.624263008484-dcalalrv49ro209h9km34t67gs8jv094</string>
 			</array>
 		</dict>
+		<dict/>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1211</string>
+	<string>1241</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>comgooglemaps</string>

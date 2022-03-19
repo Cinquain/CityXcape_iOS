@@ -29,7 +29,8 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
     var price: Int
     var saveCounts: Int
     var isPublic: Bool
-    var verified: Bool = false 
+    var verified: Bool = false
+    var verifierCount: Int = 0
     var description: String?
     
     let ownerId: String
@@ -107,7 +108,7 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
     }
     
     
-    init(postId: String, spotName: String, imageUrls: [String], longitude: Double, latitude: Double, address: String, description: String, city: String, zipcode: Int, world: String, dateCreated: Date, price: Int, viewCount: Int, saveCounts: Int, isPublic: Bool, ownerId: String, ownerDisplayName: String, ownerImageUrl: String, likeCount: Int, didLike: Bool) {
+    init(postId: String, spotName: String, imageUrls: [String], longitude: Double, latitude: Double, address: String, description: String, city: String, zipcode: Int, world: String, dateCreated: Date, price: Int, viewCount: Int, saveCounts: Int, isPublic: Bool, ownerId: String, ownerDisplayName: String, ownerImageUrl: String, likeCount: Int, didLike: Bool, verifierCount: Int) {
 
             self.id = postId
             self.spotName = spotName
@@ -129,6 +130,7 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
             self.price = price
             self.likedCount = likeCount
             self.likedByUser = didLike
+            self.verifierCount = verifierCount
         }
         
         init(entity: SecretSpotEntity) {
@@ -144,6 +146,7 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
             ownerImageUrl = entity.ownerImageUrl ?? ""
             isPublic = entity.isPublic
             saveCounts = Int(entity.saveCount)
+            verifierCount = Int(entity.verifierCount)
             viewCount = Int(entity.viewCount)
             price = Int(entity.price)
             world = entity.world ?? ""
@@ -153,6 +156,7 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
             likedCount = Int(entity.likedCount)
             likedByUser = entity.didLike
             verified = entity.verified
+            verifierCount = Int(entity.verifierCount)
         }
     
     

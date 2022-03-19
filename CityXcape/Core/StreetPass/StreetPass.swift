@@ -28,6 +28,7 @@ struct StreetPass: View {
     @State var isPresented: Bool = false
     @State var presentSettings: Bool = false
     @State var showJourney: Bool = false
+    @State var showStats: Bool = false
     
     var body: some View {
         
@@ -99,16 +100,13 @@ struct StreetPass: View {
                             showJourney.toggle()
                         } label: {
                             HStack {
-                                Image("graph")
+                                Image("Scout Life")
                                      .resizable()
                                      .scaledToFit()
                                      .frame(width: 35)
                                 VStack(alignment: .leading) {
-                                    Text("STREET")
-                                        .fontWeight(.thin)
-                                        .font(.caption)
-                                        .tracking(5)
-                                    Text("Report Card")
+                             
+                                    Text("My Journey")
                                          .font(.title2)
                                          .fontWeight(.thin)
                                          .foregroundColor(.white)
@@ -124,6 +122,39 @@ struct StreetPass: View {
                    
                     }
                     .padding(.top, 20)
+                    
+                    HStack {
+                        Spacer()
+                        
+                        Button {
+                            //Show Stats
+                        } label: {
+                            HStack {
+                               Image("graph")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 30)
+                               VStack(alignment: .leading) {
+                                   Text("STREET")
+                                       .fontWeight(.thin)
+                                       .font(.caption)
+                                       .tracking(5)
+                                   Text("Report Card")
+                                        .font(.title2)
+                                        .fontWeight(.thin)
+                                        .foregroundColor(.white)
+                               }
+                        }
+                        }
+                        .fullScreenCover(isPresented: $showStats) {
+                            //Some view
+                        }
+                        
+                        Spacer()
+                    }
+                    
+                    
+                    
                     Spacer()
                     
                     HStack {

@@ -28,16 +28,14 @@ struct JourneyView: View {
                         .fontWeight(.thin)
                         .foregroundColor(.white)
                 }
+                
                 VStack(alignment: .leading, spacing: 0) {
-                    Text("STREET")
-                        .font(Font.custom("Lato", size: 16))
-                        .tracking(5)
-                        .foregroundColor(.white)
-                        
-                        Text("Report Card")
+                   
+                        Text("My Journey")
                         .font(Font.custom("Lato", size: 35))
                         .foregroundColor(.white)
                         .padding(.bottom, 10)
+                    
                 }
                 
                 Spacer()
@@ -109,7 +107,7 @@ struct JourneyView: View {
                     } label: {
                         HStack {
                             
-                            Image("diary")
+                            Image("Stamp")
                                 .resizable()
                                 .renderingMode(.template)
                                 .foregroundColor(.white)
@@ -118,7 +116,7 @@ struct JourneyView: View {
                                 .opacity(0.8)
                                 .padding(.top, 7)
                             
-                            Text("My Journey")
+                            Text("Moments")
                             .foregroundColor(.white)
                             .fontWeight(.thin)
                             .frame(width: 100, height: 50, alignment: .leading)

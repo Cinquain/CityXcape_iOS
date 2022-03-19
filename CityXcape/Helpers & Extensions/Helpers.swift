@@ -45,6 +45,7 @@ struct SecretSpotField {
     static let spotImageUrls = "spotImageUrls"
     static let likeCount = "like_count" //Int
     static let likedBy = "liked_by" //Array
+    static let verifierCount = "verifier_count"
 }
 
 struct CommentField {
@@ -124,6 +125,11 @@ enum SecretSpotImageNumb {
     case one
     case two
     case three
+}
+
+enum Path: String {
+    case savedBy
+    case verifiers
 }
 
 struct StandardButton: ViewModifier {

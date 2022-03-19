@@ -29,6 +29,7 @@ class DataService {
     private var REF_USERS = DB_BASE.collection("users")
     private var REF_REPORTS = DB_BASE.collection("reports")
     private var REF_WORLD = DB_BASE.collection("world")
+    private var REF_FOLLOWERS = DB_BASE.collection("followers")
     
     //MARK: CREATE FUNCTIONS
     
@@ -75,10 +76,11 @@ class DataService {
                     SecretSpotField.zipcode: zipCode,
                     SecretSpotField.world: world,
                     SecretSpotField.isPublic: isPublic,
-                    SecretSpotField.dateCreated: FieldValue.serverTimestamp()
+                    SecretSpotField.dateCreated: FieldValue.serverTimestamp(),
+                    SecretSpotField.verifierCount: 0,
                 ]
                 
-                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: city, didLike: false, likedCount: 0)
+                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: city, didLike: false, likedCount: 0, verifierCount: 0)
                 self.manager.fetchSecretSpots()
                 
                 document.setData(spotData) { (error) in
@@ -147,7 +149,7 @@ class DataService {
         }
         
         //Save to Core Data
-        self.manager.addEntity(spotId: spot.id, spotName: spot.spotName, description: spot.description ?? "", longitude: spot.longitude, latitude: spot.latitude, imageUrls: spot.imageUrls, address: spot.address, uid: spot.ownerId, ownerImageUrl: spot.ownerImageUrl, ownerDisplayName: spot.ownerDisplayName, price: Double(spot.price), viewCount: Double(spot.viewCount), saveCount: Double(spot.saveCounts), zipCode: Double(spot.zipcode), world: spot.world, isPublic: spot.isPublic, dateCreated: spot.dateCreated, city: spot.city, didLike: false, likedCount: 0)
+        self.manager.addEntity(spotId: spot.id, spotName: spot.spotName, description: spot.description ?? "", longitude: spot.longitude, latitude: spot.latitude, imageUrls: spot.imageUrls, address: spot.address, uid: spot.ownerId, ownerImageUrl: spot.ownerImageUrl, ownerDisplayName: spot.ownerDisplayName, price: Double(spot.price), viewCount: Double(spot.viewCount), saveCount: Double(spot.saveCounts), zipCode: Double(spot.zipcode), world: spot.world, isPublic: spot.isPublic, dateCreated: spot.dateCreated, city: spot.city, didLike: false, likedCount: 0, verifierCount: spot.verifierCount)
         
         
         //Decrement buyer wallet remotely
@@ -167,6 +169,7 @@ class DataService {
        
 
     }
+    
     
     
     func postComment(postId: String, uid: String, username: String, bio: String, imageUrl: String, content: String, completion: @escaping (_ success: Bool, _ commentId: String?) -> ()) {
@@ -226,6 +229,13 @@ class DataService {
                 ]
                 
                 self?.REF_WORLD.document("verified").collection(uid).document(postId).setData(checkinData)
+                
+                let checkinIncrement: Int64 = 1
+                let fieldUpdate = [
+                    SecretSpotField.verifierCount: checkinIncrement
+                ]
+                
+                self?.REF_POST.document(postId).updateData(fieldUpdate)
                 
                 self?.REF_POST.document(postId).collection("verifiers").document(uid).setData(checkinData) { error in
                     
@@ -449,6 +459,7 @@ class DataService {
                             if let likedArray = data?[SecretSpotField.likedBy] as? [String] {
                                 didLike = likedArray.contains(uid)
                             }
+                            let verifierCount = data?[SecretSpotField.verifierCount] as? Int ?? 0
                             let date = dateCreated.dateValue()
                             var spotImageUrls = [imageUrl]
                             
@@ -459,11 +470,11 @@ class DataService {
                                 }
                             }
 
-                            let secretSpot = SecretSpot(postId: postId, spotName: name, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likedCount, didLike: didLike)
+                            let secretSpot = SecretSpot(postId: postId, spotName: name, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likedCount, didLike: didLike, verifierCount: verifierCount)
                             secretSpots.append(secretSpot)
                             
                             if coreData {
-                                self.manager.addEntity(spotId: postId, spotName: name, description: description, longitude: longitude, latitude: latitude, imageUrls: spotImageUrls, address: address, uid: ownerId, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: Double(price), viewCount: Double(viewCount), saveCount: Double(saveCounts), zipCode: Double(zipcode), world: world, isPublic: isPublic, dateCreated: date, city: city, didLike: didLike, likedCount: likedCount)
+                                self.manager.addEntity(spotId: postId, spotName: name, description: description, longitude: longitude, latitude: latitude, imageUrls: spotImageUrls, address: address, uid: ownerId, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: Double(price), viewCount: Double(viewCount), saveCount: Double(saveCounts), zipCode: Double(zipcode), world: world, isPublic: isPublic, dateCreated: date, city: city, didLike: didLike, likedCount: likedCount, verifierCount: verifierCount)
                             }
 //
                         }
@@ -542,6 +553,7 @@ class DataService {
                 if let likedArrays = document.get(SecretSpotField.likedBy) as? [String] {
                     likedByUser = likedArrays.contains(uid)
                 }
+                let verifierCount = document.get(SecretSpotField.verifierCount) as? Int ?? 0
                 
                 
                 let additionalImages = document.get(SecretSpotField.spotImageUrls) as? [String] ?? []
@@ -550,7 +562,7 @@ class DataService {
                     spotImageUrls.append(contentsOf: additionalImages)
                 }
 
-                let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likeCount, didLike: likedByUser)
+                let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likeCount, didLike: likedByUser, verifierCount: verifierCount)
                 self.manager.updatewithSpot(spot: secretSpot)
                 completion(secretSpot)
                 
@@ -587,6 +599,7 @@ class DataService {
                     
                     let postId = document.documentID
                     let date = dateCreated.dateValue()
+                    let verifierCount = document.get(SecretSpotField.verifierCount) as? Int ?? 0
                     let additionalImages = document.get(SecretSpotField.spotImageUrls) as? [String] ?? []
                     var spotImageUrls = [imageUrl]
                     if !additionalImages.isEmpty {
@@ -598,7 +611,7 @@ class DataService {
                         didLike = likedArray.contains(uid)
                     }
 
-                    let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likedCount, didLike: didLike)
+                    let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likedCount, didLike: didLike, verifierCount: verifierCount)
                     secretSpots.append(secretSpot)
                 }
             }
@@ -768,6 +781,25 @@ class DataService {
         }
     }
     
+    
+    func getTotalSaveCounts() -> Int {
+        guard let uid = userId else {return 0}
+        let userSpots: [SecretSpot] = manager.spotEntities.map({SecretSpot(entity: $0)}).filter({$0.ownerId == uid})
+        return userSpots.reduce(0, {return $0 + $1.saveCounts})
+    }
+    
+    func getTotalViewCount() -> Int {
+        guard let uid = userId else {return 0}
+        let userSpots: [SecretSpot] = manager.spotEntities.map({SecretSpot(entity: $0)}).filter({$0.ownerId == uid})
+        return userSpots.reduce(0, {return $0 + $1.viewCount})
+    }
+    
+    func getTotalVerifications() -> Int {
+        guard let uid = userId else {return 0}
+        let userSpots: [SecretSpot] = manager.spotEntities.map({SecretSpot(entity: $0)}).filter({$0.ownerId == uid})
+        return userSpots.reduce(0, {return $0 + $1.verifierCount})
+    }
+           
     
     //MARK: UPDATE FUNCTIONS
     
