@@ -5,12 +5,15 @@
 //  Created by James Allan on 8/19/21.
 //
 
-import Foundation
+import Firebase
 import MapKit
 import CoreLocation
 import SwiftUI
 
-struct SecretSpot:  Hashable, Codable, Identifiable {
+
+
+
+struct SecretSpot:  Hashable, Identifiable {
     
     let id: String
     var spotName: String
@@ -21,16 +24,17 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
     var city: String
     var zipcode: Int
     var world: String
-    var likedCount: Int
     var likedByUser: Bool
     
     let dateCreated: Date
-    var viewCount: Int
     var price: Int
     var saveCounts: Int
     var isPublic: Bool
-    var verified: Bool = false
-    var verifierCount: Int = 0
+    var verified: Bool
+    var likedCount: Int
+    var viewCount: Int
+    var commentCount: Int
+    var verifierCount: Int
     var description: String?
     
     let ownerId: String
@@ -38,29 +42,6 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
     var ownerImageUrl: String
     
 
-    enum CodingKeys: String, CodingKey {
-        case id = "spot_id"
-        case spotName = "spot_name"
-        case imageUrls = "spot_image_url"
-        case longitude = "longitude"
-        case latitude = "latitude"
-        case description = "description"
-        case city = "city"
-        case dateCreated = "date_created"
-        case likedCount = "like_count"
-        case ownerId = "owner_id"
-        case ownerDisplayName = "ownerDisplayName"
-        case ownerImageUrl = "ownerImageUrl"
-        case address = "address"
-        case zipcode = "zipcode"
-        case likedByUser = "did_like"
-        case saveCounts = "save_count"
-        case verified = "verified"
-        case viewCount = "view_count"
-        case price = "price"
-        case world = "world"
-        case isPublic = "public"
-    }
     
     
     var distanceFromUser: Double {
@@ -108,7 +89,7 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
     }
     
     
-    init(postId: String, spotName: String, imageUrls: [String], longitude: Double, latitude: Double, address: String, description: String, city: String, zipcode: Int, world: String, dateCreated: Date, price: Int, viewCount: Int, saveCounts: Int, isPublic: Bool, ownerId: String, ownerDisplayName: String, ownerImageUrl: String, likeCount: Int, didLike: Bool, verifierCount: Int) {
+    init(postId: String, spotName: String, imageUrls: [String], longitude: Double, latitude: Double, address: String, description: String, city: String, zipcode: Int, world: String, dateCreated: Date, price: Int, viewCount: Int, saveCounts: Int, isPublic: Bool, ownerId: String, ownerDisplayName: String, ownerImageUrl: String, likeCount: Int, verifierCount: Int, commentCount: Int, didLike: Bool, verified: Bool) {
 
             self.id = postId
             self.spotName = spotName
@@ -129,8 +110,10 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
             self.ownerImageUrl = ownerImageUrl
             self.price = price
             self.likedCount = likeCount
-            self.likedByUser = didLike
             self.verifierCount = verifierCount
+            self.commentCount = commentCount
+            self.likedByUser  = didLike
+            self.verified = verified
         }
         
         init(entity: SecretSpotEntity) {
@@ -157,7 +140,50 @@ struct SecretSpot:  Hashable, Codable, Identifiable {
             likedByUser = entity.didLike
             verified = entity.verified
             verifierCount = Int(entity.verifierCount)
+            commentCount = Int(entity.commentCount)
         }
+    
+    
+    init(data: [String: Any]?) {
+        
+        let dateCreated = data?[SecretSpotField.dateCreated] as? Timestamp ?? Timestamp()
+        let imageUrl = data?[SecretSpotField.spotImageUrl] as? String ?? ""
+        let additionalImages = data?[SecretSpotField.spotImageUrls] as? [String] ?? []
+        
+        let date = dateCreated.dateValue()
+        var spotImageUrls = [imageUrl]
+        if !additionalImages.isEmpty {
+            additionalImages.forEach { url in
+                spotImageUrls.append(url)
+            }
+        }
+        
+        self.id = data?[SecretSpotField.spotId] as? String  ?? ""
+        self.spotName = data?[SecretSpotField.spotName] as? String ?? ""
+        self.imageUrls = spotImageUrls
+        self.longitude = data?[SecretSpotField.longitude] as? Double ?? 0
+        self.latitude = data?[SecretSpotField.latitude] as? Double ?? 0
+        self.price = data?[SecretSpotField.price] as? Int ?? 0
+        self.description = data?[SecretSpotField.description] as? String ?? ""
+        self.city = data?[SecretSpotField.city] as? String ?? ""
+        self.dateCreated = date
+        self.ownerId = data?[SecretSpotField.ownerId] as? String ?? ""
+        self.ownerDisplayName = data?[SecretSpotField.ownerDisplayName] as? String ?? ""
+        self.ownerImageUrl = data?[SecretSpotField.ownerImageUrl] as? String ?? ""
+        self.address = data?[SecretSpotField.address] as? String ?? ""
+        self.zipcode = data?[SecretSpotField.zipcode] as? Int ?? 0
+        self.saveCounts = data?[SecretSpotField.saveCount] as? Int ?? 0
+        self.viewCount = data?[SecretSpotField.viewCount] as? Int ?? 0
+        self.isPublic = data?[SecretSpotField.isPublic] as? Bool ?? false
+        self.world = data?[SecretSpotField.world] as? String ?? ""
+        self.likedCount = data?[SecretSpotField.likeCount] as? Int ?? 0
+        self.verifierCount = data?[SecretSpotField.verifierCount] as? Int ?? 0
+        self.commentCount = data?[SecretSpotField.commentCount] as? Int ?? 0
+        self.likedByUser = false
+        self.verified = false
+    }
+    
+    static let spot = SecretSpot(postId: "disnf", spotName: "The Magic Garden", imageUrls: ["https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2F3rD6bKzwCbOEpfU51sYF%2F1?alt=media&token=2c45942e-5a44-4dd1-aa83-a678bb848c4b","https://cdn10.phillymag.com/wp-content/uploads/sites/3/2018/07/Emily-Smith-Cory-J-Popp-900x600.jpg", "https://apricotabroaddotco.files.wordpress.com/2019/03/philadelphia-magic-gardens.jpg"], longitude: 1010, latitude: 01202, address: "1229 Spann avenue", description: "This is the best secret spot in the world. Learn all about fractal mathematics", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), price: 1, viewCount: 1, saveCounts: 1, isPublic: true, ownerId: "q4SALDGpjtZLIVtVibHMQa8NpwD3", ownerDisplayName: "Cinquain", ownerImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", likeCount: 10, verifierCount: 0, commentCount: 0, didLike: true, verified: false)
     
     
 }

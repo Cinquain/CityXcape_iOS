@@ -30,6 +30,7 @@ class DataService {
     private var REF_REPORTS = DB_BASE.collection("reports")
     private var REF_WORLD = DB_BASE.collection("world")
     private var REF_FOLLOWERS = DB_BASE.collection("followers")
+    private var REF_Rankings = DB_BASE.collection("rankings")
     
     //MARK: CREATE FUNCTIONS
     
@@ -78,9 +79,10 @@ class DataService {
                     SecretSpotField.isPublic: isPublic,
                     SecretSpotField.dateCreated: FieldValue.serverTimestamp(),
                     SecretSpotField.verifierCount: 0,
+                    SecretSpotField.commentCount: 0
                 ]
                 
-                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: city, didLike: false, likedCount: 0, verifierCount: 0)
+                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: city, didLike: false, likedCount: 0, verifierCount: 0, commentCount: 0)
                 self.manager.fetchSecretSpots()
                 
                 document.setData(spotData) { (error) in
@@ -149,7 +151,7 @@ class DataService {
         }
         
         //Save to Core Data
-        self.manager.addEntity(spotId: spot.id, spotName: spot.spotName, description: spot.description ?? "", longitude: spot.longitude, latitude: spot.latitude, imageUrls: spot.imageUrls, address: spot.address, uid: spot.ownerId, ownerImageUrl: spot.ownerImageUrl, ownerDisplayName: spot.ownerDisplayName, price: Double(spot.price), viewCount: Double(spot.viewCount), saveCount: Double(spot.saveCounts), zipCode: Double(spot.zipcode), world: spot.world, isPublic: spot.isPublic, dateCreated: spot.dateCreated, city: spot.city, didLike: false, likedCount: 0, verifierCount: spot.verifierCount)
+        self.manager.addEntityFromSpot(spot: spot)
         
         
         //Decrement buyer wallet remotely
@@ -186,6 +188,13 @@ class DataService {
             CommentField.content : content,
             CommentField.dateCreated : FieldValue.serverTimestamp()
         ]
+        
+        
+        let increment: Int64 = 1
+        let SpotData: [String: Any] = [
+            SecretSpotField.commentCount: FieldValue.increment(increment),
+        ]
+        REF_POST.document(postId).updateData(SpotData)
         
         document.setData(data) { error in
             if let error = error {
@@ -293,6 +302,7 @@ class DataService {
             
         }
     }
+    
     
     func checkIfUserAlreadyVerified(spot: SecretSpot, completion: @escaping (_ doesExist: Bool) ->()) {
         guard let uid = userId else {return}
@@ -420,7 +430,7 @@ class DataService {
     func getSpotsFromWorld(userId: String, coreData: Bool, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
         REF_WORLD.document("private").collection(userId).addSnapshotListener { snapshot, error in
             var secretSpots = [SecretSpot]()
-            let uid = userId
+            
             if let error = error {
                 print("Error fetching the secret spots from user's branch", error.localizedDescription)
                 return
@@ -434,50 +444,13 @@ class DataService {
                     let spotId = document.documentID
                     self.REF_POST.document(spotId).getDocument { document, error in
                         let data = document?.data()
-                        if
-                        let name = data?[SecretSpotField.spotName] as? String,
-                        let imageUrl = data?[SecretSpotField.spotImageUrl] as? String,
-                        let longitude = data?[SecretSpotField.longitude] as? Double,
-                        let latitude = data?[SecretSpotField.latitude] as? Double,
-                        let description = data?[SecretSpotField.description] as? String,
-                        let city = data?[SecretSpotField.city] as? String,
-                        let dateCreated = data?[SecretSpotField.dateCreated] as? Timestamp,
-                        let ownerId = data?[SecretSpotField.ownerId] as? String,
-                        let postId = data?[SecretSpotField.spotId] as? String,
-                        let ownerDisplayName = data?[SecretSpotField.ownerDisplayName] as? String,
-                        let ownerImageUrl = data?[SecretSpotField.ownerImageUrl] as? String,
-                        let address = data?[SecretSpotField.address] as? String,
-                        let zipcode = data?[SecretSpotField.zipcode] as? Int,
-                        let saveCounts = data?[SecretSpotField.saveCount] as? Int,
-                        let viewCount = data?[SecretSpotField.viewCount] as? Int,
-                        let isPublic = data?[SecretSpotField.isPublic] as? Bool,
-                        let world = data?[SecretSpotField.world] as? String,
-                        let price = data?[SecretSpotField.price] as? Int {
-                            
-                            let likedCount = data?[SecretSpotField.likeCount] as? Int ?? 0
-                            var didLike: Bool = false
-                            if let likedArray = data?[SecretSpotField.likedBy] as? [String] {
-                                didLike = likedArray.contains(uid)
-                            }
-                            let verifierCount = data?[SecretSpotField.verifierCount] as? Int ?? 0
-                            let date = dateCreated.dateValue()
-                            var spotImageUrls = [imageUrl]
-                            
-                            let additionalImages = data?[SecretSpotField.spotImageUrls] as? [String] ?? []
-                            if !additionalImages.isEmpty {
-                                additionalImages.forEach { url in
-                                    spotImageUrls.append(url)
-                                }
-                            }
-
-                            let secretSpot = SecretSpot(postId: postId, spotName: name, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likedCount, didLike: didLike, verifierCount: verifierCount)
-                            secretSpots.append(secretSpot)
-                            
-                            if coreData {
-                                self.manager.addEntity(spotId: postId, spotName: name, description: description, longitude: longitude, latitude: latitude, imageUrls: spotImageUrls, address: address, uid: ownerId, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: Double(price), viewCount: Double(viewCount), saveCount: Double(saveCounts), zipCode: Double(zipcode), world: world, isPublic: isPublic, dateCreated: date, city: city, didLike: didLike, likedCount: likedCount, verifierCount: verifierCount)
-                            }
-//
+                        let spot = SecretSpot(data: data)
+                        secretSpots.append(spot)
+                        
+                        if coreData {
+                            self.manager.addEntityFromSpot(spot: spot)
                         }
+
                         
                         DispatchQueue.main.async {
                             completion(secretSpots)
@@ -490,6 +463,7 @@ class DataService {
                 print("No secret spot found in user's private world")
             }
     }
+        
 }
     
     func getNewSecretSpots(lastSecretSpot: String?, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
@@ -517,8 +491,66 @@ class DataService {
 //            .limit(to: 12)
     }
     
+    
+    func CreateUserRanking(rank: Ranking) {
+        
+        let document = REF_Rankings.document(rank.id)
+        let data: [String: Any] = [
+            RankingField.id: rank.id,
+            RankingField.profileUrl: rank.profileImageUrl,
+            RankingField.displayName: rank.displayName,
+            RankingField.streetcred: rank.streetCred,
+            RankingField.streetFollowers: rank.streetFollowers,
+            RankingField.bio: rank.bio,
+            RankingField.level: rank.currentLevel,
+            RankingField.totalSpots: rank.totalSpots,
+            RankingField.totalStamps: rank.totalStamps,
+            RankingField.totalSaves: rank.totalSaves,
+            RankingField.totalCities: rank.totalCities,
+            RankingField.totalPeopleMet: rank.totalPeopleMet,
+            RankingField.totalVerifications: rank.totalUserVerifications,
+            RankingField.progress: rank.progress
+        ]
+        
+        document.setData(data) { error in
+            if let error = error {
+                print("Failed to write ranks to Firebase", error.localizedDescription)
+                return
+            }
+            
+            print("Ranking uploaded to DB")
+        }
+        
+    }
+    
+    
+    func getUserRankings(completion: @escaping (_ ranks: [Ranking]) -> ()) {
+        var rankings: [Ranking] = []
+        REF_Rankings
+            .order(by: RankingField.totalSpots, descending: true)
+            .limit(to: 10)
+            .getDocuments { snapshot, error in
+                
+                if let error = error {
+                    print("Error fetching user rankings", error.localizedDescription)
+                }
+                
+                guard let documents = snapshot?.documents else {return}
+                
+                documents.forEach { document in
+                    
+                    let data = document.data()
+                    let rank = Ranking(data: data)
+                    rankings.append(rank)
+                    
+                }
+                completion(rankings)
+            }
+    }
+    
+    
+    
     func updateSecretSpot(spotId: String, completion: @escaping (_ spot: SecretSpot) -> ()) {
-        guard let uid = userId else {return}
         REF_POST.document(spotId).getDocument { snaphot, error in
             
             if let error = error {
@@ -527,46 +559,11 @@ class DataService {
             }
             
             guard let document = snaphot else {return}
-            if
-            let spotName = document.get(SecretSpotField.spotName) as? String,
-            let imageUrl = document.get(SecretSpotField.spotImageUrl) as? String,
-            let longitude = document.get(SecretSpotField.longitude) as? Double,
-            let latitude = document.get(SecretSpotField.latitude) as? Double,
-            let description = document.get(SecretSpotField.description) as? String,
-            let city = document.get(SecretSpotField.city) as? String,
-            let dateCreated = document.get(SecretSpotField.dateCreated) as? Timestamp,
-            let ownerId = document.get(SecretSpotField.ownerId) as? String,
-            let ownerDisplayName = document.get(SecretSpotField.ownerDisplayName) as? String,
-            let ownerImageUrl = document.get(SecretSpotField.ownerImageUrl) as? String,
-            let address = document.get(SecretSpotField.address) as? String,
-            let zipcode = document.get(SecretSpotField.zipcode) as? Int,
-            let isPublic = document.get(SecretSpotField.isPublic) as? Bool,
-            let saveCounts = document.get(SecretSpotField.saveCount) as? Int,
-            let viewCount = document.get(SecretSpotField.viewCount) as? Int,
-            let world = document.get(SecretSpotField.world) as? String,
-            let price = document.get(SecretSpotField.price) as? Int {
-                
-                let postId = document.documentID
-                let date = dateCreated.dateValue()
-                let likeCount = document.get(SecretSpotField.likeCount) as? Int ?? 0
-                var likedByUser: Bool = false
-                if let likedArrays = document.get(SecretSpotField.likedBy) as? [String] {
-                    likedByUser = likedArrays.contains(uid)
-                }
-                let verifierCount = document.get(SecretSpotField.verifierCount) as? Int ?? 0
-                
-                
-                let additionalImages = document.get(SecretSpotField.spotImageUrls) as? [String] ?? []
-                var spotImageUrls = [imageUrl]
-                if !additionalImages.isEmpty {
-                    spotImageUrls.append(contentsOf: additionalImages)
-                }
-
-                let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likeCount, didLike: likedByUser, verifierCount: verifierCount)
-                self.manager.updatewithSpot(spot: secretSpot)
-                completion(secretSpot)
-                
-        }
+            let data = document.data()
+            let secretSpot = SecretSpot(data: data)
+            self.manager.updatewithSpot(spot: secretSpot)
+            completion(secretSpot)
+            
     }
 }
 
@@ -574,46 +571,13 @@ class DataService {
     
     func getSecretSpotsFromSnapshot(querysnapshot: QuerySnapshot?) -> [SecretSpot] {
         var secretSpots = [SecretSpot]()
-        let uid = userId ?? ""
         if let snapshot = querysnapshot, snapshot.documents.count > 0 {
             print("Found secret spots")
             snapshot.documents.forEach { document in
-                if
-                let spotName = document.get(SecretSpotField.spotName) as? String,
-                let imageUrl = document.get(SecretSpotField.spotImageUrl) as? String,
-                let longitude = document.get(SecretSpotField.longitude) as? Double,
-                let latitude = document.get(SecretSpotField.latitude) as? Double,
-                let description = document.get(SecretSpotField.description) as? String,
-                let city = document.get(SecretSpotField.city) as? String,
-                let dateCreated = document.get(SecretSpotField.dateCreated) as? Timestamp,
-                let ownerId = document.get(SecretSpotField.ownerId) as? String,
-                let ownerDisplayName = document.get(SecretSpotField.ownerDisplayName) as? String,
-                let ownerImageUrl = document.get(SecretSpotField.ownerImageUrl) as? String,
-                let address = document.get(SecretSpotField.address) as? String,
-                let zipcode = document.get(SecretSpotField.zipcode) as? Int,
-                let isPublic = document.get(SecretSpotField.isPublic) as? Bool,
-                let saveCounts = document.get(SecretSpotField.saveCount) as? Int,
-                let viewCount = document.get(SecretSpotField.viewCount) as? Int,
-                let world = document.get(SecretSpotField.world) as? String,
-                let price = document.get(SecretSpotField.price) as? Int {
-                    
-                    let postId = document.documentID
-                    let date = dateCreated.dateValue()
-                    let verifierCount = document.get(SecretSpotField.verifierCount) as? Int ?? 0
-                    let additionalImages = document.get(SecretSpotField.spotImageUrls) as? [String] ?? []
-                    var spotImageUrls = [imageUrl]
-                    if !additionalImages.isEmpty {
-                        spotImageUrls.append(contentsOf: additionalImages)
-                    }
-                    let likedCount = document.get(SecretSpotField.likeCount) as? Int ?? 0
-                    var didLike: Bool = false
-                    if let likedArray = document.get(SecretSpotField.likedBy) as? [String] {
-                        didLike = likedArray.contains(uid)
-                    }
-
-                    let secretSpot = SecretSpot(postId: postId, spotName: spotName, imageUrls: spotImageUrls, longitude: longitude, latitude: latitude, address: address, description: description, city: city, zipcode: zipcode, world: world, dateCreated: date, price: price, viewCount: viewCount, saveCounts: saveCounts, isPublic: isPublic, ownerId: ownerId, ownerDisplayName: ownerDisplayName, ownerImageUrl: ownerImageUrl, likeCount: likedCount, didLike: didLike, verifierCount: verifierCount)
-                    secretSpots.append(secretSpot)
-                }
+                
+                let data = document.data()
+                let spot = SecretSpot(data: data)
+                secretSpots.append(spot)
             }
             return secretSpots
         } else {
@@ -701,6 +665,9 @@ class DataService {
                 
                 snapshot.documents.forEach { document in
                     let id = document.documentID
+                    let data = document.data()
+                    let timestamp = data["savedOn"] as? Timestamp
+                    let date = timestamp?.dateValue()
                     
                     self.REF_USERS.document(id).getDocument { snapshot, error in
                         
@@ -709,16 +676,9 @@ class DataService {
                         }
                         let data = snapshot?.data()
                         
-                        if
-                            let username = data?[UserField.displayName] as? String,
-                            let bio = data?[UserField.bio] as? String,
-                            let fcmToken = data?[UserField.fcmToken] as? String,
-                            let profileUrl = data?[UserField.profileImageUrl] as? String,
-                            let streetCred = data?[UserField.streetCred] as? Int
-                        {
-                            let user = User(id: id, displayName: username, profileImageUrl: profileUrl, bio: bio, fcmToken: fcmToken, streetCred: streetCred)
-                            savedUsers.append(user)
-                        }
+                        var user = User(data: data)
+                        user.membership = date
+                        savedUsers.append(user)
                         
                         DispatchQueue.main.async {
                             completion(savedUsers)
@@ -733,18 +693,22 @@ class DataService {
     }
     
     func getVerifiersForSpot(postId: String, completion: @escaping (_ users: [User]) -> ()) {
-        var savedUsers: [User] = []
+        var verifiedUsers: [User] = []
         
         REF_POST.document(postId).collection("verifiers").getDocuments { snapshot, error in
             
             if snapshot?.count == 0 {
                 print("No verifiers found")
-                completion(savedUsers)
+                let count: Double = 0
+                self.manager.updateVerifierCount(spotId: postId, count: count)
+                completion(verifiedUsers)
                 return
             }
             
             if let snapshot = snapshot, snapshot.count > 0 {
                 print("Found verifiers")
+                let count: Double = Double(snapshot.count)
+                self.manager.updateVerifierCount(spotId: postId, count: count)
                 
                 snapshot.documents.forEach { document in
                     let id = document.documentID
@@ -757,20 +721,12 @@ class DataService {
                             print("Could not find users", error.localizedDescription)
                         }
                         let data = snapshot?.data()
-                        
-                        if
-                            let username = data?[UserField.displayName] as? String,
-                            let bio = data?[UserField.bio] as? String,
-                            let fcmToken = data?[UserField.fcmToken] as? String,
-                            let profileUrl = data?[UserField.profileImageUrl] as? String,
-                            let streetCred = data?[UserField.streetCred] as? Int
-                        {
-                            let user = User(id: id, displayName: username, profileImageUrl: profileUrl, bio: bio, fcmToken: fcmToken, streetCred: streetCred, verified: date)
-                            savedUsers.append(user)
-                        }
-                        
+                        var user = User(data: data)
+                        user.verified = date
+                        verifiedUsers.append(user)
+
                         DispatchQueue.main.async {
-                            completion(savedUsers)
+                            completion(verifiedUsers)
                         }
                         
                     }
@@ -781,25 +737,6 @@ class DataService {
         }
     }
     
-    
-    func getTotalSaveCounts() -> Int {
-        guard let uid = userId else {return 0}
-        let userSpots: [SecretSpot] = manager.spotEntities.map({SecretSpot(entity: $0)}).filter({$0.ownerId == uid})
-        return userSpots.reduce(0, {return $0 + $1.saveCounts})
-    }
-    
-    func getTotalViewCount() -> Int {
-        guard let uid = userId else {return 0}
-        let userSpots: [SecretSpot] = manager.spotEntities.map({SecretSpot(entity: $0)}).filter({$0.ownerId == uid})
-        return userSpots.reduce(0, {return $0 + $1.viewCount})
-    }
-    
-    func getTotalVerifications() -> Int {
-        guard let uid = userId else {return 0}
-        let userSpots: [SecretSpot] = manager.spotEntities.map({SecretSpot(entity: $0)}).filter({$0.ownerId == uid})
-        return userSpots.reduce(0, {return $0 + $1.verifierCount})
-    }
-           
     
     //MARK: UPDATE FUNCTIONS
     
@@ -938,7 +875,6 @@ class DataService {
             
         }
     }
-    
     
     
 }

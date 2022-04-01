@@ -13,6 +13,7 @@ struct PublicStreetPass: View {
 
     @State private var showAlert: Bool = false
     
+    
     let width: CGFloat = UIScreen.main.bounds.size.width / 5
     var body: some View {
         
@@ -78,7 +79,7 @@ struct PublicStreetPass: View {
                             
                          }
          
-                             
+                        
                              
                      }
                      Spacer()
@@ -102,8 +103,9 @@ struct PublicStreetPass: View {
                 .background(Color.orange.opacity(0.7))
                 .cornerRadius(25)
 
-
                 
+
+            
                 Spacer()
                 
             }
@@ -124,7 +126,7 @@ struct PublicStreetPass: View {
 struct PublicStreetPass_Previews: PreviewProvider {
     
     static var previews: some View {
-        let user = User(id: "abc123", displayName: "Cinquain", profileImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", bio: "Yolo!", fcmToken: "xyz456", streetCred: 10)
+        let user = User(id: "abc123", displayName: "Cinquain", profileImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073")
        PublicStreetPass(user: user)
     }
 }

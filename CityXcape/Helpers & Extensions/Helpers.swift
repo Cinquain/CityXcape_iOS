@@ -46,6 +46,7 @@ struct SecretSpotField {
     static let likeCount = "like_count" //Int
     static let likedBy = "liked_by" //Array
     static let verifierCount = "verifier_count"
+    static let commentCount = "comment_count"
 }
 
 struct CommentField {
@@ -56,6 +57,26 @@ struct CommentField {
     static let bio = "user_bio"
     static let content = "message"
     static let dateCreated = "date_created"
+}
+
+
+
+struct RankingField {
+    static let id = "uid"
+    static let profileUrl = "profile_url"
+    static let displayName = "display_name"
+    static let streetcred = "streetcred"
+    static let streetFollowers = "street_followers"
+    static let bio = "bio"
+    static let level = "current_level"
+    static let totalSpots = "total_spots_posted"
+    static let totalStamps = "total_stamps"
+    static let totalSaves = "total_saves"
+    static let totalVerifications = "total_verifications"
+    static let totalPeopleMet = "total_users_met"
+    static let cities = "cities_visited"
+    static let totalCities = "city_count"
+    static let progress = "progress"
 }
 
 struct DatabaseReportField {
@@ -131,6 +152,15 @@ enum Path: String {
     case savedBy
     case verifiers
 }
+
+enum AnalyticsType: String {
+    case comments
+    case saves
+    case checkins
+    case views 
+}
+
+
 
 struct StandardButton: ViewModifier {
     

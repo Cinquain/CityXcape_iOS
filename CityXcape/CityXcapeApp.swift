@@ -86,22 +86,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         
         let userInfo = response.notification.request.content.userInfo
         print("the user info is", userInfo)
-        
-        if let followerId = userInfo["userid"] as? String,
-           let profileUrl = userInfo["profileUrl"] as? String,
-           let username = userInfo["userDisplayName"] as? String,
-           let streetcred = userInfo["streetCred"] as? String,
-           let bio = userInfo["biography"] as? String
-        {
-            let user = User(id: followerId, displayName: username, profileImageUrl: profileUrl, bio: bio, streetCred: Int(streetcred))
-            NotificationsManager.instance.user = user
-            NotificationsManager.instance.hasNotification = true
-            print("successfully converted data to string",followerId, profileUrl, username, streetcred, bio)
-
-        } else {
-            print("Failed getting user information")
-        }
-    
+        let user = User(userInfo: userInfo)
+        NotificationsManager.instance.user = user
+        NotificationsManager.instance.hasNotification = true
         completionHandler()
         
     }

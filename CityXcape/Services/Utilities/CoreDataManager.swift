@@ -109,9 +109,15 @@ class CoreDataManager {
         save()
     }
     
-    func updateVerifierCount(spotId: String, count: Int) {
+    func updateVerifierCount(spotId: String, count: Double) {
         let entity = spotEntities.first(where: {$0.spotId == spotId})
-        entity?.verifierCount = Double(count)
+        entity?.verifierCount = count
+        save()
+    }
+    
+    func updateCommentCount(spotId: String, count: Int) {
+        let entity = spotEntities.first(where: {$0.spotId == spotId})
+        entity?.commentCount = Double(count)
         save()
     }
     
@@ -123,7 +129,7 @@ class CoreDataManager {
         save()
     }
     
-    func addEntity(spotId: String, spotName: String, description: String, longitude: Double, latitude: Double, imageUrls: [String], address: String, uid: String, ownerImageUrl: String, ownerDisplayName: String, price: Double, viewCount: Double, saveCount: Double, zipCode: Double, world: String, isPublic: Bool, dateCreated: Date, city: String, didLike: Bool, likedCount: Int, verifierCount: Int) {
+    func addEntity(spotId: String, spotName: String, description: String, longitude: Double, latitude: Double, imageUrls: [String], address: String, uid: String, ownerImageUrl: String, ownerDisplayName: String, price: Double, viewCount: Double, saveCount: Double, zipCode: Double, world: String, isPublic: Bool, dateCreated: Date, city: String, didLike: Bool, likedCount: Int, verifierCount: Int, commentCount: Int) {
         
         let secretSpotEntity = SecretSpotEntity(context: context)
         secretSpotEntity.spotId = spotId
@@ -148,11 +154,41 @@ class CoreDataManager {
         secretSpotEntity.didLike = didLike
         secretSpotEntity.likedCount = Double(likedCount)
         secretSpotEntity.verified = false
+        secretSpotEntity.commentCount = Double(commentCount)
         save()
         
     }
     
-    func updateEntity(spotId: String, spotName: String, description: String, longitude: Double, latitude: Double, imageUrls: [String], address: String, uid: String, ownerImageUrl: String, ownerDisplayName: String, price: Double, viewCount: Double, saveCount: Double, zipCode: Double, world: String, isPublic: Bool, dateCreated: Date, city: String, didLike: Bool, likedCount: Int, verifierCount: Int) {
+    func addEntityFromSpot(spot: SecretSpot) {
+        let secretSpotEntity = SecretSpotEntity(context: context)
+        secretSpotEntity.spotId = spot.id
+        secretSpotEntity.spotName = spot.spotName
+        secretSpotEntity.spotDescription = spot.description
+        secretSpotEntity.longitude = spot.longitude
+        secretSpotEntity.latitude = spot.latitude
+        secretSpotEntity.imageUrls = spot.imageUrls
+        secretSpotEntity.address = spot.address
+        secretSpotEntity.ownerId = spot.ownerId
+        secretSpotEntity.ownerImageUrl = spot.ownerImageUrl
+        secretSpotEntity.ownerDisplayName = spot.ownerDisplayName
+        secretSpotEntity.price = Double(spot.price)
+        secretSpotEntity.viewCount = Double(spot.viewCount)
+        secretSpotEntity.saveCount = Double(spot.saveCounts)
+        secretSpotEntity.zipCode = Double(spot.zipcode)
+        secretSpotEntity.world = spot.world
+        secretSpotEntity.isPublic = spot.isPublic
+        secretSpotEntity.dateCreated = spot.dateCreated
+        secretSpotEntity.city = spot.city
+        secretSpotEntity.verifierCount = Double(spot.verifierCount)
+        secretSpotEntity.didLike = spot.likedByUser
+        secretSpotEntity.likedCount = Double(spot.likedCount)
+        secretSpotEntity.verified = spot.verified
+        secretSpotEntity.commentCount = Double(spot.commentCount)
+        save()
+        
+    }
+    
+    func updateEntity(spotId: String, spotName: String, description: String, longitude: Double, latitude: Double, imageUrls: [String], address: String, uid: String, ownerImageUrl: String, ownerDisplayName: String, price: Double, viewCount: Double, saveCount: Double, zipCode: Double, world: String, isPublic: Bool, dateCreated: Date, city: String, didLike: Bool, likedCount: Int, verifierCount: Int, commentCount: Int) {
         
         let entity = spotEntities.first(where: {$0.spotId == spotId})
         entity?.spotName = spotName
@@ -173,6 +209,7 @@ class CoreDataManager {
         entity?.didLike = didLike
         entity?.verifierCount = Double(verifierCount)
         entity?.likedCount = Double(likedCount)
+        entity?.commentCount = Double(commentCount)
         save()
         
     }
@@ -197,6 +234,8 @@ class CoreDataManager {
         entity?.city = spot.city
         entity?.likedCount = Double(spot.likedCount)
         entity?.didLike = spot.likedByUser
+        entity?.verifierCount = Double(spot.verifierCount)
+        entity?.commentCount = Double(spot.commentCount)
         save()
         fetchSecretSpots()
     }

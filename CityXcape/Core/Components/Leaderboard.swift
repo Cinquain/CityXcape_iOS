@@ -11,6 +11,8 @@ struct Leaderboard: View {
     
     var width: CGFloat = UIScreen.screenWidth * 0.8
     @Environment(\.presentationMode) var presentationMode
+    
+    @State var ranks: [Ranking]
 
     var body: some View {
         VStack {
@@ -26,8 +28,8 @@ struct Leaderboard: View {
         
 
             ScrollView {
-                ForEach(1..<10) { num in
-                    RankingView(uid: "abc", progress: min(200,CGFloat(num * 35)), rank: num)
+                ForEach(0..<ranks.count) { index in
+                    RankingView(rank: ranks[index], index: index + 1)
                     
                     Divider()
                         .frame(width: width, height: 0.5)
@@ -39,15 +41,7 @@ struct Leaderboard: View {
             }
             
             
-            Button {
-                self.presentationMode.wrappedValue.dismiss()
-            } label: {
-                Image("arrow")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 20)
-                    .opacity(0.5)
-            }
+          
             
         }
         .background( LinearGradient(gradient: Gradient(stops: [
@@ -59,6 +53,6 @@ struct Leaderboard: View {
 
 struct Leaderboard_Previews: PreviewProvider {
     static var previews: some View {
-        Leaderboard()
+        Leaderboard(ranks: [])
     }
 }

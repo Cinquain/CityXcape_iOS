@@ -15,6 +15,7 @@
 		2120579E27DE1B3500602EE8 /* Stamp.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2120579D27DE1B3500602EE8 /* Stamp.mp3 */; };
 		212057A027DE1C2E00602EE8 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120579F27DE1C2E00602EE8 /* SoundManager.swift */; };
 		2120CE66275FA254006367FE /* LocationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120CE65275FA254006367FE /* LocationCamera.swift */; };
+		21251A8127EB3F4B0042BDF4 /* TotalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21251A8027EB3F4B0042BDF4 /* TotalView.swift */; };
 		212EE32F27A4640500232992 /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE32E27A4640500232992 /* CommentsView.swift */; };
 		212EE33127A4667500232992 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE33027A4667500232992 /* MessageView.swift */; };
 		212EE33327A4689F00232992 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE33227A4689F00232992 /* Comment.swift */; };
@@ -76,7 +77,10 @@
 		219CA8F2275A61DD00F1C61E /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CA8F1275A61DD00F1C61E /* PostViewModel.swift */; };
 		21A4697927C12417009F337D /* StampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A4697827C12417009F337D /* StampView.swift */; };
 		21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA28DF26D13BB40001A02E /* StreetPass.swift */; };
+		21B611F427E74FAB00361508 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B611F327E74FAB00361508 /* AnalyticsView.swift */; };
+		21B611F627E753F700361508 /* RowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B611F527E753F700361508 /* RowView.swift */; };
 		21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */; };
+		21BA347727F32A3400CF2E53 /* TotalsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BA347627F32A3400CF2E53 /* TotalsViewModel.swift */; };
 		21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BBB06026E596C2000B40B3 /* AnimationController.swift */; };
 		21C1628F27E4B933001DC9BF /* RankingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1628E27E4B933001DC9BF /* RankingView.swift */; };
 		21C1629127E4BF1A001DC9BF /* BarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1629027E4BF1A001DC9BF /* BarView.swift */; };
@@ -85,9 +89,13 @@
 		21C85939271122C9008224E5 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C85938271122C9008224E5 /* CardView.swift */; };
 		21C8F64B27CEA3CB00006042 /* PassportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C8F64A27CEA3CB00006042 /* PassportView.swift */; };
 		21C8F64D27CEAEA300006042 /* Savoye LET Plain1.0.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21C8F64C27CEA6AD00006042 /* Savoye LET Plain1.0.ttf */; };
+		21C91E5F27E8A3D50050D06F /* AnalyticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C91E5E27E8A3D50050D06F /* AnalyticsViewModel.swift */; };
+		21C91E6127E8A9FD0050D06F /* Ranks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C91E6027E8A9FD0050D06F /* Ranks.swift */; };
+		21C91E6327E8AD330050D06F /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C91E6227E8AD330050D06F /* Level.swift */; };
 		21CBDEC227B3DD9E000F0D85 /* SignInWithEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CBDEC127B3DD9E000F0D85 /* SignInWithEmailView.swift */; };
 		21D03594270938400071C643 /* MissionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D03593270938400071C643 /* MissionRowView.swift */; };
 		21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0359527093B770071C643 /* MissionRowHeader.swift */; };
+		21D0F07A27EC9604003E8748 /* UserReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0F07927EC9604003E8748 /* UserReportView.swift */; };
 		21D2413C27CCFE41004D3150 /* Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D2413B27CCFE41004D3150 /* Verification.swift */; };
 		21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */; };
 		21D85F5326EACF0E00502636 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F5226EACF0E00502636 /* Shimmer */; };
@@ -112,6 +120,7 @@
 		2120579D27DE1B3500602EE8 /* Stamp.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Stamp.mp3; sourceTree = "<group>"; };
 		2120579F27DE1C2E00602EE8 /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		2120CE65275FA254006367FE /* LocationCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCamera.swift; sourceTree = "<group>"; };
+		21251A8027EB3F4B0042BDF4 /* TotalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalView.swift; sourceTree = "<group>"; };
 		212EE32E27A4640500232992 /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 		212EE33027A4667500232992 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		212EE33227A4689F00232992 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
@@ -173,7 +182,10 @@
 		219CA8F1275A61DD00F1C61E /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		21A4697827C12417009F337D /* StampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampView.swift; sourceTree = "<group>"; };
 		21AA28DF26D13BB40001A02E /* StreetPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetPass.swift; sourceTree = "<group>"; };
+		21B611F327E74FAB00361508 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
+		21B611F527E753F700361508 /* RowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowView.swift; sourceTree = "<group>"; };
 		21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailsView.swift; sourceTree = "<group>"; };
+		21BA347627F32A3400CF2E53 /* TotalsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalsViewModel.swift; sourceTree = "<group>"; };
 		21BBB06026E596C2000B40B3 /* AnimationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationController.swift; sourceTree = "<group>"; };
 		21C1628E27E4B933001DC9BF /* RankingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RankingView.swift; sourceTree = "<group>"; };
 		21C1629027E4BF1A001DC9BF /* BarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarView.swift; sourceTree = "<group>"; };
@@ -182,9 +194,13 @@
 		21C85938271122C9008224E5 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		21C8F64A27CEA3CB00006042 /* PassportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassportView.swift; sourceTree = "<group>"; };
 		21C8F64C27CEA6AD00006042 /* Savoye LET Plain1.0.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Savoye LET Plain1.0.ttf"; sourceTree = "<group>"; };
+		21C91E5E27E8A3D50050D06F /* AnalyticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsViewModel.swift; sourceTree = "<group>"; };
+		21C91E6027E8A9FD0050D06F /* Ranks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ranks.swift; sourceTree = "<group>"; };
+		21C91E6227E8AD330050D06F /* Level.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Level.swift; sourceTree = "<group>"; };
 		21CBDEC127B3DD9E000F0D85 /* SignInWithEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithEmailView.swift; sourceTree = "<group>"; };
 		21D03593270938400071C643 /* MissionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowView.swift; sourceTree = "<group>"; };
 		21D0359527093B770071C643 /* MissionRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowHeader.swift; sourceTree = "<group>"; };
+		21D0F07927EC9604003E8748 /* UserReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReportView.swift; sourceTree = "<group>"; };
 		21D2413B27CCFE41004D3150 /* Verification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verification.swift; sourceTree = "<group>"; };
 		21DCF82227E60906000BD1B3 /* Ranking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ranking.swift; sourceTree = "<group>"; };
 		21DCF82427E61043000BD1B3 /* StreetReportCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetReportCard.swift; sourceTree = "<group>"; };
@@ -387,6 +403,10 @@
 				2179853827E362D40002CEBA /* Leaderboard.swift */,
 				21C1628E27E4B933001DC9BF /* RankingView.swift */,
 				21C1629027E4BF1A001DC9BF /* BarView.swift */,
+				21B611F327E74FAB00361508 /* AnalyticsView.swift */,
+				21B611F527E753F700361508 /* RowView.swift */,
+				21C91E6027E8A9FD0050D06F /* Ranks.swift */,
+				21D0F07927EC9604003E8748 /* UserReportView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -437,6 +457,7 @@
 				21D2413B27CCFE41004D3150 /* Verification.swift */,
 				21DCF82227E60906000BD1B3 /* Ranking.swift */,
 				21DCF82627E63090000BD1B3 /* Follower.swift */,
+				21C91E6227E8AD330050D06F /* Level.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -453,6 +474,9 @@
 				21C7D44427CFB1D200A37DFC /* JourneyView.swift */,
 				21EA999927D1006D00A13C6C /* JourneyViewModel.swift */,
 				21DCF82427E61043000BD1B3 /* StreetReportCard.swift */,
+				21C91E5E27E8A3D50050D06F /* AnalyticsViewModel.swift */,
+				21BA347627F32A3400CF2E53 /* TotalsViewModel.swift */,
+				21251A8027EB3F4B0042BDF4 /* TotalView.swift */,
 			);
 			path = StreetPass;
 			sourceTree = "<group>";
@@ -643,6 +667,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				219CA8F2275A61DD00F1C61E /* PostViewModel.swift in Sources */,
+				21B611F627E753F700361508 /* RowView.swift in Sources */,
 				217C08E026D1CC4500751933 /* OnboardingViewII.swift in Sources */,
 				21730A8D27C5B0380036549F /* GetStampedButton.swift in Sources */,
 				212EE32F27A4640500232992 /* CommentsView.swift in Sources */,
@@ -651,6 +676,7 @@
 				211F664427D247800035DB83 /* StampCollectionView.swift in Sources */,
 				218CADBE26D5C94300496884 /* SettingsView.swift in Sources */,
 				219842A826CF57740089CE03 /* ImagePicker.swift in Sources */,
+				21B611F427E74FAB00361508 /* AnalyticsView.swift in Sources */,
 				212EE33127A4667500232992 /* MessageView.swift in Sources */,
 				21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */,
 				217DA73D26CC96A30039A145 /* MyWorld.swift in Sources */,
@@ -669,10 +695,12 @@
 				219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */,
 				217E9AA6270B404500F45077 /* Mission.swift in Sources */,
 				214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */,
+				21D0F07A27EC9604003E8748 /* UserReportView.swift in Sources */,
 				1493C3F3277394BA002010A6 /* ActivityIndicator.swift in Sources */,
 				21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */,
 				217DA74126CCAFDD0039A145 /* UserDotView.swift in Sources */,
 				217DA72A26CC8F8B0039A145 /* HomeView.swift in Sources */,
+				21C91E5F27E8A3D50050D06F /* AnalyticsViewModel.swift in Sources */,
 				21D03594270938400071C643 /* MissionRowView.swift in Sources */,
 				217884F926E17B870066C719 /* SignInWithApple.swift in Sources */,
 				212EE33327A4689F00232992 /* Comment.swift in Sources */,
@@ -687,6 +715,7 @@
 				21FAC218278538550035F07F /* PreviewCard.swift in Sources */,
 				218D904D2731D4F5000FB407 /* AnalyticsService.swift in Sources */,
 				2142EF4927827E9700EA489D /* SecretSpotContainer.xcdatamodeld in Sources */,
+				21C91E6327E8AD330050D06F /* Level.swift in Sources */,
 				2120CE66275FA254006367FE /* LocationCamera.swift in Sources */,
 				218ECBBF2709328E00D06603 /* DiscoverView.swift in Sources */,
 				217DA73F26CC972C0039A145 /* Ticker.swift in Sources */,
@@ -695,6 +724,8 @@
 				217DA73A26CC95A50039A145 /* Extensions.swift in Sources */,
 				21DCF82727E63090000BD1B3 /* Follower.swift in Sources */,
 				217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */,
+				21251A8127EB3F4B0042BDF4 /* TotalView.swift in Sources */,
+				21BA347727F32A3400CF2E53 /* TotalsViewModel.swift in Sources */,
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,
 				2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */,
 				217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */,
@@ -704,6 +735,7 @@
 				2142EF4627827E6B00EA489D /* CoreDataManager.swift in Sources */,
 				215B30DD27C860D300D627A4 /* VerificationView.swift in Sources */,
 				217AA0C426FB660100B994B3 /* OnboardScreen.swift in Sources */,
+				21C91E6127E8A9FD0050D06F /* Ranks.swift in Sources */,
 				217DAF3026CD7A1C00A395BC /* SecretSpotView.swift in Sources */,
 				217C08DC26D1C38E00751933 /* OnboardingView.swift in Sources */,
 				218115EB27315E9400026AAD /* NotificationsManager.swift in Sources */,

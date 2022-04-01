@@ -44,7 +44,7 @@ struct MessageView: View {
         .foregroundColor(.white)
         .padding(.horizontal, 10)
         .sheet(isPresented: $showStreetPass) {
-            let user = User(id: comment.uid, displayName: comment.username, profileImageUrl: comment.imageUrl, bio: comment.bio)
+            let user = User(comment: comment)
             PublicStreetPass(user: user)
         }
         
@@ -58,6 +58,7 @@ struct MessageView_Previews: PreviewProvider {
     
     static var previews: some View {
         MessageView(comment: comment)
+            .previewLayout(.sizeThatFits)
             
     }
 }

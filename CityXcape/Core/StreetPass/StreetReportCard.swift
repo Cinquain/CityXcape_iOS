@@ -14,42 +14,110 @@ struct StreetReportCard: View {
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
     
+    @StateObject var vm: AnalyticsViewModel = AnalyticsViewModel()
+    @State private var showTotalView: Bool = false
+    @State private var currentType: AnalyticsType = .views
     
     var body: some View {
         
         VStack {
             
             HStack {
-                VStack {
-                    UserDotView(imageUrl: profileUrl ?? "", width: 80, height: 80)
-                    Text(displayName ?? "")
-                        .foregroundColor(.white)
-                        .fontWeight(.thin)
-                }
-                .padding(.leading, 10)
+             
                 
                 VStack(spacing: 0) {
-                    Text("STREET")
-                        .tracking(5)
-                        .font(Font.custom("Lato", size: 20))
-                        .foregroundColor(.white)
+                  
                     
-                    Text("Report Card")
+                    Text("Street Report Card")
                         .font(Font.custom("Lato", size: 35))
                         .foregroundColor(.white)
                         .padding(.bottom, 8)
                     
                 }
+                .padding(.horizontal, 20)
                 
                 Spacer()
             }
             
-            ForEach(1..<4) { num in
-                RankingView(uid: "acb", progress: CGFloat(min(200, 50 * num)), rank: num)
-            }
+       
+            
+            
             
             HStack {
-                Image("graph")
+                
+                UserDotView(imageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", width: 80, height: 80)
+                    .padding(.leading, 20)
+
+                
+                Button {
+                        vm.showRanks.toggle()
+                    } label: {
+                        VStack {
+                            Text("Current Rank: \(vm.rank)")
+                                .foregroundColor(.white)
+                            BarView(progress: vm.progressValue)
+                            Text(vm.progressString)
+                                .font(.caption)
+                                .fontWeight(.thin)
+
+                        }
+
+                    }
+                    .padding(.leading, 30)
+                    .sheet(isPresented: $vm.showRanks) {
+                        Ranks()
+                }
+                
+                Spacer()
+            }
+            .padding(.top, 20)
+
+
+            VStack(alignment: .leading) {
+                HStack {
+                    
+                    Button {
+                        //TBD
+                        vm.showLeaderboard.toggle()
+                    } label: {
+                        
+                        HStack(alignment: .center) {
+                            Spacer()
+                            Image("leaderboard")
+                                .resizable()
+                                .renderingMode(.template)
+                                .foregroundColor(.cx_orange)
+                                .scaledToFit()
+                            .frame(height: 30)
+                            
+                            Text("Leaderboard")
+                                .foregroundColor(.cx_orange)
+                                .font(.title3)
+                                .fontWeight(.thin)
+                            Spacer()
+                        }
+                        
+                   
+                    }
+                    .sheet(isPresented: $vm.showLeaderboard) {
+                        Leaderboard(ranks: vm.ranking)
+                    }
+                    
+                    
+                    Spacer()
+                }
+                
+            
+                
+            }
+            .padding(.top, 20)
+            .padding(.horizontal, 20)
+       
+
+            Spacer()
+            
+            HStack {
+                Image("analytics")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 40)
@@ -66,9 +134,11 @@ struct StreetReportCard: View {
                 
                 Button {
                     //TBD
+                    currentType = .views
+                    showTotalView.toggle()
                 } label: {
                     HStack {
-                        Text("1,200 Views")
+                        Text("\(vm.totalViews) Views")
                             .font(.title3)
                             .foregroundColor(.white)
                             .fontWeight(.thin)
@@ -83,13 +153,18 @@ struct StreetReportCard: View {
                     .frame(width: 180)
 
                 }
+                .fullScreenCover(isPresented: $showTotalView) {
+                    TotalView(type: currentType, spots: vm.ownerSpots)
+                }
                 //Button 1
                 
                 Button {
                     //TBD
+                    currentType = .saves
+                    showTotalView.toggle()
                 } label: {
                     HStack {
-                        Text("120 Saves")
+                        Text("\(vm.totalSaves) Saves")
                             .font(.title3)
                             .foregroundColor(.white)
                             .fontWeight(.thin)
@@ -105,13 +180,18 @@ struct StreetReportCard: View {
 
                 }
                 .padding()
+                .fullScreenCover(isPresented: $showTotalView) {
+                    TotalView(type: currentType, spots: vm.ownerSpots)
+                }
                 //Button 1
                 
                 Button {
                     //TBD
+                    currentType = .checkins
+                    showTotalView.toggle()
                 } label: {
                     HStack {
-                        Text("12 Checkins")
+                        Text("\(vm.totalVerifications) Checkins")
                             .font(.title3)
                             .foregroundColor(.white)
                             .fontWeight(.thin)
@@ -125,13 +205,29 @@ struct StreetReportCard: View {
                     }
                     .frame(width: 180)
                 }
+                .fullScreenCover(isPresented: $showTotalView) {
+                    TotalView(type: currentType, spots: vm.ownerSpots)
+                }
                 //Button 1
 
                 
                 
             }
             .padding(.top, 20)
+            
             Spacer()
+            
+            
+            Button {
+                //
+                self.presentationMode.wrappedValue.dismiss()
+            } label: {
+                Image("arrow")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 20)
+                    .opacity(0.5)
+            }
             
             
         }

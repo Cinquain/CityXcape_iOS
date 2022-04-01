@@ -128,6 +128,7 @@ struct StreetPass: View {
                         
                         Button {
                             //Show Stats
+                            showStats.toggle()
                         } label: {
                             HStack {
                                Image("graph")
@@ -147,7 +148,7 @@ struct StreetPass: View {
                         }
                         }
                         .fullScreenCover(isPresented: $showStats) {
-                            //Some view
+                            StreetReportCard()
                         }
                         
                         Spacer()

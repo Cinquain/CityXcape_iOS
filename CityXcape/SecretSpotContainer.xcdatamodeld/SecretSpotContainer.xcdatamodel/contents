@@ -3,6 +3,7 @@
     <entity name="SecretSpotEntity" representedClassName="SecretSpotEntity" syncable="YES" codeGenerationType="class">
         <attribute name="address" optional="YES" attributeType="String"/>
         <attribute name="city" optional="YES" attributeType="String"/>
+        <attribute name="commentCount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="dateCreated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="didLike" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="imageUrls" optional="YES" attributeType="Transformable" customClassName="[String]"/>
@@ -25,6 +26,6 @@
         <attribute name="zipCode" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="SecretSpotEntity" positionX="-63" positionY="-18" width="128" height="359"/>
+        <element name="SecretSpotEntity" positionX="-63" positionY="-18" width="128" height="374"/>
     </elements>
 </model>

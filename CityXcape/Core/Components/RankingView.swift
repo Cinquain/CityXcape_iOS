@@ -12,10 +12,10 @@ struct RankingView: View {
 
     let width = UIScreen.screenWidth * 0.90
     let height: CGFloat = 100
+     
+    var rank: Ranking
+    var index: Int
     
-    var uid: String
-    var progress: CGFloat
-    var rank: Int
     @State private var showStreetPass: Bool = false
     
     
@@ -25,10 +25,10 @@ struct RankingView: View {
             
             
             HStack(spacing: 15) {
-                Text("\(rank)")
+                Text("\(index)")
                     .fontWeight(.thin)
                     .font(.title)
-                    .foregroundColor(uid == userId ? .cx_orange : .white)
+                    .foregroundColor(.white)
 
 
                 Button {
@@ -37,16 +37,16 @@ struct RankingView: View {
                 } label: {
                     
                     VStack(spacing: 0) {
-                        UserDotView(imageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", width: 70, height: 70)
+                        UserDotView(imageUrl: rank.profileImageUrl, width: 70, height: 70)
                         
-                        Text("Cinquain")
-                            .foregroundColor(uid == userId ? .cx_orange : .white)
+                        Text(rank.displayName)
+                            .foregroundColor(.white)
                             .font(.caption)
                             .fontWeight(.thin)
                     }
                 }
                 .sheet(isPresented: $showStreetPass) {
-                    BarView(progress: 100)
+                    BarView(progress: rank.progress)
                 }
 
 
@@ -56,12 +56,12 @@ struct RankingView: View {
             
             
             VStack(spacing: 5) {
-                BarView(progress: progress)
+                BarView(progress: rank.progress)
                 HStack {
                     Spacer()
                     
-                    Text("Next Level: Scout")
-                        .foregroundColor(uid == userId ? .cx_orange : .white)
+                    Text("\(rank.totalSpots) spots posted")
+                        .foregroundColor(.white)
                         .font(.caption)
                         .fontWeight(.thin)
                         .padding(.trailing, 15)
@@ -79,7 +79,7 @@ struct RankingView: View {
             //End of view
         }
         .frame(width: width, height: height)
-        .background(uid == userId ? Color.dark_grey : Color.clear)
+        .background(Color.clear)
         .cornerRadius(8)
         
     }
@@ -87,7 +87,9 @@ struct RankingView: View {
 
 struct RankingView_Previews: PreviewProvider {
     static var previews: some View {
-        RankingView(uid: "abcy", progress: 125, rank: 1)
+        let rank = Ranking(id: "abc", profileImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", displayName: "Cinquain", streetCred: 23, streetFollowers: 10, bio: "Yolo", currentLevel: "Scout", totalSpots: 30, totalStamps: 40, totalSaves: 40, totalUserVerifications: 30, totalPeopleMet: 0, totalCities: 10, progress: 30)
+        
+        RankingView(rank: rank, index: 1)
             .previewLayout(.sizeThatFits)
     }
 }
