@@ -15,6 +15,8 @@ struct RankingView: View {
      
     var rank: Ranking
     var index: Int
+    var userSize: CGFloat
+    @State var currentUser: User?
     
     @State private var showStreetPass: Bool = false
     
@@ -33,20 +35,24 @@ struct RankingView: View {
 
                 Button {
                     //TBD
+                    currentUser = User(rank: rank)
                     showStreetPass.toggle()
                 } label: {
                     
                     VStack(spacing: 0) {
-                        UserDotView(imageUrl: rank.profileImageUrl, width: 70, height: 70)
+                        UserDotView(imageUrl: rank.profileImageUrl, width: userSize, height: userSize)
                         
                         Text(rank.displayName)
                             .foregroundColor(.white)
                             .font(.caption)
                             .fontWeight(.thin)
+                            .frame(width: 50)
+                            .lineLimit(1)
+
                     }
                 }
-                .sheet(isPresented: $showStreetPass) {
-                    BarView(progress: rank.progress)
+                .sheet(item: $currentUser) { user in
+                    PublicStreetPass(user: user)
                 }
 
 
@@ -89,7 +95,7 @@ struct RankingView_Previews: PreviewProvider {
     static var previews: some View {
         let rank = Ranking(id: "abc", profileImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", displayName: "Cinquain", streetCred: 23, streetFollowers: 10, bio: "Yolo", currentLevel: "Scout", totalSpots: 30, totalStamps: 40, totalSaves: 40, totalUserVerifications: 30, totalPeopleMet: 0, totalCities: 10, progress: 30)
         
-        RankingView(rank: rank, index: 1)
+        RankingView(rank: rank, index: 1, userSize: 70)
             .previewLayout(.sizeThatFits)
     }
 }

@@ -45,7 +45,7 @@ struct StreetReportCard: View {
             
             HStack {
                 
-                UserDotView(imageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", width: 80, height: 80)
+                UserDotView(imageUrl: profileUrl ?? "", width: 80, height: 80)
                     .padding(.leading, 20)
 
                 

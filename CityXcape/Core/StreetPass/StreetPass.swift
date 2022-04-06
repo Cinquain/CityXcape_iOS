@@ -14,7 +14,9 @@ struct StreetPass: View {
     @AppStorage(CurrentUserDefaults.bio) var bio: String?
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
 
-
+    @StateObject var vm: StreetPassViewModel = StreetPassViewModel()
+    
+    
     @State private var username: String = ""
     @State private var userbio: String = ""
     @State private var profileUrl = ""
@@ -27,8 +29,7 @@ struct StreetPass: View {
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State var isPresented: Bool = false
     @State var presentSettings: Bool = false
-    @State var showJourney: Bool = false
-    @State var showStats: Bool = false
+
     
     var body: some View {
         
@@ -97,7 +98,7 @@ struct StreetPass: View {
                         Button {
                             //TB
                             AnalyticsService.instance.checkedJournal()
-                            showJourney.toggle()
+                            vm.showJourney.toggle()
                         } label: {
                             HStack {
                                 Image("Scout Life")
@@ -114,7 +115,7 @@ struct StreetPass: View {
                             }
                         
                         }
-                        .fullScreenCover(isPresented: $showJourney) {
+                        .fullScreenCover(isPresented: $vm.showJourney) {
                             JourneyView()
                         }
                         
@@ -128,13 +129,13 @@ struct StreetPass: View {
                         
                         Button {
                             //Show Stats
-                            showStats.toggle()
+                            vm.showStats.toggle()
                         } label: {
                             HStack {
                                Image("graph")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: 30)
+                                    .frame(width: 35)
                                VStack(alignment: .leading) {
                                    Text("STREET")
                                        .fontWeight(.thin)
@@ -147,11 +148,46 @@ struct StreetPass: View {
                                }
                         }
                         }
-                        .fullScreenCover(isPresented: $showStats) {
+                        .fullScreenCover(isPresented: $vm.showStats) {
                             StreetReportCard()
                         }
                         
                         Spacer()
+                    }
+                    
+                    HStack{
+                        Spacer()
+                        Button {
+                            //TB
+                            AnalyticsService.instance.checkedStreetFollowers()
+                            vm.showStreetFollowers.toggle()
+                        } label: {
+                            HStack {
+                                Image("running")
+                                     .resizable()
+                                     .scaledToFit()
+                                     .frame(height: 35)
+                                VStack(alignment: .leading) {
+                                    Text("STREET")
+                                        .fontWeight(.thin)
+                                        .font(.caption)
+                                        .tracking(5)
+                                    Text("Followers")
+                                         .font(.title2)
+                                         .fontWeight(.thin)
+                                         .foregroundColor(.white)
+                                         .padding(.trailing, 20)
+
+                                }
+                            }
+                        
+                        }
+                        .fullScreenCover(isPresented: $vm.showStreetFollowers) {
+                            StreetFollowersView(vm: vm)
+                        }
+                        
+                        Spacer()
+                   
                     }
                     
                     

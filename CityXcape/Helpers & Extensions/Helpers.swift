@@ -87,6 +87,16 @@ struct DatabaseReportField {
     static let ownerId = "owner_id"
 }
 
+struct ServerPath {
+    static let followers = "followers"
+    static let history = "history"
+    static let secret = "private"
+    static let verified = "verified"
+    static let posts = "posts"
+    static let rankings = "rankings"
+    static let users = "users"
+    static let world = "world"
+}
 
 struct CurrentUserDefaults {
     

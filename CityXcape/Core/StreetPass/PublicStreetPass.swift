@@ -6,14 +6,17 @@
 //
 
 import SwiftUI
+import FirebaseMessaging
 
 struct PublicStreetPass: View {
     
     var user: User
 
     @State private var showAlert: Bool = false
+    @State private var alertMessage: String = ""
     
-    
+    let manager = NotificationsManager.instance
+
     let width: CGFloat = UIScreen.main.bounds.size.width / 5
     var body: some View {
         
@@ -35,6 +38,7 @@ struct PublicStreetPass: View {
                           .font(.title)
                           .padding()
                           .padding(.leading, 20)
+                    
                     Spacer()
                 }
             
@@ -89,13 +93,22 @@ struct PublicStreetPass: View {
                     .frame(height: width / 1.5)
                 
                 Button {
-                    showAlert.toggle()
+                    
+                    manager.checkAuthorizationStatus { fcmToken in
+                    
+                        if let token = fcmToken {
+                            streetFollowerUser(id: user.id, fcm: token)
+                        } else {
+                            alertMessage = "CityXcape needs notification permission allowed"
+                            showAlert.toggle()
+                        }
+                    }
+                   
                 } label: {
                     
-                    Text("Message")
+                    Text("Street Follow")
                         .fontWeight(.light)
-                
-                   
+                  
                 }
                 .padding()
                 .frame(width: 220)
@@ -111,7 +124,7 @@ struct PublicStreetPass: View {
             }
             .alert(isPresented: $showAlert) {
                 AnalyticsService.instance.triedMessagingUser()
-                return Alert(title: Text("Feature Coming Soon..."))
+                return Alert(title: Text(alertMessage))
             }
             
         }
@@ -120,7 +133,20 @@ struct PublicStreetPass: View {
         
     }
     //End of body
+    
+    fileprivate func streetFollowerUser(id: String, fcm: String) {
+        DataService.instance.streetFollowUser(followingId: user.id, fcmToken: fcm) { succcess in
+            if succcess {
+                alertMessage = "Successfully Following \(user.displayName)"
+                showAlert.toggle()
+            } else {
+                alertMessage = "Error Following \(user.displayName)"
+                showAlert.toggle()
+            }
+        }
+    }
 
+   
 }
 
 struct PublicStreetPass_Previews: PreviewProvider {

@@ -59,6 +59,12 @@ struct User: Identifiable, Hashable {
         
     }
     
+    init(rank: Ranking) {
+        self.id = rank.id
+        self.displayName = rank.displayName
+        self.profileImageUrl = rank.profileImageUrl
+    }
+    
     
     
 }

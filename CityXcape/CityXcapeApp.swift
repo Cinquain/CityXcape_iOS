@@ -84,17 +84,26 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
+        
         let userInfo = response.notification.request.content.userInfo
         print("the user info is", userInfo)
+        
+        if let spotId = userInfo["spotId"] as? String {
+            NotificationsManager.instance.spotId = spotId
+            NotificationsManager.instance.hasSpotNotification = true
+            return
+        }
+        
+        
         let user = User(userInfo: userInfo)
         NotificationsManager.instance.user = user
-        NotificationsManager.instance.hasNotification = true
+        NotificationsManager.instance.hasUserNotification = true
         completionHandler()
         
     }
     
     
-    fileprivate func registerForNotifications(app: UIApplication) {
+     func registerForNotifications(app: UIApplication) {
         print("Registering for push notifications")
         
         Messaging.messaging().delegate = self

@@ -18,13 +18,16 @@ class MyWorldViewModel: NSObject, ObservableObject {
     @Published var currentSpots: [SecretSpot] = []
     @Published var users: [User] = []
     @Published var showOnboarding: Bool = false
-    @Published var showVisited: Bool = false 
+    @Published var showVisited: Bool = false
+    
+    @Published var showAlert: Bool = false
+    @Published var alertMessage: String = ""
+    
     
     var cancellables = Set<AnyCancellable>()
     
     override init() {
         super.init()
-        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             self.setupSubscribers()
         }
@@ -137,6 +140,8 @@ class MyWorldViewModel: NSObject, ObservableObject {
             return "\(String(format: "%.1f", spot.distanceFromUser)) mile"
         }
     }
+    
+
     
     
 }

@@ -29,7 +29,7 @@ struct Leaderboard: View {
 
             ScrollView {
                 ForEach(0..<ranks.count) { index in
-                    RankingView(rank: ranks[index], index: index + 1)
+                    RankingView(rank: ranks[index], index: index + 1, userSize: 70)
                     
                     Divider()
                         .frame(width: width, height: 0.5)

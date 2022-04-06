@@ -64,7 +64,12 @@ struct HomeView: View {
             
         })
         .colorScheme(.dark)
-        .sheet(isPresented: $manager.hasNotification) {
+        .onReceive(manager.$hasSpotNotification, perform: { bool in
+            if bool {
+                selectedTab = 1
+            }
+        })
+        .sheet(isPresented: $manager.hasUserNotification) {
 
         } content: {
             

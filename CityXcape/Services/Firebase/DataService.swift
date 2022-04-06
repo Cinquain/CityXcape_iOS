@@ -10,6 +10,7 @@ import SwiftUI
 import FirebaseFirestore
 import CoreLocation
 import MapKit
+import FirebaseMessaging
 
 
 class DataService {
@@ -523,6 +524,70 @@ class DataService {
         
     }
     
+    func streetFollowUser(followingId: String, fcmToken: String, completion: @escaping (_ succcess: Bool) -> ()) {
+        
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName else {return}
+        let data: [String: Any] = [
+            UserField.providerId: uid,
+            UserField.profileImageUrl: imageUrl,
+            UserField.displayName: displayName,
+            UserField.fcmToken: fcmToken,
+            UserField.dataCreated: FieldValue.serverTimestamp(),
+        ]
+        REF_WORLD.document(ServerPath.followers).collection(followingId).document(uid).setData(data) { error in
+            if let err = error {
+                print("Error saving new Street Follower", err.localizedDescription)
+                completion(false)
+                return
+            }
+            
+            completion(true)
+            
+        }
+        
+    }
+    
+    func getStreetFollowers(completion: @escaping ([User]) -> ()) {
+        guard let uid = userId else {return}
+        var users: [User] = []
+        REF_WORLD.document(ServerPath.followers).collection(uid).getDocuments { querySnapshot, error in
+            
+            if let err = error {
+                print("Error finding followers", err.localizedDescription)
+                completion(users)
+                return
+            }
+            if let snapshot = querySnapshot, snapshot.count > 0 {
+                snapshot.documents.forEach { document in
+                    
+                    let data = document.data()
+                    let user = User(data: data)
+                    users.append(user)
+                    
+                }
+                completion(users)
+            }
+            
+        }
+        
+    }
+    
+    func unfollowerUser(followingId: String, completion: @escaping (_ success: Bool) -> ()) {
+        guard let uid = userId else {return}
+        let document = REF_WORLD.document(ServerPath.followers)
+                    .collection(followingId)
+                    .document(uid)
+        
+        document.delete { error  in
+            if let error = error {
+                print("Error unfollowing user", error.localizedDescription)
+                completion(false)
+                return
+            }
+            completion(true)
+        }
+        
+    }
     
     func getUserRankings(completion: @escaping (_ ranks: [Ranking]) -> ()) {
         var rankings: [Ranking] = []
@@ -744,6 +809,7 @@ class DataService {
     func updateProfileImage(userId: String, profileImageUrl: String) {
         
         REF_USERS.document(userId).setData([UserField.profileImageUrl : profileImageUrl], merge: true)
+        REF_Rankings.document(userId).updateData([RankingField.profileUrl : profileImageUrl])
     }
     
     func updateUserBio(userId: String, bio: String) {

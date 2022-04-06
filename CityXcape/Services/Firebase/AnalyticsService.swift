@@ -126,6 +126,10 @@ class AnalyticsService {
         Analytics.logEvent("checked_report_card", parameters: nil)
     }
     
+    func checkedStreetFollowers() {
+        Analytics.logEvent("checked_street_followers", parameters: nil)
+    }
+    
   
     
 }

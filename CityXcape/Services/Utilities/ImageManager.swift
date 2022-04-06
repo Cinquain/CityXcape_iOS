@@ -30,6 +30,7 @@ class ImageManager {
         
     }
     
+    
     func uploadSecretSpotImage(image: UIImage, postId: String, completion: @escaping (_ url: String?) -> ()) {
         
         let path = getSpotImagePath(spotId: postId, imageNum: 1)

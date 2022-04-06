@@ -16,7 +16,8 @@ class DiscoverViewModel: ObservableObject {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
-
+    
+    let manager = NotificationsManager.instance
     @Published var allspots: [SecretSpot] = []
     @Published var newSecretSpots: [SecretSpot] = []
     @Published var lastSecretSpot: String = ""
@@ -31,10 +32,13 @@ class DiscoverViewModel: ObservableObject {
     
     @Published var searchTerm: String = ""
     @Published var oldResults: [SecretSpot] = []
-    
+    @Published var rankings: [Ranking] = []
+    @Published var showStreetPass: Bool = false
+
     init() {
-       
+        getScoutLeaders()
         getNewSecretSpots()
+        
     }
     
     func getNewSecretSpots() {
@@ -46,12 +50,18 @@ class DiscoverViewModel: ObservableObject {
             self?.finished = true
             
             if self?.newSecretSpots.count ?? 0 > 0 {
-                print("User has \(self?.newSecretSpots.count ?? 0) new spots")
                 self?.hasNewSpots = true
+                if self?.manager.hasSpotNotification == true {
+                    guard let index = self?.newSecretSpots.firstIndex(where: {$0.id == self?.manager.spotId}) else {return}
+                    guard let spot = self?.newSecretSpots[index] else {return}
+                    self?.newSecretSpots.removeAll()
+                    self?.newSecretSpots.insert(spot, at: 0)
+                }
             }
             
         }
     }
+    
     
     func refreshSecretSpots() {
         
@@ -162,9 +172,32 @@ class DiscoverViewModel: ObservableObject {
             }
         }
         
-   
+    }
+    
+    
+    
+    func streetFollow(rank: Ranking, fcm: String) {
+        
+        DataService.instance.streetFollowUser(followingId: rank.id, fcmToken: fcm) { [weak self] succcess in
+            if succcess {
+                self?.alertMessage = "Following \(rank.displayName)"
+                self?.showAlert = true
+            } else {
+                self?.alertMessage = "Cannot follow \(rank.displayName)"
+                self?.showAlert = true
+            }
+        }
         
     }
+    
+    
+    fileprivate func getScoutLeaders() {
+        
+        DataService.instance.getUserRankings { ranks in
+            self.rankings = ranks
+        }
+    }
+    
     
     
     
