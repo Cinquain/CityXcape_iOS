@@ -97,7 +97,7 @@ struct PublicStreetPass: View {
                     manager.checkAuthorizationStatus { fcmToken in
                     
                         if let token = fcmToken {
-                            streetFollowerUser(id: user.id, fcm: token)
+                            streetFollowerUser(fcm: token)
                         } else {
                             alertMessage = "CityXcape needs notification permission allowed"
                             showAlert.toggle()
@@ -134,14 +134,14 @@ struct PublicStreetPass: View {
     }
     //End of body
     
-    fileprivate func streetFollowerUser(id: String, fcm: String) {
-        DataService.instance.streetFollowUser(followingId: user.id, fcmToken: fcm) { succcess in
+    fileprivate func streetFollowerUser(fcm: String) {
+        DataService.instance.streetFollowUser(user: user, fcmToken: fcm) { succcess in
             if succcess {
-                alertMessage = "Successfully Following \(user.displayName)"
-                showAlert.toggle()
+                self.alertMessage = "Following \(user.displayName)"
+                self.showAlert = true
             } else {
-                alertMessage = "Error Following \(user.displayName)"
-                showAlert.toggle()
+                self.alertMessage = "Cannot follow \(user.displayName)"
+                self.showAlert = true
             }
         }
     }

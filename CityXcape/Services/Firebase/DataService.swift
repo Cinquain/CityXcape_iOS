@@ -524,17 +524,29 @@ class DataService {
         
     }
     
-    func streetFollowUser(followingId: String, fcmToken: String, completion: @escaping (_ succcess: Bool) -> ()) {
+    func streetFollowUser(user: User, fcmToken: String, completion: @escaping (_ succcess: Bool) -> ()) {
         
         guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName else {return}
-        let data: [String: Any] = [
+        let following = REF_WORLD.document(ServerPath.followers).collection(user.id).document(uid)
+        let follower = REF_WORLD.document(ServerPath.following).collection(uid).document(user.id)
+
+        let followerData: [String: Any] = [
             UserField.providerId: uid,
             UserField.profileImageUrl: imageUrl,
             UserField.displayName: displayName,
             UserField.fcmToken: fcmToken,
             UserField.dataCreated: FieldValue.serverTimestamp(),
         ]
-        REF_WORLD.document(ServerPath.followers).collection(followingId).document(uid).setData(data) { error in
+        
+        let followingData: [String: Any] = [
+            UserField.providerId: user.id,
+            UserField.profileImageUrl: user.profileImageUrl,
+            UserField.displayName: user.displayName
+        ]
+        
+        follower.setData(followingData)
+        
+        following.setData(followerData) { error in
             if let err = error {
                 print("Error saving new Street Follower", err.localizedDescription)
                 completion(false)
@@ -547,10 +559,13 @@ class DataService {
         
     }
     
+    
     func getStreetFollowers(completion: @escaping ([User]) -> ()) {
         guard let uid = userId else {return}
         var users: [User] = []
-        REF_WORLD.document(ServerPath.followers).collection(uid).getDocuments { querySnapshot, error in
+        let document = REF_WORLD.document(ServerPath.followers).collection(uid)
+        
+        document.getDocuments { querySnapshot, error in
             
             if let err = error {
                 print("Error finding followers", err.localizedDescription)
@@ -567,18 +582,42 @@ class DataService {
                 }
                 completion(users)
             }
-            
         }
+    }
+    
+    func getStreetFollowing(completion: @escaping ([User]) -> ()) {
+        guard let uid = userId else {return}
+        var users: [User] = []
+        let document = REF_WORLD.document(ServerPath.following).collection(uid)
         
+        document.getDocuments { querySnapshot, error in
+            if let err = error {
+                print("Error finding following", err.localizedDescription)
+                return
+            }
+            
+            if let snapshot = querySnapshot, snapshot.count > 0 {
+                
+                snapshot.documents.forEach { document in
+                    let data = document.data()
+                    let user = User(data: data)
+                    users.append(user)
+                }
+                completion(users)
+            }
+        }
     }
     
     func unfollowerUser(followingId: String, completion: @escaping (_ success: Bool) -> ()) {
         guard let uid = userId else {return}
-        let document = REF_WORLD.document(ServerPath.followers)
+        let following = REF_WORLD.document(ServerPath.followers)
                     .collection(followingId)
                     .document(uid)
         
-        document.delete { error  in
+        let follower = REF_WORLD.document(ServerPath.following).collection(uid).document(followingId)
+        
+        follower.delete()
+        following.delete { error  in
             if let error = error {
                 print("Error unfollowing user", error.localizedDescription)
                 completion(false)
@@ -588,6 +627,7 @@ class DataService {
         }
         
     }
+    
     
     func getUserRankings(completion: @escaping (_ ranks: [Ranking]) -> ()) {
         var rankings: [Ranking] = []

@@ -52,12 +52,13 @@ struct StreetFollowersView: View {
             ScrollView {
                 VStack(spacing: 25) {
                     
-                    ForEach(vm.streetFollowers) { user in
+                    ForEach(vm.users) { user in
                         
                         HStack {
                             
                             Button {
                                 //TBD
+                                currentUser = user
                             } label: {
                                 VStack(spacing: 0) {
                                     UserDotView(imageUrl: user.profileImageUrl, width: 80, height: 80)
@@ -71,8 +72,22 @@ struct StreetFollowersView: View {
                             
                             Spacer()
                             
-                            Text(user.membership?.timeFormatter() ?? "")
-                                .fontWeight(.thin)
+                            Button {
+                                vm.showFollowing ? vm.unfollowerUser(uid: user.id) :
+                                                   vm.followerUser(user: user)
+                            } label: {
+                                Text(vm.showFollowing ? "Unfollow" : "Follow")
+                                    .font(.caption)
+                                    .foregroundColor(.orange)
+                                    .background(Color.black)
+                                    .frame(width: 80, height: 30)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 15)
+                                                        .stroke(Color.orange, lineWidth: 1)
+                                    )
+                            }
+
+                           
                             
                         }
                         .foregroundColor(.white)
@@ -98,7 +113,13 @@ struct StreetFollowersView: View {
             }
             
         }
+        .onDisappear(perform: {
+            vm.cancellable?.cancel()
+        })
         .background(Color.black.edgesIgnoringSafeArea(.all))
+        .alert(isPresented: $vm.showAlert) {
+            return Alert(title: Text(vm.alertMessage))
+        }
     }
 }
 

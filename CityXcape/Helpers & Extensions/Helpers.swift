@@ -89,6 +89,7 @@ struct DatabaseReportField {
 
 struct ServerPath {
     static let followers = "followers"
+    static let following = "following"
     static let history = "history"
     static let secret = "private"
     static let verified = "verified"

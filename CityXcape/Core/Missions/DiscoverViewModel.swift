@@ -177,8 +177,8 @@ class DiscoverViewModel: ObservableObject {
     
     
     func streetFollow(rank: Ranking, fcm: String) {
-        
-        DataService.instance.streetFollowUser(followingId: rank.id, fcmToken: fcm) { [weak self] succcess in
+        let user = User(rank: rank)
+        DataService.instance.streetFollowUser(user: user, fcmToken: fcm) { [weak self] succcess in
             if succcess {
                 self?.alertMessage = "Following \(rank.displayName)"
                 self?.showAlert = true

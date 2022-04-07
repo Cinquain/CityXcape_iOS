@@ -19,14 +19,19 @@ class StreetPassViewModel: NSObject, ObservableObject {
     @Published var showFollowing: Bool = false
     @Published var showStreetPass: Bool = false
     @Published var streetFollowers: [User] = []
-    
+    @Published var streetFollowing: [User] = []
+    @Published var users: [User] = []
     @Published var alertMessage: String = ""
     @Published var showAlert: Bool = false
     
+    var cancellable: AnyCancellable?
+    let manager = NotificationsManager.instance
     
     override init() {
         super.init()
         getStreetFollowers()
+        getFollowing()
+        setSubscribers()
     }
     
     
@@ -34,6 +39,13 @@ class StreetPassViewModel: NSObject, ObservableObject {
         
         DataService.instance.getStreetFollowers { [weak self] followers in
             self?.streetFollowers = followers
+            self?.users = followers
+        }
+    }
+    
+    func getFollowing() {
+        DataService.instance.getStreetFollowing { [weak self] following in
+            self?.streetFollowing = following
         }
     }
     
@@ -43,6 +55,8 @@ class StreetPassViewModel: NSObject, ObservableObject {
             if success {
                 self?.alertMessage = "Successfuly unfollowed user"
                 self?.showAlert.toggle()
+                self?.streetFollowing.removeAll(where: {$0.id == uid})
+                self?.users = self?.streetFollowing ?? []
             } else {
                 self?.alertMessage = "Failed to unfollow user"
                 self?.showAlert.toggle()
@@ -51,18 +65,41 @@ class StreetPassViewModel: NSObject, ObservableObject {
         
     }
     
-    func followerUser(uid: String, name: String, fcm: String) {
+    func followerUser(user: User) {
         
-        DataService.instance.streetFollowUser(followingId: uid, fcmToken: fcm) { [weak self] success in
-            if success {
-                self?.alertMessage = "Successfuly following \(name)"
-                self?.showAlert.toggle()
+        manager.checkAuthorizationStatus { [weak self] fcmToken in
+            
+            if let token = fcmToken {
+                
+                DataService.instance.streetFollowUser(user: user, fcmToken: token) {  succcess in
+                    if succcess {
+                        self?.alertMessage = "Following \(user.displayName)"
+                        self?.showAlert = true
+                    } else {
+                        self?.alertMessage = "Cannot follow \(user.displayName)"
+                        self?.showAlert = true
+                    }
+                }
+                
             } else {
-                self?.alertMessage = "Failed to follow \(name)"
-                self?.showAlert.toggle()
+                self?.alertMessage = "Please give CityXcape notifications permission"
+                self?.showAlert = true
             }
+            
         }
         
+    }
+    
+    func setSubscribers() {
+        
+      cancellable =  $showFollowing
+            .sink { [weak self] boolen in
+                if boolen {
+                    self?.users = self?.streetFollowing ?? []
+                } else {
+                    self?.users = self?.streetFollowers ?? []
+                }
+            }
         
     }
     
