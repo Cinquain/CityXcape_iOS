@@ -56,7 +56,6 @@ class StreetPassViewModel: NSObject, ObservableObject {
                 self?.alertMessage = "Successfuly unfollowed user"
                 self?.showAlert.toggle()
                 self?.streetFollowing.removeAll(where: {$0.id == uid})
-                self?.users = self?.streetFollowing ?? []
             } else {
                 self?.alertMessage = "Failed to unfollow user"
                 self?.showAlert.toggle()
@@ -75,6 +74,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
                     if succcess {
                         self?.alertMessage = "Following \(user.displayName)"
                         self?.showAlert = true
+                        self?.streetFollowing.append(user)
                     } else {
                         self?.alertMessage = "Cannot follow \(user.displayName)"
                         self?.showAlert = true
