@@ -22,12 +22,7 @@ struct DiscoverView: View {
     @Binding var spotCount: Int
     
     @StateObject var vm: DiscoverViewModel = DiscoverViewModel()
-    
-    @State var captions: [String] = [
-        "Discover New Places",
-        "Save Places to Visit",
-        "Saving a Spot Cost StreetCred"
-    ]
+
     
     var body: some View {
         
@@ -35,13 +30,13 @@ struct DiscoverView: View {
         
         VStack(spacing: 20) {
             
-            Ticker(profileUrl: profileUrl ?? "", captions: $captions)
-                .frame(height: 100)
+            Ticker(searchText: vm.$searchTerm, handlesearch: {
+                
+            })
             
             
             ScrollView {
                 if vm.newSecretSpots.isEmpty {
-                    
                     UserDiscoveryView(vm: vm)
                     .opacity(vm.finished ? 1 : 0)
                     

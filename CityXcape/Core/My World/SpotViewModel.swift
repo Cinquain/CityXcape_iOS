@@ -18,6 +18,8 @@ class SpotViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.bio) var bio: String?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
+    
+    @State var searchText: String = ""
 
     @Published var comment: String = ""
     @Published var journeyImage: UIImage = UIImage()

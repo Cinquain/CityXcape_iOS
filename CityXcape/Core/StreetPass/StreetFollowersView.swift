@@ -64,6 +64,8 @@ struct StreetFollowersView: View {
                                     UserDotView(imageUrl: user.profileImageUrl, width: 80, height: 80)
                                     Text(user.displayName)
                                         .fontWeight(.thin)
+                                        .lineLimit(1)
+                                        .frame(width: 80)
                                 }
                             }
                             .sheet(item: $currentUser) { user in

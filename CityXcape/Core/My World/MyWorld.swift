@@ -23,12 +23,7 @@ struct MyWorld: View {
     @State private var showMission: Bool = false
 
     let manager = CoreDataManager.instance
-    @State var captions: [String] = [
-        "CityXcape",
-        "You got Spots to Visit",
-        "Your World"
-    ]
-    
+
     var body: some View {
         
    
@@ -40,8 +35,9 @@ struct MyWorld: View {
                         .edgesIgnoringSafeArea(.all)
                     
                     VStack {
-                        Ticker(profileUrl: profileUrl ?? "", captions: $captions)
-                            .frame(height: 100)
+                        Ticker(searchText: vm.$searchTerm, handlesearch: {
+                            
+                        })
                         
                         
                     if vm.showOnboarding {
@@ -124,18 +120,7 @@ struct MyWorld: View {
                 }
             }
             .onAppear {
-                
                 manager.fetchSecretSpots()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                    guard let streetname = username else {return}
-                    let count = vm.currentSpots.count
-                    let countStatement = "You got \(count) spots to visit"
-                    let worldStatement = "\(streetname)'s World"
-                    
-                    captions[1] = countStatement
-                    captions[2] = worldStatement
-                }
-              
             }
            
     }

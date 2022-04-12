@@ -22,6 +22,7 @@ class MyWorldViewModel: NSObject, ObservableObject {
     
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
+    @State var searchTerm: String = ""
     
     
     var cancellables = Set<AnyCancellable>()

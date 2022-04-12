@@ -42,9 +42,10 @@ struct SpotDetailsView: View {
                 VStack(alignment: .center, spacing: 0) {
                     
                     ZStack {
-                        Ticker(profileUrl: spot.ownerImageUrl, captions: $captions)
-                            .frame(height: 120)
-                            .opacity(isEditing ? 0 : 1)
+                        Ticker(searchText: vm.$searchText, handlesearch: {
+                            
+                        })
+                        .opacity(isEditing ? 0 : 1)
 
                         
                         TextField(spot.spotName, text: $vm.newSpotName, onCommit: {

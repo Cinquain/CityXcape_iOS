@@ -30,7 +30,7 @@ class DiscoverViewModel: ObservableObject {
     @Published var saved: Bool = false
     @Published var passed: Bool = false
     
-    @Published var searchTerm: String = ""
+    @State var searchTerm: String = ""
     @Published var oldResults: [SecretSpot] = []
     @Published var rankings: [Ranking] = []
     @Published var showStreetPass: Bool = false
