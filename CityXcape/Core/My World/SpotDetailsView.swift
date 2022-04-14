@@ -12,23 +12,18 @@ struct SpotDetailsView: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @Environment(\.presentationMode) var presentationMode
 
-    @State var captions: [String] = ["", "", ""]
     @State var spot: SecretSpot
     
     @ObservedObject var vm: SpotViewModel = SpotViewModel()
     @StateObject var mapViewModel: MapViewModel = MapViewModel()
     let manager = CoreDataManager.instance
-    
-    @State private var isEditing: Bool = false
-    @State private var showStreetPass: Bool = false
-    @State private var showActionSheet: Bool = false
-    @State private var actionSheetType: SpotActionSheetType = .general
-    @State private var currentlyEditing: Bool = false
+    let analytics = AnalyticsService.instance
+    @State var detailsTapped: Bool = false
+    @State var likedTapped: Bool = false
     @State private var showUsers: Bool = false
-    @State private var showComments: Bool = false
-    @State private var showAlert: Bool = false
-    @State private var alertmessage: String = ""
     @State private var showMission: Bool = false
+    @State private var showAlert: Bool = false
+    @State private var alertMessage: String = ""
   
     
  
@@ -39,194 +34,61 @@ struct SpotDetailsView: View {
     
     var body: some View {
                 
-                VStack(alignment: .center, spacing: 0) {
+                VStack {
+
                     
                     ZStack {
-                        Ticker(searchText: vm.$searchText, handlesearch: {
-                            
-                        })
-                        .opacity(isEditing ? 0 : 1)
+                        
+                        ImageSlider(images: spot.imageUrls)
+                            .animation(.easeIn(duration: 0.5))
 
                         
-                        TextField(spot.spotName, text: $vm.newSpotName, onCommit: {
-                            if !vm.newSpotName.isEmpty {
-                                vm.editSpotName(postId: spot.id)
-                                spot.spotName = vm.newSpotName
-                                captions[0] = vm.newSpotName
-                                vm.refresh.toggle()
-                            }
-                        })
-                            .padding(.leading, 20)
-                            .frame(height: 50)
-                            .opacity(isEditing ? 1 : 0)
-                    }
-                    
-                    ZStack {
-                      
-                        TabView {
-                
-                            ForEach(spot.imageUrls, id: \.self) { url in
-                                
-                                    WebImage(url: URL(string: url))
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: .infinity)
-                                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                            }
-                      
-                        }
-                        .opacity(isEditing ? 0 : 1)
-                        .tabViewStyle(PageTabViewStyle())
+                        DetailsView(spot: spot, vm: vm)
+                            .opacity(detailsTapped ? 1 : 0)
+                            .animation(.easeIn(duration: 0.5))
                         
                         if vm.showStamp {
                             StampView(spot: spot)
                         }
-                        
-                        TabView {
-                            
+                        //End of Image ZStack
+                    }
+                    
+                        HStack {
+                            Image("pin_blue")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 30)
+                            Text(spot.spotName)
+                                .font(.title)
+                                .fontWeight(.thin)
+                                .lineLimit(1)
+                            Spacer()
+                         
                           
-                                Button {
-                                    vm.setupImageSubscriber()
-                                    vm.showPicker = true
-                                    vm.addedImage = false
-                                } label: {
-                                    
-                                    if vm.addedImage {
-                                        Image(uiImage: vm.selectedImage)
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                    } else {
-                                        WebImage(url: URL(string: spot.imageUrls.first ?? ""))
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: .infinity)
-                                            .clipShape(RoundedRectangle(cornerRadius: 12))
-                                    }
-                                }
-                            
-                        
-                            
-                            Button {
-                                vm.setupImageSubscriber()
-                                vm.imageSelected = .two
-                                vm.showPicker = true
-                                vm.addedImage = false
-                            } label: {
-                                if vm.addedImage {
-                                    Image(uiImage: vm.selectedImageII)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                } else {
-                                    VStack {
-                                        LocationCamera(height: 150, color: .white)
-                                        Text("Replace Main Image")
-                                    }
-                                }
-                            }
-                            
-                            Button {
-                                vm.setupImageSubscriber()
-                                vm.imageSelected = .three
-                                vm.showPicker = true
-                                vm.addedImage = false
-                            } label: {
-                                if vm.addedImage {
-                                    Image(uiImage: vm.selectedImageIII)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                } else {
-                                    VStack {
-                                        LocationCamera(height: 150, color: .white)
-                                        Text("Replace Main Image")
-                                    }
-                                }
-                            }
                         }
-                        .opacity(isEditing ? 1 : 0)
-                        .tabViewStyle(PageTabViewStyle())
-                
-                        
-                    }
+                        .padding(.horizontal, 10)
+                        .padding(.bottom, 5)
+                        .frame(width: UIScreen.screenWidth)
                     
-                    HStack {
-                        
-                       
-                                    
-                        Text(vm.getViews(spot: spot))
-                            .font(.subheadline)
-                            .fontWeight(.thin)
-                            .foregroundColor(.white)
-                            .lineLimit(1)
-                                    
-                            
-                        
-                        Spacer()
-                        
-                        Button {
-                            alertmessage = "This spot belongs to the \(spot.world) community"
-                            showAlert.toggle()
-                            } label: {
-                                
-                                    Text("\(spot.world)")
-                                        .font(.subheadline)
-                                        .fontWeight(.thin)
-                                        .lineLimit(1)
-                                        .frame(width: 60)
-                            
-                            }
-                        
-                    }
-                    .opacity(isEditing ? 0 : 1)
-                    .padding(.horizontal, 20)
-                    
-          
-                    
-                    HStack {
-                        ZStack {
-                            Text(spot.description ?? "")
-                                .multilineTextAlignment(.leading)
-                                .font(.body)
-                                .lineLimit(.none)
-                                .padding()
-                            .opacity(isEditing ? 0 : 1)
-                            
-                            
-                            TextField(spot.description ?? "Enter a description", text: $vm.newDescription, onCommit: {
-                                if !vm.description.isEmpty {
-                                    vm.editSpotDescription(postId: spot.id)
-                                    spot.description = vm.newDescription
-                                    vm.refresh.toggle()
-                                }
-                            })
-                                .multilineTextAlignment(.leading)
-                                .font(.body)
-                                .lineLimit(.none)
-                                .padding()
-                                .opacity(isEditing ? 1 : 0)
-                        }
-                        
-                        
-                        Spacer()
-                    }
-                    
+                 
+    
                     
                     HStack(spacing: 10) {
                         
                         Button {
                             showUsers.toggle()
                             vm.getSavedbyUsers(postId: spot.id)
-                            AnalyticsService.instance.checkSavedUsers()
+                            analytics.checkSavedUsers()
                         } label: {
                             VStack {
-                               Image("saves")
+                               Image("save")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(width: 40)
+                                    .frame(width: 50)
                                 
                             }
 
                         }
-                        .opacity(isEditing ? 0 : 1)
                         .sheet(isPresented: $showUsers) {
                             SavesView(spot: spot, vm: vm)
                         }
@@ -234,137 +96,84 @@ struct SpotDetailsView: View {
                         
                         Button {
                             vm.didLike.toggle()
+                            alertMessage = "Liked!"
+                            showAlert.toggle()
                             vm.pressLike(postId: spot.id)
+                            analytics.likedSpot()
                         } label: {
                             VStack(spacing: 0) {
-                                LikeAnimationView(color: .red, didLike: $vm.didLike, size: 40)
-                                    .padding(.top, -3)
-                                
+                                Image("like")
+                                     .resizable()
+                                     .aspectRatio(contentMode: .fit)
+                                     .frame(width: 50)
                             }
                         }
-                        .opacity(isEditing ? 0 : 1)
-
               
                         
                         Button {
-                                //Comment code.
-                            showComments.toggle()
                             vm.getComments(postId: spot.id)
-                            AnalyticsService.instance.viewedComments()
-                            } label: {
-                                VStack {
-                                    Image(systemName: "bubble.left.fill")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 38)
-                                        .foregroundColor(.cx_blue.opacity(0.5))
-                                }
-                            }
-                            .sheet(isPresented: $showComments) {
-                                CommentsView(spot: spot, vm: vm)
-                            }
-                            .opacity(isEditing ? 0 : 1)
-                        
-                        if spot.verified {
-                            Button {
-                                //TBD
-                                vm.showVerifiers.toggle()
-                                vm.getVerifiedUsers(postId: spot.id)
-                                AnalyticsService.instance.checkedVerifiers()
-                            } label: {
-                                Image("checkmark")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 40)
-                                    .padding(.leading, 4)
-                                    
-                                
-                            }
-                            .animation(.easeOut)
-                            .opacity(isEditing ? 0 : 1)
-                            .sheet(isPresented: $vm.showVerifiers) {
-                                VerificationView(spot: spot, vm: vm)
-                            }
+                            vm.showComments.toggle()
+                            analytics.viewedComments()
+                        } label: {
+                            Image("comment")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 55)
                         }
-                       
+                        .sheet(isPresented: $vm.showComments) {
+                            CommentsView(spot: spot, vm: vm)
+                        }
 
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            showActionSheet.toggle()
-                        }, label: {
-                            
-                            VStack {
-                                Image(systemName: "ellipsis")
-                                    .font(.title2)
-                                    .foregroundColor(.white)
-                                .rotationEffect(.init(degrees: 90))
+                     
+                        Button {
+                            //TBD
+                            analytics.viewedDetails()
+                            detailsTapped.toggle()
+                        } label: {
+                            Image("info")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50)
+                                .padding(.leading, 4)
+                                .animation(.easeOut)
                                 
-                            }
-                        })
-                    
-                        
+                        }
                        
                     }
                     .padding(.top, 10)
-                    .padding(.horizontal, 20)
-                
-                   
                     
-                    if isEditing {
-                        TextField(spot.world, text: $vm.newWorld, onCommit:  {
-                            if !vm.newWorld.isEmpty {
-                                vm.editWorldTag(postId: spot.id)
-                                spot.world = vm.newWorld
-                                vm.refresh.toggle()
-                            }
-                        })
-                            .font(.body)
-                            .lineLimit(.none)
-                            .padding(.leading, 20)
-                            .opacity(isEditing ? 1 : 0)
-                    }
                     
                     HStack {
-                    
-                    
-                        Spacer()
-                        
+                      
                         Button {
                             //Load Route Screen
+                            analytics.viewedMission()
                             showMission.toggle()
                             
                         } label: {
                             Text("Start Mission")
-                                .foregroundColor(.black)
+                                .foregroundColor(.white)
                                 .fontWeight(.light)
-                                .font(.title3)
-                                .frame(width: 170, height: 45)
-                                .background(Color.green.opacity(0.9))
-                                .cornerRadius(25)
+                                .font(.subheadline)
+                                .frame(width: 160, height: 45)
+                                .overlay(
+                                   Rectangle()
+                                       .stroke(Color.white, lineWidth: 1)
+                                       )
                                 .animation(.easeOut)
                                 
                         }
-                        .opacity(isEditing ? 0 : 1)
                         .fullScreenCover(isPresented: $showMission, onDismiss: {
                             //TBD
                         }, content: {
                             MissionView(spot: spot, vm: mapViewModel, spotModel: vm)
                         })
                         
-                        Spacer()
-                        
-                   
+                  
 
                     }
                     .padding(.top, 50)
-                    .sheet(isPresented: $showStreetPass) {
-                        //TBD
-                    } content: {
-                        let user = User(id: spot.ownerId, displayName: spot.ownerDisplayName, profileImageUrl: spot.ownerImageUrl)
-                        PublicStreetPass(user: user)
-                    }
+               
 
                     
                 
@@ -376,70 +185,13 @@ struct SpotDetailsView: View {
                 AnalyticsService.instance.viewedSecretSpot()
                 DataService.instance.updatePostViewCount(postId: spot.id)
                 vm.updateSecretSpot(postId: spot.id)
-                captions.removeAll()
-                let name = spot.spotName
-                let distanceString = String(format: "%.0f", spot.distanceFromUser)
-                let distance = spot.distanceFromUser > 1 ? "\(distanceString) miles away" : "\(distanceString) mile away"
-                let postedby = "Posted by \(spot.ownerDisplayName)"
-                captions.append(contentsOf: [name, distance, postedby])
             })
-            .actionSheet(isPresented: $showActionSheet, content: {
+            .actionSheet(isPresented: $vm.showActionSheet, content: {
                 getActionSheet()
             })
             .alert(isPresented: $showAlert) {
-                return Alert(title: Text(alertmessage), message: nil)
+                return Alert(title: Text(alertMessage))
             }
-            .sheet(isPresented: $vm.showPicker, onDismiss: {
-                //TBD
-                if vm.addedImage {
-                    switch vm.imageSelected {
-                    case .one:
-                        
-                        vm.updateMainSpotImage(postId: spot.id) {  url in
-                            
-                            if spot.imageUrls.indices.contains(0) {
-                                spot.imageUrls.remove(at: 0)
-                            }
-                            spot.imageUrls.insert(url, at: 0)
-                            vm.refresh.toggle()
-                            
-                        }
-                    case .two:
-                        vm.updateAdditonalImage(postId: spot.id, image: vm.selectedImageII, number: 2) { url in
-                            //I'll be back
-                            
-                            if spot.imageUrls.indices.contains(1) {
-                                spot.imageUrls.remove(at: 1)
-                            }
-                            spot.imageUrls.insert(url, at: 1)
-                            vm.refresh.toggle()
-                        }
-                    case .three:
-                        vm.updateAdditonalImage(postId: spot.id, image: vm.selectedImageIII, number: 3) { url in
-                            //I'll be back
-                            
-                            if spot.imageUrls.indices.contains(2) {
-                                spot.imageUrls.remove(at: 2)
-                            }
-                            spot.imageUrls.insert(url, at: 2)
-                            vm.refresh.toggle()
-                        }
-                    }
-                }
-                
-            }, content: {
-                
-                switch vm.imageSelected {
-                case .one:
-                    ImagePicker(imageSelected: $vm.selectedImage, sourceType: $vm.sourceType)
-                case .two:
-                    ImagePicker(imageSelected: $vm.selectedImageII, sourceType: $vm.sourceType)
-                case .three:
-                    ImagePicker(imageSelected: $vm.selectedImageIII, sourceType: $vm.sourceType)
-
-                }
-                
-            })
             .background(Color.black.edgesIgnoringSafeArea(.all))
             
 
@@ -449,41 +201,22 @@ struct SpotDetailsView: View {
     
     
     func getActionSheet() -> ActionSheet {
-        
-        let uid = userId ?? ""
-        
                 
-        switch actionSheetType {
+        switch vm.actionSheetType {
             case .general:
                 return ActionSheet(title: Text("What would you like to do"), message: nil, buttons: [
                     
-                  
-                .default(Text(isEditing ? "Done" : "Edit"), action: {
-                    if spot.ownerId == uid {
-                        
-                        if isEditing {
-                            manager.fetchSecretSpots()
-                        }
-                        
-                        isEditing.toggle()
-                        
-                    } else {
-                        vm.alertmessage = "You don't have editing permissions"
-                        vm.showAlert = true
-                    }
-                    }),
-            
                 .default(Text("Report"), action: {
-                    self.actionSheetType = .report
+                    vm.actionSheetType = .report
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.showActionSheet.toggle()
+                        vm.showActionSheet.toggle()
                     }
                 }),
                 
                 .default(Text("Delete"), action: {
-                    self.actionSheetType = .delete
+                    vm.actionSheetType = .delete
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.showActionSheet.toggle()
+                        vm.showActionSheet.toggle()
                     }
                 }),
                 
@@ -501,7 +234,7 @@ struct SpotDetailsView: View {
                     vm.reportPost(reason: "It made me uncomfortable", spot: spot)
                 }),
                 .cancel( {
-                    self.actionSheetType = .general
+                    vm.actionSheetType = .general
                 })
             ])
         case .delete:
@@ -515,9 +248,7 @@ struct SpotDetailsView: View {
                 }),
                 
                 .cancel(Text("No"), action: {
-                    if isEditing {
-                        isEditing.toggle()
-                    }
+                    
                 })
             ])
         }

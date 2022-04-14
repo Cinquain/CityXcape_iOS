@@ -927,6 +927,23 @@ class DataService {
 
     }
     
+    func updateSocialMediaUrl(ig: String) {
+       guard let uid = userId else {return}
+       let data: [String: Any] = [
+           SecretSpotField.ownerIg: ig
+       ]
+        let ownerSpots = manager.spotEntities
+                        .map({SecretSpot(entity: $0)})
+                        .filter({$0.ownerId == uid})
+
+        ownerSpots.forEach { spot in
+            self.REF_POST.document(spot.id).updateData(data)
+        }
+
+   }
+    
+    
+    
     
     func likeSpot(postId: String) {
         guard let uid = userId else {return}
@@ -961,12 +978,16 @@ class DataService {
     func deleteSecretSpot(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
         guard let uid = userId else {return}
         let spotId = spot.id
-
+        
+        //Delete user from save collection
         REF_POST.document(spotId).collection("savedBy").document(uid).delete()
+        
+        //Delete spot it is owned by user
         if spot.ownerId == uid {
             REF_POST.document(spotId).delete()
         }
         
+        //Delete spot from user's private world
         REF_WORLD.document("private").collection(uid).document(spotId).delete { error in
             
             if let error = error {

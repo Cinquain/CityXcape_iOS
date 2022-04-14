@@ -40,7 +40,7 @@ struct StampCollectionView: View {
                 
                 
             }
-            .background(Color.black)
+            .background(Color.clear)
             .frame(width: width,
                    height: height)
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))

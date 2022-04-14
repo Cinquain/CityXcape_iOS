@@ -9,33 +9,32 @@ import SwiftUI
 
 struct Ticker: View {
 
-    let width: CGFloat = UIScreen.screenWidth
     @Binding var searchText: String
     var handlesearch: () -> ()
+    
+    
+    
+    let width: CGFloat = UIScreen.screenWidth
     var body: some View {
         
         HStack {
-            Image("fire")
+            Image("cx")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 50)
+                .frame(width: 60)
                 .background(Color.black)
                 .clipShape(Circle())
             
-            TextField("", text: $searchText, onCommit: handlesearch)
-                .placeholder(when: searchText.isEmpty) {
-                    Text("Search a spot or user").foregroundColor(.orange.opacity(0.7)).fontWeight(.thin)
-            }
-             
-
+            TextField("Search...", text: $searchText, onCommit: handlesearch)
                
             
         }
         .font(.headline)
         .frame(width: width)
         .overlay(
-                  RoundedRectangle(cornerRadius: 25)
-                    .stroke(Color.orange.opacity(0.7), lineWidth: 0.5)
+                  RoundedRectangle(cornerRadius: 30)
+                    .stroke(Color.white, lineWidth: 0.5)
+                  
               )
  
         
@@ -49,16 +48,8 @@ struct Ticker: View {
 }
 
 struct Ticker_Previews: PreviewProvider {
-    
-    @State static var captions =  [
-        "Welcome to CityXcape",
-        "Find Secret Spots",
-        "Keep Exploring!"
-    ]
     @State static var search: String = ""
     static let searchFunction: () -> () = {print("123")}
-    
-
 
     static var previews: some View {
        

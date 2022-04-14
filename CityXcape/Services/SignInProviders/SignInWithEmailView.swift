@@ -105,7 +105,7 @@ struct SignInWithEmailView: View {
                     
 
                     
-                TextField("Password", text: $vm.password)
+                SecureField("Password", text: $vm.password)
                     .placeholder(when: vm.password.isEmpty) {
                         Text("Password").foregroundColor(.gray)
                 }

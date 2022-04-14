@@ -22,6 +22,8 @@ class AuthService {
     private init() {}
     
     private var REF_USERS = DB_BASE.collection("users")
+    private var REF_Rankings = DB_BASE.collection("rankings")
+
     
     func loginUserToFirebase(credential: AuthCredential, completion: @escaping (_ providerId: String?, _ error: Bool, _ isNewUser: Bool?, _ userId: String?) -> ()) {
         
@@ -242,6 +244,7 @@ class AuthService {
                let bio = document.get(UserField.bio) as? String,
                let streetCred = document.get(UserField.streetCred) as? Int,
                let imageUrl = document.get(UserField.profileImageUrl) as? String {
+                let social = document.get(UserField.ig) as? String ?? ""
                 completion(name, bio, streetCred, imageUrl)
                 return
             } else {
@@ -293,5 +296,25 @@ class AuthService {
                 return
             }
         }
+    }
+    
+    func updateSocialMedia(uid: String, ig: String, completion: @escaping (_ success: Bool) -> ()) {
+        let data: [String: Any] = [
+            UserField.ig: ig
+        ]
+        
+        REF_USERS.document(uid).updateData(data)
+        REF_Rankings.document(uid).updateData(data) { error in
+            if let err = error {
+                print("Error updating social media on ranks", err.localizedDescription)
+                completion(false)
+                return
+            } else {
+                DataService.instance.updateSocialMediaUrl(ig: ig)
+                completion(true)
+                return
+            }
+        }
+        
     }
 }

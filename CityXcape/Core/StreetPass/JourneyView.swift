@@ -23,7 +23,7 @@ struct JourneyView: View {
         VStack {
             HStack {
                 VStack(spacing: 0) {
-                    UserDotView(imageUrl: profileUrl ?? "", width: 80, height: 80)
+                    UserDotView(imageUrl: profileUrl ?? "", width: 80)
                     Text(displayName ?? "")
                         .fontWeight(.thin)
                         .foregroundColor(.white)

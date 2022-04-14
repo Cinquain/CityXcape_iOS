@@ -73,7 +73,8 @@ struct SettingsEditTextView: View {
     }
     
     fileprivate func saveText() {
-        
+        guard let uid = userId else {return}
+
         switch options {
         case .displayName:
             
@@ -83,7 +84,6 @@ struct SettingsEditTextView: View {
             UserDefaults.standard.setValue(submissionText, forKey: CurrentUserDefaults.displayName)
             
             //Update the displayNames on DB user's spots
-            guard let uid = userId else {return}
             DataService.instance.updateDisplayNameOnPosts(userId: uid, displayName: submissionText)
             //Update the displayName on user profile
             AuthService.instance.updateUserDisplayName(userId: uid, displayName: submissionText) { success in
@@ -96,12 +96,19 @@ struct SettingsEditTextView: View {
             
             break
         case .bio:
-            guard let uid = userId else {return}
             self.profileText = submissionText
             UserDefaults.standard.set(submissionText, forKey: CurrentUserDefaults.bio)
             AuthService.instance.updateUserBio(userId: uid, bio: submissionText) { success in
                 if success {
                     AnalyticsService.instance.createdBio()
+                    self.showSuccessAlert.toggle()
+                }
+            }
+        case .social:
+            UserDefaults.standard.set(submissionText, forKey: CurrentUserDefaults.social)
+            AuthService.instance.updateSocialMedia(uid: uid, ig: submissionText) { success in
+                if success {
+                    AnalyticsService.instance.updateSocialMedia()
                     self.showSuccessAlert.toggle()
                 }
             }

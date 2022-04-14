@@ -34,7 +34,7 @@ struct SettingsEditImageView: View {
                     Button(action: {
                         showImagePicker.toggle()
                     }, label: {
-                        UserDotView(imageUrl: profileUrl, width: 250, height: 250)
+                        UserDotView(imageUrl: profileUrl, width: 250)
                             .shadow(radius: 5)
                             .shadow(color: .orange, radius: 30, x: 0, y: 0)
                     })

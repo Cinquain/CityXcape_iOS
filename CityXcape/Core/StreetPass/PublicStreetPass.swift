@@ -52,7 +52,7 @@ struct PublicStreetPass: View {
                          Button(action: {
                              
                          }, label: {
-                             UserDotView(imageUrl: user.profileImageUrl, width: 250, height: 250)
+                             UserDotView(imageUrl: user.profileImageUrl, width: 250)
                                  .shadow(radius: 5)
                                  .shadow(color: .orange, radius: 30, x: 0, y: 0)
                          })

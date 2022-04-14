@@ -103,7 +103,7 @@ struct CardView: View {
                 } label: {
                     
                     VStack(spacing: 0) {
-                        UserDotView(imageUrl: spot.ownerImageUrl, width: 25, height: 25)
+                        UserDotView(imageUrl: spot.ownerImageUrl, width: 25)
                         Text(spot.ownerDisplayName)
                             .font(.caption)
                             .fontWeight(.thin)

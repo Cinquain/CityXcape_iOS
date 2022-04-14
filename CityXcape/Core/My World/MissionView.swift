@@ -49,7 +49,17 @@ struct MissionView: View {
                 .foregroundColor(.white)
                 .padding(.bottom, 5)
             
-            Text(isRouting ? vm.routeText : vm.missionText)
+            if isRouting {
+                Button {
+                    spotModel.openGoogleMap(spot: spot)
+                } label: {
+                    Text(vm.routeText)
+                        .font(.subheadline)
+                }
+
+            }
+            
+            Text(isRouting ? "Please checkin when you arrive" : vm.missionText)
                 .fontWeight(.thin)
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 30)
@@ -59,13 +69,10 @@ struct MissionView: View {
                 if isRouting {
                     vm.checkIfVerifiable(spot: spot)
                 } else {
-                    vm.routeText = "\(String(format: "%.1f", spot.distanceFromUser)) miles away. Press checkin when you arrive"
+                   
                     isRouting = true
                     vm.calculateRoute(spot: spot)
-                    
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        spotModel.openGoogleMap(spot: spot)
-                    }
+                    vm.routeText = "\(String(format: "%.1f", spot.distanceFromUser)) miles away."
                     
                 }
              

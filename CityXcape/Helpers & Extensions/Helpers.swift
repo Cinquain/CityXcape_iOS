@@ -19,6 +19,7 @@ struct UserField {
     static let profileImageUrl = "profileImageUrl"
     static let streetCred = "streetCred"
     static let fcmToken = "fcmToken"
+    static let ig = "instagram"
 }
 
 struct SecretSpotField {
@@ -47,6 +48,7 @@ struct SecretSpotField {
     static let likedBy = "liked_by" //Array
     static let verifierCount = "verifier_count"
     static let commentCount = "comment_count"
+    static let ownerIg = "owner_ig"
 }
 
 struct CommentField {
@@ -77,6 +79,7 @@ struct RankingField {
     static let cities = "cities_visited"
     static let totalCities = "city_count"
     static let progress = "progress"
+    static let ig = "instagram"
 }
 
 struct DatabaseReportField {
@@ -107,6 +110,7 @@ struct CurrentUserDefaults {
     static let profileUrl = "profileImageUrl"
     static let userLocation = "userLocation"
     static let wallet = "wallet"
+    static let social = "instagram"
     
 }
 
@@ -151,6 +155,7 @@ enum SpotActionSheetType {
 enum SettingsEditTextOption {
     case displayName
     case bio
+    case social
 }
 
 enum SecretSpotImageNumb {

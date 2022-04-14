@@ -40,7 +40,7 @@ struct SavesView: View {
                             currentUser = user
                         } label: {
                             VStack {
-                                UserDotView(imageUrl: user.profileImageUrl, width: 80, height: 80)
+                                UserDotView(imageUrl: user.profileImageUrl, width: 80)
                                 Text(user.displayName)
                                     .fontWeight(.thin)
                                     .frame(width: 70)

@@ -40,7 +40,7 @@ struct RankingView: View {
                 } label: {
                     
                     VStack(spacing: 0) {
-                        UserDotView(imageUrl: rank.profileImageUrl, width: userSize, height: userSize)
+                        UserDotView(imageUrl: rank.profileImageUrl, width: userSize)
                         
                         Text(rank.displayName)
                             .foregroundColor(.white)

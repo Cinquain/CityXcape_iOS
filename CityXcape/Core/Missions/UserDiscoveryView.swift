@@ -50,7 +50,7 @@ struct UserDiscoveryView: View {
                             vm.showStreetPass.toggle()
                         } label: {
                             VStack {
-                                UserDotView(imageUrl: rank.profileImageUrl, width: 100, height: 100)
+                                UserDotView(imageUrl: rank.profileImageUrl, width: 100)
                                 Text(rank.displayName)
                                     .fontWeight(.thin)
                                     .frame(width: 70)

@@ -108,6 +108,8 @@
 		21E2861527CE56150068208E /* MyJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E2861427CE56150068208E /* MyJournal.swift */; };
 		21E4DC072753D8D9004276D2 /* CheckinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E4DC062753D8D9004276D2 /* CheckinView.swift */; };
 		21EA999A27D1006D00A13C6C /* JourneyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA999927D1006D00A13C6C /* JourneyViewModel.swift */; };
+		21F039C328074E4E003438D0 /* ImageSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F039C228074E4E003438D0 /* ImageSlider.swift */; };
+		21F039C528075576003438D0 /* DetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F039C428075576003438D0 /* DetailsView.swift */; };
 		21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F8D9C526E8D7CC0016DF9D /* DataService.swift */; };
 		21FAC218278538550035F07F /* PreviewCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FAC217278538550035F07F /* PreviewCard.swift */; };
 		B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */; };
@@ -214,6 +216,8 @@
 		21E2861427CE56150068208E /* MyJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyJournal.swift; sourceTree = "<group>"; };
 		21E4DC062753D8D9004276D2 /* CheckinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinView.swift; sourceTree = "<group>"; };
 		21EA999927D1006D00A13C6C /* JourneyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyViewModel.swift; sourceTree = "<group>"; };
+		21F039C228074E4E003438D0 /* ImageSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlider.swift; sourceTree = "<group>"; };
+		21F039C428075576003438D0 /* DetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsView.swift; sourceTree = "<group>"; };
 		21F8D9C526E8D7CC0016DF9D /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		21FAC217278538550035F07F /* PreviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewCard.swift; sourceTree = "<group>"; };
 		D55E8FAFE7D475B0B8F4DBF2 /* Pods-CityXcape.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.debug.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.debug.xcconfig"; sourceTree = "<group>"; };
@@ -414,6 +418,8 @@
 				21B611F527E753F700361508 /* RowView.swift */,
 				21C91E6027E8A9FD0050D06F /* Ranks.swift */,
 				21D0F07927EC9604003E8748 /* UserReportView.swift */,
+				21F039C228074E4E003438D0 /* ImageSlider.swift */,
+				21F039C428075576003438D0 /* DetailsView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -713,6 +719,7 @@
 				217DA72A26CC8F8B0039A145 /* HomeView.swift in Sources */,
 				21C91E5F27E8A3D50050D06F /* AnalyticsViewModel.swift in Sources */,
 				21D03594270938400071C643 /* MissionRowView.swift in Sources */,
+				21F039C528075576003438D0 /* DetailsView.swift in Sources */,
 				217884F926E17B870066C719 /* SignInWithApple.swift in Sources */,
 				212EE33327A4689F00232992 /* Comment.swift in Sources */,
 				217C08D726D1AFF400751933 /* MapContainer.swift in Sources */,
@@ -733,6 +740,7 @@
 				217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */,
 				2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */,
 				217DA73A26CC95A50039A145 /* Extensions.swift in Sources */,
+				21F039C328074E4E003438D0 /* ImageSlider.swift in Sources */,
 				21DCF82727E63090000BD1B3 /* Follower.swift in Sources */,
 				217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */,
 				21251A8127EB3F4B0042BDF4 /* TotalView.swift in Sources */,

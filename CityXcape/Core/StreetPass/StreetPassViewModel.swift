@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 class StreetPassViewModel: NSObject, ObservableObject {
     
@@ -102,6 +103,17 @@ class StreetPassViewModel: NSObject, ObservableObject {
             }
         
     }
+    
+    func openInstagram(username: String) {
+            //Open in brower
+        let appURL = URL(string: "instagram://user?username=\(username)")!
+        let application = UIApplication.shared
+        application.open(appURL)
+        
+    }
+    
+    
+    
     
     
 }

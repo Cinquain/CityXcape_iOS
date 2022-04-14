@@ -93,7 +93,7 @@ class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func updateRoute(spot: SecretSpot) {
-       routeText = "\(String(format: "%.1f", spot.distanceFromUser)) miles away. Press checkin when you arrive"
+       routeText = "\(String(format: "%.1f", spot.distanceFromUser)) miles away."
     }
     
     func checkIfVerifiable(spot: SecretSpot) {

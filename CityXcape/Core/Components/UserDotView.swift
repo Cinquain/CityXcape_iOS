@@ -13,7 +13,7 @@ struct UserDotView: View {
 
     let imageUrl: String
     let width: CGFloat
-    let height: CGFloat
+
     let ratio : CGFloat = 1.3
     @State var userProfileImage = UIImage()
     
@@ -22,12 +22,12 @@ struct UserDotView: View {
         ZStack {
             Image(Icon.dot.rawValue)
                 .resizable()
-                .frame(width: width, height: height, alignment: .center)
+                .frame(width: width, height: width, alignment: .center)
                 .overlay(
                     WebImage(url: URL(string: imageUrl))
                         .resizable()
                         .clipShape(Circle())
-                        .frame(width: width / ratio, height: height / ratio)
+                        .frame(width: width / ratio, height: width / ratio)
                     
                 )
             
@@ -53,6 +53,6 @@ struct UserDotView_Previews: PreviewProvider {
     
     static var previews: some View {
         
-        UserDotView(imageUrl: "User", width: 150, height: 150)
+        UserDotView(imageUrl: "User", width: 150)
     }
 }

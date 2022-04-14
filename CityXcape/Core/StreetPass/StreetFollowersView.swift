@@ -19,7 +19,7 @@ struct StreetFollowersView: View {
         VStack {
             HStack {
                 VStack(spacing:0) {
-                    UserDotView(imageUrl:profileUrl ?? "", width: 80, height: 80)
+                    UserDotView(imageUrl:profileUrl ?? "", width: 80)
                     Text(displayName ?? "")
                         .fontWeight(.thin)
                 }
@@ -61,7 +61,7 @@ struct StreetFollowersView: View {
                                 currentUser = user
                             } label: {
                                 VStack(spacing: 0) {
-                                    UserDotView(imageUrl: user.profileImageUrl, width: 80, height: 80)
+                                    UserDotView(imageUrl: user.profileImageUrl, width: 80)
                                     Text(user.displayName)
                                         .fontWeight(.thin)
                                         .lineLimit(1)

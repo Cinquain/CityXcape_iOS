@@ -22,7 +22,7 @@ struct MessageView: View {
                     showStreetPass.toggle()
                     AnalyticsService.instance.viewStreetpass()
                 } label: {
-                    UserDotView(imageUrl: comment.imageUrl, width: 40, height: 40)
+                    UserDotView(imageUrl: comment.imageUrl, width: 40)
                 }
                 
                 Text(comment.username)

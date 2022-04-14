@@ -31,11 +31,12 @@
 		<dict/>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1429</string>
+	<string>1511</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>comgooglemaps</string>
 		<string>comgooglemaps-x-callback</string>
+		<string>instagram</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

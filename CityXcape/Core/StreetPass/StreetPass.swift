@@ -13,6 +13,8 @@ struct StreetPass: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.bio) var bio: String?
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
+    @AppStorage(CurrentUserDefaults.social) var social: Int?
+
 
     @StateObject var vm: StreetPassViewModel = StreetPassViewModel()
     
@@ -20,6 +22,7 @@ struct StreetPass: View {
     @State private var username: String = ""
     @State private var userbio: String = ""
     @State private var profileUrl = ""
+    @State private var instagram = ""
     @State private var streetCred : Int = 0
     @State private var showAlert : Bool = false
     @State private var message: String = ""
@@ -58,7 +61,7 @@ struct StreetPass: View {
                             Button(action: {
                                 isPresented.toggle()
                             }, label: {
-                                UserDotView(imageUrl: profileUrl, width: 250, height: 250)
+                                UserDotView(imageUrl: profileUrl, width: 250)
                                     .shadow(radius: 5)
                                     .shadow(color: .orange, radius: 30, x: 0, y: 0)
                             })
@@ -72,9 +75,13 @@ struct StreetPass: View {
                             
                             //Need a text liner for the bio
                             VStack(spacing: 5) {
-                                Text(userbio)
-                                    .font(.subheadline)
+                                
+                         
+                                    Text(userbio)
+                                        .font(.subheadline)
                                     .foregroundColor(.gray)
+                                  
+                                
                                 
                                 Button {
                                     message = "StreetCred is a currency that lets you save Secret Spots."

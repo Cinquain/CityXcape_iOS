@@ -21,11 +21,19 @@ class SpotViewModel: NSObject, ObservableObject {
     
     @State var searchText: String = ""
 
+    
+    
+    
+    @Published var showActionSheet: Bool = false
+    @Published var actionSheetType: SpotActionSheetType = .general
+    
+    
     @Published var comment: String = ""
     @Published var journeyImage: UIImage = UIImage()
     @Published var showStamp: Bool = false
     @Published var showVerifiers: Bool = false
-
+    @Published var showComments: Bool = false
+    
     @Published var alertmessage: String = ""
     @Published var genericAlert: Bool = false
     @Published var didLike: Bool = false

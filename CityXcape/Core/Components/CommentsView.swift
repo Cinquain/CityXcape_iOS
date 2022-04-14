@@ -39,7 +39,7 @@ struct CommentsView: View {
             }
             
             HStack {
-                UserDotView(imageUrl: profileUrl ?? "", width: 30, height: 30)
+                UserDotView(imageUrl: profileUrl ?? "", width: 30)
                    
                 TextField("Add comment", text: $vm.submissionText)
                     .placeholder(when: vm.submissionText.isEmpty) {

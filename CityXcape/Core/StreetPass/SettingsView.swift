@@ -57,6 +57,12 @@ struct SettingsView: View {
                         })
                     
                     NavigationLink(
+                        destination: SettingsEditTextView(submissionText: userBio, title: "Instagram", description: "Connect Instagram to your StreetPass", placeHolder: "Enter IG username", options: .bio, profileText: $userBio),
+                        label: {
+                            SettingsRowView(text: "Instagram", leftIcon: "camera.circle.fill", color: .cx_blue)
+                        })
+                    
+                    NavigationLink(
                         destination: SettingsEditImageView(profileUrl: $profileUrl, title: "Profile Picture", description: "Your profile picture will be shown on your streetpass and on the secret spots you post. Please make it an image of yourself", selectedImage: UIImage(named: "User")!),
                         label: {
                             SettingsRowView(text: "Profile Picture", leftIcon: "photo", color: .cx_blue)

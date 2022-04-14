@@ -43,7 +43,7 @@ struct VerificationView: View {
                         } label: {
                             
                             VStack(spacing: 0) {
-                                UserDotView(imageUrl: user.profileImageUrl, width: 80, height: 80)
+                                UserDotView(imageUrl: user.profileImageUrl, width: 80)
                                 Text(user.displayName)
                                     .fontWeight(.thin)
                                     .frame(width: 70)

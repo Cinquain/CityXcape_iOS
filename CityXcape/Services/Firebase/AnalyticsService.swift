@@ -102,6 +102,10 @@ class AnalyticsService {
         Analytics.logEvent("viewed_comments", parameters: nil)
     }
     
+    func viewedDetails() {
+        Analytics.logEvent("viewed_details", parameters: nil)
+    }
+    
     func postedComment() {
         Analytics.logEvent("posted_comment", parameters: nil)
     }
@@ -128,6 +132,10 @@ class AnalyticsService {
     
     func checkedStreetFollowers() {
         Analytics.logEvent("checked_street_followers", parameters: nil)
+    }
+    
+    func updateSocialMedia() {
+        Analytics.logEvent("updated_socialmedia", parameters: nil)
     }
     
   

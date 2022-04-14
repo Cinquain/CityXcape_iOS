@@ -45,7 +45,7 @@ struct StreetReportCard: View {
             
             HStack {
                 
-                UserDotView(imageUrl: profileUrl ?? "", width: 80, height: 80)
+                UserDotView(imageUrl: profileUrl ?? "", width: 80)
                     .padding(.leading, 20)
 
                 

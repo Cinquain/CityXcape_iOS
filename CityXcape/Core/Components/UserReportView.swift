@@ -44,7 +44,7 @@ struct UserReportView: View {
                         
                         HStack {
                             VStack(spacing: 0) {
-                                UserDotView(imageUrl: user.profileImageUrl, width: 120, height: 120)
+                                UserDotView(imageUrl: user.profileImageUrl, width: 120)
                                 
                                 Text(user.displayName)
                                     .fontWeight(.thin)

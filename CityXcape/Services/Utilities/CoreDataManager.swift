@@ -31,6 +31,8 @@ class CoreDataManager {
             
         }
         context = container.viewContext
+        context.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
+
     }
     
     func fetchSecretSpots() {
