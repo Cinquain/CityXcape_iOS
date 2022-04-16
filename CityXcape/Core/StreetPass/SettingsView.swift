@@ -57,7 +57,7 @@ struct SettingsView: View {
                         })
                     
                     NavigationLink(
-                        destination: SettingsEditTextView(submissionText: userBio, title: "Instagram", description: "Connect Instagram to your StreetPass", placeHolder: "Enter IG username", options: .bio, profileText: $userBio),
+                        destination: SettingsEditTextView(submissionText: userBio, title: "Instagram", description: "Connect Instagram to your StreetPass", placeHolder: "Enter IG username", options: .social, profileText: $userBio),
                         label: {
                             SettingsRowView(text: "Instagram", leftIcon: "camera.circle.fill", color: .cx_blue)
                         })

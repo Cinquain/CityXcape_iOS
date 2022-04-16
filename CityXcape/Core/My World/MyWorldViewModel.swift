@@ -29,9 +29,6 @@ class MyWorldViewModel: NSObject, ObservableObject {
     
     override init() {
         super.init()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.setupSubscribers()
-        }
         setupToggleObserver()
     }
     
@@ -61,11 +58,11 @@ class MyWorldViewModel: NSObject, ObservableObject {
         
         $showVisited
             .sink { [weak self] showVisited in
-                guard let strongSelf = self else {return}
+                guard let self = self else {return}
                 if showVisited {
-                    strongSelf.currentSpots = strongSelf.allSpots.filter({$0.verified == true})
+                    self.currentSpots = self.allSpots.filter({$0.verified == true})
                 } else {
-                    strongSelf.currentSpots = strongSelf.allSpots.filter({$0.verified == false})
+                    self.currentSpots = self.allSpots.filter({$0.verified == false})
                 }
             }
             .store(in: &cancellables)
@@ -114,23 +111,20 @@ class MyWorldViewModel: NSObject, ObservableObject {
         }
     }
     
-    func setupSubscribers() {
+    func formatSecretSpots() {
         
-        manager.$spotEntities
-            .sink { [weak self] entities in
-                guard let strongSelf = self else {return}
-                strongSelf.allSpots.removeAll()
-                strongSelf.allSpots = entities.map({SecretSpot(entity: $0)})
-                strongSelf.currentSpots = strongSelf.allSpots.filter({$0.verified == false})
-                print("Loading from Core Data")
-                if strongSelf.allSpots.isEmpty {
-                    print("Core Data is Empty")
-                    guard let userId = self?.userId else {return}
-                    self?.getSavedSpotsForUser(uid: userId)
-                }
-            }
-            .store(in: &cancellables)
-        
+        let spots = manager.spotEntities.map({SecretSpot(entity: $0)})
+        if spots.isEmpty {
+            print("Core Data is Empty")
+            guard let userId = self.userId else {return}
+            self.getSavedSpotsForUser(uid: userId)
+        } else {
+            print("Core Data Entities Found!")
+            self.allSpots.removeAll()
+            self.allSpots = spots
+            self.currentSpots = self.allSpots.filter({$0.verified == false})
+        }
+            
     }
     
     func getDistanceMessage(spot: SecretSpot) -> String {

@@ -82,7 +82,7 @@ struct HomeView: View {
     
     func getAdditionalProfileInfo() {
         guard let uid = userId else {return}
-        AuthService.instance.getUserInfo(forUserID: uid) { username, bio, streetcred, profileUrl in
+        AuthService.instance.getUserInfo(forUserID: uid) { username, bio, streetcred, profileUrl, social in
             
             if let streetCred = streetcred {
                 UserDefaults.standard.set(streetCred, forKey: CurrentUserDefaults.wallet)

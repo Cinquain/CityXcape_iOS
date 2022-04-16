@@ -40,6 +40,7 @@ struct SecretSpot:  Hashable, Identifiable {
     let ownerId: String
     var ownerDisplayName: String
     var ownerImageUrl: String
+    var ownerIg: String?
     
 
     
@@ -179,6 +180,7 @@ struct SecretSpot:  Hashable, Identifiable {
         self.likedCount = data?[SecretSpotField.likeCount] as? Int ?? 0
         self.verifierCount = data?[SecretSpotField.verifierCount] as? Int ?? 0
         self.commentCount = data?[SecretSpotField.commentCount] as? Int ?? 0
+        self.ownerIg = data?[SecretSpotField.ownerIg] as? String ?? nil
         self.likedByUser = false
         self.verified = false
     }

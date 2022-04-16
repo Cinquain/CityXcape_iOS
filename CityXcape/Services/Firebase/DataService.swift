@@ -19,7 +19,8 @@ class DataService {
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
-
+    @AppStorage(CurrentUserDefaults.bio) var bio: String?
+    @AppStorage(CurrentUserDefaults.social) var social: String?
 
     
     static let instance = DataService()
@@ -53,6 +54,7 @@ class DataService {
             print("Error getting user defaults at DataService")
             return
         }
+        let instagram = social ?? ""
         
         let userWorldRef = REF_WORLD.document("private").collection(uid).document(spotId)
         ImageManager.instance.uploadSecretSpotImage(image: image, postId: spotId) { (urlString) in
@@ -80,11 +82,11 @@ class DataService {
                     SecretSpotField.isPublic: isPublic,
                     SecretSpotField.dateCreated: FieldValue.serverTimestamp(),
                     SecretSpotField.verifierCount: 0,
-                    SecretSpotField.commentCount: 0
+                    SecretSpotField.commentCount: 0,
+                    SecretSpotField.ownerIg: instagram
                 ]
                 
-                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: city, didLike: false, likedCount: 0, verifierCount: 0, commentCount: 0)
-                self.manager.fetchSecretSpots()
+                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: city, didLike: false, likedCount: 0, verifierCount: 0, commentCount: 0, social: instagram)
                 
                 document.setData(spotData) { (error) in
                     if let err = error {
@@ -103,7 +105,11 @@ class DataService {
                     let walletData : [String: Any] = [
                         UserField.streetCred : FieldValue.increment(increment)
                     ]
+                    let rankData: [String: Any] = [
+                        RankingField.totalSpots : FieldValue.increment(increment)
+                    ]
                     AuthService.instance.updateUserField(uid: uid, data: walletData)
+                    self.REF_Rankings.document(uid).updateData(rankData)
                         
                     completion(true)
 
@@ -135,9 +141,16 @@ class DataService {
         
 
         //Save post id in user's world
-        guard let uid = userId else {return}
+        
         let savedData: [String: Any] =
-            ["savedOn": FieldValue.serverTimestamp()]
+            ["savedOn": FieldValue.serverTimestamp(),
+             UserField.displayName: displayName ?? "",
+             UserField.profileImageUrl: profileUrl ?? "",
+             UserField.providerId: uid,
+             UserField.bio: bio ?? "",
+             UserField.ig: social ?? ""
+            ]
+        
         REF_WORLD.document("private").collection(uid).document(spotId).setData(savedData)
 
         //Add user to saved collection in spot
@@ -255,18 +268,30 @@ class DataService {
                         return
                     }
                     
+                    let oneIncrement: Int64 = 1
                     let verifierIncrement: Int64 = 3
+                    
+                    //Update verifier info
                     let verifierWalletData: [String: Any] = [
                         UserField.streetCred : FieldValue.increment(verifierIncrement)
                     ]
-                    
+                    let verifierRankData: [String: Any] = [
+                        RankingField.totalStamps: FieldValue.increment(oneIncrement)
+                    ]
+                    self?.REF_Rankings.document(uid).updateData(verifierRankData)
                     AuthService.instance.updateUserField(uid: uid, data: verifierWalletData)
                     
-                    let ownerIncrement: Int64 = 1
+                    
+                    
+                    //Update owner info
                     let ownerWalletData: [String: Any] = [
-                        UserField.streetCred : FieldValue.increment(ownerIncrement)
+                        UserField.streetCred : FieldValue.increment(oneIncrement)
                     ]
-                                
+                   
+                    let ownerRankData: [String: Any] = [
+                        RankingField.totalVerifications: FieldValue.increment(oneIncrement)
+                    ]
+                    self?.REF_Rankings.document(ownerId).updateData(ownerRankData)
                     AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
                     
                     print("Successfully saved verification to DB")
@@ -510,10 +535,10 @@ class DataService {
             RankingField.totalCities: rank.totalCities,
             RankingField.totalPeopleMet: rank.totalPeopleMet,
             RankingField.totalVerifications: rank.totalUserVerifications,
-            RankingField.progress: rank.progress
+            RankingField.progress: rank.progress,
         ]
         
-        document.setData(data) { error in
+        document.setData(data, merge: true) { error in
             if let error = error {
                 print("Failed to write ranks to Firebase", error.localizedDescription)
                 return
@@ -929,16 +954,16 @@ class DataService {
     
     func updateSocialMediaUrl(ig: String) {
        guard let uid = userId else {return}
+       let document = REF_POST
        let data: [String: Any] = [
            SecretSpotField.ownerIg: ig
        ]
+        //Update DB & Core Data
         let ownerSpots = manager.spotEntities
                         .map({SecretSpot(entity: $0)})
                         .filter({$0.ownerId == uid})
-
-        ownerSpots.forEach { spot in
-            self.REF_POST.document(spot.id).updateData(data)
-        }
+        ownerSpots.forEach({document.document($0.id).updateData(data)})
+        ownerSpots.forEach({manager.updateSocial(spotId: $0.id, instagram: ig)})
 
    }
     

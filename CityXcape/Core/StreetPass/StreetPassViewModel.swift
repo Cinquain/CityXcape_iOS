@@ -108,7 +108,13 @@ class StreetPassViewModel: NSObject, ObservableObject {
             //Open in brower
         let appURL = URL(string: "instagram://user?username=\(username)")!
         let application = UIApplication.shared
-        application.open(appURL)
+        
+        if application.canOpenURL(appURL) {
+            application.open(appURL, options: [:])
+        } else {
+            let webURL = URL(string: "https://instagram.com/\(username)")!
+            application.open(webURL)
+        }
         
     }
     

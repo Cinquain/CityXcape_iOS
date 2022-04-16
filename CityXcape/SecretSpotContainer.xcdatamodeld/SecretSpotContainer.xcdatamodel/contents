@@ -13,6 +13,7 @@
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="ownerDisplayName" optional="YES" attributeType="String"/>
         <attribute name="ownerId" optional="YES" attributeType="String"/>
+        <attribute name="ownerIg" optional="YES" attributeType="String"/>
         <attribute name="ownerImageUrl" optional="YES" attributeType="String"/>
         <attribute name="price" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="saveCount" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
@@ -26,6 +27,6 @@
         <attribute name="zipCode" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="SecretSpotEntity" positionX="-63" positionY="-18" width="128" height="374"/>
+        <element name="SecretSpotEntity" positionX="-63" positionY="-18" width="128" height="389"/>
     </elements>
 </model>

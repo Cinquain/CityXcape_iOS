@@ -46,12 +46,28 @@ struct StreetPass: View {
             
             GeometryReader { geo in
                 VStack(alignment: .leading) {
-                    Text("StreetPass".uppercased())
-                        .foregroundColor(.white)
-                        .fontWeight(.thin)
-                        .tracking(5)
-                        .font(.title)
-                        .padding()
+                    HStack {
+                        Text("StreetPass".uppercased())
+                            .foregroundColor(.white)
+                            .fontWeight(.thin)
+                            .tracking(5)
+                            .font(.title)
+                        
+                        Spacer()
+                        
+                        if !instagram.isEmpty {
+                            Button {
+                                vm.openInstagram(username: instagram)
+                            } label: {
+                                Image("instagram")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 28)
+                            }
+                        }
+                    }
+                    .padding()
+
                     
                     Spacer()
                         .frame(height: geo.size.width / 5)
@@ -75,12 +91,9 @@ struct StreetPass: View {
                             
                             //Need a text liner for the bio
                             VStack(spacing: 5) {
-                                
-                         
                                     Text(userbio)
-                                        .font(.subheadline)
-                                    .foregroundColor(.gray)
-                                  
+                                            .font(.subheadline)
+                                        .foregroundColor(.gray)
                                 
                                 
                                 Button {
@@ -263,7 +276,7 @@ struct StreetPass: View {
     
     func getAdditionalProfileInfo() {
         guard let uid = userId else {return}
-        AuthService.instance.getUserInfo(forUserID: uid) { username, bio, streetcred, profileUrl in
+        AuthService.instance.getUserInfo(forUserID: uid) { username, bio, streetcred, profileUrl, social in
             
             if let name = username {
                 self.username = name
@@ -285,6 +298,10 @@ struct StreetPass: View {
                 self.streetCred = streetCred
                 UserDefaults.standard.set(streetcred, forKey: CurrentUserDefaults.wallet)
 
+            }
+        
+            if let ig = social {
+                self.instagram = ig
             }
             
             

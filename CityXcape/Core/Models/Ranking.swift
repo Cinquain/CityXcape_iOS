@@ -17,6 +17,7 @@ struct Ranking: Identifiable, Hashable {
     let streetCred: Int
     let streetFollowers: Int
     let bio: String
+    let social: String?
     
     let currentLevel: String
     let totalSpots: Int
@@ -28,7 +29,7 @@ struct Ranking: Identifiable, Hashable {
     let progress: CGFloat
     
     
-    init(id: String, profileImageUrl: String, displayName: String, streetCred: Int, streetFollowers: Int, bio: String, currentLevel: String, totalSpots: Int, totalStamps: Int, totalSaves: Int, totalUserVerifications: Int, totalPeopleMet: Int, totalCities: Int, progress: CGFloat) {
+    init(id: String, profileImageUrl: String, displayName: String, streetCred: Int, streetFollowers: Int, bio: String, currentLevel: String, totalSpots: Int, totalStamps: Int, totalSaves: Int, totalUserVerifications: Int, totalPeopleMet: Int, totalCities: Int, progress: CGFloat, social: String?) {
         
         self.id = id
         self.profileImageUrl = profileImageUrl
@@ -44,6 +45,7 @@ struct Ranking: Identifiable, Hashable {
         self.totalPeopleMet = totalPeopleMet
         self.totalCities = totalCities
         self.progress = progress
+        self.social = social
     }
     
     
@@ -62,6 +64,7 @@ struct Ranking: Identifiable, Hashable {
         self.totalPeopleMet = data?[RankingField.totalPeopleMet] as? Int ?? 0
         self.totalCities = data?[RankingField.totalCities] as? Int ?? 0
         self.progress = data?[RankingField.progress] as? CGFloat ?? 0
+        self.social = data?[RankingField.ig] as? String ?? nil
     }
 }
 

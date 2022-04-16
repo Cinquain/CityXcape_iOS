@@ -164,7 +164,7 @@ struct CardView: View {
             
         } content: {
             //TBD
-            let user = User(id: spot.ownerId, displayName: spot.ownerDisplayName, profileImageUrl: spot.ownerImageUrl)
+            let user = User(spot: spot)
             PublicStreetPass(user: user)
         }
 

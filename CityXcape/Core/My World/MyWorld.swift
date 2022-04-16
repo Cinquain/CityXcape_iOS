@@ -8,7 +8,6 @@
 import SwiftUI
 import CoreLocation
 import Combine
-import Shimmer
 import JGProgressHUD_SwiftUI
 
 struct MyWorld: View {
@@ -27,17 +26,11 @@ struct MyWorld: View {
     var body: some View {
         
    
-        
-            GeometryReader { geo in
+            VStack {
                 
-                ZStack {
-                    Color.background
-                        .edgesIgnoringSafeArea(.all)
-                    
-                    VStack {
-                        Ticker(searchText: vm.$searchTerm, handlesearch: {
-                            
-                        })
+                    Ticker(searchText: vm.$searchTerm, handlesearch: {
+                        
+                    })
                         
                         
                     if vm.showOnboarding {
@@ -57,14 +50,13 @@ struct MyWorld: View {
                         Button {
                             selectedTab = 1
                         } label: {
-                            Text("Post a Spot")
+                            Text("Find Spots")
                                 .padding()
                                 .background(Color.white)
                                 .cornerRadius(5)
                         }
                         .foregroundColor(.white)
                         .padding(.top, 40)
-                        .shimmering(duration: 4)
 
 
                         Spacer()
@@ -116,13 +108,17 @@ struct MyWorld: View {
                         
                         
                     }
-                        
-                }
-            }
-            .onAppear {
-                manager.fetchSecretSpots()
-            }
-           
+                    .background(Color.background.edgesIgnoringSafeArea(.all))
+                    .onAppear {
+                        manager.fetchSecretSpots()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            vm.formatSecretSpots()
+                        }
+                    }
+                   
+            
+        
+        //End of body
     }
     
     fileprivate func getExplorerMessage(spot: SecretSpot) -> String {

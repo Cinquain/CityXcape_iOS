@@ -16,6 +16,7 @@ class AnalyticsViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var username: String?
+
     
     let manager = CoreDataManager.instance
     
@@ -153,7 +154,7 @@ class AnalyticsViewModel: NSObject, ObservableObject {
         guard let displayName = username else {return}
         guard let bio = bio else {return}
         guard let streetcred = wallet else {return}
-        let ranking = Ranking(id: uid, profileImageUrl: imageUrl, displayName: displayName, streetCred: streetcred, streetFollowers: 0, bio: bio, currentLevel: rank, totalSpots: totalSpotsPosted, totalStamps: totalStamps, totalSaves: totalSaves, totalUserVerifications: totalVerifications, totalPeopleMet: totalCities, totalCities: totalCities, progress: progressValue)
+        let ranking = Ranking(id: uid, profileImageUrl: imageUrl, displayName: displayName, streetCred: streetcred, streetFollowers: 0, bio: bio, currentLevel: rank, totalSpots: totalSpotsPosted, totalStamps: totalStamps, totalSaves: totalSaves, totalUserVerifications: totalVerifications, totalPeopleMet: totalCities, totalCities: totalCities, progress: progressValue, social: nil)
        
         DataService.instance.CreateUserRanking(rank: ranking)
     }

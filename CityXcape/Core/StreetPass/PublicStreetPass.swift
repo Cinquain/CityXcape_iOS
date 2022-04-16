@@ -14,20 +14,14 @@ struct PublicStreetPass: View {
 
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
+    @State private var instagram: String = ""
     
     let manager = NotificationsManager.instance
 
     let width: CGFloat = UIScreen.main.bounds.size.width / 5
+    
     var body: some View {
-        
-        
-        ZStack(alignment: .topLeading) {
-            Color.streePass
-                .edgesIgnoringSafeArea(.all)
-            
-            LinearGradient(gradient: Gradient(colors: [Color.black, Color.orange,]), startPoint: .center, endPoint: .bottom)
-                            .cornerRadius(25)
-            
+                    
             VStack {
                 
                 HStack {
@@ -36,11 +30,22 @@ struct PublicStreetPass: View {
                           .fontWeight(.thin)
                           .tracking(5)
                           .font(.title)
-                          .padding()
-                          .padding(.leading, 20)
-                    
+                         
+
                     Spacer()
+                    
+                    if let social = user.social {
+                        Button {
+                            openInstagram(username: social)
+                        } label: {
+                            Image("instagram")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 28)
+                        }
+                    }
                 }
+                .padding()
             
 
                 Spacer()
@@ -122,14 +127,11 @@ struct PublicStreetPass: View {
                 Spacer()
                 
             }
+            .background(LinearGradient(gradient: Gradient(colors: [Color.black, Color.orange,]), startPoint: .center, endPoint: .bottom).edgesIgnoringSafeArea(.all))
             .alert(isPresented: $showAlert) {
                 AnalyticsService.instance.triedMessagingUser()
                 return Alert(title: Text(alertMessage))
             }
-            
-        }
-        
-        
         
     }
     //End of body
@@ -144,6 +146,20 @@ struct PublicStreetPass: View {
                 self.showAlert = true
             }
         }
+    }
+    
+    fileprivate func openInstagram(username: String) {
+            //Open in brower
+        let appURL = URL(string: "instagram://user?username=\(username)")!
+        let application = UIApplication.shared
+        
+        if application.canOpenURL(appURL) {
+            application.open(appURL, options: [:])
+        } else {
+            let webURL = URL(string: "https://instagram.com/\(username)")!
+            application.open(webURL)
+        }
+        
     }
 
    
