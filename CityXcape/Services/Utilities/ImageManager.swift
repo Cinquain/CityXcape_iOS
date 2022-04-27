@@ -42,6 +42,18 @@ class ImageManager {
         }
     }
     
+    func deleteSecretSpotImage(postId: String, imageNumb: Int) {
+        let path = getSpotImagePath(spotId: postId, imageNum: imageNumb)
+        path.delete { error in
+            if let error = error {
+                print("Error deleting file in buck", error.localizedDescription)
+                return
+            }
+            print("Successfully deleted image in bucked")
+        }
+        
+    }
+    
     func uploadVerifyImage(image: UIImage, userId: String, postId: String, completion: @escaping (_ url: String?) -> ()) {
         
         let path = getVerificationPath(uid: userId, postId: postId)

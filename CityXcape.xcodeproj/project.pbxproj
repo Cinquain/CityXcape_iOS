@@ -36,7 +36,6 @@
 		217884F926E17B870066C719 /* SignInWithApple.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217884F826E17B870066C719 /* SignInWithApple.swift */; };
 		217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217884FA26E181CE0066C719 /* SignInWithGoogle.swift */; };
 		217884FE26E18CEA0066C719 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217884FD26E18CEA0066C719 /* AuthService.swift */; };
-		2178C4512719030600B4C395 /* CardStack in Frameworks */ = {isa = PBXBuildFile; productRef = 2178C4502719030600B4C395 /* CardStack */; };
 		2178C4532719166800B4C395 /* TextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2178C4522719166800B4C395 /* TextFieldView.swift */; };
 		21793FC726D919D9001ACD1A /* SettingsEditImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21793FC626D919D9001ACD1A /* SettingsEditImageView.swift */; };
 		2179853927E362D40002CEBA /* Leaderboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2179853827E362D40002CEBA /* Leaderboard.swift */; };
@@ -63,7 +62,6 @@
 		217E9AA8270B6EC400F45077 /* DiscoverViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217E9AA7270B6EC400F45077 /* DiscoverViewModel.swift */; };
 		217E9AAB270B757500F45077 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 217E9AAA270B757500F45077 /* Assets.xcassets */; };
 		217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217EFE8926DEAB1F005C7C88 /* CongratsView.swift */; };
-		21806AD3274955EC00C641C7 /* JGProgressHUD-SwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21806AD2274955EC00C641C7 /* JGProgressHUD-SwiftUI */; };
 		218115EB27315E9400026AAD /* NotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218115EA27315E9400026AAD /* NotificationsManager.swift */; };
 		218115ED2731860700026AAD /* PublicStreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218115EC2731860700026AAD /* PublicStreetPass.swift */; };
 		218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218980A626DC54C500A6FD23 /* LikeAnimationView.swift */; };
@@ -72,12 +70,14 @@
 		218D904D2731D4F5000FB407 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218D904C2731D4F5000FB407 /* AnalyticsService.swift */; };
 		218E76F326DBB08A00F720F1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 218E76F226DBB08A00F720F1 /* LaunchScreen.storyboard */; };
 		218ECBBF2709328E00D06603 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218ECBBE2709328E00D06603 /* DiscoverView.swift */; };
-		219842A326CF3A680089CE03 /* LBTATools in Frameworks */ = {isa = PBXBuildFile; productRef = 219842A226CF3A680089CE03 /* LBTATools */; };
 		219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A526CF4E3D0089CE03 /* SecretSpot.swift */; };
 		219842A826CF57740089CE03 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A726CF57740089CE03 /* ImagePicker.swift */; };
 		219CA8F2275A61DD00F1C61E /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CA8F1275A61DD00F1C61E /* PostViewModel.swift */; };
 		21A4697927C12417009F337D /* StampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A4697827C12417009F337D /* StampView.swift */; };
 		21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA28DF26D13BB40001A02E /* StreetPass.swift */; };
+		21ACA5D42814281E0034D0AD /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21ACA5D32814281E0034D0AD /* LaunchView.swift */; };
+		21B1A4C1280D843F00B0AFE2 /* EditSpotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B1A4C0280D843F00B0AFE2 /* EditSpotView.swift */; };
+		21B1A4C3280D84B700B0AFE2 /* EditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B1A4C2280D84B700B0AFE2 /* EditViewModel.swift */; };
 		21B611F427E74FAB00361508 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B611F327E74FAB00361508 /* AnalyticsView.swift */; };
 		21B611F627E753F700361508 /* RowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B611F527E753F700361508 /* RowView.swift */; };
 		21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */; };
@@ -101,7 +101,6 @@
 		21D0F07A27EC9604003E8748 /* UserReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0F07927EC9604003E8748 /* UserReportView.swift */; };
 		21D2413C27CCFE41004D3150 /* Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D2413B27CCFE41004D3150 /* Verification.swift */; };
 		21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */; };
-		21D85F5326EACF0E00502636 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F5226EACF0E00502636 /* Shimmer */; };
 		21DCF82327E60906000BD1B3 /* Ranking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82227E60906000BD1B3 /* Ranking.swift */; };
 		21DCF82527E61043000BD1B3 /* StreetReportCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82427E61043000BD1B3 /* StreetReportCard.swift */; };
 		21DCF82727E63090000BD1B3 /* Follower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82627E63090000BD1B3 /* Follower.swift */; };
@@ -188,6 +187,9 @@
 		219CA8F1275A61DD00F1C61E /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		21A4697827C12417009F337D /* StampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampView.swift; sourceTree = "<group>"; };
 		21AA28DF26D13BB40001A02E /* StreetPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetPass.swift; sourceTree = "<group>"; };
+		21ACA5D32814281E0034D0AD /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
+		21B1A4C0280D843F00B0AFE2 /* EditSpotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSpotView.swift; sourceTree = "<group>"; };
+		21B1A4C2280D84B700B0AFE2 /* EditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditViewModel.swift; sourceTree = "<group>"; };
 		21B611F327E74FAB00361508 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
 		21B611F527E753F700361508 /* RowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowView.swift; sourceTree = "<group>"; };
 		21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotDetailsView.swift; sourceTree = "<group>"; };
@@ -229,11 +231,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21806AD3274955EC00C641C7 /* JGProgressHUD-SwiftUI in Frameworks */,
-				21D85F5326EACF0E00502636 /* Shimmer in Frameworks */,
 				21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */,
-				219842A326CF3A680089CE03 /* LBTATools in Frameworks */,
-				2178C4512719030600B4C395 /* CardStack in Frameworks */,
 				B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,6 +305,7 @@
 				217C08DB26D1C38E00751933 /* OnboardingView.swift */,
 				217C08DF26D1CC4500751933 /* OnboardingViewII.swift */,
 				21BBB06026E596C2000B40B3 /* AnimationController.swift */,
+				21ACA5D32814281E0034D0AD /* LaunchView.swift */,
 			);
 			path = SignUp;
 			sourceTree = "<group>";
@@ -456,6 +455,8 @@
 				217B770A26DD007C000A78C9 /* PostSpotForm.swift */,
 				217EFE8926DEAB1F005C7C88 /* CongratsView.swift */,
 				219CA8F1275A61DD00F1C61E /* PostViewModel.swift */,
+				21B1A4C0280D843F00B0AFE2 /* EditSpotView.swift */,
+				21B1A4C2280D84B700B0AFE2 /* EditViewModel.swift */,
 			);
 			path = MapView;
 			sourceTree = "<group>";
@@ -534,11 +535,7 @@
 			);
 			name = CityXcape;
 			packageProductDependencies = (
-				219842A226CF3A680089CE03 /* LBTATools */,
 				21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */,
-				21D85F5226EACF0E00502636 /* Shimmer */,
-				2178C4502719030600B4C395 /* CardStack */,
-				21806AD2274955EC00C641C7 /* JGProgressHUD-SwiftUI */,
 			);
 			productName = CityXcape;
 			productReference = 217DA72426CC8F8B0039A145 /* CityXcape.app */;
@@ -681,6 +678,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21B1A4C1280D843F00B0AFE2 /* EditSpotView.swift in Sources */,
+				21ACA5D42814281E0034D0AD /* LaunchView.swift in Sources */,
 				219CA8F2275A61DD00F1C61E /* PostViewModel.swift in Sources */,
 				21B611F627E753F700361508 /* RowView.swift in Sources */,
 				217C08E026D1CC4500751933 /* OnboardingViewII.swift in Sources */,
@@ -715,6 +714,7 @@
 				21D0F07A27EC9604003E8748 /* UserReportView.swift in Sources */,
 				1493C3F3277394BA002010A6 /* ActivityIndicator.swift in Sources */,
 				21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */,
+				21B1A4C3280D84B700B0AFE2 /* EditViewModel.swift in Sources */,
 				217DA74126CCAFDD0039A145 /* UserDotView.swift in Sources */,
 				217DA72A26CC8F8B0039A145 /* HomeView.swift in Sources */,
 				21C91E5F27E8A3D50050D06F /* AnalyticsViewModel.swift in Sources */,
@@ -913,7 +913,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.6;
+				MARKETING_VERSION = 1.3.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -938,7 +938,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.6;
+				MARKETING_VERSION = 1.3.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1013,30 +1013,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2178C4502719030600B4C395 /* CardStack */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2178C44F2719030600B4C395 /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */;
-			productName = CardStack;
-		};
-		21806AD2274955EC00C641C7 /* JGProgressHUD-SwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 21806AD1274955EC00C641C7 /* XCRemoteSwiftPackageReference "JGProgressHUD-SwiftUI" */;
-			productName = "JGProgressHUD-SwiftUI";
-		};
-		219842A226CF3A680089CE03 /* LBTATools */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 219842A126CF3A680089CE03 /* XCRemoteSwiftPackageReference "LBTATools" */;
-			productName = LBTATools;
-		};
 		21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
-		};
-		21D85F5226EACF0E00502636 /* Shimmer */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 21D85F5126EACF0E00502636 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
-			productName = Shimmer;
 		};
 /* End XCSwiftPackageProductDependency section */
 

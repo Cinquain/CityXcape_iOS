@@ -8,7 +8,6 @@
 import SwiftUI
 import CoreLocation
 import Combine
-import JGProgressHUD_SwiftUI
 
 struct MyWorld: View {
     
@@ -20,6 +19,8 @@ struct MyWorld: View {
     @Binding var selectedTab: Int
     @State var currentSpot: SecretSpot?
     @State private var showMission: Bool = false
+    @State var searchTerm: String = ""
+
 
     let manager = CoreDataManager.instance
 
@@ -28,8 +29,8 @@ struct MyWorld: View {
    
             VStack {
                 
-                    Ticker(searchText: vm.$searchTerm, handlesearch: {
-                        
+                Ticker(searchText: $searchTerm, handlesearch: {
+                        vm.performSearch(searchTerm: searchTerm)
                     })
                         
                         

@@ -16,6 +16,7 @@ struct CityXcapeApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @AppStorage(CurrentUserDefaults.userId) var currentUserID: String?
+    @State private var showLaunchView: Bool = true
     
     var body: some Scene {
         WindowGroup {
@@ -23,7 +24,19 @@ struct CityXcapeApp: App {
                 SignUpView()
             } else
             {
-                HomeView()
+                ZStack {
+                    HomeView()
+                    
+                    
+                    ZStack {
+                        if showLaunchView {
+                            LaunchView(showLaunchView: $showLaunchView)
+                                .transition(.move(edge: .leading))
+                        }
+                    }
+                    .zIndex(2)
+                
+                }
             }
         }
     }

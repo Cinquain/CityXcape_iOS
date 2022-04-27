@@ -41,7 +41,6 @@ struct CongratsView: View {
                     Text("You Earned 1 StreetCred")
                         .font(.title3)
                         .fontWeight(.thin)
-                        .shimmering()
                     
                     
                   

@@ -13,9 +13,9 @@ class TotalsViewModel: NSObject, ObservableObject {
     
     @Published var saveUsers: [User] = []
     @Published var verifiedUsers: [User] = []
-    @Published var showUsersView: Bool = false
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
+    
     
      func getImageName(type: AnalyticsType) -> String {
         switch type {
@@ -66,7 +66,7 @@ class TotalsViewModel: NSObject, ObservableObject {
         case .checkins:
             return "Total Checkins"
         case .views:
-            return "Total Views"
+            return "Total Spots"
         }
     }
     
@@ -77,21 +77,19 @@ class TotalsViewModel: NSObject, ObservableObject {
            showAlert.toggle()
        case .saves:
            getSavedUsers(spot: spot)
-           showUsersView.toggle()
        case .checkins:
            getVerifiedusers(spot: spot)
-           showUsersView.toggle()
        case .views:
-           return
+           break
        }
    }
     
     func timeStamp(type: AnalyticsType, user: User) -> String{
         
         if type == .checkins {
-            return "Checked in on \n \(user.membership?.stringDescription() ?? "")"
+            return "Checked-in on \n \(user.verified?.stringDescription() ?? "")"
         } else {
-            return "Saved on \n \(user.membership?.stringDescription() ?? "")"
+            return "Saved on \n \(user.verified?.stringDescription() ?? "")"
         }
         
     }

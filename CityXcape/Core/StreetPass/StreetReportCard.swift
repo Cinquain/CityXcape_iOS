@@ -16,7 +16,7 @@ struct StreetReportCard: View {
     
     @StateObject var vm: AnalyticsViewModel = AnalyticsViewModel()
     @State private var showTotalView: Bool = false
-    @State private var currentType: AnalyticsType = .views
+    @State private var currentType: AnalyticsType?
     
     var body: some View {
         
@@ -117,10 +117,10 @@ struct StreetReportCard: View {
             Spacer()
             
             HStack {
-                Image("analytics")
+                Image("graph")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 40)
+                    .frame(width: 30)
                 
                 Text("Analytics")
                     .font(.title2)
@@ -138,24 +138,25 @@ struct StreetReportCard: View {
                     showTotalView.toggle()
                 } label: {
                     HStack {
-                        Text("\(vm.totalViews) Views")
+                        Text("\(vm.totalSpotsPosted) Spots")
                             .font(.title3)
                             .foregroundColor(.white)
                             .fontWeight(.thin)
                         Spacer()
-                        Image(systemName: "eye.fill")
+                        Image("pin_blue")
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 30)
+                            .frame(height: 30)
                             .foregroundColor(.white)
                         
                     }
                     .frame(width: 180)
 
                 }
-                .fullScreenCover(isPresented: $showTotalView) {
-                    TotalView(type: currentType, spots: vm.ownerSpots)
-                }
+                .fullScreenCover(item: $currentType, content: { type in
+                    TotalView(type: type, spots: vm.ownerSpots.sorted(by: {$0.viewCount > $1.viewCount}))
+                })
+               
                 //Button 1
                 
                 Button {
@@ -180,9 +181,10 @@ struct StreetReportCard: View {
 
                 }
                 .padding()
-                .fullScreenCover(isPresented: $showTotalView) {
-                    TotalView(type: currentType, spots: vm.ownerSpots)
-                }
+                .fullScreenCover(item: $currentType, content: { type in
+                    TotalView(type: type, spots: vm.ownerSpots)
+                })
+               
                 //Button 1
                 
                 Button {
@@ -205,9 +207,11 @@ struct StreetReportCard: View {
                     }
                     .frame(width: 180)
                 }
-                .fullScreenCover(isPresented: $showTotalView) {
-                    TotalView(type: currentType, spots: vm.ownerSpots)
-                }
+                .fullScreenCover(item: $currentType, content: { type in
+                    TotalView(type: type, spots: vm.ownerSpots)
+                })
+                
+                
                 //Button 1
 
                 

@@ -113,8 +113,13 @@ class CoreDataManager {
     
     func updateImage(spotId: String, index: Int, imageUrl: String) {
         let entity = spotEntities.first(where: {$0.spotId == spotId})
-        entity?.imageUrls?.insert(imageUrl, at: index)
+        entity?.imageUrls?[index] = imageUrl
         save()
+    }
+    
+    func addImage(spotId: String, imageUrl: String) {
+        let entity = spotEntities.first(where: {$0.spotId == spotId})
+        entity?.imageUrls?.append(imageUrl)
     }
     
     func updateVerifierCount(spotId: String, count: Double) {
@@ -129,6 +134,11 @@ class CoreDataManager {
         save()
     }
     
+    func updatePrice(spotId: String, price: Int) {
+        let entity = spotEntities.first(where: {$0.spotId == spotId})
+        entity?.price = Double(price)
+        save()
+    }
     
     func updateVerification(spotId: String, verified: Bool) {
         let entity = spotEntities.first(where: {$0.spotId == spotId})

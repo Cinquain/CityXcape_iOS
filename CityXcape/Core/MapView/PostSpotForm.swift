@@ -113,30 +113,23 @@ struct PostSpotForm: View {
                     .padding(.bottom, 10)
                     
               
-                        VStack{
                             
-                            HStack {
-                                Button(action: {
-                                    vm.showActionSheet.toggle()
-                                }, label: {
-                                    HStack {
-                                        Image(systemName: "camera.circle.fill")
-                                            .font(.system(size: 30))
-                                            .foregroundColor(.white)
-                                        Text("Secret Spot Image")
-                                            .fontWeight(.thin)
-                                            .foregroundColor(.white)
-                                    }
-                            })
+                        Button(action: {
+                            vm.showActionSheet.toggle()
+                        }, label: {
+                            if let image = vm.selectedImage {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(maxWidth: .infinity)
+                                    .cornerRadius(12)
+                            } else {
+                                LocationCamera(height: 150, color: .white)
                             }
+                    
+                    })
+                    
                             
-                            Image(uiImage: vm.selectedImage)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(maxWidth: .infinity)
-                                .cornerRadius(12)
-                            
-                        }
                         
                     HStack {
                         Text("Price:")
@@ -211,9 +204,7 @@ struct PostSpotForm: View {
                     
             
                 }
-                .sheet(isPresented: $vm.showPicker, onDismiss: {
-                    vm.addedImage = true
-                }, content: {
+                .sheet(isPresented: $vm.showPicker, content: {
                     ImagePicker(imageSelected: $vm.selectedImage, sourceType: $vm.sourceType)
                         .colorScheme(.dark)
                 })

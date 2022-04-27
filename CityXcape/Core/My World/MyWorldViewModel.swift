@@ -22,7 +22,6 @@ class MyWorldViewModel: NSObject, ObservableObject {
     
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
-    @State var searchTerm: String = ""
     
     
     var cancellables = Set<AnyCancellable>()
@@ -86,8 +85,6 @@ class MyWorldViewModel: NSObject, ObservableObject {
     
     
     func getSavedbyUsers(postId: String) {
-        
-        
         DataService.instance.getUsersForSpot(postId: postId, path: "savedBy") { savedUsers in
             if savedUsers.isEmpty {
                 print("No users saved this secret spot")
@@ -136,6 +133,16 @@ class MyWorldViewModel: NSObject, ObservableObject {
         }
     }
     
+    func performSearch(searchTerm: String) {
+        if searchTerm.isEmpty {
+            currentSpots  = allSpots.filter({$0.verified == false})
+            return
+        }
+        currentSpots = allSpots.filter({$0.city.lowercased().contains(searchTerm.lowercased())
+                    || $0.world.lowercased().contains(searchTerm.lowercased())
+                    || $0.spotName.lowercased().contains(searchTerm.lowercased())})
+        
+    }
 
     
     

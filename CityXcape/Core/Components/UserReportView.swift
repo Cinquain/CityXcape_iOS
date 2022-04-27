@@ -40,7 +40,7 @@ struct UserReportView: View {
                 
                 VStack(alignment: .leading) {
                     
-                    ForEach(vm.saveUsers) { user in
+                    ForEach(type == .checkins ? vm.verifiedUsers : vm.saveUsers) { user in
                         
                         HStack {
                             VStack(spacing: 0) {

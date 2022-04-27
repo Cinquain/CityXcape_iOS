@@ -36,7 +36,7 @@ struct CheckinView: View {
                         .frame(height: 200)
                         .opacity(0.2)
                         .overlay(
-                            Image(uiImage: vm.journeyImage)
+                            Image(uiImage: vm.journeyImage ?? UIImage())
                                 .resizable()
                                 .frame(width: 145, height: 145)
                                 .scaledToFit()

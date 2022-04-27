@@ -8,7 +8,6 @@
 import SwiftUI
 import MapKit
 import UIKit
-import JGProgressHUD_SwiftUI
 
 struct MapContainer: View {
     @Environment(\.presentationMode) var presentationMode

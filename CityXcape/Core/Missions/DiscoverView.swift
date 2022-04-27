@@ -17,6 +17,8 @@ struct DiscoverView: View {
     @State private var alertMessage: String = ""
     @State private var passed: Bool = false
     @State private var saved: Bool = false
+    @State var searchTerm: String = ""
+
     
     @Binding var selectedTab: Int
     @Binding var spotCount: Int
@@ -30,8 +32,8 @@ struct DiscoverView: View {
         
         VStack(spacing: 20) {
             
-            Ticker(searchText: vm.$searchTerm, handlesearch: {
-                
+            Ticker(searchText: $searchTerm, handlesearch: {
+                vm.performSearch(searchTerm: searchTerm)
             })
             
             

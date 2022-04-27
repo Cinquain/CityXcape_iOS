@@ -48,18 +48,20 @@ struct SignInWithEmailView: View {
                         vm.showPicker.toggle()
                     } label: {
                         VStack(spacing: 0) {
-                            Image("profile")
-                                .resizable()
-                                .aspectRatio( contentMode: .fit)
-                                .frame(width: 150)
-                                .overlay(
-                                    Image(uiImage: vm.userImage)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 130)
-                                        .clipShape(Circle())
-                            )
                             
+                            if let image = vm.userImage {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 130)
+                                    .clipShape(Circle())
+                            } else {
+                                Image("profile")
+                                    .resizable()
+                                    .aspectRatio( contentMode: .fit)
+                                    .frame(width: 150)
+                            }
+                           
                      Text("Tap to add profile image")
                                 .font(.caption)
                                 .fontWeight(.thin)

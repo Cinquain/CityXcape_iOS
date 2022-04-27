@@ -28,7 +28,7 @@ class PostViewModel: NSObject, ObservableObject {
     
     @Published var showPicker: Bool = false
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
-    @Published var selectedImage: UIImage = UIImage()
+    @Published var selectedImage: UIImage?
 
     
     @Published var presentPopover: Bool = false
@@ -39,7 +39,6 @@ class PostViewModel: NSObject, ObservableObject {
     @Published var presentCompletion: Bool = false
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
-    @Published var addedImage: Bool = false
 
     
     
@@ -52,7 +51,7 @@ class PostViewModel: NSObject, ObservableObject {
         }
         
         if spotName.count > 4
-            && addedImage == true
+            && selectedImage != nil
             && details.count > 10
             && world.count > 2
               {
@@ -79,7 +78,7 @@ class PostViewModel: NSObject, ObservableObject {
                 return
             }
             
-            if addedImage == false {
+            if selectedImage == nil {
                 alertMessage = "Please add an image for your spot"
                 showAlert.toggle()
                 return
@@ -93,8 +92,9 @@ class PostViewModel: NSObject, ObservableObject {
     func postSecretSpot(mapItem: MKMapItem) {
 
         buttonDisabled = true
-
-        DataService.instance.uploadSecretSpot(spotName: spotName, description: details, image: selectedImage, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { (success) in
+        guard let image = selectedImage else {return}
+        
+        DataService.instance.uploadSecretSpot(spotName: spotName, description: details, image: image, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { (success) in
             
             if success {
                 self.buttonDisabled = false
@@ -109,6 +109,7 @@ class PostViewModel: NSObject, ObservableObject {
     
     
     func converToHashTag() {
+        
         var newWords = [String]()
         let wordsArray = world.components(separatedBy:" ")
         for word in wordsArray {

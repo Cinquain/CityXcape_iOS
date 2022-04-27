@@ -32,6 +32,7 @@ struct SecretSpotField {
     static let ownerId = "owner_id"
     static let ownerDisplayName = "ownerDisplayName"
     static let ownerImageUrl = "ownerImageUrl"
+    static let verifierImages = "verifier_images"
     static let latitude = "latitude"
     static let longitude = "longitude"
     static let dateCreated = "date_created"
@@ -114,6 +115,23 @@ struct CurrentUserDefaults {
     
 }
 
+
+struct CheckinField {
+    static let comment = "comment"
+    static let image =  "imageUrl"
+    static let veriferName = "verifierName"
+    static let verifierImage = "verifierImageUrl"
+    static let verifierId =  "verifierId"
+    static let spotOwnerId =  "spotOwnerId"
+    static let spotId = "postId"
+    static let city =   "city"
+    static let spotName =  "name"
+    static let latitude = "latitude"
+    static let longitude = "longitude"
+    static let country =  "country"
+    static let timestamp = "time"
+}
+
 enum Icon: String {
     case pin = "pin_blue"
     case dot = "dot"
@@ -158,7 +176,7 @@ enum SettingsEditTextOption {
     case social
 }
 
-enum SecretSpotImageNumb {
+enum SecretSpotImageNumb: CaseIterable {
     case one
     case two
     case three
@@ -169,7 +187,9 @@ enum Path: String {
     case verifiers
 }
 
-enum AnalyticsType: String {
+enum AnalyticsType: String, Identifiable {
+    var id : RawValue { rawValue }
+    
     case comments
     case saves
     case checkins

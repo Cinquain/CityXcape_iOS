@@ -30,7 +30,6 @@ class DiscoverViewModel: ObservableObject {
     @Published var saved: Bool = false
     @Published var passed: Bool = false
     
-    @State var searchTerm: String = ""
     @Published var oldResults: [SecretSpot] = []
     @Published var rankings: [Ranking] = []
     @Published var showStreetPass: Bool = false
@@ -82,19 +81,16 @@ class DiscoverViewModel: ObservableObject {
     }
     
     
-    func performSearch() {
-        if oldResults.isEmpty {
-            oldResults.append(contentsOf: newSecretSpots)
-            let results = newSecretSpots.filter({$0.city.contains(searchTerm)
-                || $0.world.contains(searchTerm.lowercased())})
-            newSecretSpots = results
+    func performSearch(searchTerm: String) {
+        if searchTerm.isEmpty {
+            newSecretSpots = allspots
             return
         }
-            let results = oldResults.filter({$0.city.contains(searchTerm)
-                || $0.world.contains(searchTerm.lowercased())})
-            newSecretSpots = results
-        
+        newSecretSpots = allspots.filter({$0.city.lowercased().contains(searchTerm.lowercased())
+                            || $0.world.lowercased().contains(searchTerm.lowercased())
+                            || $0.spotName.lowercased().contains(searchTerm.lowercased())})
     }
+    
     
     func getDistanceMessage(spot: SecretSpot) -> String {
         
@@ -199,9 +195,7 @@ class DiscoverViewModel: ObservableObject {
     }
     
     
-    
-    
-    
+
     
     
 }

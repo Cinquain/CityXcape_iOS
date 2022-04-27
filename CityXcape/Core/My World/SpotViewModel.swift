@@ -9,7 +9,6 @@ import SwiftUI
 import CoreLocation
 import Combine
 import FirebaseFirestore
-import JGProgressHUD_SwiftUI
 
 class SpotViewModel: NSObject, ObservableObject {
     
@@ -29,7 +28,8 @@ class SpotViewModel: NSObject, ObservableObject {
     
     
     @Published var comment: String = ""
-    @Published var journeyImage: UIImage = UIImage()
+    @Published var commentString: String = ""
+    @Published var journeyImage: UIImage?
     @Published var showStamp: Bool = false
     @Published var showVerifiers: Bool = false
     @Published var showComments: Bool = false
@@ -45,26 +45,14 @@ class SpotViewModel: NSObject, ObservableObject {
     @Published var refresh: Bool = false
     
     
-    @Published var newDescription: String = ""
-    @Published var newWorld: String = ""
-    @Published var newSpotName: String = ""
-    @Published var newSpotImageUrl: String = ""
-    @Published var commentString: String = ""
-
-    
     @Published var showPicker: Bool = false
     @Published var addedImage: Bool = false
-    @Published var imageSelected: SecretSpotImageNumb = .one
-    @Published var selectedImage: UIImage = UIImage()
-    @Published var selectedImageII: UIImage = UIImage()
-    @Published var selectedImageIII: UIImage = UIImage()
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     @Published var submissionText: String = ""
     @Published var comments: [Comment] = []
     @Published var users: [User] = []
     
-    var amount: Float = 10
 
     let manager = CoreDataManager.instance
     var cancellables = Set<AnyCancellable>()
@@ -106,143 +94,11 @@ class SpotViewModel: NSObject, ObservableObject {
         self.showAlert = true
         self.alertMessage = "This spot is for the \(spot.world) community"
     }
+   
     
-    func editSpotDescription(postId: String) {
-        
-        let data: [String: Any] = [
-            SecretSpotField.description : newDescription
-        ]
-        
-        manager.updateDescription(spotId: postId, description: newDescription)
-        
-        DataService.instance.updateSpotField(postId: postId, data: data) { success in
-            
-            if success {
-                
-                self.alertmessage = "Successfully updated description"
-                self.showAlert = true
-                return
-            } else {
-                self.alertmessage = "Failed to update description"
-                self.showAlert = true
-                return
-            }
-            
-        }
-    }
-    
-    func editWorldTag(postId: String) {
-        let hashtag = newWorld.converToHashTag()
-        
-        let data: [String: Any] = [
-            SecretSpotField.world : hashtag
-        ]
-        
-        manager.updateWorld(spotId: postId, world: hashtag)
-        
-        DataService.instance.updateSpotField(postId: postId, data: data) { success in
-            
-            if success {
-                self.alertmessage = "Successfully updated World"
-                self.showAlert = true
-                return
-            } else {
-                self.alertmessage = "Failed to update World"
-                self.showAlert = true
-                return
-            }
-        }
-    }
-    
-    func editSpotName(postId: String) {
-        let data: [String: Any] = [
-            SecretSpotField.spotName : newSpotName
-        ]
-        
-        manager.updateName(spotId: postId, name: newSpotName)
-        
-        DataService.instance.updateSpotField(postId: postId, data: data) { success in
-            
-            if success {
-                self.alertmessage = "Successfully updated spot name"
-                self.showAlert = true
-                return
-            } else {
-                self.alertmessage = "Failed to update spot name"
-                self.showAlert = true
-                return
-            }
-        }
-    }
-    
-    func updateMainSpotImage(postId: String, completion: @escaping (_ url: String) -> ()) {
-     
-        ImageManager.instance.uploadSecretSpotImage(image: selectedImage, postId: postId) { downloadUrl in
-            
-            guard let url = downloadUrl else {return}
-            completion(url)
-            self.manager.updateImage(spotId: postId, index: 0, imageUrl: url)
-            self.newSpotImageUrl = url
-            
-            let data: [String: Any] = [
-                SecretSpotField.spotImageUrl : url
-            ]
-            
-            DataService.instance.updateSpotField(postId: postId, data: data) { success in
-                if success {
-                    self.alertmessage = "Successfully updated image"
-                    self.showAlert = true
-                    return
-                } else {
-                    self.alertmessage = "Failed to upload image"
-                    self.showAlert = true
-                    return
-                }
-            }
-            
-        }
-    }
-    
-    func updateAdditonalImage(postId: String, image: UIImage, number: Int,  completion: @escaping (_ url: String) -> ()) {
 
-        ImageManager.instance.updateSecretSpotImage(image: image, postId: postId, number: number) { url in
-           
-            guard let downloadUrl = url else {return}
-            completion(downloadUrl)
-            let index = number - 1
-            self.manager.updateImage(spotId: postId, index: index, imageUrl: downloadUrl)
-            
-            let data: [String: Any] = [
-                SecretSpotField.spotImageUrls : FieldValue.arrayUnion([downloadUrl])
-            ]
-            
-            DataService.instance.updateSpotField(postId: postId, data: data) { success in
-                
-                if success {
-                    self.alertmessage = "Successfully added image"
-                    self.showAlert = true
-                    return
-                } else {
-                    self.alertmessage = "Failed to add new image"
-                    self.showAlert = true
-                    return
-                }
-                
-            }
-            
-        }
-        
-    }
-    
-    func setupImageSubscriber() {
-        $selectedImage
-            .combineLatest($selectedImageII, $selectedImageIII)
-            .sink { [weak self] _ in
-                self?.addedImage = true
-            }
-            .store(in: &cancellables)
-    }
-    
+
+
     func reportPost(reason: String, spot: SecretSpot) {
           print("Reporting post")
           AnalyticsService.instance.reportPost()
@@ -378,8 +234,6 @@ class SpotViewModel: NSObject, ObservableObject {
     }
     
     func getComments(postId: String) {
-        
-        
         DataService.instance.downloadComments(postId: postId) { comments in
             if comments.isEmpty {
                 print("No Comments Found")
@@ -408,13 +262,15 @@ class SpotViewModel: NSObject, ObservableObject {
             return
         }
         
-        if self.addedImage == false {
+        if self.journeyImage == nil {
             alertMessage = "Take a picture for your journey"
             showAlert = true
             return
         }
         
-        DataService.instance.verifySecretSpot(spot: spot, image: journeyImage, comment: comment) { [weak self] (success, message) in
+        let image = journeyImage ?? UIImage()
+        
+        DataService.instance.verifySecretSpot(spot: spot, image: image, comment: comment) { [weak self] (success, message) in
             if success {
                 self?.manager.updateVerification(spotId: spot.id, verified: true)
                 completion(success)

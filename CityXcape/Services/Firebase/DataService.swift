@@ -229,7 +229,8 @@ class DataService {
     
     
     func verifySecretSpot(spot: SecretSpot, image: UIImage, comment: String, completion: @escaping (_ success: Bool, _ error: String?) ->()) {
-        guard let uid = userId else {return}
+        guard let uid = userId, let username = displayName, let profileUrl = profileUrl else {return}
+        
         let postId = spot.id
         let ownerId = spot.ownerId
         
@@ -238,23 +239,26 @@ class DataService {
             if let imageUrl = url {
                 
                 let checkinData: [String: Any] = [
-                    "comment": comment,
-                    "imageUrl": imageUrl,
-                    "verifierId": uid,
-                    "spotOwnerId": ownerId,
-                    "postId": postId,
-                    "city": spot.city,
-                    "name": spot.spotName,
-                    "latitude": spot.latitude,
-                    "longitude": spot.longitude,
-                    "country": spot.country,
-                    "time": FieldValue.serverTimestamp()
+                    CheckinField.comment: comment,
+                    CheckinField.image: imageUrl,
+                    CheckinField.veriferName: username,
+                    CheckinField.verifierImage: profileUrl,
+                    CheckinField.verifierId: uid,
+                    CheckinField.spotOwnerId: ownerId,
+                    CheckinField.spotId: postId,
+                    CheckinField.city: spot.city,
+                    CheckinField.spotName: spot.spotName,
+                    CheckinField.latitude: spot.latitude,
+                    CheckinField.longitude: spot.longitude,
+                    CheckinField.country: spot.country,
+                    CheckinField.timestamp: FieldValue.serverTimestamp()
                 ]
                 
                 self?.REF_WORLD.document("verified").collection(uid).document(postId).setData(checkinData)
                 
                 let checkinIncrement: Int64 = 1
-                let fieldUpdate = [
+                let fieldUpdate: [String: Any] = [
+                    SecretSpotField.verifierImages: FieldValue.arrayUnion([imageUrl]),
                     SecretSpotField.verifierCount: checkinIncrement
                 ]
                 
@@ -798,6 +802,7 @@ class DataService {
                     let data = document.data()
                     let timestamp = data["savedOn"] as? Timestamp
                     let date = timestamp?.dateValue()
+                
                     
                     self.REF_USERS.document(id).getDocument { snapshot, error in
                         
@@ -807,7 +812,7 @@ class DataService {
                         let data = snapshot?.data()
                         
                         var user = User(data: data)
-                        user.membership = date
+                        user.verified = date
                         savedUsers.append(user)
                         
                         DispatchQueue.main.async {
@@ -827,6 +832,12 @@ class DataService {
         
         REF_POST.document(postId).collection("verifiers").getDocuments { snapshot, error in
             
+            if let err = error {
+                print("Error finding verifiers for secret spot", err.localizedDescription)
+                completion(verifiedUsers)
+                return
+            }
+            
             if snapshot?.count == 0 {
                 print("No verifiers found")
                 let count: Double = 0
@@ -835,15 +846,16 @@ class DataService {
                 return
             }
             
-            if let snapshot = snapshot, snapshot.count > 0 {
+            if let snapshot = snapshot {
                 print("Found verifiers")
                 let count: Double = Double(snapshot.count)
                 self.manager.updateVerifierCount(spotId: postId, count: count)
                 
                 snapshot.documents.forEach { document in
                     let id = document.documentID
-                    let checkedIn = document.get("checked-in") as? Timestamp
-                    let date = checkedIn?.dateValue()
+                    let data = document.data()
+                    let timestamp = data[CheckinField.timestamp] as? Timestamp
+                    let date = timestamp?.dateValue()
                     
                     self.REF_USERS.document(id).getDocument { snapshot, error in
                         

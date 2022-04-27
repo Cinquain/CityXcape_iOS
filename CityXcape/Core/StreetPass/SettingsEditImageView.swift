@@ -16,7 +16,7 @@ struct SettingsEditImageView: View {
     @Binding var profileUrl: String
     @State var title: String
     @State var description: String
-    @State var selectedImage: UIImage = UIImage(named: "silhouette")!
+    @State var selectedImage: UIImage? = UIImage(named: "silhouette")!
     @State var showImagePicker: Bool = false
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State private var showSuccessAlert: Bool = false
@@ -88,16 +88,24 @@ struct SettingsEditImageView: View {
     fileprivate func saveProfileImage() {
         guard let uid = userId else {return}
         
-        ImageManager.instance.uploadProfileImage(uid: uid, image: selectedImage) { imageurl in
-            
-            guard let url = imageurl else {return}
-            profileUrl = url
-            UserDefaults.standard.set(url, forKey: CurrentUserDefaults.profileUrl)
-            
-            DataService.instance.updateProfileImage(userId: uid, profileImageUrl: url)
-            self.showSuccessAlert.toggle()
+        if let image = selectedImage {
+            ImageManager.instance.uploadProfileImage(uid: uid, image: image) { imageurl in
+                
+                guard let url = imageurl else {return}
+                profileUrl = url
+                UserDefaults.standard.set(url, forKey: CurrentUserDefaults.profileUrl)
+                
+                DataService.instance.updateProfileImage(userId: uid, profileImageUrl: url)
+                self.showSuccessAlert.toggle()
+            }
         }
+      
+        
+    
+        
     }
+    
+    
 }
 
 struct SettingsEditImageView_Previews: PreviewProvider {

@@ -14,7 +14,7 @@ struct OnboardingViewII: View {
 
     @State private var displayName = ""
     @State private var showPicker: Bool = false
-    @State var userImage: UIImage = UIImage()
+    @State var userImage: UIImage?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
     @State private var opacity: Double = 0
@@ -40,10 +40,10 @@ struct OnboardingViewII: View {
                 
        
                 
-                HStack {
-                    Spacer()
+                HStack(alignment: .center) {
+     
                     Button(action: {
-                        
+                        showPicker.toggle()
                     }, label: {
                         VStack(spacing: 25){
                             Image(Icon.dot.rawValue)
@@ -51,7 +51,7 @@ struct OnboardingViewII: View {
                                 .frame(width: geo.size.width / 2, height: geo.size.width / 2)
                                 .shadow(color: .orange, radius: 30, x: 0, y: 0)
                                 .overlay(
-                                    Image(uiImage: userImage)
+                                    Image(uiImage: userImage ?? UIImage())
                                         .resizable()
                                         .frame(width: geo.size.width / 3, height: geo.size.width / 3)
                                         .cornerRadius((geo.size.width / 3) / 2)
@@ -61,7 +61,6 @@ struct OnboardingViewII: View {
                                 .fontWeight(.thin)
                         }
                     })
-                    Spacer()
                 }
             
                 TextField("Create a Username", text: $displayName)
@@ -77,6 +76,7 @@ struct OnboardingViewII: View {
                     .autocapitalization(.sentences)
                     .padding(.horizontal)
                 
+                
                 Button(action: {
                     showPicker.toggle()
                 }, label: {
@@ -88,10 +88,16 @@ struct OnboardingViewII: View {
                         .frame(maxWidth: .infinity)
                         .background(Color.orange)
                         .cornerRadius(8)
-                        .opacity(displayName.count > 3 ? 1.0 : 0.0)
+                        .opacity(displayName.count > 3 ? 1.0 : 1.0)
                         .animation(.easeOut(duration: 1.0))
                         .padding(.horizontal)
                 })
+                
+                ProgressView()
+                    .frame(width: 100, height: 100)
+                    .progressViewStyle(.circular)
+                    .colorScheme(.dark)
+                    .opacity(disableInteraction ? 1 : 0)
                 
                 Spacer()
                     .frame(height: 60)
@@ -119,6 +125,8 @@ struct OnboardingViewII: View {
                 .opacity(opacity)
                 .animation(.easeOut(duration: 0.5))
                 .disabled(disableInteraction)
+                
+
 
                 
                 Spacer()
@@ -143,17 +151,27 @@ struct OnboardingViewII: View {
     
     fileprivate func createProfile() {
         
+                
         print("Creating Profile")
         disableInteraction = true
         
-        if displayName.isEmpty || displayName.count < 3 {
+        if displayName.count < 3 {
             self.showError = true
             message = "Username should be at least 3 characters 😤"
             disableInteraction = false
             return
         }
         
-        AuthService.instance.createNewUserInDatabase(name: displayName, email: email, providerId: providerId, provider: provider, profileImage: userImage) { (uid) in
+        if userImage == nil {
+            message = "Upload a photo for your Streetpass"
+            self.showError = true
+            disableInteraction = false
+            return
+        }
+        
+        let image = userImage ?? UIImage()
+        
+        AuthService.instance.createNewUserInDatabase(name: displayName, email: email, providerId: providerId, provider: provider, profileImage: image) { (uid) in
             buttonMessage = "Creating Account"
             if let userId = uid {
                 

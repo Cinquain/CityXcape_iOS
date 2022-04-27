@@ -17,7 +17,7 @@ class EmailSigninViewModel: ObservableObject {
     
     
     @Published var showPicker: Bool = false
-    @Published var userImage: UIImage = UIImage()
+    @Published var userImage: UIImage?
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @Published var addedPic: Bool = false
     @Published var disable: Bool = false 
@@ -86,8 +86,9 @@ class EmailSigninViewModel: ObservableObject {
     
     func createNewAccount(completion: @escaping (_ success: Bool) -> ()) {
         
-            disable = true
-        if !addedPic {
+         disable = true
+        
+        if userImage == nil {
             message = "Please add a profile picture"
             disable = false
             completion(false)
@@ -115,8 +116,8 @@ class EmailSigninViewModel: ObservableObject {
             return
         }
         
-        
-        AuthService.instance.signUpWithEmail(username: username, email: email, password: password, profileImage: userImage) { uid, error  in
+        let image = userImage ?? UIImage()
+        AuthService.instance.signUpWithEmail(username: username, email: email, password: password, profileImage: image) { uid, error  in
             
             if error != nil {
                 self.message = error ?? "Error signing up "

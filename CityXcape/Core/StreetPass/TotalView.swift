@@ -16,7 +16,8 @@ struct TotalView: View {
     @Environment(\.presentationMode) var presentationMode
     @State private var showView: Bool = false
     @State var spots: [SecretSpot]
-    
+    @State var currentSpot: SecretSpot?
+    @State var userViewSpot: SecretSpot?
     var body: some View {
         
         VStack {
@@ -64,6 +65,11 @@ struct TotalView: View {
                     Button {
                         //TBD
                         vm.handleButton(type: type, spot: spot)
+                        if type == .views {
+                            currentSpot = spot
+                        } else {
+                            userViewSpot = spot
+                        }
                     } label: {
                         HStack {
                             SecretSpotView(width: 60, height: 60, imageUrl: spot.imageUrls.first ?? "")
@@ -81,15 +87,20 @@ struct TotalView: View {
                         .foregroundColor(.white)
                     }
                     .padding(.horizontal, 20)
-                    .sheet(isPresented: $vm.showUsersView) {
+                    .sheet(item: $userViewSpot) { spot in
                         UserReportView(vm: vm, spot: spot, type: type)
                     }
                     
                     Divider()
                         .background(Color.white)
                         .frame(width: width, height: 0.5)
+                        .sheet(item: $currentSpot) { spot in
+                            EditSpotView(spot: spot)
+                        }
                 }
+                
             }
+            
             
             
             Button {
@@ -117,3 +128,4 @@ struct TotalView_Previews: PreviewProvider {
         TotalView(type: .views, spots: [])
     }
 }
+

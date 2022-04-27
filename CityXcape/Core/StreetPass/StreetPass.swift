@@ -28,7 +28,7 @@ struct StreetPass: View {
     @State private var message: String = ""
     
     @State var refresh: Bool = false
-    @State var userImage: UIImage = UIImage()
+    @State var userImage: UIImage?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State var isPresented: Bool = false
     @State var presentSettings: Bool = false
@@ -256,8 +256,9 @@ struct StreetPass: View {
     
     fileprivate func updateProfielImage() {
         
+        guard let image = userImage else {return}
         if let uid = userId {
-            ImageManager.instance.uploadProfileImage(uid: uid, image: userImage) { (imageUrl) in
+            ImageManager.instance.uploadProfileImage(uid: uid, image: image) { (imageUrl) in
                 guard let url = imageUrl else {return}
                 UserDefaults.standard.set(url, forKey: CurrentUserDefaults.profileUrl)
                 
