@@ -40,7 +40,6 @@ class DiscoverViewModel: ObservableObject {
     init() {
         getScoutLeaders()
         getNewSecretSpots()
-        subscribetoRouter()
     }
     
     func getNewSecretSpots() {
@@ -64,7 +63,8 @@ class DiscoverViewModel: ObservableObject {
         DataService.instance.getNewSecretSpots(lastSecretSpot: lastSecretSpot) { [weak self] secretspots in
             print("This is secret spots inside mission model", secretspots)
             self?.newSecretSpots = secretspots
-            
+            self?.subscribetoRouter()
+
             if self?.newSecretSpots.count ?? 0 > 0 {
                 print("User has new missions of \(self?.newSecretSpots.count ?? 0)")
                 self?.hasNewSpots = true

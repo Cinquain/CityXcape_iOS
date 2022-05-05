@@ -28,15 +28,6 @@
       }
     },
     {
-      "identity" : "partialsheet",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/AndreaMiotto/PartialSheet.git",
-      "state" : {
-        "revision" : "318f18bfabd2b2ddf785babd2e53bd593c00a254",
-        "version" : "3.1.0"
-      }
-    },
-    {
       "identity" : "sdwebimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SDWebImage/SDWebImage.git",
@@ -52,33 +43,6 @@
       "state" : {
         "revision" : "cd8625b7cf11a97698e180d28bb7d5d357196678",
         "version" : "2.0.2"
-      }
-    },
-    {
-      "identity" : "swift-snapshot-testing",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-snapshot-testing.git",
-      "state" : {
-        "revision" : "f8a9c997c3c1dab4e216a8ec9014e23144cbab37",
-        "version" : "1.9.0"
-      }
-    },
-    {
-      "identity" : "swiftui-cardstackview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/dadalar/SwiftUI-CardStackView.git",
-      "state" : {
-        "revision" : "30f1b5d72a9c9e200080590e10eec852073487c1",
-        "version" : "0.0.5"
-      }
-    },
-    {
-      "identity" : "swiftui-shimmer",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/markiv/SwiftUI-Shimmer",
-      "state" : {
-        "revision" : "61411771350a5a4e96666a8a202ae4b2be327a2b",
-        "version" : "1.0.1"
       }
     }
   ],

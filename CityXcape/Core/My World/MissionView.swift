@@ -248,9 +248,7 @@ struct Map: UIViewRepresentable {
 
 struct MissionView_Previews: PreviewProvider {
     static var previews: some View {
-        
-       
-        
+
         MissionView(spot: SecretSpot.spot, vm: MapViewModel(), spotModel: SpotViewModel())
     }
 }

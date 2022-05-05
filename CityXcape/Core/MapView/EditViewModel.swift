@@ -20,7 +20,7 @@ class EditViewModel: ObservableObject {
     @Published var world: String = ""
     @Published var address: String = ""
     @Published var streetcred: String = "1"
-    
+    @Published var isLoading: Bool = false
     
     @Published var editDescription: Bool = false
     @Published var showAlert: Bool = false
@@ -152,6 +152,7 @@ class EditViewModel: ObservableObject {
     func updateMainSpotImage(postId: String, completion: @escaping (_ url: String?) -> ()) {
         if let newImage = image {
             //Delete file in bucket (index starts at 1)
+            isLoading = true
             print("Found Image")
             print("Deleting main image in bucket")
             ImageManager.instance.deleteSecretSpotImage(postId: postId, imageNumb: 1)
@@ -172,11 +173,13 @@ class EditViewModel: ObservableObject {
                 print("update image to database")
                 DataService.instance.updateSpotField(postId: postId, data: data) { success in
                     if success {
+                        self.isLoading = false
                         self.alertMessage = "Successfully updated image"
                         self.showAlert = true
                         completion(url)
                         return
                     } else {
+                        self.isLoading = false
                         self.alertMessage = "Failed to upload image"
                         self.showAlert = true
                         completion(nil)
@@ -196,6 +199,7 @@ class EditViewModel: ObservableObject {
     func updateExtraImage(postId: String, oldUrl: String, completion: @escaping (_ url: String?) -> ()) {
         
         guard let newImage = image else {return}
+        isLoading = true
         ImageManager.instance.deleteSecretSpotImage(postId: postId, imageNumb: index + 1)
 
         ImageManager.instance.updateSecretSpotImage(image: newImage, postId: postId, number: index + 1) { [weak self] url in
@@ -220,11 +224,13 @@ class EditViewModel: ObservableObject {
                     DataService.instance.updateSpotField(postId: postId, data: data) { success in
                         
                         if success {
+                            self.isLoading = false
                             self.alertMessage = "Successfully added image"
                             self.showAlert = true
                             completion(downloadUrl)
                             return
                         } else {
+                            self.isLoading = false
                             self.alertMessage = "Failed to add new image"
                             self.showAlert = true
                             completion(nil)
@@ -233,6 +239,7 @@ class EditViewModel: ObservableObject {
                         
                     }
                 } else {
+                    self.isLoading = false
                     self.alertMessage = "Could not find old image to replace"
                     self.showAlert = true
                     return
@@ -248,6 +255,7 @@ class EditViewModel: ObservableObject {
     func addImage(postId: String, completion: @escaping (_ url: String?) -> ()) {
         
         guard let newImage = image else {return}
+        isLoading = true
         ImageManager.instance.updateSecretSpotImage(image: newImage, postId: postId, number: self.index + 1) { [weak self] url in
             guard let self = self else {return}
             guard let downloadUrl = url else {return}
@@ -262,11 +270,13 @@ class EditViewModel: ObservableObject {
             DataService.instance.updateSpotField(postId: postId, data: data) { success in
                 
                 if success {
+                    self.isLoading = false
                     self.alertMessage = "Successfully added image"
                     self.showAlert = true
                     completion(downloadUrl)
                     return
                 } else {
+                    self.isLoading = false
                     self.alertMessage = "Failed to add new image"
                     self.showAlert = true
                     completion(nil)
@@ -280,16 +290,20 @@ class EditViewModel: ObservableObject {
     
     
     func deleteImage(postId: String, url: String) {
+        self.isLoading = true
         let data: [String: Any] = [
             SecretSpotField.spotImageUrls : FieldValue.arrayRemove([url])
         ]
        
-        DataService.instance.updateSpotField(postId: postId, data: data) { success in
+        DataService.instance.updateSpotField(postId: postId, data: data) { [weak self] success in
+            guard let self = self else {return}
             if success {
+                self.isLoading = false
                 self.alertMessage = "Successfully deleted image"
                 self.showAlert = true
                 return
             } else {
+                self.isLoading = false
                 self.alertMessage = "Failed to delete new image"
                 self.showAlert = true
                 return

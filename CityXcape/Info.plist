@@ -40,7 +40,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1802</string>
+	<string>1821</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
 	<array>
 		<string>link.cityxcape.com</string>

@@ -42,25 +42,32 @@ struct OnboardingViewII: View {
                 
                 HStack(alignment: .center) {
      
-                    Button(action: {
-                        showPicker.toggle()
-                    }, label: {
-                        VStack(spacing: 25){
-                            Image(Icon.dot.rawValue)
-                                .resizable()
-                                .frame(width: geo.size.width / 2, height: geo.size.width / 2)
-                                .shadow(color: .orange, radius: 30, x: 0, y: 0)
-                                .overlay(
-                                    Image(uiImage: userImage ?? UIImage())
-                                        .resizable()
-                                        .frame(width: geo.size.width / 3, height: geo.size.width / 3)
-                                        .cornerRadius((geo.size.width / 3) / 2)
-                                )
-                            Text(displayName)
-                                .font(.title3)
-                                .fontWeight(.thin)
-                        }
+                    ZStack {
+                        Button(action: {
+                            showPicker.toggle()
+                        }, label: {
+                            VStack(spacing: 25){
+                                Image(Icon.dot.rawValue)
+                                    .resizable()
+                                    .frame(width: geo.size.width / 2, height: geo.size.width / 2)
+                                    .shadow(color: .orange, radius: 30, x: 0, y: 0)
+                                    .overlay(
+                                        Image(uiImage: userImage ?? UIImage())
+                                            .resizable()
+                                            .frame(width: geo.size.width / 3, height: geo.size.width / 3)
+                                            .cornerRadius((geo.size.width / 3) / 2)
+                                    )
+                                Text(displayName)
+                                    .font(.title3)
+                                    .fontWeight(.thin)
+                            }
                     })
+                        ProgressView()
+                            .frame(width: 100, height: 100)
+                            .scaleEffect(3)
+                            .opacity(disableInteraction ? 1 : 0)
+                            .offset(y: -20)
+                    }
                 }
             
                 TextField("Create a Username", text: $displayName)
@@ -93,11 +100,6 @@ struct OnboardingViewII: View {
                         .padding(.horizontal)
                 })
                 
-                ProgressView()
-                    .frame(width: 100, height: 100)
-                    .progressViewStyle(.circular)
-                    .colorScheme(.dark)
-                    .opacity(disableInteraction ? 1 : 0)
                 
                 Spacer()
                     .frame(height: 60)

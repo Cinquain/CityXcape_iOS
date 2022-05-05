@@ -22,7 +22,7 @@ class SpotViewModel: NSObject, ObservableObject {
 
     
     
-    
+    @Published var isLoading: Bool = false 
     @Published var showActionSheet: Bool = false
     @Published var actionSheetType: SpotActionSheetType = .general
     
@@ -296,16 +296,18 @@ class SpotViewModel: NSObject, ObservableObject {
             showAlert = true
             return
         }
-        
+        isLoading = true
         let image = journeyImage ?? UIImage()
         
         DataService.instance.verifySecretSpot(spot: spot, image: image, comment: comment) { [weak self] (success, message) in
+            guard let self = self else {return}
             if success {
-                self?.manager.updateVerification(spotId: spot.id, verified: true)
+                self.manager.updateVerification(spotId: spot.id, verified: true)
                 completion(success)
             } else {
-                self?.alertMessage = message ?? ""
-                self?.showAlert = true
+                self.isLoading = false
+                self.alertMessage = message ?? "Failed to verifiy Secret Spot"
+                self.showAlert = true
             }
         }
         

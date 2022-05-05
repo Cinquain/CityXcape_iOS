@@ -79,26 +79,34 @@ extension EditSpotView {
 
             ForEach(spot.imageUrls, id: \.self) { url in
                 
-                WebImage(url: URL(string: url))
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: .infinity)
-                    .overlay(
-                        ZStack {
-                            LinearGradient(colors: [Color.clear, Color.black], startPoint: .center, endPoint: .bottom)
-                    
-                        })
-                    .onTapGesture {
-                        vm.findIndexof(url: url, spot: spot)
-                        vm.showPicker.toggle()
+                
+                    WebImage(url: URL(string: url))
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: .infinity)
+                        .overlay(
+                            ZStack {
+                                LinearGradient(colors: [Color.clear, Color.black], startPoint: .center, endPoint: .bottom)
+                        
+                            })
+                        .onTapGesture {
+                            vm.findIndexof(url: url, spot: spot)
+                            vm.showPicker.toggle()
                     }
-            }
-            
-            LocationCamera(height: 150, color: .white)
-                .onTapGesture {
-                    vm.index = spot.imageUrls.count + 1
-                    vm.showPicker.toggle()
                 }
+            
+            
+            ZStack {
+                LocationCamera(height: 150, color: .white)
+                    .onTapGesture {
+                        vm.index = spot.imageUrls.count + 1
+                        vm.showPicker.toggle()
+                }
+                
+                ProgressView()
+                    .scaleEffect(3)
+                    .opacity(vm.isLoading ? 1 : 0)
+            }
       
         }
         .tabViewStyle(PageTabViewStyle())

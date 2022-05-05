@@ -23,6 +23,7 @@ class PostViewModel: NSObject, ObservableObject {
     @Published var isPublic: Bool = true
     @Published var refresh: Bool = false
     @Published var priceString: String = ""
+    @Published var isLoading: Bool = false
     var price: Int = 1
 
     
@@ -43,7 +44,6 @@ class PostViewModel: NSObject, ObservableObject {
     
     
     func isReady(mapItem: MKMapItem)  {
-        
         price = Int(priceString) ?? 1
         
         if isPublic == false {
@@ -90,16 +90,18 @@ class PostViewModel: NSObject, ObservableObject {
     }
     
     func postSecretSpot(mapItem: MKMapItem) {
-
+        isLoading = true
         buttonDisabled = true
         guard let image = selectedImage else {return}
         
-        DataService.instance.uploadSecretSpot(spotName: spotName, description: details, image: image, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { (success) in
-            
+        DataService.instance.uploadSecretSpot(spotName: spotName, description: details, image: image, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { [weak self] (success) in
+            guard let self = self else {return}
             if success {
+                self.isLoading = false
                 self.buttonDisabled = false
                 self.presentCompletion.toggle()
             } else {
+                self.isLoading = false
                 self.buttonDisabled = false
                 self.showAlert.toggle()
                 self.alertMessage = "Error posting Secret Spot 😤"

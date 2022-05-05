@@ -117,16 +117,22 @@ struct PostSpotForm: View {
                         Button(action: {
                             vm.showActionSheet.toggle()
                         }, label: {
-                            if let image = vm.selectedImage {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(maxWidth: .infinity)
-                                    .cornerRadius(12)
-                            } else {
-                                LocationCamera(height: 150, color: .white)
+                            ZStack {
+                                if let image = vm.selectedImage {
+                                    Image(uiImage: image)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(maxWidth: .infinity)
+                                        .cornerRadius(12)
+                                } else {
+                                    LocationCamera(height: 150, color: .white)
+                                }
+                                
+                                ProgressView()
+                                    .opacity(vm.isLoading ? 1 : 0)
+                                    .scaleEffect(3)
                             }
-                    
+                            
                     })
                     
                             

@@ -11,10 +11,12 @@ import Firebase
 
 struct PassportView: View {
     
+    @Environment(\.presentationMode) var presentationMode
     var verification: Verification
+    var width: CGFloat = UIScreen.screenWidth
     
     var body: some View {
-        VStack {
+        ScrollView {
             
             VStack(spacing: 10) {
                 ZStack {
@@ -22,9 +24,9 @@ struct PassportView: View {
                     
                     WebImage(url: URL(string: verification.imageUrl))
                         .resizable()
-                        .frame(width: 360, height: 360)
+                        .frame(width: width - 40, height: width - 40)
                 }
-                .frame(width: 380, height: 380)
+                .frame(width: width - 20, height: width - 20)
                 
                 HStack {
                     Spacer()
@@ -63,11 +65,6 @@ struct PassportView: View {
                 .padding(.horizontal, 20)
 
             }
-            
-      
-           
-        
-            
         
             Spacer()
 
@@ -76,7 +73,7 @@ struct PassportView: View {
                 Image("Stamp")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 325)
+                    .frame(height: width - 100 )
                     .overlay(
                         VStack(alignment: .center, spacing: 0) {
                             
@@ -97,6 +94,18 @@ struct PassportView: View {
                         )
             }
             .padding()
+            
+            
+            Button {
+                //
+                self.presentationMode.wrappedValue.dismiss()
+            } label: {
+                Image("arrow")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 20)
+                    .opacity(0.5)
+            }
       
             
         }

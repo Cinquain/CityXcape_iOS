@@ -573,10 +573,7 @@
 			packageReferences = (
 				219842A126CF3A680089CE03 /* XCRemoteSwiftPackageReference "LBTATools" */,
 				21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
-				21D85F5126EACF0E00502636 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
-				2178C44F2719030600B4C395 /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */,
 				21806AD1274955EC00C641C7 /* XCRemoteSwiftPackageReference "JGProgressHUD-SwiftUI" */,
-				1417B3BC2821899600B22CC1 /* XCRemoteSwiftPackageReference "PartialSheet" */,
 			);
 			productRefGroup = 217DA72526CC8F8B0039A145 /* Products */;
 			projectDirPath = "";
@@ -922,7 +919,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.7;
+				MARKETING_VERSION = 1.3.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -947,7 +944,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.7;
+				MARKETING_VERSION = 1.3.8;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -979,22 +976,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		1417B3BC2821899600B22CC1 /* XCRemoteSwiftPackageReference "PartialSheet" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/AndreaMiotto/PartialSheet.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
-			};
-		};
-		2178C44F2719030600B4C395 /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/dadalar/SwiftUI-CardStackView.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.5;
-			};
-		};
 		21806AD1274955EC00C641C7 /* XCRemoteSwiftPackageReference "JGProgressHUD-SwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD-SwiftUI.git";
@@ -1017,14 +998,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.0.2;
-			};
-		};
-		21D85F5126EACF0E00502636 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

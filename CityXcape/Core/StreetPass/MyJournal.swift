@@ -18,7 +18,7 @@ struct MyJournal: View {
         ScrollView {
             TabView {
                 
-                ForEach(vm.verifications) { verification in
+                ForEach(vm.verifications.sorted(by: {$0.time > $1.time})) { verification in
                     PassportView(verification: verification)
                         .onTapGesture {
                             self.presentationMode.wrappedValue.dismiss()

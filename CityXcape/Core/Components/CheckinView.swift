@@ -29,20 +29,27 @@ struct CheckinView: View {
                         .multilineTextAlignment(.center)
 
 
-                    Image("pin_blue")
-                        .resizable()
-                        .renderingMode(.template)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 200)
-                        .opacity(0.2)
-                        .overlay(
-                            Image(uiImage: vm.journeyImage ?? UIImage())
-                                .resizable()
-                                .frame(width: 145, height: 145)
-                                .scaledToFit()
-                                .clipShape(Circle())
-                                .padding(.bottom, 25)
+                    ZStack {
+                        Image("pin_blue")
+                            .resizable()
+                            .renderingMode(.template)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 200)
+                            .opacity(0.2)
+                            .overlay(
+                                Image(uiImage: vm.journeyImage ?? UIImage())
+                                    .resizable()
+                                    .frame(width: 145, height: 145)
+                                    .scaledToFit()
+                                    .clipShape(Circle())
+                                    .padding(.bottom, 25)
                         )
+                        
+                        ProgressView()
+                            .scaleEffect(3)
+                            .offset(y: -10)
+                            .opacity(vm.isLoading ? 1 : 0)
+                    }
                     
                     Text("You've checked in! \n Leave a photo & comment")
                         .fontWeight(.thin)
@@ -105,9 +112,10 @@ struct CheckinView: View {
                         //TBD
                         vm.getVerificationStamp(spot: spot) { success in
                             if success {
+                                vm.isLoading = false
                                 presentationMode.wrappedValue.dismiss()
                                 vm.showVerifiers = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                                     vm.showStamp = true
                                 }
                             }
@@ -147,9 +155,6 @@ struct CheckinView: View {
 struct CheckinView_Previews: PreviewProvider {
     
     static var previews: some View {
-        
-       
-        
         CheckinView(spot: SecretSpot.spot, vm: SpotViewModel())
     }
 }
