@@ -28,10 +28,23 @@
 				<string>com.googleusercontent.apps.624263008484-dcalalrv49ro209h9km34t67gs8jv094</string>
 			</array>
 		</dict>
-		<dict/>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.cityportal.CityXcape</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>cityxcape</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1659</string>
+	<string>1802</string>
+	<key>FirebaseDynamicLinksCustomDomains</key>
+	<array>
+		<string>link.cityxcape.com</string>
+	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>comgooglemaps</string>

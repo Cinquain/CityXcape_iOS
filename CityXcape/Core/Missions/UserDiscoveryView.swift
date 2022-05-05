@@ -21,6 +21,7 @@ struct UserDiscoveryView: View {
                     .font(.title)
                     .fontWeight(.thin)
                 Spacer()
+                
                 Button {
                     vm.refreshSecretSpots()
                     AnalyticsService.instance.loadedNewSpots()

@@ -138,6 +138,14 @@ class AnalyticsService {
         Analytics.logEvent("updated_socialmedia", parameters: nil)
     }
     
+    func shareSecretSpot() {
+        Analytics.logEvent("share_spot", parameters: nil)
+    }
+    
+    func shareStreetPass() {
+        Analytics.logEvent("share_streetpass", parameters: nil)
+    }
+    
   
     
 }

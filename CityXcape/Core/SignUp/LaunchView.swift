@@ -58,7 +58,7 @@ struct LaunchView: View {
         }
         .onReceive(timer) { _ in
             withAnimation(.spring()) {
-                if loops > 3 {
+                if loops > 2 {
                     showLaunchView = false
                 }
                 

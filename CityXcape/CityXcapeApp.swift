@@ -17,6 +17,7 @@ struct CityXcapeApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @AppStorage(CurrentUserDefaults.userId) var currentUserID: String?
     @State private var showLaunchView: Bool = true
+    let router = Router.shared
     
     var body: some Scene {
         WindowGroup {
@@ -26,7 +27,9 @@ struct CityXcapeApp: App {
             {
                 ZStack {
                     HomeView()
-                    
+                        .onOpenURL { url in
+                            router.handleUrl(url: url)
+                        }
                     
                     ZStack {
                         if showLaunchView {
@@ -54,10 +57,26 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
         return true
     }
     
+    
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        return GIDSignIn.sharedInstance.handle(url)
+    }
+ 
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         
-        
-        return false
+        print("Hello deep link")
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+                let incomingURL = userActivity.webpageURL,
+                let components = NSURLComponents(url: incomingURL, resolvingAgainstBaseURL: true) else {
+                return false
+            }
+
+            // Check for specific URL components that you need.
+        guard let host = components.host else {print("No host found"); return false}
+           
+        print("DeepLink received and is \(host)")
+        return true
     }
     
     
@@ -147,9 +166,8 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     
     
     
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return GIDSignIn.sharedInstance.handle(url)
-    }
+ 
     
+  
     
 }

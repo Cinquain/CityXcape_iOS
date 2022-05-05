@@ -21,7 +21,7 @@ class NotificationsManager: ObservableObject {
     @Published var user: User?
     
     @Published var hasSpotNotification: Bool = false
-    @Published var spotId: String = ""
+    @Published var spotId: String?
     
     
     let manager = UNUserNotificationCenter.current()

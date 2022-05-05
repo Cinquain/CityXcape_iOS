@@ -42,8 +42,6 @@ struct SecretSpot:  Hashable, Identifiable {
     var ownerImageUrl: String
     var ownerIg: String?
     
-
-    
     
     var distanceFromUser: Double {
         let manager = LocationService.instance.manager

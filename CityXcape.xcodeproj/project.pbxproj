@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1493C3F3277394BA002010A6 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1493C3F2277394BA002010A6 /* ActivityIndicator.swift */; };
+		14EF54BE282044BE004D9610 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF54BD282044BE004D9610 /* ShareSheetView.swift */; };
+		14F43354281ED757000F8479 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F43353281ED757000F8479 /* Router.swift */; };
 		2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */; };
 		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
 		211EC5DF27C65EB800F0B0A8 /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211EC5DE27C65EB800F0B0A8 /* MissionView.swift */; };
@@ -117,6 +119,8 @@
 /* Begin PBXFileReference section */
 		03633A38349C026A52CC221D /* Pods-CityXcape.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.release.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.release.xcconfig"; sourceTree = "<group>"; };
 		1493C3F2277394BA002010A6 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
+		14EF54BD282044BE004D9610 /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
+		14F43353281ED757000F8479 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotViewModel.swift; sourceTree = "<group>"; };
 		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
 		211EC5DE27C65EB800F0B0A8 /* MissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
@@ -254,6 +258,7 @@
 				2142EF4527827E6B00EA489D /* CoreDataManager.swift */,
 				2120579F27DE1C2E00602EE8 /* SoundManager.swift */,
 				218115EA27315E9400026AAD /* NotificationsManager.swift */,
+				14F43353281ED757000F8479 /* Router.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -419,6 +424,7 @@
 				21D0F07927EC9604003E8748 /* UserReportView.swift */,
 				21F039C228074E4E003438D0 /* ImageSlider.swift */,
 				21F039C428075576003438D0 /* DetailsView.swift */,
+				14EF54BD282044BE004D9610 /* ShareSheetView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -570,6 +576,7 @@
 				21D85F5126EACF0E00502636 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 				2178C44F2719030600B4C395 /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */,
 				21806AD1274955EC00C641C7 /* XCRemoteSwiftPackageReference "JGProgressHUD-SwiftUI" */,
+				1417B3BC2821899600B22CC1 /* XCRemoteSwiftPackageReference "PartialSheet" */,
 			);
 			productRefGroup = 217DA72526CC8F8B0039A145 /* Products */;
 			projectDirPath = "";
@@ -694,6 +701,7 @@
 				212EE33127A4667500232992 /* MessageView.swift in Sources */,
 				21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */,
 				217DA73D26CC96A30039A145 /* MyWorld.swift in Sources */,
+				14F43354281ED757000F8479 /* Router.swift in Sources */,
 				217B770B26DD007C000A78C9 /* PostSpotForm.swift in Sources */,
 				2138B6A727C70C6A004C9B3C /* MapViewModel.swift in Sources */,
 				214A4A3B278D340300B5950A /* User.swift in Sources */,
@@ -739,6 +747,7 @@
 				217DA73F26CC972C0039A145 /* Ticker.swift in Sources */,
 				217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */,
 				2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */,
+				14EF54BE282044BE004D9610 /* ShareSheetView.swift in Sources */,
 				217DA73A26CC95A50039A145 /* Extensions.swift in Sources */,
 				21F039C328074E4E003438D0 /* ImageSlider.swift in Sources */,
 				21DCF82727E63090000BD1B3 /* Follower.swift in Sources */,
@@ -908,7 +917,7 @@
 				DEVELOPMENT_TEAM = M85RTB7279;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CityXcape/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -933,7 +942,7 @@
 				DEVELOPMENT_TEAM = M85RTB7279;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CityXcape/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -970,6 +979,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1417B3BC2821899600B22CC1 /* XCRemoteSwiftPackageReference "PartialSheet" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AndreaMiotto/PartialSheet.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 		2178C44F2719030600B4C395 /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/dadalar/SwiftUI-CardStackView.git";

@@ -1,79 +1,86 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "JGProgressHUD",
-        "repositoryURL": "https://github.com/JonasGessner/JGProgressHUD.git",
-        "state": {
-          "branch": null,
-          "revision": "78d7cd35f1d90ff74fd82e486f2cbe4b24be8cf9",
-          "version": "2.2.0"
-        }
-      },
-      {
-        "package": "JGProgressHUD-SwiftUI",
-        "repositoryURL": "https://github.com/JonasGessner/JGProgressHUD-SwiftUI.git",
-        "state": {
-          "branch": null,
-          "revision": "a173f018132a48e11b5e0bbca9a3dac30ce3f0ae",
-          "version": "0.1.1"
-        }
-      },
-      {
-        "package": "LBTATools",
-        "repositoryURL": "https://github.com/bhlvoong/LBTATools.git",
-        "state": {
-          "branch": null,
-          "revision": "dce147bfbdc0417a4b430ec220c088629e9dc81d",
-          "version": "1.0.17"
-        }
-      },
-      {
-        "package": "SDWebImage",
-        "repositoryURL": "https://github.com/SDWebImage/SDWebImage.git",
-        "state": {
-          "branch": null,
-          "revision": "76dd4b49110b8624317fc128e7fa0d8a252018bc",
-          "version": "5.11.1"
-        }
-      },
-      {
-        "package": "SDWebImageSwiftUI",
-        "repositoryURL": "https://github.com/SDWebImage/SDWebImageSwiftUI.git",
-        "state": {
-          "branch": null,
-          "revision": "cd8625b7cf11a97698e180d28bb7d5d357196678",
-          "version": "2.0.2"
-        }
-      },
-      {
-        "package": "SnapshotTesting",
-        "repositoryURL": "https://github.com/pointfreeco/swift-snapshot-testing.git",
-        "state": {
-          "branch": null,
-          "revision": "f8a9c997c3c1dab4e216a8ec9014e23144cbab37",
-          "version": "1.9.0"
-        }
-      },
-      {
-        "package": "CardStack",
-        "repositoryURL": "https://github.com/dadalar/SwiftUI-CardStackView.git",
-        "state": {
-          "branch": null,
-          "revision": "30f1b5d72a9c9e200080590e10eec852073487c1",
-          "version": "0.0.5"
-        }
-      },
-      {
-        "package": "SwiftUI-Shimmer",
-        "repositoryURL": "https://github.com/markiv/SwiftUI-Shimmer",
-        "state": {
-          "branch": null,
-          "revision": "61411771350a5a4e96666a8a202ae4b2be327a2b",
-          "version": "1.0.1"
-        }
+  "pins" : [
+    {
+      "identity" : "jgprogresshud",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/JonasGessner/JGProgressHUD.git",
+      "state" : {
+        "revision" : "78d7cd35f1d90ff74fd82e486f2cbe4b24be8cf9",
+        "version" : "2.2.0"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "jgprogresshud-swiftui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/JonasGessner/JGProgressHUD-SwiftUI.git",
+      "state" : {
+        "revision" : "a173f018132a48e11b5e0bbca9a3dac30ce3f0ae",
+        "version" : "0.1.1"
+      }
+    },
+    {
+      "identity" : "lbtatools",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/bhlvoong/LBTATools.git",
+      "state" : {
+        "revision" : "dce147bfbdc0417a4b430ec220c088629e9dc81d",
+        "version" : "1.0.17"
+      }
+    },
+    {
+      "identity" : "partialsheet",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/AndreaMiotto/PartialSheet.git",
+      "state" : {
+        "revision" : "318f18bfabd2b2ddf785babd2e53bd593c00a254",
+        "version" : "3.1.0"
+      }
+    },
+    {
+      "identity" : "sdwebimage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SDWebImage/SDWebImage.git",
+      "state" : {
+        "revision" : "76dd4b49110b8624317fc128e7fa0d8a252018bc",
+        "version" : "5.11.1"
+      }
+    },
+    {
+      "identity" : "sdwebimageswiftui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SDWebImage/SDWebImageSwiftUI.git",
+      "state" : {
+        "revision" : "cd8625b7cf11a97698e180d28bb7d5d357196678",
+        "version" : "2.0.2"
+      }
+    },
+    {
+      "identity" : "swift-snapshot-testing",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-snapshot-testing.git",
+      "state" : {
+        "revision" : "f8a9c997c3c1dab4e216a8ec9014e23144cbab37",
+        "version" : "1.9.0"
+      }
+    },
+    {
+      "identity" : "swiftui-cardstackview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dadalar/SwiftUI-CardStackView.git",
+      "state" : {
+        "revision" : "30f1b5d72a9c9e200080590e10eec852073487c1",
+        "version" : "0.0.5"
+      }
+    },
+    {
+      "identity" : "swiftui-shimmer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/markiv/SwiftUI-Shimmer",
+      "state" : {
+        "revision" : "61411771350a5a4e96666a8a202ae4b2be327a2b",
+        "version" : "1.0.1"
+      }
+    }
+  ],
+  "version" : 2
 }

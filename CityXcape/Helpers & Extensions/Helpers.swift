@@ -9,6 +9,13 @@ import Foundation
 import SwiftUI
 
 
+
+enum DeepLink: String, CaseIterable {
+    case home
+    case discover
+    case streetPass 
+}
+
 struct UserField {
     static let displayName = "displayName"
     static let email = "email"

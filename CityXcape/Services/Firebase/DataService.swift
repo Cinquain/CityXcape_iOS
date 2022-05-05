@@ -164,10 +164,6 @@ class DataService {
             completion(true)
         }
         
-        //Save to Core Data
-        self.manager.addEntityFromSpot(spot: spot)
-        
-        
         //Decrement buyer wallet remotely
         let decrement: Int64 = -1
         let walletData : [String: Any] = [
@@ -496,6 +492,7 @@ class DataService {
         
 }
     
+    
     func getNewSecretSpots(lastSecretSpot: String?, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
         guard let uid = userId else {return}
         var history : [String] = []
@@ -515,12 +512,9 @@ class DataService {
                     completion(filteredResults)
                 }
         }
-        
-     
-            
+    
 //            .limit(to: 12)
     }
-    
     
     func CreateUserRanking(rank: Ranking) {
         

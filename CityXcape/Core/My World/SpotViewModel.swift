@@ -61,6 +61,7 @@ class SpotViewModel: NSObject, ObservableObject {
         super.init()
         
     }
+ 
     
     func openGoogleMap(spot: SecretSpot) {
         AnalyticsService.instance.touchedRoute()
@@ -232,6 +233,34 @@ class SpotViewModel: NSObject, ObservableObject {
         }
         
     }
+    
+    func createSpotURL(spot: SecretSpot) -> URL {
+        let name = spot.spotName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let description = spot.description ?? ""
+        let spotId = spot.id
+        let scheme = "cityxcape://discover/\(spotId)"
+        let formattedDescription = description.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let image = "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/CityXcape%2FPin.png?alt=media&token=ba915478-809e-43fd-9a6f-54194b22d718"
+        let link = "https://link.cityxcape.com/?link=https://www.cityxcape.com&isi=1588136633&ibi=\(scheme)&st=\(name)&sd=\(formattedDescription)&si=\(image)"
+        return URL(string: link)!
+    }
+    
+    func presentShareSheet(spot: SecretSpot) {
+        
+        let name = spot.spotName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let description = spot.description ?? ""
+        let spotId = spot.id
+        let scheme = "cityxcape://discover//\(spotId)"
+        let formattedDescription = description.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+        let image = "https://www.cityxcape.com/assets/blog/assets/data/data7.jpg"
+        let link = "https://link.cityxcape.com/?link=https://www.cityxcape.com&isi=1588136633&ibi=\(scheme)&st=\(name)&sd=\(formattedDescription)&si=\(image)"
+        guard let urlShare = URL(string: link) else {return}
+        
+        let activityVC = UIActivityViewController(activityItems: [urlShare], applicationActivities: nil)
+        UIApplication.shared.windows.first?.rootViewController?.presentedViewController?.present(activityVC, animated: true, completion: nil)
+        
+    }
+ 
     
     func getComments(postId: String) {
         DataService.instance.downloadComments(postId: postId) { comments in

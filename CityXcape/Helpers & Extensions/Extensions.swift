@@ -146,7 +146,21 @@ extension MKMapItem {
     }
 }
 
-
+extension HomeView {
+    
+    func handleDeepLink(_ link: DeepLink) {
+        
+        switch link {
+        case .home:
+            selectedTab = 0
+        case .discover:
+            selectedTab = 1
+        case .streetPass:
+            selectedTab = 3
+        }
+    }
+    
+}
 
 extension View {
     func standardButtonFormatting(textColor: Color, color: Color) -> some View {

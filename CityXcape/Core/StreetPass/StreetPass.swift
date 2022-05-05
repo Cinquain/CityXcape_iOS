@@ -18,7 +18,6 @@ struct StreetPass: View {
 
     @StateObject var vm: StreetPassViewModel = StreetPassViewModel()
     
-    
     @State private var username: String = ""
     @State private var userbio: String = ""
     @State private var profileUrl = ""
@@ -70,14 +69,14 @@ struct StreetPass: View {
 
                     
                     Spacer()
-                        .frame(height: geo.size.width / 5)
+                        .frame(height: geo.size.width / 11)
                     HStack {
                         Spacer()
                         VStack(alignment: .center) {
                             Button(action: {
                                 isPresented.toggle()
                             }, label: {
-                                UserDotView(imageUrl: profileUrl, width: 250)
+                                UserDotView(imageUrl: profileUrl, width: geo.size.width / 1.5)
                                     .shadow(radius: 5)
                                     .shadow(color: .orange, radius: 30, x: 0, y: 0)
                             })
@@ -87,7 +86,6 @@ struct StreetPass: View {
                                 .fontWeight(.thin)
                                 .foregroundColor(.accent)
                                 .tracking(2)
-                                .padding()
                             
                             //Need a text liner for the bio
                             VStack(spacing: 5) {

@@ -17,7 +17,11 @@ class DiscoverViewModel: ObservableObject {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     
-    let manager = NotificationsManager.instance
+    let notificationManager = NotificationsManager.instance
+    let manager = CoreDataManager.instance
+    let router = Router.shared
+    var cancellable = Set<AnyCancellable>()
+    
     @Published var allspots: [SecretSpot] = []
     @Published var newSecretSpots: [SecretSpot] = []
     @Published var lastSecretSpot: String = ""
@@ -30,14 +34,13 @@ class DiscoverViewModel: ObservableObject {
     @Published var saved: Bool = false
     @Published var passed: Bool = false
     
-    @Published var oldResults: [SecretSpot] = []
     @Published var rankings: [Ranking] = []
     @Published var showStreetPass: Bool = false
 
     init() {
         getScoutLeaders()
         getNewSecretSpots()
-        
+        subscribetoRouter()
     }
     
     func getNewSecretSpots() {
@@ -50,12 +53,6 @@ class DiscoverViewModel: ObservableObject {
             
             if self?.newSecretSpots.count ?? 0 > 0 {
                 self?.hasNewSpots = true
-                if self?.manager.hasSpotNotification == true {
-                    guard let index = self?.newSecretSpots.firstIndex(where: {$0.id == self?.manager.spotId}) else {return}
-                    guard let spot = self?.newSecretSpots[index] else {return}
-                    self?.newSecretSpots.removeAll()
-                    self?.newSecretSpots.insert(spot, at: 0)
-                }
             }
             
         }
@@ -123,8 +120,11 @@ class DiscoverViewModel: ObservableObject {
                 }
                 print("successfully saved spot to user's world")
                 AnalyticsService.instance.savedSecretSpot()
+                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                     self?.saved = false
+                    self?.manager.addEntityFromSpot(spot: spot)
+                    
                 }
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -192,6 +192,28 @@ class DiscoverViewModel: ObservableObject {
         DataService.instance.getUserRankings { ranks in
             self.rankings = ranks
         }
+    }
+    
+    fileprivate func subscribetoRouter() {
+         router.$postId
+                .combineLatest(notificationManager.$spotId)
+                .sink { [weak self] (id1, id2) in
+                    guard let self = self else {return}
+                    
+                    if id1 != nil {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            self.newSecretSpots = self.allspots.filter({$0.id == id1})
+                            self.router.postId = nil
+                        }
+                    } else if id2 != nil {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            self.newSecretSpots = self.allspots.filter({$0.id == id2})
+                            self.notificationManager.spotId = nil
+                        }
+                    }
+                  
+                }
+                .store(in: &cancellable)
     }
     
     

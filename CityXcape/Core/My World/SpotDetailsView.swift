@@ -16,8 +16,11 @@ struct SpotDetailsView: View {
     
     @ObservedObject var vm: SpotViewModel = SpotViewModel()
     @StateObject var mapViewModel: MapViewModel = MapViewModel()
+    
     let manager = CoreDataManager.instance
     let analytics = AnalyticsService.instance
+    let height = UIScreen.screenHeight
+    
     @State var detailsTapped: Bool = false
     @State var likedTapped: Bool = false
     @State private var showUsers: Bool = false
@@ -76,6 +79,34 @@ struct SpotDetailsView: View {
                     HStack(spacing: 10) {
                         
                         Button {
+                            //TBD
+                            analytics.viewedDetails()
+                            detailsTapped.toggle()
+                        } label: {
+                            Image("info")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50)
+                                .padding(.leading, 4)
+                                .animation(.easeOut)
+                                
+                        }
+                        
+                        Button {
+                            vm.presentShareSheet(spot: spot)
+                        } label: {
+                            VStack(spacing: 0) {
+                                Image("share")
+                                     .resizable()
+                                     .aspectRatio(contentMode: .fit)
+                                     .frame(width: 50)
+                            }
+                        }
+                    
+                        
+              
+                        
+                        Button {
                             showUsers.toggle()
                             vm.getSavedbyUsers(postId: spot.id)
                             analytics.checkSavedUsers()
@@ -95,22 +126,6 @@ struct SpotDetailsView: View {
 
                         
                         Button {
-                            vm.didLike.toggle()
-                            alertMessage = "Liked!"
-                            showAlert.toggle()
-                            vm.pressLike(postId: spot.id)
-                            analytics.likedSpot()
-                        } label: {
-                            VStack(spacing: 0) {
-                                Image("like")
-                                     .resizable()
-                                     .aspectRatio(contentMode: .fit)
-                                     .frame(width: 50)
-                            }
-                        }
-              
-                        
-                        Button {
                             vm.getComments(postId: spot.id)
                             vm.showComments.toggle()
                             analytics.viewedComments()
@@ -125,19 +140,7 @@ struct SpotDetailsView: View {
                         }
 
                      
-                        Button {
-                            //TBD
-                            analytics.viewedDetails()
-                            detailsTapped.toggle()
-                        } label: {
-                            Image("info")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 50)
-                                .padding(.leading, 4)
-                                .animation(.easeOut)
-                                
-                        }
+                    
                        
                     }
                     .padding(.top, 10)

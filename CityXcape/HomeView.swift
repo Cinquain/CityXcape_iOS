@@ -10,10 +10,10 @@ import SwiftUI
 struct HomeView: View {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
-    
+    let router = Router.shared
     @State var selectedTab: Int = 0
-    @State var newSpotCount: Int = 0
     @StateObject var manager = NotificationsManager.instance
+    @StateObject var discoverVM: DiscoverViewModel = DiscoverViewModel()
     
     init() {
         UITabBar.appearance().isTranslucent = false
@@ -32,13 +32,14 @@ struct HomeView: View {
                 }
                 .tag(0)
             
-            DiscoverView(selectedTab: $selectedTab, spotCount: $newSpotCount)
+            DiscoverView(selectedTab: $selectedTab, vm: discoverVM)
                     .tabItem {
                         Image(Icon.tabItem0.rawValue)
                             .renderingMode(.template)
                         Text(Labels.tab0.rawValue)
                     }
                     .tag(1)
+                    .badge(discoverVM.newSecretSpots.count)
                     
             
             MapContainer(selectedTab: $selectedTab, isMission: false)
@@ -77,6 +78,18 @@ struct HomeView: View {
                 PublicStreetPass(user: user)
             }
             
+        }
+        .onReceive(router.$link) { deepLink in
+            switch deepLink {
+            case .home:
+                selectedTab = 0
+            case .discover:
+                selectedTab = 1
+            case .streetPass:
+                selectedTab = 3
+            case .none:
+                break
+            }
         }
     }
     

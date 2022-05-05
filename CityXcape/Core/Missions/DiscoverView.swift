@@ -19,11 +19,10 @@ struct DiscoverView: View {
     @State private var saved: Bool = false
     @State var searchTerm: String = ""
 
-    
+    let manager = CoreDataManager.instance
     @Binding var selectedTab: Int
-    @Binding var spotCount: Int
     
-    @StateObject var vm: DiscoverViewModel = DiscoverViewModel()
+    @StateObject var vm: DiscoverViewModel 
 
     
     var body: some View {
@@ -39,8 +38,28 @@ struct DiscoverView: View {
             
             ScrollView {
                 if vm.newSecretSpots.isEmpty {
-                    UserDiscoveryView(vm: vm)
-                    .opacity(vm.finished ? 1 : 0)
+                    VStack {
+                            Image("404")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 200)
+                            Text("No Secret Spot Found")
+                                .font(.title2)
+                                .fontWeight(.thin)
+                            
+                            Button {
+                                vm.refreshSecretSpots()
+                                AnalyticsService.instance.loadedNewSpots()
+                            } label: {
+                                    Text("Refresh")
+                                        .font(.subheadline)
+                                        .fontWeight(.semibold)
+                                        .frame(width: 120, height: 40)
+                                        .background(Color.white)
+                                        .foregroundColor(.cx_blue)
+                                        .cornerRadius(20)
+                        }
+                    }
                     
                 } else {
                     
@@ -141,6 +160,6 @@ struct DiscoverView: View {
 struct MissionsView_Previews: PreviewProvider {
     @State static var selection: Int = 0
     static var previews: some View {
-        DiscoverView(selectedTab: $selection, spotCount: $selection)
+        DiscoverView(selectedTab: $selection, vm: DiscoverViewModel())
     }
 }
