@@ -70,6 +70,8 @@ struct StreetPass: View {
                     
                     Spacer()
                         .frame(height: geo.size.width / 11)
+                    
+                    
                     HStack {
                         Spacer()
                         VStack(alignment: .center) {
@@ -111,6 +113,8 @@ struct StreetPass: View {
                         Spacer()
                     }
                     
+                 
+                    
                     HStack{
                         Spacer()
                         Button {
@@ -123,6 +127,7 @@ struct StreetPass: View {
                                      .resizable()
                                      .scaledToFit()
                                      .frame(width: 35)
+                                
                                 VStack(alignment: .leading) {
                              
                                     Text("My Journey")
@@ -143,6 +148,7 @@ struct StreetPass: View {
                     .padding(.top, 20)
                     
                     HStack {
+                        
                         Spacer()
                         
                         Button {
@@ -213,6 +219,21 @@ struct StreetPass: View {
                     Spacer()
                     
                     HStack {
+                        
+                        Button {
+                            vm.showWorld.toggle()
+                        } label: {
+                            Image("world")
+                                .resizable()
+                                .scaledToFit()
+                                .opacity(0.9)
+                                .frame(width: 50)
+                                .padding(.leading, 20)
+                        }
+                        .sheet(isPresented: $vm.showWorld) {
+                            WorldCompositionView(vm: vm)
+                        }
+                        
                         Spacer()
                         
                         Button(action: {
@@ -228,6 +249,9 @@ struct StreetPass: View {
                         .padding(.all, 20)
                         .padding(.trailing, 20)
                     }
+                    
+                    
+                //End of ZStack
                 }
                 .sheet(isPresented: $isPresented, onDismiss: {
                     updateProfielImage()

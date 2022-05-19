@@ -18,13 +18,13 @@ struct MyJournal: View {
         ScrollView {
             TabView {
                 
-                ForEach(vm.verifications.sorted(by: {$0.time > $1.time})) { verification in
-                    PassportView(verification: verification)
-                        .onTapGesture {
-                            self.presentationMode.wrappedValue.dismiss()
-                        }
-                }
-            
+                    ForEach(vm.verifications.sorted(by: {$0.time > $1.time})) { verification in
+                        PassportView(verification: verification, vm: vm)
+                            .onTapGesture {
+                                self.presentationMode.wrappedValue.dismiss()
+                            }
+                    }
+                
             }
             .frame(width: UIScreen.main.bounds.width,
                    height: UIScreen.main.bounds.height - 50)
@@ -38,9 +38,9 @@ struct MyJournal: View {
     }
 }
 
-struct MyJournal_Previews: PreviewProvider {
-
-    static var previews: some View {
-        MyJournal(vm: JourneyViewModel())
-    }
-}
+//struct MyJournal_Previews: PreviewProvider {
+//
+//    static var previews: some View {
+//        MyJournal(vm: JourneyViewModel())
+//    }
+//}

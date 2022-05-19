@@ -52,6 +52,11 @@ struct SpotDetailsView: View {
                         
                         if vm.showStamp {
                             StampView(spot: spot)
+                                .onAppear {
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                        //Load the sharing view
+                                    }
+                                }
                         }
                         //End of Image ZStack
                     }

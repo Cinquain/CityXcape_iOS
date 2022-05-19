@@ -27,6 +27,7 @@ struct UserField {
     static let streetCred = "streetCred"
     static let fcmToken = "fcmToken"
     static let ig = "instagram"
+    static let world = "world"
 }
 
 struct SecretSpotField {

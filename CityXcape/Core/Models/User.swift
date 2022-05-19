@@ -23,6 +23,7 @@ struct User: Identifiable, Hashable {
     
     var verified: Date?
     var membership: Date?
+    var world: [String: Double]?
     
     init(id: String, displayName: String, profileImageUrl: String) {
         self.id = id
@@ -39,6 +40,7 @@ struct User: Identifiable, Hashable {
         self.fcmToken = data?[ UserField.fcmToken] as? String ?? ""
         self.profileImageUrl = data?[UserField.profileImageUrl] as? String ?? ""
         self.social = data?[UserField.ig] as? String ?? nil
+        self.world = data?[UserField.world] as? [String: Double] ?? [:]
         let timestamp = data?[UserField.dataCreated] as? Timestamp
         self.membership = timestamp?.dateValue()
     }

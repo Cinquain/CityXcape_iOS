@@ -11,7 +11,7 @@ import MapKit
 
 class PostViewModel: NSObject, ObservableObject {
     
-    var worldPlaceHolder = "What community is this for?"
+    var worldPlaceHolder = "example: #Skaters"
     var privatePlaceHolder = "Secret Spot is Private"
     var worldDefinition = "Different World Different Spots"
     var detailsPlaceHolder = "Describe what makes this spot is special"
@@ -53,7 +53,7 @@ class PostViewModel: NSObject, ObservableObject {
         if spotName.count > 4
             && selectedImage != nil
             && details.count > 10
-            && world.count > 2
+            && world.count >= 2
               {
             
             self.postSecretSpot(mapItem: mapItem)
@@ -114,14 +114,34 @@ class PostViewModel: NSObject, ObservableObject {
         
         var newWords = [String]()
         let wordsArray = world.components(separatedBy:" ")
+            
+        
         for word in wordsArray {
             if word.count > 0 {
-                let newWord = "#\(word.lowercased())"
-                newWords.append(newWord)
+                
+                if word.contains("#") {
+                    let newWord = word.replacingOccurrences(of: "#", with: "")
+                                    
+                    newWords.append("#\(newWord.capitalizingFirstLetter())")
+                } else {
+                    let newWord = "#\(word.capitalizingFirstLetter())"
+                    newWords.append(newWord)
+                }
             }
+            
+         
         }
-        world = newWords.joined(separator:", ")
-      
+        world = ""
+//        newWords.forEach({ world += " \($0)"})
+        var count = 1
+        for word in newWords {
+            if count == 4 {
+                break
+            }
+            world += " \(word)"
+            count += 1
+            
+        }
     }
     
     

@@ -277,7 +277,7 @@ class AuthService {
     }
     
     func updateUserField(uid: String, data: [String: Any]) {
-        REF_USERS.document(uid).updateData(data)
+        REF_USERS.document(uid).setData(data, merge: true)
     }
     
     func updateUserBio(userId: String, bio: String, completion: @escaping (_ success: Bool) -> ()) {

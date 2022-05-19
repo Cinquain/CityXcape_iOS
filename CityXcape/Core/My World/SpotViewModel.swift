@@ -10,7 +10,7 @@ import CoreLocation
 import Combine
 import FirebaseFirestore
 
-class SpotViewModel: NSObject, ObservableObject {
+class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionControllerDelegate {
     
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
@@ -19,9 +19,6 @@ class SpotViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
     
     @State var searchText: String = ""
-
-    
-    
     @Published var isLoading: Bool = false 
     @Published var showActionSheet: Bool = false
     @Published var actionSheetType: SpotActionSheetType = .general
@@ -34,9 +31,11 @@ class SpotViewModel: NSObject, ObservableObject {
     @Published var showVerifiers: Bool = false
     @Published var showComments: Bool = false
     
+    @Published var showShareSheet: Bool = false
     @Published var alertmessage: String = ""
     @Published var genericAlert: Bool = false
     @Published var didLike: Bool = false
+    
     
     @Published var alertMessage: String = ""
     @Published var showAlert: Bool = false
@@ -234,17 +233,6 @@ class SpotViewModel: NSObject, ObservableObject {
         
     }
     
-    func createSpotURL(spot: SecretSpot) -> URL {
-        let name = spot.spotName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let description = spot.description ?? ""
-        let spotId = spot.id
-        let scheme = "cityxcape://discover/\(spotId)"
-        let formattedDescription = description.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let image = "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/CityXcape%2FPin.png?alt=media&token=ba915478-809e-43fd-9a6f-54194b22d718"
-        let link = "https://link.cityxcape.com/?link=https://www.cityxcape.com&isi=1588136633&ibi=\(scheme)&st=\(name)&sd=\(formattedDescription)&si=\(image)"
-        return URL(string: link)!
-    }
-    
     func presentShareSheet(spot: SecretSpot) {
         
         let name = spot.spotName.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -260,7 +248,37 @@ class SpotViewModel: NSObject, ObservableObject {
         UIApplication.shared.windows.first?.rootViewController?.presentedViewController?.present(activityVC, animated: true, completion: nil)
         
     }
- 
+    
+    func shareStampImage(spot: SecretSpot) {
+        let stampImage = generateStampImage(spot: spot)
+        let activityVC = UIActivityViewController(activityItems: [stampImage], applicationActivities: nil)
+        UIApplication.shared.windows.first?.rootViewController?.presentedViewController?.present(activityVC, animated: true, completion: nil)
+    }
+    
+    func shareInstaStamp(spot: SecretSpot) {
+        guard let instagramUrl = URL(string:"instagram-stories://share?source_application=com.cityportal.CityXcape")
+                                else {return}
+        
+        let image = journeyImage ?? UIImage()
+        
+        let stampImage = StampImage(width: 500, height: 500, image: image, title: spot.spotName, date: Date())
+                            .snapshot()
+                            .jpegData(compressionQuality: 1)
+        
+        if UIApplication.shared.canOpenURL(instagramUrl) {
+            let pasteboardItem = ["com.instagram.sharedSticker.backgroundImage": stampImage]
+            let pasteboardOptions = [UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(60 * 5)]
+            UIPasteboard.general.setItems([pasteboardItem], options: pasteboardOptions)
+            UIApplication.shared.open(instagramUrl, options: [:], completionHandler: nil)
+        } else {
+            alertmessage = "Cannot Find Instagram on Device"
+            showAlert.toggle()
+        }
+    }
+    
+    func generateStampImage(spot: SecretSpot) -> UIImage {
+        return StampImage(width: 500, height: 500, image: journeyImage ?? UIImage(), title: spot.spotName, date: Date()).snapshot()
+    }
     
     func getComments(postId: String) {
         DataService.instance.downloadComments(postId: postId) { comments in

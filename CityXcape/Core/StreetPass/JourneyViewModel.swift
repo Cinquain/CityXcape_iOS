@@ -5,9 +5,8 @@
 //  Created by James Allan on 3/3/22.
 //
 
-import Foundation
 import Firebase
-import FirebaseFirestoreSwift
+import SwiftUI
 
 class JourneyViewModel: NSObject, ObservableObject {
     
@@ -18,7 +17,10 @@ class JourneyViewModel: NSObject, ObservableObject {
     @Published var showJournal: Bool = false
     @Published var alertMessage: String = ""
     @Published var showAlert: Bool = false
-
+    @Published var showShareSheet: Bool = false
+    @Published var passportImage: UIImage?
+    @Published var allowshare: Bool = false
+    
     override init() {
         super.init()
         getVerificationForUser()
@@ -81,6 +83,65 @@ class JourneyViewModel: NSObject, ObservableObject {
             return "\(cities.keys.count) City"
         }
     }
+    
+    
+    func shareStampImage(object: Verification) {
+        let stampImage = generateStampImage(object: object)
+        let activityVC = UIActivityViewController(activityItems: [stampImage], applicationActivities: nil)
+        UIApplication.shared.windows.first?.rootViewController?.presentedViewController?.present(activityVC, animated: true, completion: nil)
+    }
+    
+    func generateStampImage(object: Verification) -> UIImage {
+        return StampImage(width: 500, height: 500, image: passportImage ?? UIImage(), title: object.name, date: object.time).snapshot()
+    }
+
+    
+    
+    
+    func shareInstaStamp(object: Verification) {
+        guard let instagramUrl = URL(string:"instagram-stories://share") else {return}
+        let stampImage = StampImage(width: 720, height: 1080, image: passportImage ?? UIImage(), title: object.name, date: object.time).snapshot()
+        
+        if UIApplication.shared.canOpenURL(instagramUrl) {
+            
+            let pasteboardItem = [
+                "com.instagram.sharedSticker.backgroundImage": stampImage
+            ]
+            
+            
+            let pasteboardOptions = [UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(60 * 5)]
+            UIPasteboard.general.setItems([pasteboardItem], options: pasteboardOptions)
+            UIApplication.shared.open(instagramUrl, options: [:], completionHandler: nil)
+            
+        } else {
+            print("Cannot Find Instagram on Device")
+        }
+    }
+    
+    func getVerificationImage(object: Verification) {
+        guard let url = URL(string: object.imageUrl) else {return}
+        
+         URLSession.shared.dataTask(with: url) { data, response, error in
+            if let err = error {
+                print("Error fetching image data", err.localizedDescription)
+                return
+            }
+            print("Found image data!")
+            guard let data = data else {return}
+             DispatchQueue.main.async { [weak self] in
+                 guard let self = self else {return}
+                  let tempImage = UIImage(data: data)
+                 self.passportImage = StampImage(width: 500, height: 600, image: tempImage ?? UIImage(), title: object.name, date: object.time).snapshot()
+                 self.allowshare = true 
+             }
+            
+        }
+         .resume()
+        
+        
+        
+    }
+ 
     
     
     

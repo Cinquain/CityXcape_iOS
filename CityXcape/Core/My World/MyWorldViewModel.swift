@@ -34,24 +34,20 @@ class MyWorldViewModel: NSObject, ObservableObject {
         
     
     func getSavedSpotsForUser(uid: String) {
-        
-        DataService.instance.getSpotsFromWorld(userId: uid, coreData: true) { [weak self] returnedSpots in
-            
-            guard let strongself = self else {return}
+        DataService.instance.getSpotsFromWorld(userId: uid) { [weak self] returnedSpots in
+            guard let self = self else {return}
             if returnedSpots.isEmpty {
-
                 print("No Secret Spots in array")
-                self?.showOnboarding = true
+                self.showOnboarding = true
             } else {
-                self?.allSpots = returnedSpots
-                self?.currentSpots = strongself.allSpots.filter({$0.verified == false})
-                self?.showOnboarding = false
-                print(returnedSpots)
-
+                self.allSpots = returnedSpots
+                self.currentSpots = self.allSpots.filter({$0.verified == false})
+                self.showOnboarding = false
             }
-          
         }
     }
+    
+    
     
     func setupToggleObserver() {
         
@@ -108,7 +104,7 @@ class MyWorldViewModel: NSObject, ObservableObject {
         }
     }
     
-    func formatSecretSpots() {
+    func fetchSecretSpots() {
         
         let spots = manager.spotEntities.map({SecretSpot(entity: $0)})
         if spots.isEmpty {

@@ -73,44 +73,49 @@ struct PostSpotForm: View {
                     }
                     .padding()
                     
-                    HStack {
-                        Button(action: {
-                            vm.isPublic.toggle()
-                        }, label: {
-                            if vm.isPublic {
-                                Image("globe")
-                                    .resizable()
-                                    .renderingMode(.template)
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 40, height: 40)
-                            } else {
-                                Image(systemName: "lock.fill")
-                                    .font(.largeTitle)
-                                    .foregroundColor(.yellow)
-                            }
-                         
-                        })
-                        
-                        if vm.isPublic {
-                            TextField(vm.worldPlaceHolder, text: $vm.world, onCommit:  {
-                                vm.converToHashTag()
+                    VStack {
+                        Text("What community is this for?")
+                            .foregroundColor(.white)
+                            .fontWeight(.thin)
+                        HStack {
+                            Button(action: {
+                                vm.isPublic.toggle()
+                            }, label: {
+                                if vm.isPublic {
+                                    Image("globe")
+                                        .resizable()
+                                        .renderingMode(.template)
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 40, height: 40)
+                                } else {
+                                    Image(systemName: "lock.fill")
+                                        .font(.largeTitle)
+                                        .foregroundColor(.yellow)
+                                }
+                             
                             })
-                            .placeholder(when: vm.world.isEmpty) {
-                                Text(vm.worldPlaceHolder).foregroundColor(.gray)
+                            
+                            if vm.isPublic {
+                                TextField(vm.worldPlaceHolder, text: $vm.world, onCommit:  {
+                                    vm.converToHashTag()
+                                })
+                                .placeholder(when: vm.world.isEmpty) {
+                                    Text(vm.worldPlaceHolder).foregroundColor(.gray)
+                            }
+                                .padding()
+                                .background(Color.white)
+                                .accentColor(.black)
+                                .foregroundColor(.black)
+                                .frame(maxWidth: UIScreen.main.bounds.width / 1.5)
+                            } else {
+                                Text(vm.privatePlaceHolder)
+                                    .foregroundColor(.white)
+                                   
+                            }
+                            
                         }
-                            .padding()
-                            .background(Color.white)
-                            .accentColor(.black)
-                            .foregroundColor(.black)
-                            .frame(maxWidth: UIScreen.main.bounds.width / 1.5)
-                        } else {
-                            Text(vm.privatePlaceHolder)
-                                .foregroundColor(.white)
-                               
-                        }
-                        
+                        .padding(.bottom, 10)
                     }
-                    .padding(.bottom, 10)
                     
               
                             

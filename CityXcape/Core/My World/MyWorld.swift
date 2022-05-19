@@ -113,7 +113,7 @@ struct MyWorld: View {
                     .onAppear {
                         manager.fetchSecretSpots()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            vm.formatSecretSpots()
+                            vm.fetchSecretSpots()
                         }
                     }
                    

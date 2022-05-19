@@ -12,6 +12,7 @@
 		14F43354281ED757000F8479 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F43353281ED757000F8479 /* Router.swift */; };
 		2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */; };
 		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
+		2117A7E5282573A20001C76C /* StampImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2117A7E4282573A20001C76C /* StampImage.swift */; };
 		211EC5DF27C65EB800F0B0A8 /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211EC5DE27C65EB800F0B0A8 /* MissionView.swift */; };
 		211F664427D247800035DB83 /* StampCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211F664327D247800035DB83 /* StampCollectionView.swift */; };
 		2120579E27DE1B3500602EE8 /* Stamp.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2120579D27DE1B3500602EE8 /* Stamp.mp3 */; };
@@ -22,6 +23,8 @@
 		212EE33127A4667500232992 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE33027A4667500232992 /* MessageView.swift */; };
 		212EE33327A4689F00232992 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE33227A4689F00232992 /* Comment.swift */; };
 		2138B6A727C70C6A004C9B3C /* MapViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138B6A627C70C6A004C9B3C /* MapViewModel.swift */; };
+		213E8ECA282D3F39002A1495 /* SwiftPieChart in Frameworks */ = {isa = PBXBuildFile; productRef = 213E8EC9282D3F39002A1495 /* SwiftPieChart */; };
+		213E8ECC282D4F70002A1495 /* WorldCompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213E8ECB282D4F70002A1495 /* WorldCompositionView.swift */; };
 		2142EF4627827E6B00EA489D /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2142EF4527827E6B00EA489D /* CoreDataManager.swift */; };
 		2142EF4927827E9700EA489D /* SecretSpotContainer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2142EF4727827E9700EA489D /* SecretSpotContainer.xcdatamodeld */; };
 		21469EC327B68B5600626FEE /* EmailSigninViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21469EC227B68B5600626FEE /* EmailSigninViewModel.swift */; };
@@ -108,6 +111,7 @@
 		21DCF82727E63090000BD1B3 /* Follower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82627E63090000BD1B3 /* Follower.swift */; };
 		21E2861527CE56150068208E /* MyJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E2861427CE56150068208E /* MyJournal.swift */; };
 		21E4DC072753D8D9004276D2 /* CheckinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E4DC062753D8D9004276D2 /* CheckinView.swift */; };
+		21E8F3EE2826ADC000AFFCAE /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E8F3ED2826ADC000AFFCAE /* ShareView.swift */; };
 		21EA999A27D1006D00A13C6C /* JourneyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA999927D1006D00A13C6C /* JourneyViewModel.swift */; };
 		21F039C328074E4E003438D0 /* ImageSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F039C228074E4E003438D0 /* ImageSlider.swift */; };
 		21F039C528075576003438D0 /* DetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F039C428075576003438D0 /* DetailsView.swift */; };
@@ -123,6 +127,7 @@
 		14F43353281ED757000F8479 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotViewModel.swift; sourceTree = "<group>"; };
 		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
+		2117A7E4282573A20001C76C /* StampImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampImage.swift; sourceTree = "<group>"; };
 		211EC5DE27C65EB800F0B0A8 /* MissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
 		211F664327D247800035DB83 /* StampCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampCollectionView.swift; sourceTree = "<group>"; };
 		2120579D27DE1B3500602EE8 /* Stamp.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Stamp.mp3; sourceTree = "<group>"; };
@@ -133,6 +138,7 @@
 		212EE33027A4667500232992 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		212EE33227A4689F00232992 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		2138B6A627C70C6A004C9B3C /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
+		213E8ECB282D4F70002A1495 /* WorldCompositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldCompositionView.swift; sourceTree = "<group>"; };
 		2142EF4527827E6B00EA489D /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		2142EF4827827E9700EA489D /* SecretSpotContainer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SecretSpotContainer.xcdatamodel; sourceTree = "<group>"; };
 		21469EC227B68B5600626FEE /* EmailSigninViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSigninViewModel.swift; sourceTree = "<group>"; };
@@ -221,6 +227,7 @@
 		21DCF82627E63090000BD1B3 /* Follower.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Follower.swift; sourceTree = "<group>"; };
 		21E2861427CE56150068208E /* MyJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyJournal.swift; sourceTree = "<group>"; };
 		21E4DC062753D8D9004276D2 /* CheckinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinView.swift; sourceTree = "<group>"; };
+		21E8F3ED2826ADC000AFFCAE /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		21EA999927D1006D00A13C6C /* JourneyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyViewModel.swift; sourceTree = "<group>"; };
 		21F039C228074E4E003438D0 /* ImageSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlider.swift; sourceTree = "<group>"; };
 		21F039C428075576003438D0 /* DetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsView.swift; sourceTree = "<group>"; };
@@ -237,6 +244,7 @@
 			files = (
 				21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */,
 				B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */,
+				213E8ECA282D3F39002A1495 /* SwiftPieChart in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,7 +412,6 @@
 				21D03593270938400071C643 /* MissionRowView.swift */,
 				21D0359527093B770071C643 /* MissionRowHeader.swift */,
 				2178C4522719166800B4C395 /* TextFieldView.swift */,
-				21E4DC062753D8D9004276D2 /* CheckinView.swift */,
 				2120CE65275FA254006367FE /* LocationCamera.swift */,
 				1493C3F2277394BA002010A6 /* ActivityIndicator.swift */,
 				21FAC217278538550035F07F /* PreviewCard.swift */,
@@ -425,6 +432,8 @@
 				21F039C228074E4E003438D0 /* ImageSlider.swift */,
 				21F039C428075576003438D0 /* DetailsView.swift */,
 				14EF54BD282044BE004D9610 /* ShareSheetView.swift */,
+				2117A7E4282573A20001C76C /* StampImage.swift */,
+				213E8ECB282D4F70002A1495 /* WorldCompositionView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -436,6 +445,8 @@
 				2106253626EDA07C000210E2 /* MyWorldViewModel.swift */,
 				21B7AB8426D03DD5009A5253 /* SpotDetailsView.swift */,
 				2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */,
+				21E4DC062753D8D9004276D2 /* CheckinView.swift */,
+				21E8F3ED2826ADC000AFFCAE /* ShareView.swift */,
 				211EC5DE27C65EB800F0B0A8 /* MissionView.swift */,
 				2138B6A627C70C6A004C9B3C /* MapViewModel.swift */,
 			);
@@ -542,6 +553,7 @@
 			name = CityXcape;
 			packageProductDependencies = (
 				21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */,
+				213E8EC9282D3F39002A1495 /* SwiftPieChart */,
 			);
 			productName = CityXcape;
 			productReference = 217DA72426CC8F8B0039A145 /* CityXcape.app */;
@@ -574,6 +586,7 @@
 				219842A126CF3A680089CE03 /* XCRemoteSwiftPackageReference "LBTATools" */,
 				21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				21806AD1274955EC00C641C7 /* XCRemoteSwiftPackageReference "JGProgressHUD-SwiftUI" */,
+				213E8EC8282D3F39002A1495 /* XCRemoteSwiftPackageReference "SwiftPieChart" */,
 			);
 			productRefGroup = 217DA72526CC8F8B0039A145 /* Products */;
 			projectDirPath = "";
@@ -699,9 +712,11 @@
 				21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */,
 				217DA73D26CC96A30039A145 /* MyWorld.swift in Sources */,
 				14F43354281ED757000F8479 /* Router.swift in Sources */,
+				213E8ECC282D4F70002A1495 /* WorldCompositionView.swift in Sources */,
 				217B770B26DD007C000A78C9 /* PostSpotForm.swift in Sources */,
 				2138B6A727C70C6A004C9B3C /* MapViewModel.swift in Sources */,
 				214A4A3B278D340300B5950A /* User.swift in Sources */,
+				21E8F3EE2826ADC000AFFCAE /* ShareView.swift in Sources */,
 				218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */,
 				211EC5DF27C65EB800F0B0A8 /* MissionView.swift in Sources */,
 				212057A027DE1C2E00602EE8 /* SoundManager.swift in Sources */,
@@ -744,6 +759,7 @@
 				217DA73F26CC972C0039A145 /* Ticker.swift in Sources */,
 				217DAF3226CD7D5600A395BC /* Helpers.swift in Sources */,
 				2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */,
+				2117A7E5282573A20001C76C /* StampImage.swift in Sources */,
 				14EF54BE282044BE004D9610 /* ShareSheetView.swift in Sources */,
 				217DA73A26CC95A50039A145 /* Extensions.swift in Sources */,
 				21F039C328074E4E003438D0 /* ImageSlider.swift in Sources */,
@@ -919,7 +935,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.8;
+				MARKETING_VERSION = 1.3.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -944,7 +960,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.3.8;
+				MARKETING_VERSION = 1.3.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -976,6 +992,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		213E8EC8282D3F39002A1495 /* XCRemoteSwiftPackageReference "SwiftPieChart" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ilamanov/SwiftPieChart";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		21806AD1274955EC00C641C7 /* XCRemoteSwiftPackageReference "JGProgressHUD-SwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/JonasGessner/JGProgressHUD-SwiftUI.git";
@@ -1003,6 +1027,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		213E8EC9282D3F39002A1495 /* SwiftPieChart */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 213E8EC8282D3F39002A1495 /* XCRemoteSwiftPackageReference "SwiftPieChart" */;
+			productName = SwiftPieChart;
+		};
 		21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;

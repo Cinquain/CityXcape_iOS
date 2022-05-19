@@ -100,15 +100,16 @@ class DataService {
                         ["savedOn": FieldValue.serverTimestamp()]
                     userWorldRef.setData(savedData)
                     
-                    //Increment User StreetCred
+                    //Increment User StreetCred & world dictionary
                     let increment: Int64 = 1
-                    let walletData : [String: Any] = [
+                    let userData : [String: Any] = [
+                        UserField.world : [world: FieldValue.increment(increment)],
                         UserField.streetCred : FieldValue.increment(increment)
                     ]
                     let rankData: [String: Any] = [
                         RankingField.totalSpots : FieldValue.increment(increment)
                     ]
-                    AuthService.instance.updateUserField(uid: uid, data: walletData)
+                    AuthService.instance.updateUserField(uid: uid, data: userData)
                     self.REF_Rankings.document(uid).updateData(rankData)
                         
                     completion(true)
@@ -164,12 +165,13 @@ class DataService {
             completion(true)
         }
         
-        //Decrement buyer wallet remotely
+        //Decrement buyer wallet remotely 
         let decrement: Int64 = -1
-        let walletData : [String: Any] = [
+        let userData : [String: Any] = [
             UserField.streetCred : FieldValue.increment(decrement)
         ]
-        AuthService.instance.updateUserField(uid: uid, data: walletData)
+        
+        AuthService.instance.updateUserField(uid: uid, data: userData)
         
         
         //Increment owner wallet
@@ -453,7 +455,7 @@ class DataService {
     }
     
     
-    func getSpotsFromWorld(userId: String, coreData: Bool, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
+    func getSpotsFromWorld(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
         REF_WORLD.document("private").collection(userId).addSnapshotListener { snapshot, error in
             var secretSpots = [SecretSpot]()
             
@@ -472,11 +474,6 @@ class DataService {
                         let data = document?.data()
                         let spot = SecretSpot(data: data)
                         secretSpots.append(spot)
-                        
-                        if coreData {
-                            self.manager.addEntityFromSpot(spot: spot)
-                        }
-
                         
                         DispatchQueue.main.async {
                             completion(secretSpots)
@@ -908,7 +905,7 @@ class DataService {
 //
     func updateDisplayNameOnPosts(userId: String, displayName: String) {
 
-        getSpotsFromWorld(userId: userId, coreData: false) { secretSpots in
+        getSpotsFromWorld(userId: userId) { secretSpots in
             let filteredSpots = secretSpots.filter({$0.ownerId == userId})
 
             for spot in filteredSpots {
@@ -946,7 +943,7 @@ class DataService {
             SecretSpotField.ownerImageUrl: profileUrl
         ]
 
-         getSpotsFromWorld(userId: uid, coreData: false) { secretspots in
+         getSpotsFromWorld(userId: uid) { secretspots in
 
             let filteredSpots = secretspots.filter({$0.ownerId == uid})
 

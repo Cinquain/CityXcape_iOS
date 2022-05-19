@@ -40,7 +40,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1821</string>
+	<string>2065</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
 	<array>
 		<string>link.cityxcape.com</string>
@@ -50,6 +50,7 @@
 		<string>comgooglemaps</string>
 		<string>comgooglemaps-x-callback</string>
 		<string>instagram</string>
+		<string>instagram-stories</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>

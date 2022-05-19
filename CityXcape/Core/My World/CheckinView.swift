@@ -23,7 +23,7 @@ struct CheckinView: View {
             
             VStack {
                 VStack {
-                    Text("Congratulations! \n You earned 3 StreetCred")
+                    Text("Almost Done!")
                         .font(.title2)
                         .fontWeight(.thin)
                         .multilineTextAlignment(.center)
@@ -51,7 +51,7 @@ struct CheckinView: View {
                             .opacity(vm.isLoading ? 1 : 0)
                     }
                     
-                    Text("You've checked in! \n Leave a photo & comment")
+                    Text("Leave a photo & comment")
                         .fontWeight(.thin)
                         .multilineTextAlignment(.center)
                     
@@ -115,7 +115,7 @@ struct CheckinView: View {
                                 vm.isLoading = false
                                 presentationMode.wrappedValue.dismiss()
                                 vm.showVerifiers = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                                     vm.showStamp = true
                                 }
                             }

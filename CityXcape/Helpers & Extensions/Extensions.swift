@@ -57,6 +57,10 @@ extension Color {
         return Color("textColor")
     }
     
+    static var graph: Color {
+        return Color("graph")
+    }
+    
     static let neuBackground = Color(hex: "f0f0f3")
     static let dropShadow = Color(hex: "aeaec0").opacity(0.4)
     static let dropLight = Color(hex: "ffffff")
@@ -86,6 +90,17 @@ extension Color {
         self.init(red: Double(r) / 0xff, green: Double(g) / 0xff, blue: Double(b) / 0xff)
     }
 }
+
+
+extension Double {
+    /// Rounds the double to decimal places value
+    func rounded(toPlaces places:Int) -> Double {
+        let divisor = pow(10.0, Double(places))
+        return (self * divisor).rounded() / divisor
+    }
+}
+
+
 
 extension MKMapItem {
     
@@ -186,6 +201,24 @@ extension View {
          let resign = #selector(UIResponder.resignFirstResponder)
          UIApplication.shared.sendAction(resign, to: nil, from: nil, for: nil)
      }
+    
+    func snapshot() -> UIImage {
+        
+        let controller = UIHostingController(rootView: self)
+        let view = controller.view
+        
+        let targetSize = controller.view.intrinsicContentSize
+        view?.bounds = CGRect(origin: .zero, size: targetSize)
+        view?.backgroundColor = .clear
+        
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        
+        return renderer.image { _ in
+            view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+        }
+        
+    }
+    //End of vie
 }
 
 
@@ -209,14 +242,30 @@ extension String {
         let wordsArray = self.components(separatedBy:" ")
         for word in wordsArray {
             if word.count > 0 {
-                let newWord = "#\(word.lowercased())"
-                newWords.append(newWord)
+                if word.contains("#") {
+                    let newWord = word.replacingOccurrences(of: "#", with: "")
+                    newWords.append("#\(newWord.capitalizingFirstLetter())")
+                } else {
+                    let newWord = "#\(word.capitalizingFirstLetter())"
+                    newWords.append(newWord)
+                }
             }
         }
-        let hashtag = newWords.joined(separator:", ")
+        let hashtag = newWords.first ?? ""
         return hashtag
     }
+    
+    func capitalizingFirstLetter() -> String {
+        return prefix(1).capitalized + dropFirst()
+    }
+    
+    mutating func capitalizeFirstLetter() {
+        self = self.capitalizingFirstLetter()
+    }
+    
 }
+
+
 
 extension UIScreen {
     
