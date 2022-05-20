@@ -139,6 +139,9 @@ class MyWorldViewModel: NSObject, ObservableObject {
                     || $0.spotName.lowercased().contains(searchTerm.lowercased())})
         
     }
+    
+    
+    
 
     
     

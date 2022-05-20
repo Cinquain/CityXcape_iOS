@@ -15,7 +15,6 @@ struct CheckinView: View {
     @StateObject var vm: SpotViewModel
     
     @State private var showComments: Bool = false
-    @State var sourceType: UIImagePickerController.SourceType = .camera
 
     var body: some View {
         ZStack {
@@ -23,7 +22,7 @@ struct CheckinView: View {
             
             VStack {
                 VStack {
-                    Text("Almost Done!")
+                    Text("Almost Done...")
                         .font(.title2)
                         .fontWeight(.thin)
                         .multilineTextAlignment(.center)
@@ -51,7 +50,7 @@ struct CheckinView: View {
                             .opacity(vm.isLoading ? 1 : 0)
                     }
                     
-                    Text("Leave a photo & comment")
+                    Text("Post reaction & photo \n for your moments")
                         .fontWeight(.thin)
                         .multilineTextAlignment(.center)
                     
@@ -83,7 +82,7 @@ struct CheckinView: View {
                         
                         Button(action: {
                             //TBd
-                            vm.showPicker = true
+                            vm.showActionSheet = true
                         }, label: {
                             VStack {
                                 Image(systemName: "camera.fill")
@@ -102,7 +101,7 @@ struct CheckinView: View {
                                 //TBD
                                 vm.addedImage = true
                             } content: {
-                                ImagePicker(imageSelected: $vm.journeyImage, sourceType: $sourceType)
+                                ImagePicker(imageSelected: $vm.journeyImage, sourceType: $vm.sourceType)
                             }
 
                     }
@@ -144,6 +143,19 @@ struct CheckinView: View {
         .edgesIgnoringSafeArea(.all)
         .alert(isPresented: $vm.showAlert) {
             return Alert(title: Text(vm.alertMessage))
+        }
+        .actionSheet(isPresented: $vm.showActionSheet) {
+            ActionSheet(title: Text("Source Options"), message: nil, buttons: [
+                .default(Text("Camera"), action: {
+                    vm.sourceType = .camera
+                    vm.showPicker.toggle()
+                }),
+                .default(Text("Photo Library"), action: {
+                    vm.sourceType = .photoLibrary
+                    vm.showPicker.toggle()
+                })
+            ])
+            
         }
     }
     

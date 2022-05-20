@@ -121,10 +121,11 @@ class DiscoverViewModel: ObservableObject {
                 print("successfully saved spot to user's world")
                 AnalyticsService.instance.savedSecretSpot()
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self?.saved = false
-                    self?.manager.addEntityFromSpot(spot: spot)
-                    
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                    guard let self = self else {return}
+                    self.saved = false
+                    self.manager.addEntityFromSpot(spot: spot)
+                    self.calculateWorld()
                 }
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -215,6 +216,63 @@ class DiscoverViewModel: ObservableObject {
                 }
                 .store(in: &cancellable)
     }
+    
+    
+    func calculateWorld()  {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            guard let self = self else {return}
+            self.manager.fetchSecretSpots()
+            var worlds: [String] = []
+            var worldDictionary: [String: Double] = [:]
+            let spots = self.manager.spotEntities.map({SecretSpot(entity: $0)})
+            if spots.isEmpty {return}
+            
+            spots.forEach({worlds.append(contentsOf: $0.world.components(separatedBy: " "))})
+            
+            for word in worlds {
+                let newWord = word
+                            .replacingOccurrences(of: "#", with: "")
+                            .replacingOccurrences(of: ",", with: "")
+                            
+                
+                if word == "" {
+                    continue
+                }
+                    
+                if let count = worldDictionary[newWord] {
+                    worldDictionary[newWord] = count + 1
+                } else {
+                    worldDictionary[newWord] = 1
+                }
+            }
+          
+            let sum = worldDictionary.reduce(0, {$0 + $1.value})
+            let worldCompo = worldDictionary
+                .mapValues({($0 / sum).rounded(toPlaces: 2) * 100})
+            
+            var topworld = ""
+            worldCompo.keys.forEach { key in
+                if topworld == "" {
+                    topworld = key
+                } else {
+                    if worldCompo[key]! > worldCompo[topworld]! {
+                        topworld = key
+                    }
+                }
+            }
+            
+            
+            let userData: [String: Any] = [
+                UserField.world : worldCompo
+            ]
+            guard let uid = self.userId else {return}
+            print("updating User's world")
+            
+            AuthService.instance.updateUserField(uid: uid, data: userData)
+        }
+
+    }
+
     
     
 

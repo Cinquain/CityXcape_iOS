@@ -138,6 +138,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
         var worldDictionary: [String: Double] = [:]
         
         let spots = coreData.spotEntities.map({SecretSpot(entity: $0)})
+        if spots.isEmpty {return}
         spots.forEach({worlds.append(contentsOf: $0.world.components(separatedBy: " "))})
         
         for word in worlds {
@@ -163,9 +164,23 @@ class StreetPassViewModel: NSObject, ObservableObject {
         self.worldCompo = worldDictionary
             .mapValues({($0 / sum).rounded(toPlaces: 2) * 100})
         
-        print(worldCompo)
+        
+        var topworld = ""
+        worldCompo.keys.forEach { key in
+            if topworld == "" {
+                topworld = key
+            } else {
+                if worldCompo[key]! > worldCompo[topworld]! {
+                    topworld = key
+                }
+            }
+        }
+        topworld.capitalizeFirstLetter()
+        print("top world is: \(topworld)")
+        
         
         let userData: [String: Any] = [
+            UserField.community: topworld,
             UserField.world : worldCompo
         ]
         guard let uid = userId else {return}

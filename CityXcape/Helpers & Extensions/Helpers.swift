@@ -28,6 +28,7 @@ struct UserField {
     static let fcmToken = "fcmToken"
     static let ig = "instagram"
     static let world = "world"
+    static let community = "top_world"
 }
 
 struct SecretSpotField {
