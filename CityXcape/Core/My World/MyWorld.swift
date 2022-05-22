@@ -111,6 +111,7 @@ struct MyWorld: View {
                     }
                     .background(Color.background.edgesIgnoringSafeArea(.all))
                     .onAppear {
+                        manager.fetchSecretSpots()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                             vm.fetchSecretSpots()
                         }

@@ -45,8 +45,17 @@ struct StreetReportCard: View {
             
             HStack {
                 
-                UserDotView(imageUrl: profileUrl ?? "", width: 80)
-                    .padding(.leading, 20)
+                VStack(alignment: .center) {
+                    UserDotView(imageUrl: profileUrl ?? "", width: 80)
+                    Text(displayName ?? "")
+                        .font(.caption)
+                        .fontWeight(.thin)
+                        .foregroundColor(.white)
+                        .frame(width: 80)
+                    
+                }
+                .padding(.leading, 20)
+
 
                 
                 Button {

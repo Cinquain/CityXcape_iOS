@@ -72,10 +72,16 @@ struct DiscoverView: View {
                                     .animation(Animation.linear(duration: 0.4))
 
                                 
-                                LikeAnimationView(color: .cx_green, didLike: $vm.passed, size: 200)
-                                    .opacity(currentSpot == spot && vm.saved ? 1 : 0)
-                                    .animation(Animation.linear(duration: 0.5))
-
+                                VStack(alignment: .center) {
+                                    LikeAnimationView(color: .cx_green, didLike: $vm.passed, size: 200)
+                                       
+                                        .animation(Animation.linear(duration: 0.5))
+                                    Text(" - \(currentSpot?.price ?? 1) StreetCred")
+                                        .font(.title)
+                                        .fontWeight(.thin)
+                                        .foregroundColor(.red)
+                                }
+                                .opacity(currentSpot == spot && vm.saved ? 1 : 0)
                                     
                                 Image(systemName: "hand.thumbsdown.fill")
                                     .resizable()

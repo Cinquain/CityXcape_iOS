@@ -84,29 +84,48 @@ struct MapContainer: View {
                 
                 Spacer()
                 
-                Button(action: {
-                    vm.searchQuery = ""
-                }, label: {
-                    HStack {
-                        Image("marker")
-                            .renderingMode(.template)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 25, height: 25)
-                        Text("Clear Map")
-                            .font(.headline)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .foregroundColor(.black)
-                    .background(Color.white)
-                    .cornerRadius(5)
 
-                       
-                })
-                .padding()
-                .animation(.easeOut(duration: 0.5))
-                .opacity(vm.mapItems.count >= 1 ? 1 : 0)
+                
+                HStack {
+                    Button(action: {
+                        vm.searchQuery = ""
+                    }, label: {
+                        HStack {
+                            Image("marker")
+                                .renderingMode(.template)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 25, height: 25)
+                            Text("Clear Map")
+                                .font(.headline)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .foregroundColor(.black)
+                        .background(Color.white)
+                        .cornerRadius(5)
+
+                           
+                    })
+                    .padding()
+                    .animation(.easeOut(duration: 0.5))
+                    .opacity(vm.mapItems.count >= 1 ? 1 : 0)
+                    
+                    
+                    
+                    Button {
+                        vm.dropPin()
+                    } label: {
+                        Image("Post Pin")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 45)
+                    }
+                    .opacity(vm.mapItems.count >= 1 ? 0 : 1)
+
+                }
+                .padding(.horizontal, 10)
+
              
                 Spacer()
                     .frame(height: vm.keyboardHeight)
@@ -162,9 +181,7 @@ struct MapView: UIViewRepresentable {
             viewModel.annotations.forEach { annotation in
                 uiView.addAnnotation(annotation)
             }
-            
-            print("refreshing annotations")
-      
+                  
             uiView.showAnnotations(uiView.annotations.filter({$0 is MKPointAnnotation}), animated: true)
         }
         

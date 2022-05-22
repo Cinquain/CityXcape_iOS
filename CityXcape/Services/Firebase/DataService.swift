@@ -308,8 +308,7 @@ class DataService {
         
     }
     
-    func getVerifications(completion: @escaping (_ verifications: [Verification]) ->()) {
-        guard let uid = userId else {return}
+    func getVerifications(uid: String, completion: @escaping (_ verifications: [Verification]) ->()) {
         
         REF_WORLD.document("verified").collection(uid).getDocuments { querySnapshot, error in
             
@@ -330,6 +329,8 @@ class DataService {
             
         }
     }
+    
+    
     
     
     func checkIfUserAlreadyVerified(spot: SecretSpot, completion: @escaping (_ doesExist: Bool) ->()) {

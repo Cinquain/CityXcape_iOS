@@ -46,7 +46,8 @@ struct JourneyView: View {
                 StampCollectionView(vm: vm)
                     .animation(.easeOut(duration: 0.5))
             } else {
-                JourneyMap(vm: vm)
+                
+                JourneyMap(verifications: vm.verifications)
                     .frame(width: width, height: height)
                     .colorScheme(.dark)
                     .cornerRadius(5)
@@ -166,14 +167,15 @@ struct JourneyMap: UIViewRepresentable {
         Coordinator(mapview)
     }
     
-    @StateObject var vm: JourneyViewModel
+    let verifications: [Verification]
     let mapview = MKMapView()
     
     func makeUIView(context: Context) -> MKMapView {
         mapview.showsCompass = false
         mapview.isUserInteractionEnabled = true
         mapview.delegate = context.coordinator
-        let annotations = vm.verifications.map({MKPointAnnotation(__coordinate: .init(latitude: $0.latitude, longitude: $0.longitude))})
+        if verifications.isEmpty {return mapview}
+        let annotations = verifications.map({MKPointAnnotation(__coordinate: .init(latitude: $0.latitude, longitude: $0.longitude))})
         mapview.addAnnotations(annotations)
         mapview.showAnnotations(mapview.annotations.filter({$0 is MKPointAnnotation}), animated: true)
         return mapview
@@ -181,8 +183,9 @@ struct JourneyMap: UIViewRepresentable {
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         //TBD
+        if verifications.isEmpty {return}
         uiView.removeAnnotations(mapview.annotations)
-        let annotations = vm.verifications.map({MKPointAnnotation(__coordinate: .init(latitude: $0.latitude, longitude: $0.longitude))})
+        let annotations = verifications.map({MKPointAnnotation(__coordinate: .init(latitude: $0.latitude, longitude: $0.longitude))})
         uiView.addAnnotations(annotations)
         uiView.showAnnotations(mapview.annotations.filter({$0 is MKPointAnnotation}), animated: true)
     }
@@ -211,6 +214,8 @@ struct JourneyMap: UIViewRepresentable {
     }
     
 }
+
+
 
 struct JourneyView_Previews: PreviewProvider {
     static var previews: some View {

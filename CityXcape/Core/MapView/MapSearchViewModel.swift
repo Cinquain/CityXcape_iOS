@@ -115,7 +115,7 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     fileprivate func checkAuthorizationStatus() {
         switch locationManager.authorizationStatus {
         case .authorizedAlways:
-            break
+            locationManager.startUpdatingLocation()
         case .denied:
             break
         case .notDetermined:
@@ -130,7 +130,7 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .authorizedWhenInUse {
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
             locationManager.startUpdatingLocation()
         }
         
@@ -144,7 +144,25 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         self.currentLocation = firstLocation.coordinate
         
     }
+    
+    func dropPin() {
+        let annotation = MKPointAnnotation()
+        guard let location = currentLocation else {return}
+        annotation.coordinate = location
+        annotations.removeAll()
+        annotations.append(annotation)
+        
+        let placemark = MKPlacemark(coordinate: location)
+        let mapItem = MKMapItem(placemark: placemark)
+        mapItems.removeAll()
+        mapItems.append(mapItem)
+    }
+    
+    //End of view model
 }
+
+
+  
 
 
 class LocationService: NSObject, CLLocationManagerDelegate {

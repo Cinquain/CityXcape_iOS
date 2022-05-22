@@ -15,7 +15,9 @@ struct PublicStreetPass: View {
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
     @State private var instagram: String = ""
-    
+    @State private var showJourney: Bool = false
+
+    @StateObject var vm: PublicStreetPassVM = PublicStreetPassVM()
     let manager = NotificationsManager.instance
 
     let width: CGFloat = UIScreen.main.bounds.size.width / 5
@@ -54,20 +56,45 @@ struct PublicStreetPass: View {
                 HStack {
                      Spacer()
                      VStack(alignment: .center) {
-                         Button(action: {
-                             
-                         }, label: {
-                             UserDotView(imageUrl: user.profileImageUrl, width: 250)
-                                 .shadow(radius: 5)
-                                 .shadow(color: .orange, radius: 30, x: 0, y: 0)
-                         })
-                       
                          
-                         Text(user.displayName)
-                             .fontWeight(.thin)
-                             .foregroundColor(.accent)
-                             .tracking(2)
-                             .padding()
+                         if vm.showJourney {
+                             withAnimation(.easeOut(duration: 0.4)) {
+                                 JourneyMap(verifications: vm.verifications)
+                             }
+                         } else {
+                             withAnimation(.easeOut(duration: 0.4)) {
+                                 UserDotView(imageUrl: user.profileImageUrl, width: 250)
+                                     .shadow(radius: 5)
+                                     .shadow(color: .orange, radius: 30, x: 0, y: 0)
+                             }
+                         
+                         }
+                        
+                         
+                         VStack(spacing: 0) {
+                             Text(user.displayName)
+                                 .fontWeight(.thin)
+                                 .foregroundColor(.accent)
+                                 .tracking(2)
+                                 .padding(.top, 10)
+                             
+                             Button {
+                                 vm.showJourney ? vm.showJourney.toggle() :
+                                 vm.getVerificationForUser(userId: user.id)
+                             } label: {
+                                 
+                                 HStack {
+                                     Image("Footprints")
+                                         .resizable()
+                                         .scaledToFit()
+                                         .frame(width: 20)
+                                         .opacity(0.8)
+                                     
+                                     Text("Their Journey")
+                                         .fontWeight(.thin)
+                                 }
+                             }
+                         }
                          
                          //Need a text liner for the bio
                          VStack(spacing: 5) {
@@ -100,7 +127,6 @@ struct PublicStreetPass: View {
                 Button {
                     
                     manager.checkAuthorizationStatus { fcmToken in
-                    
                         if let token = fcmToken {
                             streetFollowerUser(fcm: token)
                         } else {

@@ -10,6 +10,8 @@ import SwiftUI
 
 class JourneyViewModel: NSObject, ObservableObject {
     
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
+
     
     @Published var verifications: [Verification] = []
     @Published var cities: [String: Int] = [:]
@@ -41,7 +43,8 @@ class JourneyViewModel: NSObject, ObservableObject {
     }
     
     fileprivate func getVerificationForUser() {
-        DataService.instance.getVerifications { [weak self] verifications in
+        guard let uid = userId else {return}
+        DataService.instance.getVerifications(uid: uid) { [weak self] verifications in
             self?.verifications = verifications
             self?.getCities()
         }

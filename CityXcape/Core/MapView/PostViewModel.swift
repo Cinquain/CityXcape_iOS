@@ -11,7 +11,7 @@ import MapKit
 
 class PostViewModel: NSObject, ObservableObject {
     
-    var worldPlaceHolder = "example: #Skaters"
+    var worldPlaceHolder = "i.e: #Artists #Skaters #Urbex"
     var privatePlaceHolder = "Secret Spot is Private"
     var worldDefinition = "Different World Different Spots"
     var detailsPlaceHolder = "Describe what makes this spot is special"

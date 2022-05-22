@@ -31,6 +31,7 @@
 		214A4A3B278D340300B5950A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214A4A3A278D340300B5950A /* User.swift */; };
 		214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214FAC6C26E2F16300F37B80 /* ImageManager.swift */; };
 		215B30DD27C860D300D627A4 /* VerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215B30DC27C860D300D627A4 /* VerificationView.swift */; };
+		2167AEA2283949B100E9F36E /* PublicStreetPassVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2167AEA1283949B100E9F36E /* PublicStreetPassVM.swift */; };
 		216A5CDE27AA0F31006AA7B4 /* SavesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A5CDD27AA0F31006AA7B4 /* SavesView.swift */; };
 		21730A8D27C5B0380036549F /* GetStampedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21730A8C27C5B0380036549F /* GetStampedButton.swift */; };
 		217657D327FC642C0077B0A0 /* UserDiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217657D227FC642C0077B0A0 /* UserDiscoveryView.swift */; };
@@ -145,6 +146,7 @@
 		214A4A3A278D340300B5950A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		214FAC6C26E2F16300F37B80 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		215B30DC27C860D300D627A4 /* VerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationView.swift; sourceTree = "<group>"; };
+		2167AEA1283949B100E9F36E /* PublicStreetPassVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStreetPassVM.swift; sourceTree = "<group>"; };
 		216A5CDD27AA0F31006AA7B4 /* SavesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavesView.swift; sourceTree = "<group>"; };
 		21730A8C27C5B0380036549F /* GetStampedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetStampedButton.swift; sourceTree = "<group>"; };
 		217657D227FC642C0077B0A0 /* UserDiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDiscoveryView.swift; sourceTree = "<group>"; };
@@ -510,6 +512,7 @@
 				21251A8027EB3F4B0042BDF4 /* TotalView.swift */,
 				21BB328727FB2004005241BE /* StreetPassViewModel.swift */,
 				21BB328927FB2043005241BE /* StreetFollowersView.swift */,
+				2167AEA1283949B100E9F36E /* PublicStreetPassVM.swift */,
 			);
 			path = StreetPass;
 			sourceTree = "<group>";
@@ -768,6 +771,7 @@
 				21251A8127EB3F4B0042BDF4 /* TotalView.swift in Sources */,
 				21BA347727F32A3400CF2E53 /* TotalsViewModel.swift in Sources */,
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,
+				2167AEA2283949B100E9F36E /* PublicStreetPassVM.swift in Sources */,
 				2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */,
 				217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */,
 				217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */,
