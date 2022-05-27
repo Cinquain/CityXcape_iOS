@@ -146,6 +146,13 @@ class AnalyticsService {
         Analytics.logEvent("share_streetpass", parameters: nil)
     }
     
+    func viewedLeaderBoard() {
+        Analytics.logEvent("viewed_leaderboard", parameters: nil)
+    }
+    
+    func viewedRanks() {
+        Analytics.logEvent("viewed_ranks", parameters: nil)
+    }
   
     
 }

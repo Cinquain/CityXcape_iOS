@@ -107,7 +107,7 @@
 		21D0F07A27EC9604003E8748 /* UserReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0F07927EC9604003E8748 /* UserReportView.swift */; };
 		21D2413C27CCFE41004D3150 /* Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D2413B27CCFE41004D3150 /* Verification.swift */; };
 		21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */; };
-		21DCF82327E60906000BD1B3 /* Ranking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82227E60906000BD1B3 /* Ranking.swift */; };
+		21DCF82327E60906000BD1B3 /* Rank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82227E60906000BD1B3 /* Rank.swift */; };
 		21DCF82527E61043000BD1B3 /* StreetReportCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82427E61043000BD1B3 /* StreetReportCard.swift */; };
 		21DCF82727E63090000BD1B3 /* Follower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82627E63090000BD1B3 /* Follower.swift */; };
 		21E2861527CE56150068208E /* MyJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E2861427CE56150068208E /* MyJournal.swift */; };
@@ -224,7 +224,7 @@
 		21D0359527093B770071C643 /* MissionRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowHeader.swift; sourceTree = "<group>"; };
 		21D0F07927EC9604003E8748 /* UserReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReportView.swift; sourceTree = "<group>"; };
 		21D2413B27CCFE41004D3150 /* Verification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verification.swift; sourceTree = "<group>"; };
-		21DCF82227E60906000BD1B3 /* Ranking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ranking.swift; sourceTree = "<group>"; };
+		21DCF82227E60906000BD1B3 /* Rank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rank.swift; sourceTree = "<group>"; };
 		21DCF82427E61043000BD1B3 /* StreetReportCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetReportCard.swift; sourceTree = "<group>"; };
 		21DCF82627E63090000BD1B3 /* Follower.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Follower.swift; sourceTree = "<group>"; };
 		21E2861427CE56150068208E /* MyJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyJournal.swift; sourceTree = "<group>"; };
@@ -422,7 +422,6 @@
 				216A5CDD27AA0F31006AA7B4 /* SavesView.swift */,
 				21730A8C27C5B0380036549F /* GetStampedButton.swift */,
 				215B30DC27C860D300D627A4 /* VerificationView.swift */,
-				21C8F64A27CEA3CB00006042 /* PassportView.swift */,
 				211F664327D247800035DB83 /* StampCollectionView.swift */,
 				2179853827E362D40002CEBA /* Leaderboard.swift */,
 				21C1628E27E4B933001DC9BF /* RankingView.swift */,
@@ -488,7 +487,7 @@
 				214A4A3A278D340300B5950A /* User.swift */,
 				212EE33227A4689F00232992 /* Comment.swift */,
 				21D2413B27CCFE41004D3150 /* Verification.swift */,
-				21DCF82227E60906000BD1B3 /* Ranking.swift */,
+				21DCF82227E60906000BD1B3 /* Rank.swift */,
 				21DCF82627E63090000BD1B3 /* Follower.swift */,
 				21C91E6227E8AD330050D06F /* Level.swift */,
 			);
@@ -513,6 +512,7 @@
 				21BB328727FB2004005241BE /* StreetPassViewModel.swift */,
 				21BB328927FB2043005241BE /* StreetFollowersView.swift */,
 				2167AEA1283949B100E9F36E /* PublicStreetPassVM.swift */,
+				21C8F64A27CEA3CB00006042 /* PassportView.swift */,
 			);
 			path = StreetPass;
 			sourceTree = "<group>";
@@ -791,7 +791,7 @@
 				21C7D44527CFB1D200A37DFC /* JourneyView.swift in Sources */,
 				216A5CDE27AA0F31006AA7B4 /* SavesView.swift in Sources */,
 				217DA72826CC8F8B0039A145 /* CityXcapeApp.swift in Sources */,
-				21DCF82327E60906000BD1B3 /* Ranking.swift in Sources */,
+				21DCF82327E60906000BD1B3 /* Rank.swift in Sources */,
 				21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */,
 				21CBDEC227B3DD9E000F0D85 /* SignInWithEmailView.swift in Sources */,
 				21A4697927C12417009F337D /* StampView.swift in Sources */,
@@ -939,7 +939,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -964,7 +964,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.0;
+				MARKETING_VERSION = 1.4.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

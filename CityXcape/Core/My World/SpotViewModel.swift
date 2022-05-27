@@ -17,6 +17,8 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     @AppStorage(CurrentUserDefaults.bio) var bio: String?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
+    @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
+
     
     @State var searchText: String = ""
     @Published var isLoading: Bool = false 
@@ -39,6 +41,7 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     
     @Published var alertMessage: String = ""
     @Published var showAlert: Bool = false
+    @Published var showRanks: Bool = false
     @Published var showCheckin: Bool = false
     @Published var disableCheckin: Bool = false
     @Published var refresh: Bool = false
@@ -51,8 +54,15 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     @Published var submissionText: String = ""
     @Published var comments: [Comment] = []
     @Published var users: [User] = []
+    @Published var rankings: [Rank] = []
+    @Published var showLeaderboard: Bool = false 
     
-
+    @Published var showShareView: Bool = false 
+    @Published var rank: String = ""
+    @Published var progressString: String = ""
+    @Published var progressValue: CGFloat = 0
+    
+    let analytics = AnalyticsService.instance
     let manager = CoreDataManager.instance
     var cancellables = Set<AnyCancellable>()
     
@@ -96,9 +106,6 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     }
    
     
-
-
-
     func reportPost(reason: String, spot: SecretSpot) {
           print("Reporting post")
           AnalyticsService.instance.reportPost()
@@ -119,14 +126,15 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     func deletePost(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
         
         manager.delete(spotId: spot.id)
-        manager.fetchSecretSpots()
         
-        DataService.instance.deleteSecretSpot(spot: spot) { success in
-           
+        DataService.instance.deleteSecretSpot(spot: spot) { [weak self] success in
+            guard let self = self else {return}
+            
            if success {
                self.alertmessage = "This secret spot has been removed from your world"
                self.genericAlert.toggle()
                AnalyticsService.instance.deletePost()
+               self.manager.fetchSecretSpots()
                completion(success)
            } else {
                self.alertmessage = "There was an error in deleting this spot. Restart the app and try again"
@@ -138,7 +146,8 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     
     func getSavedbyUsers(postId: String) {
         
-        DataService.instance.getUsersForSpot(postId: postId, path: "savedBy") { savedUsers in
+        DataService.instance.getUsersForSpot(postId: postId, path: "savedBy") { [weak self] savedUsers in
+            guard let self = self else {return}
             if savedUsers.isEmpty {
                 print("No users saved this secret spot")
                 self.users = []
@@ -150,7 +159,8 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     
     func getVerifiedUsers(postId: String) {
         
-        DataService.instance.getVerifiersForSpot(postId: postId) { users in
+        DataService.instance.getVerifiersForSpot(postId: postId) { [weak self] users in
+            guard let self = self else {return}
             if users.isEmpty {
                 print("No users verified this spiot")
                 self.users = []
@@ -351,6 +361,52 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
         manager.updateLike(spotId: postId, liked: didLike)
 
     }
+    
+    
+     func getScoutLeaders() {
+        DataService.instance.getUserRankings { ranks in
+            self.rankings = ranks
+        }
+    }
+    
+    func calculateRank() {
+        
+        let allspots = manager.spotEntities.map({SecretSpot(entity: $0)})
+        let verifiedSpots = allspots.filter({$0.verified == true})
+        let totalStamps = verifiedSpots.count
+        let ownerSpots = allspots.filter({$0.ownerId == userId})
+        let totalSpotsPosted = ownerSpots.count
+        let totalSaves = ownerSpots.reduce(0, {$0 + $1.saveCounts})
+        let totalViews = ownerSpots.reduce(0, {$0 + $1.viewCount})
+        let totalVerifications = ownerSpots.reduce(0, {$0 + $1.verifierCount})
+        var totalCities: Int = 0
+        var cities: [String: Int] = [:]
+        verifiedSpots.forEach { spot in
+            if let count = cities[spot.city] {
+                cities[spot.city] = count + 1
+            } else {
+                cities[spot.city] = 1
+                totalCities += 1
+            }
+        }
+        
+        (self.rank,
+         self.progressString,
+         self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpotsPosted, totalSaves: totalSaves, totalStamps: totalStamps)
+        
+        
+
+        guard let uid = userId else {return}
+        guard let imageUrl = profileUrl else {return}
+        guard let username = displayName else {return}
+        guard let bio = bio else {return}
+        guard let streetcred = wallet else {return}
+        let ranking = Rank(id: uid, profileImageUrl: imageUrl, displayName: username, streetCred: streetcred, streetFollowers: 0, bio: bio, currentLevel: rank, totalSpots: totalSpotsPosted, totalStamps: totalStamps, totalSaves: totalSaves, totalUserVerifications: totalVerifications, totalPeopleMet: totalCities, totalCities: totalCities, progress: progressValue, social: nil)
+       
+        DataService.instance.saveUserRanking(rank: ranking)
+    }
+    
+ 
   
     
     

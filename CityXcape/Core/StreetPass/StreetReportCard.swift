@@ -86,7 +86,7 @@ struct StreetReportCard: View {
                 HStack {
                     
                     Button {
-                        //TBD
+                        AnalyticsService.instance.viewedLeaderBoard()
                         vm.showLeaderboard.toggle()
                     } label: {
                         
@@ -113,7 +113,6 @@ struct StreetReportCard: View {
                     }
                     
                     
-                    Spacer()
                 }
                 
             
@@ -166,7 +165,7 @@ struct StreetReportCard: View {
                     TotalView(type: type, spots: vm.ownerSpots.sorted(by: {$0.viewCount > $1.viewCount}))
                 })
                
-                //Button 1
+                //Button 2
                 
                 Button {
                     //TBD
@@ -189,12 +188,11 @@ struct StreetReportCard: View {
                     .frame(width: 180)
 
                 }
-                .padding()
                 .fullScreenCover(item: $currentType, content: { type in
                     TotalView(type: type, spots: vm.ownerSpots)
                 })
                
-                //Button 1
+                //Button 3
                 
                 Button {
                     //TBD
@@ -221,7 +219,40 @@ struct StreetReportCard: View {
                 })
                 
                 
-                //Button 1
+                //Button 4
+                
+                Button {
+                    //TB
+                    AnalyticsService.instance.checkedStreetFollowers()
+                    vm.showStreetFollowers.toggle()
+                } label: {
+                    HStack {
+                       
+                            
+                        Text("\(vm.streetFollowers.count) Followers")
+                         .font(.title3)
+                         .fontWeight(.thin)
+                         .foregroundColor(.white)
+                         .padding(.trailing, 20)
+                        
+                        Spacer()
+                        
+                        Image("running")
+                             .resizable()
+                             .scaledToFit()
+                             .frame(height: 30)
+                             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+
+
+                    }
+                    .frame(width: 180)
+                
+                }
+                .fullScreenCover(isPresented: $vm.showStreetFollowers) {
+                    StreetFollowersView(vm: vm)
+                }
+        
+                
 
                 
                 

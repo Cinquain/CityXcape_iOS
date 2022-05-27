@@ -134,6 +134,7 @@ class AuthService {
                 UserField.streetCred: 12,
                 UserField.fcmToken: fcmToken,
                 UserField.bio: "",
+                UserField.rank: Ranking.Tourist.rawValue,
                 UserField.profileImageUrl: profileImageUrl,
                 UserField.dataCreated: FieldValue.serverTimestamp()
             ]
@@ -175,6 +176,7 @@ class AuthService {
                     UserField.streetCred: 12,
                     UserField.fcmToken: fcmToken,
                     UserField.bio: "",
+                    UserField.rank: Ranking.Tourist.rawValue,
                     UserField.profileImageUrl: url,
                     UserField.dataCreated: FieldValue.serverTimestamp()
                 ]

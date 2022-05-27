@@ -12,7 +12,7 @@ struct Leaderboard: View {
     var width: CGFloat = UIScreen.screenWidth * 0.8
     @Environment(\.presentationMode) var presentationMode
     
-    @State var ranks: [Ranking]
+    @State var ranks: [Rank]
 
     var body: some View {
         VStack {

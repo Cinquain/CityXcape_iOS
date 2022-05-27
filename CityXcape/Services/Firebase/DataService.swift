@@ -514,7 +514,7 @@ class DataService {
 //            .limit(to: 12)
     }
     
-    func CreateUserRanking(rank: Ranking) {
+    func saveUserRanking(rank: Rank) {
         
         let document = REF_Rankings.document(rank.id)
         let data: [String: Any] = [
@@ -650,8 +650,8 @@ class DataService {
     }
     
     
-    func getUserRankings(completion: @escaping (_ ranks: [Ranking]) -> ()) {
-        var rankings: [Ranking] = []
+    func getUserRankings(completion: @escaping (_ ranks: [Rank]) -> ()) {
+        var rankings: [Rank] = []
         REF_Rankings
             .order(by: RankingField.totalSpots, descending: true)
             .limit(to: 10)
@@ -666,7 +666,7 @@ class DataService {
                 documents.forEach { document in
                     
                     let data = document.data()
-                    let rank = Ranking(data: data)
+                    let rank = Rank(data: data)
                     rankings.append(rank)
                     
                 }

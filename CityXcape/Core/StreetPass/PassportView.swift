@@ -62,14 +62,14 @@ struct PassportView: View {
        
    
             
-            VStack(spacing: 0) {
+            HStack(spacing: 0) {
             
                     Button {
                         vm.showShareSheet.toggle()
                    } label: {
                         
                         HStack {
-                            Text("Share Stamp")
+                            Text("Share")
                                 .font(Font.custom("Savoye LET", size: 35))
                             .foregroundColor(.black)
                             
@@ -79,8 +79,6 @@ struct PassportView: View {
                                 .frame(width: 20)
                                 .offset(y: -5)
                             
-                            Spacer()
-
                         }
                         .padding(.horizontal, 20)
                         .sheet(isPresented: $vm.showShareSheet) {
@@ -88,7 +86,10 @@ struct PassportView: View {
                         }
                         
                     }
+                
+                Spacer()
             }
+            .padding(.horizontal, 10)
             .opacity(vm.allowshare ? 1 : 0)
             .animation(.easeIn, value: vm.allowshare)
 

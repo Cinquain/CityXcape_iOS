@@ -7,15 +7,27 @@
 
 import SwiftUI
 import MapKit
+import FirebaseMessaging
 
 
 class PostViewModel: NSObject, ObservableObject {
     
+    
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @AppStorage(CurrentUserDefaults.bio) var bio: String?
+    @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
+    @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
+    @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
+    
+    
     var worldPlaceHolder = "i.e: #Artists #Skaters #Urbex"
     var privatePlaceHolder = "Secret Spot is Private"
     var worldDefinition = "Different World Different Spots"
-    var detailsPlaceHolder = "Describe what makes this spot is special"
+    var detailsPlaceHolder = "  Describe why this spot is special"
     var pricePlaceHolder = " 1"
+    var price: Int = 1
+    let manager = CoreDataManager.instance
+    let analytics = AnalyticsService.instance
     
     @Published var spotName: String = ""
     @Published var details: String = ""
@@ -24,7 +36,6 @@ class PostViewModel: NSObject, ObservableObject {
     @Published var refresh: Bool = false
     @Published var priceString: String = ""
     @Published var isLoading: Bool = false
-    var price: Int = 1
 
     
     @Published var showPicker: Bool = false
@@ -35,12 +46,21 @@ class PostViewModel: NSObject, ObservableObject {
     @Published var presentPopover: Bool = false
     @Published var showActionSheet: Bool = false
     @Published var buttonDisabled: Bool = false
+    @Published var showLeaderboard: Bool = false
+    @Published var showRanks: Bool = false
     
     
     @Published var presentCompletion: Bool = false
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
-
+    
+    @Published var showSuggestions: Bool = false
+    @Published var worldSuggestions: [String] = ["#Urbex", "#Skater", "#History", "#Art", "#Scout"]
+    
+    @Published var rankings: [Rank] = []
+    @Published var rank: String = ""
+    @Published var progressString: String = ""
+    @Published var progressValue: CGFloat = 0
     
     
     func isReady(mapItem: MKMapItem)  {
@@ -99,6 +119,8 @@ class PostViewModel: NSObject, ObservableObject {
             if success {
                 self.isLoading = false
                 self.buttonDisabled = false
+                self.getScoutLeaders()
+                self.calculateRank()
                 self.presentCompletion.toggle()
             } else {
                 self.isLoading = false
@@ -140,6 +162,97 @@ class PostViewModel: NSObject, ObservableObject {
             }
             world += " \(word)"
             count += 1
+            
+        }
+    }
+    
+    func getScoutLeaders() {
+       DataService.instance.getUserRankings { ranks in
+           self.rankings = ranks
+       }
+   }
+   
+   func calculateRank() {
+       
+       let allspots = manager.spotEntities.map({SecretSpot(entity: $0)})
+       let verifiedSpots = allspots.filter({$0.verified == true})
+       let totalStamps = verifiedSpots.count
+       let ownerSpots = allspots.filter({$0.ownerId == userId})
+       let totalSpotsPosted = ownerSpots.count
+       let totalSaves = ownerSpots.reduce(0, {$0 + $1.saveCounts})
+       let totalVerifications = ownerSpots.reduce(0, {$0 + $1.verifierCount})
+       var totalCities: Int = 0
+       var cities: [String: Int] = [:]
+       verifiedSpots.forEach { spot in
+           if let count = cities[spot.city] {
+               cities[spot.city] = count + 1
+           } else {
+               cities[spot.city] = 1
+               totalCities += 1
+           }
+       }
+       
+       (self.rank,
+        self.progressString,
+        self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpotsPosted, totalSaves: totalSaves, totalStamps: totalStamps)
+
+       guard let uid = userId else {return}
+       guard let imageUrl = profileUrl else {return}
+       guard let username = displayName else {return}
+       guard let bio = bio else {return}
+       guard let streetcred = wallet else {return}
+       let ranking = Rank(id: uid, profileImageUrl: imageUrl, displayName: username, streetCred: streetcred, streetFollowers: 0, bio: bio, currentLevel: rank, totalSpots: totalSpotsPosted, totalStamps: totalStamps, totalSaves: totalSaves, totalUserVerifications: totalVerifications, totalPeopleMet: totalCities, totalCities: totalCities, progress: progressValue, social: nil)
+      
+       DataService.instance.saveUserRanking(rank: ranking)
+   }
+    
+    
+     func checkforNotifications() {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .authorized, .provisional:
+                print("Notification is authorized")
+                return
+            case .denied:
+                //request notification & save FCM token to DB
+                print("Authorization Denied!")
+                self.requestForNotification()
+            case .notDetermined:
+                //request notification & save FCM token to DB
+                self.requestForNotification()
+                print("Authorization Not determined")
+            case .ephemeral:
+                print("Notificaiton is ephemeral")
+                return
+            @unknown default:
+                return
+            }
+            
+            
+        }
+    }
+    
+     func requestForNotification() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            
+            if let error = error {
+                print("Error getting notification permission", error.localizedDescription)
+            }
+            
+            
+            if granted {
+                print("Notification access granted")
+                let fcmToken = Messaging.messaging().fcmToken ?? ""
+                guard let uid = self.userId else {return}
+
+                let data = [
+                    UserField.fcmToken: fcmToken
+                ]
+                
+                AuthService.instance.updateUserField(uid: uid, data: data)
+            } else {
+                print("Notification Authorization denied")
+            }
             
         }
     }

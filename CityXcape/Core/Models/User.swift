@@ -20,6 +20,7 @@ struct User: Identifiable, Hashable {
     var fcmToken: String?
     var streetCred: Int?
     var social: String?
+    var rank: String?
     
     var verified: Date?
     var membership: Date?
@@ -41,6 +42,7 @@ struct User: Identifiable, Hashable {
         self.profileImageUrl = data?[UserField.profileImageUrl] as? String ?? ""
         self.social = data?[UserField.ig] as? String ?? nil
         self.world = data?[UserField.world] as? [String: Double] ?? [:]
+        self.rank = data?[UserField.rank] as? String ?? ""
         let timestamp = data?[UserField.dataCreated] as? Timestamp
         self.membership = timestamp?.dateValue()
     }
@@ -69,7 +71,7 @@ struct User: Identifiable, Hashable {
         self.social = userInfo["instagram"] as? String ?? nil
     }
     
-    init(rank: Ranking) {
+    init(rank: Rank) {
         self.id = rank.id
         self.displayName = rank.displayName
         self.profileImageUrl = rank.profileImageUrl

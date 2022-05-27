@@ -114,6 +114,7 @@ struct MapContainer: View {
                     
                     
                     Button {
+                        AnalyticsService.instance.droppedPin()
                         vm.dropPin()
                     } label: {
                         Image("Post Pin")

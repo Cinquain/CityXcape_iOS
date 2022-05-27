@@ -29,6 +29,7 @@ struct UserField {
     static let ig = "instagram"
     static let world = "world"
     static let community = "top_world"
+    static let rank = "rank"
 }
 
 struct SecretSpotField {

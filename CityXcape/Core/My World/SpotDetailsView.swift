@@ -9,27 +9,21 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct SpotDetailsView: View {
-    @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @Environment(\.presentationMode) var presentationMode
 
     @State var spot: SecretSpot
-    
-    @ObservedObject var vm: SpotViewModel = SpotViewModel()
+    @StateObject var vm: SpotViewModel = SpotViewModel()
     @StateObject var mapViewModel: MapViewModel = MapViewModel()
     
-    let manager = CoreDataManager.instance
-    let analytics = AnalyticsService.instance
     let height = UIScreen.screenHeight
     
     @State var detailsTapped: Bool = false
-    @State var likedTapped: Bool = false
     @State private var showUsers: Bool = false
     @State private var showMission: Bool = false
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
   
     
- 
     init(spot: SecretSpot) {
         _spot = State(initialValue: spot)
         vm.didLike = spot.likedByUser
@@ -43,20 +37,28 @@ struct SpotDetailsView: View {
                     ZStack {
                         
                         ImageSlider(images: spot.imageUrls)
-                            .animation(.easeIn(duration: 0.5))
 
                         
                         DetailsView(spot: spot, vm: vm)
                             .opacity(detailsTapped ? 1 : 0)
-                            .animation(.easeIn(duration: 0.5))
+                            .animation(.easeOut(duration: 0.5), value: detailsTapped)
                         
                         if vm.showStamp {
                             StampView(spot: spot)
                                 .onAppear {
+                                    vm.calculateRank()
+                                    vm.getScoutLeaders()
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                        //Load the sharing view
+                                        vm.showShareView.toggle()
                                     }
                                 }
+                                .sheet(isPresented: $vm.showShareView) {
+                                    self.presentationMode.wrappedValue.dismiss()
+                                
+                                } content: {
+                                    ShareView(vm: vm, spot: spot)
+                                }
+
                         }
                         //End of Image ZStack
                     }
@@ -85,7 +87,7 @@ struct SpotDetailsView: View {
                         
                         Button {
                             //TBD
-                            analytics.viewedDetails()
+                            vm.analytics.viewedDetails()
                             detailsTapped.toggle()
                         } label: {
                             Image("info")
@@ -93,7 +95,7 @@ struct SpotDetailsView: View {
                                 .scaledToFit()
                                 .frame(width: 50)
                                 .padding(.leading, 4)
-                                .animation(.easeOut)
+                                .animation(.easeOut, value: detailsTapped)
                                 
                         }
                         
@@ -114,7 +116,7 @@ struct SpotDetailsView: View {
                         Button {
                             showUsers.toggle()
                             vm.getSavedbyUsers(postId: spot.id)
-                            analytics.checkSavedUsers()
+                            vm.analytics.checkSavedUsers()
                         } label: {
                             VStack {
                                Image("save")
@@ -133,7 +135,7 @@ struct SpotDetailsView: View {
                         Button {
                             vm.getComments(postId: spot.id)
                             vm.showComments.toggle()
-                            analytics.viewedComments()
+                            vm.analytics.viewedComments()
                         } label: {
                             Image("comment")
                                 .resizable()
@@ -155,7 +157,7 @@ struct SpotDetailsView: View {
                       
                         Button {
                             //Load Route Screen
-                            analytics.viewedMission()
+                            vm.analytics.viewedMission()
                             showMission.toggle()
                             
                         } label: {
@@ -168,7 +170,7 @@ struct SpotDetailsView: View {
                                    Rectangle()
                                        .stroke(Color.white, lineWidth: 1)
                                        )
-                                .animation(.easeOut)
+                                .animation(.easeOut, value: showMission)
                                 
                         }
                         .fullScreenCover(isPresented: $showMission, onDismiss: {
@@ -190,7 +192,7 @@ struct SpotDetailsView: View {
             .foregroundColor(.accent)
             .colorScheme(.dark)
             .onAppear(perform: {
-                AnalyticsService.instance.viewedSecretSpot()
+                vm.analytics.viewedSecretSpot()
                 DataService.instance.updatePostViewCount(postId: spot.id)
                 vm.updateSecretSpot(postId: spot.id)
             })
@@ -251,6 +253,7 @@ struct SpotDetailsView: View {
                     vm.deletePost(spot: spot) { success in
                         if success {
                             presentationMode.wrappedValue.dismiss()
+                            vm.manager.fetchSecretSpots()
                         }
                     }
                 }),

@@ -82,11 +82,12 @@ struct PostSpotForm: View {
                                 vm.isPublic.toggle()
                             }, label: {
                                 if vm.isPublic {
-                                    Image("globe")
+                                    Image("world")
                                         .resizable()
                                         .renderingMode(.template)
                                         .aspectRatio(contentMode: .fit)
                                         .frame(width: 40, height: 40)
+                                        .opacity(0.9)
                                 } else {
                                     Image(systemName: "lock.fill")
                                         .font(.largeTitle)
@@ -107,6 +108,7 @@ struct PostSpotForm: View {
                                 .accentColor(.black)
                                 .foregroundColor(.black)
                                 .frame(maxWidth: UIScreen.main.bounds.width / 1.5)
+                                
                             } else {
                                 Text(vm.privatePlaceHolder)
                                     .foregroundColor(.white)
@@ -117,7 +119,6 @@ struct PostSpotForm: View {
                         .padding(.bottom, 10)
                     }
                     
-              
                             
                         Button(action: {
                             vm.showActionSheet.toggle()
@@ -228,7 +229,7 @@ struct PostSpotForm: View {
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }, content: {
-                    CongratsView()
+                    CongratsView(vm: vm)
                     
                 })
                 .alert(isPresented: $vm.showAlert, content: {

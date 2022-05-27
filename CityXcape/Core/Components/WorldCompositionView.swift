@@ -20,11 +20,13 @@ struct WorldCompositionView: View {
             HStack {
                 VStack(spacing: 0) {
                     UserDotView(imageUrl: profileUrl ?? "", width: 70)
-                 
+                    Text(username ?? "")
+                        .font(.caption)
+                        .fontWeight(.thin)
                 }
                 .foregroundColor(.white)
                 
-                Text("\(username ?? "")'s World Makeup")
+                Text("Your World Makeup")
                     .fontWeight(.thin)
                     .foregroundColor(.white)
                 

@@ -34,7 +34,7 @@ class DiscoverViewModel: ObservableObject {
     @Published var saved: Bool = false
     @Published var passed: Bool = false
     
-    @Published var rankings: [Ranking] = []
+    @Published var rankings: [Rank] = []
     @Published var showStreetPass: Bool = false
 
     init() {
@@ -173,7 +173,7 @@ class DiscoverViewModel: ObservableObject {
     
     
     
-    func streetFollow(rank: Ranking, fcm: String) {
+    func streetFollow(rank: Rank, fcm: String) {
         let user = User(rank: rank)
         DataService.instance.streetFollowUser(user: user, fcmToken: fcm) { [weak self] succcess in
             if succcess {

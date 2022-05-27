@@ -24,44 +24,76 @@ struct ShareView: View {
                     .frame(height: width / 4)
                 
                 
-                Text("Congratulations! \n You verified \(spot.spotName)")
+                Text("Congrats! \n You verified \(spot.spotName)")
                     .foregroundColor(.white)
                     .font(.title3)
                     .fontWeight(.thin)
                     .multilineTextAlignment(.center)
                 
-                StampImage(width: width, height: width, image: vm.journeyImage ?? UIImage(named: "magic garden")!, title: spot.spotName, date: Date())
+                StampImage(width: width, height: width, image: vm.journeyImage ?? UIImage(), title: spot.spotName, date: Date())
+                 
+                
+                Button {
+                        vm.analytics.viewedRanks()
+                        vm.showRanks.toggle()
+                } label: {
+                    VStack {
+                        Text("Your rank is: \(vm.rank)")
+                            .font(.title3)
+                            .fontWeight(.thin)
+                        
+                        BarView(progress: vm.progressValue)
+
+                        Text("\(vm.progressString)")
+                            .font(.caption)
+                            .fontWeight(.thin)
+                    }
+                    .foregroundColor(.white)
+                    .padding(.bottom, 10)
+                }
+                .sheet(isPresented: $vm.showRanks) {
+                    Ranks()
+                }
+
+           
                 
                 HStack {
                     
                     Button {
-                        vm.shareStampImage(spot: spot)
-                        vm.showShareSheet.toggle()
-                    } label: {
-                        VStack(spacing: 0) {
-                            Image("share")
-                                 .resizable()
-                                 .aspectRatio(contentMode: .fit)
-                                 .frame(width: 50)
+                        vm.analytics.viewedLeaderBoard()
+                        vm.getScoutLeaders()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            vm.showLeaderboard.toggle()
                         }
+                    } label: {
+                        
+                        HStack(alignment: .center) {
+                            Spacer()
+                            Image("leaderboard")
+                                .resizable()
+                                .renderingMode(.template)
+                                .foregroundColor(.cx_orange)
+                                .scaledToFit()
+                            .frame(height: 30)
+                            
+                            
+                            Text("Leaderboard")
+                                .foregroundColor(.cx_orange)
+                                .font(.title3)
+                                .fontWeight(.thin)
+                            Spacer()
+                        }
+                        
+                   
                     }
-                    .sheet(isPresented: $vm.showShareSheet) {
-                        ShareSheetView(photo: vm.generateStampImage(spot: spot))
+                    .sheet(isPresented: $vm.showLeaderboard) {
+                        Leaderboard(ranks: vm.rankings)
                     }
                     
-                    Button {
-                        vm.shareInstaStamp(spot: spot)
-                    } label: {
-                        VStack(spacing: 0) {
-                            Image("iG")
-                                 .resizable()
-                                 .aspectRatio(contentMode: .fit)
-                                 .frame(width: 50)
-                        }
-                    }
-                
+                    
+                    Spacer()
                 }
-                .padding()
+
                 
                 Spacer()
                 

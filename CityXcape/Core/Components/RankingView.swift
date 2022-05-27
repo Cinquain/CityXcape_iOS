@@ -13,7 +13,7 @@ struct RankingView: View {
     let width = UIScreen.screenWidth * 0.90
     let height: CGFloat = 100
      
-    var rank: Ranking
+    var rank: Rank
     var index: Int
     var userSize: CGFloat
     @State var currentUser: User?
@@ -91,7 +91,7 @@ struct RankingView: View {
 
 struct RankingView_Previews: PreviewProvider {
     static var previews: some View {
-        let rank = Ranking(id: "abc", profileImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", displayName: "Cinquain", streetCred: 23, streetFollowers: 10, bio: "Yolo", currentLevel: "Scout", totalSpots: 30, totalStamps: 40, totalSaves: 40, totalUserVerifications: 30, totalPeopleMet: 0, totalCities: 10, progress: 30, social: "JamesAllan0")
+        let rank = Rank(id: "abc", profileImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", displayName: "Cinquain", streetCred: 23, streetFollowers: 10, bio: "Yolo", currentLevel: "Scout", totalSpots: 30, totalStamps: 40, totalSaves: 40, totalUserVerifications: 30, totalPeopleMet: 0, totalCities: 10, progress: 30, social: "JamesAllan0")
         
         RankingView(rank: rank, index: 1, userSize: 70)
             .previewLayout(.sizeThatFits)

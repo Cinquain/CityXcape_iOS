@@ -29,13 +29,12 @@ class JourneyViewModel: NSObject, ObservableObject {
     }
     
     fileprivate func getCities() {
-            
-        verifications.forEach { verification in
-
+        
+        for verification in verifications {
+            if verification.city == "" {continue}
             if let count = cities[verification.city] {
                 cities[verification.city] = count + 1
             } else {
-            
                 cities[verification.city] = 1
             }
         }

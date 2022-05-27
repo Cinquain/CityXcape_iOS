@@ -13,7 +13,7 @@ struct StreetFollowersView: View {
     @Environment(\.presentationMode) var presentationMode
 
 
-    @StateObject var vm: StreetPassViewModel
+    @StateObject var vm: AnalyticsViewModel
     @State private var currentUser: User?
     var body: some View {
         VStack {
@@ -127,6 +127,6 @@ struct StreetFollowersView: View {
 
 struct StreetFollowersView_Previews: PreviewProvider {
     static var previews: some View {
-        StreetFollowersView(vm: StreetPassViewModel())
+        StreetFollowersView(vm: AnalyticsViewModel())
     }
 }

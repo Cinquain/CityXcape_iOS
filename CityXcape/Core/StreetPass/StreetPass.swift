@@ -54,16 +54,7 @@ struct StreetPass: View {
                         
                         Spacer()
                         
-                        if !instagram.isEmpty {
-                            Button {
-                                vm.openInstagram(username: instagram)
-                            } label: {
-                                Image("instagram")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 28)
-                            }
-                        }
+                 
                     }
                     .padding()
 
@@ -84,10 +75,13 @@ struct StreetPass: View {
                             })
                           
                             
-                            Text(username)
-                                .fontWeight(.thin)
-                                .foregroundColor(.accent)
-                                .tracking(2)
+                      
+                                Text(username)
+                                    .fontWeight(.thin)
+                                    .foregroundColor(.accent)
+                                    .tracking(2)
+                                
+                            
                             
                             //Need a text liner for the bio
                             VStack(spacing: 5) {
@@ -113,6 +107,37 @@ struct StreetPass: View {
                         Spacer()
                     }
                     
+                    
+                    HStack{
+                        Spacer()
+                        Button {
+                            vm.showWorld.toggle()
+                        } label: {
+                            HStack {
+                                Image("world")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .opacity(0.9)
+                                    .frame(width: 35)
+                                
+                                Text("My World")
+                                     .font(.title2)
+                                     .fontWeight(.thin)
+                                     .foregroundColor(.white)
+                                
+                                Spacer()
+                                
+                            }
+                            .frame(width: 150)
+                        }
+                        .sheet(isPresented: $vm.showWorld) {
+                            WorldCompositionView(vm: vm)
+                        }
+                        
+                        Spacer()
+                   
+                    }
+                    .padding(.top, 20)
                  
                     
                     HStack{
@@ -127,15 +152,14 @@ struct StreetPass: View {
                                      .resizable()
                                      .scaledToFit()
                                      .frame(width: 35)
-                                
-                                VStack(alignment: .leading) {
-                             
+                                                             
                                     Text("My Journey")
                                          .font(.title2)
                                          .fontWeight(.thin)
                                          .foregroundColor(.white)
-                                }
+                                
                             }
+                            .frame(width: 150)
                         
                         }
                         .fullScreenCover(isPresented: $vm.showJourney) {
@@ -145,7 +169,7 @@ struct StreetPass: View {
                         Spacer()
                    
                     }
-                    .padding(.top, 20)
+                    
                     
                     HStack {
                         
@@ -160,17 +184,16 @@ struct StreetPass: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 35)
-                               VStack(alignment: .leading) {
-                                   Text("STREET")
-                                       .fontWeight(.thin)
-                                       .font(.caption)
-                                       .tracking(5)
-                                   Text("Report Card")
+                                 
+                                   Text("Analytics")
                                         .font(.title2)
                                         .fontWeight(.thin)
                                         .foregroundColor(.white)
-                               }
+                                Spacer()
+
                         }
+                        .frame(width: 150)
+
                         }
                         .fullScreenCover(isPresented: $vm.showStats) {
                             StreetReportCard()
@@ -179,60 +202,11 @@ struct StreetPass: View {
                         Spacer()
                     }
                     
-                    HStack{
-                        Spacer()
-                        Button {
-                            //TB
-                            AnalyticsService.instance.checkedStreetFollowers()
-                            vm.showStreetFollowers.toggle()
-                        } label: {
-                            HStack {
-                                Image("running")
-                                     .resizable()
-                                     .scaledToFit()
-                                     .frame(height: 35)
-                                VStack(alignment: .leading) {
-                                    Text("STREET")
-                                        .fontWeight(.thin)
-                                        .font(.caption)
-                                        .tracking(5)
-                                    Text("Followers")
-                                         .font(.title2)
-                                         .fontWeight(.thin)
-                                         .foregroundColor(.white)
-                                         .padding(.trailing, 20)
-
-                                }
-                            }
-                        
-                        }
-                        .fullScreenCover(isPresented: $vm.showStreetFollowers) {
-                            StreetFollowersView(vm: vm)
-                        }
-                        
-                        Spacer()
-                   
-                    }
-                    
                     
                     
                     Spacer()
                     
                     HStack {
-                        
-                        Button {
-                            vm.showWorld.toggle()
-                        } label: {
-                            Image("world")
-                                .resizable()
-                                .scaledToFit()
-                                .opacity(0.9)
-                                .frame(width: 50)
-                                .padding(.leading, 20)
-                        }
-                        .sheet(isPresented: $vm.showWorld) {
-                            WorldCompositionView(vm: vm)
-                        }
                         
                         Spacer()
                         

@@ -12,8 +12,7 @@ struct PublicStreetPass: View {
     
     var user: User
 
-    @State private var showAlert: Bool = false
-    @State private var alertMessage: String = ""
+   
     @State private var instagram: String = ""
     @State private var showJourney: Bool = false
 
@@ -36,16 +35,7 @@ struct PublicStreetPass: View {
 
                     Spacer()
                     
-                    if let social = user.social {
-                        Button {
-                            openInstagram(username: social)
-                        } label: {
-                            Image("instagram")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 28)
-                        }
-                    }
+                 
                 }
                 .padding()
             
@@ -72,12 +62,26 @@ struct PublicStreetPass: View {
                         
                          
                          VStack(spacing: 0) {
-                             Text(user.displayName)
-                                 .fontWeight(.thin)
-                                 .foregroundColor(.accent)
-                                 .tracking(2)
-                                 .padding(.top, 10)
-                             
+                             HStack(alignment: .bottom) {
+                                 Text(user.displayName)
+                                     .fontWeight(.thin)
+                                     .foregroundColor(.accent)
+                                     .tracking(2)
+                                 
+                                 if user.social != nil {
+                                     Button {
+                                         vm.openInstagram(username: user.social ?? "")
+                                     } label: {
+                                         Image("instagram")
+                                             .resizable()
+                                             .scaledToFit()
+                                             .frame(width: 15)
+                                     }
+                                 }
+
+                             }
+                             .padding(.top, 10)
+
                              Button {
                                  vm.showJourney ? vm.showJourney.toggle() :
                                  vm.getVerificationForUser(userId: user.id)
@@ -128,10 +132,10 @@ struct PublicStreetPass: View {
                     
                     manager.checkAuthorizationStatus { fcmToken in
                         if let token = fcmToken {
-                            streetFollowerUser(fcm: token)
+                            vm.streetFollowerUser(fcm: token, user: user)
                         } else {
-                            alertMessage = "CityXcape needs notification permission allowed"
-                            showAlert.toggle()
+                            vm.alertMessage = "CityXcape needs notification permission to follow user"
+                            vm.showAlert.toggle()
                         }
                     }
                    
@@ -154,40 +158,12 @@ struct PublicStreetPass: View {
                 
             }
             .background(LinearGradient(gradient: Gradient(colors: [Color.black, Color.orange,]), startPoint: .center, endPoint: .bottom).edgesIgnoringSafeArea(.all))
-            .alert(isPresented: $showAlert) {
-                AnalyticsService.instance.triedMessagingUser()
-                return Alert(title: Text(alertMessage))
+            .alert(isPresented: $vm.showAlert) {
+                return Alert(title: Text(vm.alertMessage))
             }
         
     }
     //End of body
-    
-    fileprivate func streetFollowerUser(fcm: String) {
-        DataService.instance.streetFollowUser(user: user, fcmToken: fcm) { succcess in
-            if succcess {
-                self.alertMessage = "Following \(user.displayName)"
-                self.showAlert = true
-            } else {
-                self.alertMessage = "Cannot follow \(user.displayName)"
-                self.showAlert = true
-            }
-        }
-    }
-    
-    fileprivate func openInstagram(username: String) {
-            //Open in brower
-        let appURL = URL(string: "instagram://user?username=\(username)")!
-        let application = UIApplication.shared
-        
-        if application.canOpenURL(appURL) {
-            application.open(appURL, options: [:])
-        } else {
-            let webURL = URL(string: "https://instagram.com/\(username)")!
-            application.open(webURL)
-        }
-        
-    }
-
    
 }
 

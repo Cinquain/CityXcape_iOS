@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 
 class AnalyticsViewModel: NSObject, ObservableObject {
@@ -18,11 +19,20 @@ class AnalyticsViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.displayName) var username: String?
 
     
-    let manager = CoreDataManager.instance
     
     @Published var showLeaderboard: Bool = false
+    @Published var showStreetFollowers: Bool = false
+    @Published var showFollowing: Bool = false
+
+    @Published var users: [User] = []
+    @Published var streetFollowers: [User] = []
+    @Published var streetFollowing: [User] = []
+    
     @Published var showRanks:Bool = false
-    @Published var ranking: [Ranking] = []
+    @Published var ranking: [Rank] = []
+    
+    @Published var alertMessage: String = ""
+    @Published var showAlert: Bool = false
     
     @Published var ownerSpots: [SecretSpot] = []
     @Published var totalSpotsPosted: Int = 0
@@ -40,10 +50,15 @@ class AnalyticsViewModel: NSObject, ObservableObject {
     var spotProgress: CGFloat = 0
     var stampProgress: CGFloat = 0
     var saveProgress: CGFloat = 0
+    let coreData = CoreDataManager.instance
+    let manager = NotificationsManager.instance
+    var cancellable: AnyCancellable?
     
     override init() {
         super.init()
+        getStreetFollowers()
         calculateRank()
+        getFollowing()
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
             self.saveToLeaderboard()
         }
@@ -52,7 +67,8 @@ class AnalyticsViewModel: NSObject, ObservableObject {
 
 
     func calculateRank() {
-        let allspots = manager.spotEntities.map({SecretSpot(entity: $0)})
+        
+        let allspots = coreData.spotEntities.map({SecretSpot(entity: $0)})
         let verifiedSpots = allspots.filter({$0.verified == true})
         totalStamps = verifiedSpots.count
         ownerSpots = allspots.filter({$0.ownerId == userId})
@@ -60,7 +76,6 @@ class AnalyticsViewModel: NSObject, ObservableObject {
         totalSaves = ownerSpots.reduce(0, {$0 + $1.saveCounts})
         totalViews = ownerSpots.reduce(0, {$0 + $1.viewCount})
         totalVerifications = ownerSpots.reduce(0, {$0 + $1.verifierCount})
-        
         
         verifiedSpots.forEach { spot in
             if let count = cities[spot.city] {
@@ -71,75 +86,14 @@ class AnalyticsViewModel: NSObject, ObservableObject {
             }
         }
         
-      
-        if totalSpotsPosted == 0 {
-            rank = Rank.Tourist.rawValue
-            progressString = "Post 1 spot to reach the next level"
-            progressValue = 0
-            return
-        } else if totalSpotsPosted < 3  {
-            rank = Rank.Visitor.rawValue
-            progressString = "Post \(3 - totalSpotsPosted) spots to reach the next level"
-            progressValue =  CGFloat((totalSpotsPosted) / 3 * 200)
-            return
-        } else if totalSpotsPosted < 10 || totalSaves < 25 || totalStamps < 3 {
-            rank = Rank.Observer.rawValue
-            spotProgress = CGFloat(min(10, totalSpotsPosted))
-            saveProgress = CGFloat(min(25, totalSaves))
-            stampProgress = CGFloat(min(3, totalStamps))
-            progressString = "\(min(10, totalSpotsPosted))/10 spots, \(min(25, totalSaves))/25 saves, \(min(3, totalStamps))/3 stamps remaining"
-            progressValue =  (spotProgress + saveProgress + stampProgress) / 38 * 200
-            print("progress value is \(progressValue)")
-            return
-        } else if totalSpotsPosted < 25 || totalSaves < 100  || totalStamps < 10{
-            rank = Rank.Local.rawValue
-            spotProgress = CGFloat(min(25, totalSpotsPosted))
-            saveProgress = CGFloat(min(100, totalSaves))
-            stampProgress = CGFloat(min(10, totalStamps))
-            progressString = "\(min(25, totalSpotsPosted))/25 spots, \(min(100, totalSaves))/100 saves, \(min(10, totalStamps))/10 stamps remaining"
-            progressValue =  (spotProgress + saveProgress + stampProgress) / 135 * 200
-        } else if totalSpotsPosted < 50 || totalSaves < 250 || totalStamps < 50 {
-            rank = Rank.Informant.rawValue
-            spotProgress = CGFloat(min(50, totalSpotsPosted))
-            saveProgress = CGFloat(min(250, totalSaves))
-            stampProgress = CGFloat(min(50, totalStamps))
-            progressString = "\(min(50, totalSpotsPosted))/50 spots, \(min(250, totalSaves))/250 saves, \(min(50, totalStamps))/50 stamps remaining"
-            progressValue =  (spotProgress + saveProgress + stampProgress) / 350 * 200
-            return
-        } else if totalSpotsPosted < 100 || totalSaves < 1000 || totalStamps < 100 {
-            rank = Rank.Scout.rawValue
-            spotProgress = CGFloat(min(100, totalSpotsPosted))
-            saveProgress = CGFloat(min(1000, totalSaves))
-            stampProgress = CGFloat(min(100, totalStamps))
-            progressString = "\(min(100, totalSpotsPosted))/100 spots, \(min(1000, totalSaves))/1K saves, \(min(100, totalStamps))/100 stamps remaining"
-            progressValue =  (spotProgress + saveProgress + stampProgress) / 1200 * 200
-            return
-        } else if totalSpotsPosted < 300 || totalSaves < 5000 || totalStamps < 300 {
-            rank = Rank.Recon.rawValue
-            spotProgress = CGFloat(min(300, totalSpotsPosted))
-            saveProgress = CGFloat(min(5000, totalSaves))
-            stampProgress = CGFloat(min(300, totalStamps))
-            progressString = "\(min(300, totalSpotsPosted))/300 spots, \(min(5000, totalSaves))/5K saves, \(min(300, totalStamps))/300 stamps remaining"
-            progressValue =  (spotProgress + saveProgress + stampProgress) / 5600 * 200
-            return
-        } else if totalSpotsPosted < 1000 || totalSaves < 10000 || totalStamps < 1000 {
-            rank = Rank.ForceRecon.rawValue
-            spotProgress = CGFloat(min(1000, totalSpotsPosted))
-            saveProgress = CGFloat(min(10000, totalSaves))
-            stampProgress = CGFloat(min(1000, totalStamps))
-            progressString = "\(min(1000, totalSpotsPosted))/1K spots, \(min(10000, totalSaves))/10K saves, \(min(1000, totalStamps))/1K stamps remaining"
-            progressValue =  (spotProgress + saveProgress + stampProgress) / 12000 * 200
-            return
-        } else if totalSpotsPosted > 1000 && totalSaves > 10000 && totalStamps > 1000 {
-            rank = Rank.Bond.rawValue
-            progressString = "You are a Scout Chief"
-            progressValue = 200
-            return
-        }
+        (self.rank,
+         self.progressString,
+         self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpotsPosted, totalSaves: totalSaves, totalStamps: totalStamps)
         
- 
+        saveToLeaderboard()
 
     }
+    
     
     fileprivate func getScoutLeaders() {
         
@@ -154,10 +108,86 @@ class AnalyticsViewModel: NSObject, ObservableObject {
         guard let displayName = username else {return}
         guard let bio = bio else {return}
         guard let streetcred = wallet else {return}
-        let ranking = Ranking(id: uid, profileImageUrl: imageUrl, displayName: displayName, streetCred: streetcred, streetFollowers: 0, bio: bio, currentLevel: rank, totalSpots: totalSpotsPosted, totalStamps: totalStamps, totalSaves: totalSaves, totalUserVerifications: totalVerifications, totalPeopleMet: totalCities, totalCities: totalCities, progress: progressValue, social: nil)
-       
-        DataService.instance.CreateUserRanking(rank: ranking)
+        let ranking = Rank(id: uid, profileImageUrl: imageUrl, displayName: displayName, streetCred: streetcred, streetFollowers: 0, bio: bio, currentLevel: rank, totalSpots: totalSpotsPosted, totalStamps: totalStamps, totalSaves: totalSaves, totalUserVerifications: totalVerifications, totalPeopleMet: totalCities, totalCities: totalCities, progress: progressValue, social: nil)
+        let userData : [String: Any] = [
+            UserField.rank: rank
+        ]
+        AuthService.instance.updateUserField(uid: uid, data: userData)
+        DataService.instance.saveUserRanking(rank: ranking)
     }
+    
+    
+    
+    func getStreetFollowers() {
+        
+        DataService.instance.getStreetFollowers { [weak self] followers in
+            self?.streetFollowers = followers
+            self?.users = followers
+        }
+    }
+    
+    func getFollowing() {
+        DataService.instance.getStreetFollowing { [weak self] following in
+            self?.streetFollowing = following
+        }
+    }
+    
+    
+    func unfollowerUser(uid: String) {
+        
+        DataService.instance.unfollowerUser(followingId: uid) { [weak self] success in
+            if success {
+                self?.alertMessage = "Successfuly unfollowed user"
+                self?.showAlert.toggle()
+                self?.streetFollowing.removeAll(where: {$0.id == uid})
+            } else {
+                self?.alertMessage = "Failed to unfollow user"
+                self?.showAlert.toggle()
+            }
+        }
+        
+    }
+    
+    func followerUser(user: User) {
+        
+        manager.checkAuthorizationStatus { [weak self] fcmToken in
+            
+            if let token = fcmToken {
+                
+                DataService.instance.streetFollowUser(user: user, fcmToken: token) {  succcess in
+                    if succcess {
+                        self?.alertMessage = "Following \(user.displayName)"
+                        self?.showAlert = true
+                        self?.streetFollowing.append(user)
+                    } else {
+                        self?.alertMessage = "Cannot follow \(user.displayName)"
+                        self?.showAlert = true
+                    }
+                }
+                
+            } else {
+                self?.alertMessage = "Please give CityXcape notifications permission"
+                self?.showAlert = true
+            }
+            
+        }
+        
+    }
+    
+    
+    func setSubscribers() {
+        
+      cancellable =  $showFollowing
+            .sink { [weak self] boolen in
+                if boolen {
+                    self?.users = self?.streetFollowing ?? []
+                } else {
+                    self?.users = self?.streetFollowers ?? []
+                }
+            }
+        
+    }
+    
     
     
   
