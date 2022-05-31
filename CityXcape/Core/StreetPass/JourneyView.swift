@@ -117,7 +117,7 @@ struct JourneyView: View {
                                 .opacity(0.8)
                                 .padding(.top, 7)
                             
-                            Text("Moments")
+                            Text(vm.getStampTitle())
                             .foregroundColor(.white)
                             .fontWeight(.thin)
                             .frame(width: 100, height: 50, alignment: .leading)

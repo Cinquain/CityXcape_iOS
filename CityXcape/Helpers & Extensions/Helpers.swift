@@ -154,7 +154,7 @@ enum Icon: String {
     case globe = "globe"
     case unknown = "silhouette"
     case back = "back_arrow"
-    case compass = "compass"
+    case compass = "Scout-Logo"
     case tabItem0 = "mission"
     case tabItemI = "my_world"
     case tabItemII = "tab2"

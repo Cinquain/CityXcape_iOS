@@ -122,6 +122,8 @@ class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
 }
     
+
+    
     
   
     

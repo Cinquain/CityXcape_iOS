@@ -79,6 +79,9 @@ struct SpotDetailsView: View {
                         .padding(.horizontal, 10)
                         .padding(.bottom, 5)
                         .frame(width: UIScreen.screenWidth)
+                        .fullScreenCover(isPresented: $vm.showCheckin) {
+                            CheckinView(spot: spot, vm: vm)
+                        }
                     
                  
     
@@ -195,6 +198,7 @@ struct SpotDetailsView: View {
                 vm.analytics.viewedSecretSpot()
                 DataService.instance.updatePostViewCount(postId: spot.id)
                 vm.updateSecretSpot(postId: spot.id)
+                vm.checkIfPresent(spot: spot)
             })
             .actionSheet(isPresented: $vm.showActionSheet, content: {
                 getActionSheet()

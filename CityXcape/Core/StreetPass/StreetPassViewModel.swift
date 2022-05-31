@@ -10,9 +10,12 @@ import Combine
 import SwiftUI
 
 class StreetPassViewModel: NSObject, ObservableObject {
-    
+        
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
-
+    @AppStorage(CurrentUserDefaults.bio) var bio: String?
+    @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
+    @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
+    @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     
     @Published var showJourney: Bool = false
     @Published var showStats: Bool = false
@@ -24,7 +27,10 @@ class StreetPassViewModel: NSObject, ObservableObject {
     @Published var alertMessage: String = ""
     @Published var showAlert: Bool = false
     
-
+    @Published var showRanks: Bool = false 
+    @Published var rank: String = ""
+    @Published var progressString: String = ""
+    @Published var progressValue: CGFloat = 0
     
     let coreData = CoreDataManager.instance
     let manager = NotificationsManager.instance
@@ -32,6 +38,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
     override init() {
         super.init()
         calculateWorld()
+        calculateRank()
     }
     
     func generateColors() -> [Color] {
@@ -111,6 +118,43 @@ class StreetPassViewModel: NSObject, ObservableObject {
         guard let uid = userId else {return}
         AuthService.instance.updateUserField(uid: uid, data: userData)
 
+    }
+    
+    
+    func calculateRank() {
+        
+        let allspots = coreData.spotEntities.map({SecretSpot(entity: $0)})
+        let verifiedSpots = allspots.filter({$0.verified == true})
+        let totalStamps = verifiedSpots.count
+        let ownerSpots = allspots.filter({$0.ownerId == userId})
+        let totalSpotsPosted = ownerSpots.count
+        let totalSaves = ownerSpots.reduce(0, {$0 + $1.saveCounts})
+        let totalVerifications = ownerSpots.reduce(0, {$0 + $1.verifierCount})
+        var totalCities: Int = 0
+        var cities: [String: Int] = [:]
+        verifiedSpots.forEach { spot in
+            if let count = cities[spot.city] {
+                cities[spot.city] = count + 1
+            } else {
+                cities[spot.city] = 1
+                totalCities += 1
+            }
+        }
+        
+        (self.rank,
+         self.progressString,
+         self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpotsPosted, totalSaves: totalSaves, totalStamps: totalStamps)
+        
+        
+
+        guard let uid = userId else {return}
+        guard let imageUrl = profileUrl else {return}
+        guard let username = displayName else {return}
+        guard let bio = bio else {return}
+        guard let streetcred = wallet else {return}
+        let ranking = Rank(id: uid, profileImageUrl: imageUrl, displayName: username, streetCred: streetcred, streetFollowers: 0, bio: bio, currentLevel: rank, totalSpots: totalSpotsPosted, totalStamps: totalStamps, totalSaves: totalSaves, totalUserVerifications: totalVerifications, totalPeopleMet: totalCities, totalCities: totalCities, progress: progressValue, social: nil)
+       
+        DataService.instance.saveUserRanking(rank: ranking)
     }
     
     

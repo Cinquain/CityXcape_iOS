@@ -143,6 +143,15 @@ class JourneyViewModel: NSObject, ObservableObject {
         
         
     }
+    
+    func getStampTitle() -> String {
+        if verifications.count <= 1 {
+            return "\(verifications.count) Stamp"
+        } else {
+            return "\(verifications.count) Stamps"
+        }
+        
+    }
  
     
     

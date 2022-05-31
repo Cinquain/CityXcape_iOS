@@ -377,7 +377,6 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
         let ownerSpots = allspots.filter({$0.ownerId == userId})
         let totalSpotsPosted = ownerSpots.count
         let totalSaves = ownerSpots.reduce(0, {$0 + $1.saveCounts})
-        let totalViews = ownerSpots.reduce(0, {$0 + $1.viewCount})
         let totalVerifications = ownerSpots.reduce(0, {$0 + $1.verifierCount})
         var totalCities: Int = 0
         var cities: [String: Int] = [:]
@@ -404,6 +403,23 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
         let ranking = Rank(id: uid, profileImageUrl: imageUrl, displayName: username, streetCred: streetcred, streetFollowers: 0, bio: bio, currentLevel: rank, totalSpots: totalSpotsPosted, totalStamps: totalStamps, totalSaves: totalSaves, totalUserVerifications: totalVerifications, totalPeopleMet: totalCities, totalCities: totalCities, progress: progressValue, social: nil)
        
         DataService.instance.saveUserRanking(rank: ranking)
+    }
+    
+    
+    func checkIfPresent(spot: SecretSpot) {
+        let manager = LocationService.instance.manager
+        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
+            let manager = LocationService.instance.manager
+            let spotLocation = CLLocation(latitude: spot.latitude, longitude: spot.longitude)
+            let userLocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
+            let distance = userLocation.distance(from: spotLocation)
+            let distanceInFeet = distance * 3.28084
+            if distanceInFeet < 200 {
+                showCheckin = true
+            }
+        } else {
+            manager.requestWhenInUseAuthorization()
+        }
     }
     
  

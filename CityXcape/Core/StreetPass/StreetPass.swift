@@ -54,6 +54,27 @@ struct StreetPass: View {
                         
                         Spacer()
                         
+                        Button {
+                            vm.showRanks.toggle()
+                        } label: {
+                            VStack(spacing: 0) {
+                                Image(vm.rank)
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .foregroundColor(.cx_orange)
+                                    .scaledToFit()
+                                .frame(height: 30)
+                                Text(vm.rank)
+                                    .font(.caption)
+                                    .fontWeight(.thin)
+                            }
+                            .foregroundColor(.cx_orange)
+                            .opacity(0.7)
+                        }
+                        .sheet(isPresented: $vm.showRanks) {
+                            Ranks()
+                        }
+                 
                  
                     }
                     .padding()

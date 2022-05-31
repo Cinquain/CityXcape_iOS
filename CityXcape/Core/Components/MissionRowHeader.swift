@@ -11,7 +11,7 @@ struct MissionRowHeader: View {
     var body: some View {
         HStack {
             
-            Image("compass")
+            Image(Icon.compass.rawValue)
                 .resizable()
                 .renderingMode(.template)
                 .foregroundColor(.white)
