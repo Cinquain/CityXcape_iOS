@@ -122,14 +122,7 @@ struct MyWorld: View {
         //End of body
     }
     
-    fileprivate func getExplorerMessage(spot: SecretSpot) -> String {
-        if spot.saveCounts > 1 {
-            return "\(spot.saveCounts) Explorers"
-        } else {
-            return "\(spot.saveCounts) Explorer"
-        }
-    }
-    
+
     
   
 }

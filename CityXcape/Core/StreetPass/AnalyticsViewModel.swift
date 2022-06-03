@@ -47,6 +47,10 @@ class AnalyticsViewModel: NSObject, ObservableObject {
     @Published var cities: [String: Int] = [:]
     @Published var totalCities: Int = 0
     
+    @Published var worldCompo: [String: Double] = [:]
+    @Published var topWorld: String = ""
+    @Published var showWorld: Bool = false 
+    
     var spotProgress: CGFloat = 0
     var stampProgress: CGFloat = 0
     var saveProgress: CGFloat = 0
@@ -56,6 +60,7 @@ class AnalyticsViewModel: NSObject, ObservableObject {
     
     override init() {
         super.init()
+        calculateWorld()
         getStreetFollowers()
         calculateRank()
         getFollowing()
@@ -187,6 +192,72 @@ class AnalyticsViewModel: NSObject, ObservableObject {
             }
         
     }
+    
+    
+    func calculateWorld()  {
+        coreData.fetchSecretSpots()
+        var worlds: [String] = []
+        var worldDictionary: [String: Double] = [:]
+        
+        let spots = coreData.spotEntities.map({SecretSpot(entity: $0)})
+        if spots.isEmpty {return}
+        spots.forEach({worlds.append(contentsOf: $0.world.components(separatedBy: " "))})
+        
+        for word in worlds {
+            let newWord = word
+                        .replacingOccurrences(of: "#", with: "")
+                        .replacingOccurrences(of: ",", with: "")
+                        
+            
+            if word == "" {
+                continue
+            }
+                
+            if let count = worldDictionary[newWord] {
+                worldDictionary[newWord] = count + 1
+            } else {
+                worldDictionary[newWord] = 1
+            }
+        }
+      
+        
+        let sum = worldDictionary.reduce(0, {$0 + $1.value})
+        
+        self.worldCompo = worldDictionary
+            .mapValues({($0 / sum).rounded(toPlaces: 2) * 100})
+        
+        
+ 
+        worldCompo.keys.forEach { key in
+            if topWorld == "" {
+                topWorld = key
+            } else {
+                if worldCompo[key]! > worldCompo[topWorld]! {
+                    topWorld = key
+                }
+            }
+        }
+        topWorld.capitalizeFirstLetter()
+        
+        
+        let userData: [String: Any] = [
+            UserField.community: topWorld,
+            UserField.world : worldCompo
+        ]
+        guard let uid = userId else {return}
+        AuthService.instance.updateUserField(uid: uid, data: userData)
+
+    }
+    
+    func generateColors() -> [Color] {
+        var colors: [Color] = []
+        (0...worldCompo.count).forEach { _ in
+            colors.append(Color.random)
+        }
+        return colors
+    }
+
+    
     
     
     

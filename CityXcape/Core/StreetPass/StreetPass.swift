@@ -23,8 +23,7 @@ struct StreetPass: View {
     @State private var profileUrl = ""
     @State private var instagram = ""
     @State private var streetCred : Int = 0
-    @State private var showAlert : Bool = false
-    @State private var message: String = ""
+   
     
     @State var refresh: Bool = false
     @State var userImage: UIImage?
@@ -35,15 +34,10 @@ struct StreetPass: View {
     
     var body: some View {
         
-        ZStack(alignment: .topLeading) {
-            
-            Color.streePass
-                .edgesIgnoringSafeArea(.all)
-     
-            LinearGradient(gradient: Gradient(colors: [Color.black, Color.orange,]), startPoint: .center, endPoint: .bottom)
-                .cornerRadius(25)
-            
+        VStack {
+    
             GeometryReader { geo in
+                
                 VStack(alignment: .leading) {
                     HStack {
                         Text("StreetPass".uppercased())
@@ -54,27 +48,9 @@ struct StreetPass: View {
                         
                         Spacer()
                         
-                        Button {
-                            vm.showRanks.toggle()
-                        } label: {
-                            VStack(spacing: 0) {
-                                Image(vm.rank)
-                                    .resizable()
-                                    .renderingMode(.template)
-                                    .foregroundColor(.cx_orange)
-                                    .scaledToFit()
-                                .frame(height: 30)
-                                Text(vm.rank)
-                                    .font(.caption)
-                                    .fontWeight(.thin)
-                            }
-                            .foregroundColor(.cx_orange)
-                            .opacity(0.7)
+                        if vm.totalStamps >= 0 {
+                            PlugLight(on: $vm.plugMode, handleButton: vm.turnOnPlugMode)
                         }
-                        .sheet(isPresented: $vm.showRanks) {
-                            Ranks()
-                        }
-                 
                  
                     }
                     .padding()
@@ -102,63 +78,41 @@ struct StreetPass: View {
                                     .foregroundColor(.accent)
                                     .tracking(2)
                                 
-                            
-                            
-                            //Need a text liner for the bio
-                            VStack(spacing: 5) {
-                                    Text(userbio)
-                                            .font(.subheadline)
-                                        .foregroundColor(.gray)
-                                
                                 
                                 Button {
-                                    message = "StreetCred is a currency that lets you save Secret Spots."
-                                    AnalyticsService.instance.viewStreetpass()
-                                    showAlert.toggle()
+                                    vm.handleStreetCredAlert()
                                 } label: {
                                     Text("\(streetCred) StreetCred")
                                         .font(.caption)
                                         .foregroundColor(.gray)
                                 }
+                            
+                            Button {
+                                    vm.showRanks.toggle()
+                                } label: {
+                                    VStack {
+                                        Text("Current Rank: \(vm.rank)")
+                                            .foregroundColor(.white)
+                                        BarView(progress: vm.progressValue)
+                                        Text(vm.progressString)
+                                            .font(.caption)
+                                            .fontWeight(.thin)
+
+                                    }
+
+                                }
+                                .sheet(isPresented: $vm.showRanks) {
+                                    Leaderboard(ranks: vm.ranking)
                             }
-            
-                                
+                                .padding(.top, 20)
+                            
                                 
                         }
                         Spacer()
                     }
                     
                     
-                    HStack{
-                        Spacer()
-                        Button {
-                            vm.showWorld.toggle()
-                        } label: {
-                            HStack {
-                                Image("world")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .opacity(0.9)
-                                    .frame(width: 35)
-                                
-                                Text("My World")
-                                     .font(.title2)
-                                     .fontWeight(.thin)
-                                     .foregroundColor(.white)
-                                
-                                Spacer()
-                                
-                            }
-                            .frame(width: 150)
-                        }
-                        .sheet(isPresented: $vm.showWorld) {
-                            WorldCompositionView(vm: vm)
-                        }
-                        
-                        Spacer()
-                   
-                    }
-                    .padding(.top, 20)
+       
                  
                     
                     HStack{
@@ -190,6 +144,8 @@ struct StreetPass: View {
                         Spacer()
                    
                     }
+                    .padding(.top, 20)
+                    
                     
                     
                     HStack {
@@ -246,7 +202,7 @@ struct StreetPass: View {
                     }
                     
                     
-                //End of ZStack
+            //End of Geometry Reader
                 }
                 .sheet(isPresented: $isPresented, onDismiss: {
                     updateProfielImage()
@@ -257,15 +213,17 @@ struct StreetPass: View {
                 .fullScreenCover(isPresented: $presentSettings, content: {
                     SettingsView(displayName: $username, userBio: $userbio, profileUrl: $profileUrl)
                 })
-                
-              
+            
+            //End of VStack
             }
             .onAppear(perform: {
                 getAdditionalProfileInfo()
             })
-            .alert(isPresented: $showAlert) {
-                return Alert(title: Text(message))
+            .alert(isPresented: $vm.showAlert) {
+                return Alert(title: Text(vm.message))
             }
+            .background(LinearGradient(gradient: Gradient(colors: [Color.black, Color.orange,]), startPoint: .center, endPoint: .bottom)
+                .cornerRadius(25).edgesIgnoringSafeArea(.all))
         }
     
 

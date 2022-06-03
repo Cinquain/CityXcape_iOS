@@ -115,6 +115,26 @@ class AuthService {
         
     }
     
+    func deleteUser(completion: @escaping (_ success: Bool) -> ()) {
+        let user = Auth.auth().currentUser
+        
+        user?.delete(completion: { error in
+            if let error = error {
+                print("Error deleting user account", error.localizedDescription)
+                completion(false)
+                return
+            }
+            print("Account successfully deleted")
+            let dictionary = UserDefaults.standard.dictionaryRepresentation()
+            
+            dictionary.keys.forEach { (key) in
+                UserDefaults.standard.removeObject(forKey: key)
+            }
+            completion(true)
+        })
+        
+    }
+    
     func createNewUserInDatabase(name: String, email: String, providerId: String, provider: String, profileImage: UIImage, completion: @escaping (_ userId: String?) -> ()) {
         
         let document = REF_USERS.document()

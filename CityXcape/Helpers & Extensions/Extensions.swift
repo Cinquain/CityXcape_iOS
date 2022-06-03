@@ -61,6 +61,14 @@ extension Color {
         return Color("graph")
     }
     
+    static var traffic_red: Color {
+        return Color("traffic_red")
+    }
+    
+    static var traffic_green: Color {
+        return Color("traffic_green")
+    }
+    
     static let neuBackground = Color(hex: "f0f0f3")
     static let dropShadow = Color(hex: "aeaec0").opacity(0.4)
     static let dropLight = Color(hex: "ffffff")

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftPieChart
 
 struct StreetReportCard: View {
     
@@ -22,23 +23,6 @@ struct StreetReportCard: View {
         
         VStack {
             
-            HStack {
-             
-                
-                VStack(spacing: 0) {
-                  
-                    
-                    Text("Street Report Card")
-                        .font(Font.custom("Lato", size: 35))
-                        .foregroundColor(.white)
-                        .padding(.bottom, 8)
-                    
-                }
-                .padding(.horizontal, 20)
-                
-                Spacer()
-            }
-            
        
             
             
@@ -50,79 +34,45 @@ struct StreetReportCard: View {
                     Text(displayName ?? "")
                         .font(.caption)
                         .fontWeight(.thin)
-                        .foregroundColor(.white)
                         .frame(width: 80)
                     
                 }
-                .padding(.leading, 20)
 
-
-                
-                Button {
-                        vm.showRanks.toggle()
-                    } label: {
-                        VStack {
-                            Text("Current Rank: \(vm.rank)")
-                                .foregroundColor(.white)
-                            BarView(progress: vm.progressValue)
-                            Text(vm.progressString)
-                                .font(.caption)
-                                .fontWeight(.thin)
-
-                        }
-
-                    }
-                    .padding(.leading, 30)
-                    .sheet(isPresented: $vm.showRanks) {
-                        Ranks()
-                }
+                Text("Your top community is: \(vm.topWorld)")
+                    .font(.title3)
+                    .fontWeight(.thin)
                 
                 Spacer()
             }
-            .padding(.top, 20)
-
-
-            VStack(alignment: .leading) {
-                HStack {
-                    
-                    Button {
-                        AnalyticsService.instance.viewedLeaderBoard()
-                        vm.showLeaderboard.toggle()
-                    } label: {
-                        
-                        HStack(alignment: .center) {
-                            Spacer()
-                            Image("leaderboard")
-                                .resizable()
-                                .renderingMode(.template)
-                                .foregroundColor(.cx_orange)
-                                .scaledToFit()
-                            .frame(height: 30)
-                            
-                            Text("Leaderboard")
-                                .foregroundColor(.cx_orange)
-                                .font(.title3)
-                                .fontWeight(.thin)
-                            Spacer()
-                        }
-                        
-                   
-                    }
-                    .sheet(isPresented: $vm.showLeaderboard) {
-                        Leaderboard(ranks: vm.ranking)
-                    }
-                    
-                    
-                }
-                
-            
-                
-            }
+            .foregroundColor(.white)
             .padding(.top, 20)
             .padding(.horizontal, 20)
-       
+            
+            HStack {
+                
+                Button {
+                    //TBD
+                    vm.showWorld.toggle()
+                } label: {
+                    VStack {
+                        Image("world")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 150)
+                        Text("View My World")
+                            .fontWeight(.thin)
+                    }
+                }
 
-            Spacer()
+             
+            }
+            .foregroundColor(.white)
+            .padding(.top, 20)
+            .sheet(isPresented: $vm.showWorld) {
+                WorldCompositionView(vm: vm)
+            }
+
+
             
             HStack {
                 Image("graph")

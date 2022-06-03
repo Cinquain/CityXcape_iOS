@@ -12,7 +12,7 @@ struct WorldCompositionView: View {
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var username: String?
 
-    @StateObject var vm: StreetPassViewModel
+    @StateObject var vm: AnalyticsViewModel
     
     var body: some View {
             
@@ -51,6 +51,7 @@ struct WorldCompositionView: View {
             
             
             
+            
         }
         .background(Color.graph.edgesIgnoringSafeArea(.all))
     }
@@ -58,6 +59,6 @@ struct WorldCompositionView: View {
 
 struct WorldCompositionView_Previews: PreviewProvider {
     static var previews: some View {
-        WorldCompositionView(vm: StreetPassViewModel())
+        WorldCompositionView(vm: AnalyticsViewModel())
     }
 }

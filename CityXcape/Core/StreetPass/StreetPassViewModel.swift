@@ -29,8 +29,15 @@ class StreetPassViewModel: NSObject, ObservableObject {
     
     @Published var showRanks: Bool = false 
     @Published var rank: String = ""
+    @Published var ranking: [Rank] = []
+
     @Published var progressString: String = ""
     @Published var progressValue: CGFloat = 0
+    @Published var totalStamps: Int = 0
+    
+    @Published var plugMode: Bool = false
+    @Published var message: String = ""
+    
     
     let coreData = CoreDataManager.instance
     let manager = NotificationsManager.instance
@@ -39,6 +46,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
         super.init()
         calculateWorld()
         calculateRank()
+        getScoutLeaders()
     }
     
     func generateColors() -> [Color] {
@@ -62,6 +70,17 @@ class StreetPassViewModel: NSObject, ObservableObject {
             application.open(webURL)
         }
         
+    }
+    
+    
+    func handleStreetCredAlert() {
+        message = "StreetCred is a currency that lets you save Secret Spots."
+        AnalyticsService.instance.viewStreetpass()
+        showAlert.toggle()
+    }
+    
+    func turnOnPlugMode() {
+        print("Plug mode is \(plugMode)")
     }
     
     func calculateWorld()  {
@@ -125,7 +144,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
         
         let allspots = coreData.spotEntities.map({SecretSpot(entity: $0)})
         let verifiedSpots = allspots.filter({$0.verified == true})
-        let totalStamps = verifiedSpots.count
+        totalStamps = verifiedSpots.count
         let ownerSpots = allspots.filter({$0.ownerId == userId})
         let totalSpotsPosted = ownerSpots.count
         let totalSaves = ownerSpots.reduce(0, {$0 + $1.saveCounts})
@@ -155,6 +174,14 @@ class StreetPassViewModel: NSObject, ObservableObject {
         let ranking = Rank(id: uid, profileImageUrl: imageUrl, displayName: username, streetCred: streetcred, streetFollowers: 0, bio: bio, currentLevel: rank, totalSpots: totalSpotsPosted, totalStamps: totalStamps, totalSaves: totalSaves, totalUserVerifications: totalVerifications, totalPeopleMet: totalCities, totalCities: totalCities, progress: progressValue, social: nil)
        
         DataService.instance.saveUserRanking(rank: ranking)
+    }
+    
+    
+    fileprivate func getScoutLeaders() {
+        
+        DataService.instance.getUserRankings { ranks in
+            self.ranking = ranks
+        }
     }
     
     

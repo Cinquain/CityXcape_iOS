@@ -20,6 +20,11 @@ class MyWorldViewModel: NSObject, ObservableObject {
     @Published var showOnboarding: Bool = false
     @Published var showVisited: Bool = false
     
+    
+    @Published var rank: String = ""
+    @Published var progressString: String = ""
+    @Published var progressValue: CGFloat = 0
+    
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
     
@@ -139,6 +144,36 @@ class MyWorldViewModel: NSObject, ObservableObject {
                     || $0.spotName.lowercased().contains(searchTerm.lowercased())})
         
     }
+    
+    
+    
+    
+    func calculateRank() {
+        
+        let allspots = manager.spotEntities.map({SecretSpot(entity: $0)})
+        let verifiedSpots = allspots.filter({$0.verified == true})
+        let totalStamps = verifiedSpots.count
+        let ownerSpots = allspots.filter({$0.ownerId == userId})
+        let totalSpotsPosted = ownerSpots.count
+        let totalSaves = ownerSpots.reduce(0, {$0 + $1.saveCounts})
+        var totalCities: Int = 0
+        var cities: [String: Int] = [:]
+        verifiedSpots.forEach { spot in
+            if let count = cities[spot.city] {
+                cities[spot.city] = count + 1
+            } else {
+                cities[spot.city] = 1
+                totalCities += 1
+            }
+        }
+        
+        (self.rank,
+         self.progressString,
+         self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpotsPosted, totalSaves: totalSaves, totalStamps: totalStamps)
+        
+        
+    }
+    
     
     
     

@@ -16,7 +16,7 @@ class SoundManager {
     var player: AVAudioPlayer?
     
     
-    func playSound() {
+    func playStamp() {
         
         guard let url = Bundle.main.url(forResource: "Stamp", withExtension: ".mp3") else {return}
         
@@ -25,6 +25,18 @@ class SoundManager {
             player?.play()
         } catch let error {
             print("Error playing stamp sound", error.localizedDescription)
+        }
+    }
+    
+    func playBeep() {
+        
+        guard let url = Bundle.main.url(forResource: "Beep", withExtension: ".mp3") else {return}
+        
+        do {
+            player = try AVAudioPlayer(contentsOf: url)
+            player?.play()
+        } catch let error {
+            print("Error playing radio sound", error.localizedDescription)
         }
     }
     

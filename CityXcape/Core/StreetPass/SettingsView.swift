@@ -15,6 +15,9 @@ struct SettingsView: View {
     @Binding var displayName: String
     @Binding var userBio: String
     @Binding var profileUrl: String
+    @State var showActionsheet: Bool = false
+    @State private var showAlert: Bool = false
+    @State private var message: String = ""
     
     var body: some View {
         
@@ -76,10 +79,22 @@ struct SettingsView: View {
                     .alert(isPresented: $showSignoutError, content: {
                         return Alert(title: Text("Error signing out 🥵"))
                     })
+                    
+                    
+                    Button(action: {
+                        showActionsheet.toggle()
+                    }, label: {
+                        SettingsRowView(text: "Delete Acccount", leftIcon: "trash", color: .red)
+                    })
+                    .alert(isPresented: $showSignoutError, content: {
+                        return Alert(title: Text("Error signing out 🥵"))
+                    })
 
                 })
                 .background(Color.white)
                 .padding()
+                
+                
                 
                 //MARK: SECTION 3: APPLICATION
                 GroupBox(label: SettingsLabelView(labelText: "Application", labelImage: "apps.iphone"), content: {
@@ -135,6 +150,21 @@ struct SettingsView: View {
             
            
         }
+        .alert(isPresented: $showAlert) {
+            return Alert(title: Text(message))
+        }
+        .actionSheet(isPresented: $showActionsheet) {
+            return ActionSheet(title: Text("Are you sure you want to delete?"), message: nil, buttons: [
+                
+                .destructive(Text("Yes"), action: {
+                    delete()
+                }),
+                
+                .cancel()
+            ])
+        }
+        
+        
     }
     
     //MARK: FUNCTIONS
@@ -160,6 +190,24 @@ struct SettingsView: View {
             }
         }
     }
+    
+    func delete() {
+        AuthService.instance.deleteUser { success in
+            if success {
+                message = "Account Deleted"
+                showAlert.toggle()
+                self.presentationMode.wrappedValue.dismiss()
+
+            } else {
+                message = "Error deleting your account"
+                showAlert.toggle()
+            }
+            
+        }
+    }
+    
+    
+    
 }
 
 
