@@ -70,8 +70,10 @@ struct PreviewCard: View {
     fileprivate func returnDistance() -> String {
         if spot.distanceFromUser < 1 {
             return String(format: "%.1f mile", spot.distanceFromUser)
-        } else {
+        } else if spot.distanceFromUser < 10 {
             return String(format: "%.1f miles", spot.distanceFromUser)
+        } else {
+            return "\(spot.city)"
         }
     }
     

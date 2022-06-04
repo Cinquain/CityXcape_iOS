@@ -175,10 +175,12 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     
     func getDistanceMessage(spot: SecretSpot) -> String {
         
-        if spot.distanceFromUser > 1 {
+        if spot.distanceFromUser < 1 {
+            return "\(String(format: "%.1f", spot.distanceFromUser)) mile"
+        } else if spot.distanceFromUser < 10 {
             return "\(String(format: "%.1f", spot.distanceFromUser)) miles"
         } else {
-            return "\(String(format: "%.1f", spot.distanceFromUser)) mile"
+            return "\(spot.city)"
         }
     }
     

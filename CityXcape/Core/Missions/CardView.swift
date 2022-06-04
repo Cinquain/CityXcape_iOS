@@ -14,6 +14,9 @@ struct CardView: View {
 
     @State private var showStreetPass: Bool = false
     @State private var showComments: Bool = false
+    @State private var showActionsheet: Bool = false
+    @State private var actionType: CardActionSheet = .general
+    
     var width = UIScreen.screenWidth - 15
     @Binding var showAlert: Bool
     @Binding var alertMessage: String
@@ -45,6 +48,19 @@ struct CardView: View {
                                     .fontWeight(.thin)
                                     .lineLimit(1)
                                 Spacer()
+                                
+                                VStack {
+                                    if spot.distanceFromUser < 10 {
+                                        Image("walking")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit)
+                                            .frame(width: 20)
+                                    }
+                                    Text(vm.getDistanceMessage(spot: spot))
+                                        .font(.caption)
+                                        .fontWeight(.thin)
+                                    
+                                }
                              
                             }
                             .padding(.horizontal, 10)
@@ -59,41 +75,6 @@ struct CardView: View {
             
             
             HStack(spacing: 10) {
-                
-                Button {
-                    alertMessage = "You must save this spot to see its address."
-                    showAlert.toggle()
-                } label: {
-                    VStack {
-                        Image("walking")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 20)
-                        Text(vm.getDistanceMessage(spot: spot))
-                            .font(.caption)
-                            .fontWeight(.thin)
-                        
-                    }
-                    
-                }
-                
-       
-                
-                Button {
-                    alertMessage = "You must save this spot to see the users who saved it"
-                    showAlert.toggle()
-                } label: {
-                    VStack {
-                        Image("dot")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 20)
-                        
-                        Text(vm.getSavesMessage(spot: spot))
-                            .font(.caption)
-                            .fontWeight(.thin)
-                    }
-                }
 
                 Button {
                     //To be continued
@@ -106,7 +87,26 @@ struct CardView: View {
                         Text(spot.ownerDisplayName)
                             .font(.caption)
                             .fontWeight(.thin)
+                            .lineLimit(1)
+                            .frame(width: 50)
                     }
+                }
+                
+                
+                Button {
+                    showActionsheet.toggle()
+                } label: {
+                    VStack(spacing: 4) {
+                        Image(systemName: "flag.fill")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 18)
+                        
+                        Text("Report")
+                            .font(.caption)
+                            .fontWeight(.thin)
+                    }
+                    .foregroundColor(.red)
                 }
                 
                 Spacer()
@@ -166,10 +166,67 @@ struct CardView: View {
             let user = User(spot: spot)
             PublicStreetPass(user: user)
         }
+        .actionSheet(isPresented: $showActionsheet) {
+            loadActionSheet()
+        }
 
         
       
     }
+    
+    
+    fileprivate func loadActionSheet() -> ActionSheet {
+        
+        switch actionType {
+        case .general:
+            return ActionSheet(title: Text("Would you like to report this post?"), message: nil, buttons: [
+            
+                .destructive(Text("Report"), action: {
+                    actionType = .report
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        showActionsheet.toggle()
+                    }
+                }),
+                
+                .cancel()
+    
+            
+            ])
+        case .report:
+            return ActionSheet(title: Text("Why are you reporting this post"), message: nil, buttons: [
+                .destructive(Text("This is innapropriate"), action: {
+                    reportPost(reason: "This is innapropriate", spot: spot)
+                }),
+                .destructive(Text("This is spam"), action: {
+                    reportPost(reason: "This is spam", spot: spot)
+                }),
+                .destructive(Text("It made me uncomfortable"), action: {
+                    reportPost(reason: "It made me uncomfortable", spot: spot)
+                }),
+                .cancel({
+                    vm.actionSheetType = .general
+                })
+            ])
+        }
+        
+    }
+    
+    
+    func reportPost(reason: String, spot: SecretSpot) {
+          print("Reporting post")
+          AnalyticsService.instance.reportPost()
+          DataService.instance.uploadReports(reason: reason, postId: spot.id) { success in
+              
+              if success {
+                  alertMessage = "Thank you for reporting this spot. We will review it shortly!"
+                  showAlert.toggle()
+              } else {
+                  alertMessage = "There was an error reporting this secret spot. Please restart the app and try again."
+                  showAlert.toggle()
+              }
+          }
+
+      }
 
 }
 

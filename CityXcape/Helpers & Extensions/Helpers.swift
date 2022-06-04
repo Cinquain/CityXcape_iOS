@@ -179,6 +179,10 @@ enum SpotActionSheetType {
     case delete
 }
 
+enum CardActionSheet {
+    case general
+    case report
+}
 
 enum SettingsEditTextOption {
     case displayName
