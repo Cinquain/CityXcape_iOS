@@ -53,10 +53,10 @@ struct MyWorld: View {
                         } label: {
                             Text("Find Spots")
                                 .padding()
+                                .foregroundColor(.black)
                                 .background(Color.white)
                                 .cornerRadius(5)
                         }
-                        .foregroundColor(.white)
                         .padding(.top, 40)
 
 

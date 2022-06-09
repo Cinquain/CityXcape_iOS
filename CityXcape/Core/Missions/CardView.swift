@@ -16,6 +16,7 @@ struct CardView: View {
     @State private var showComments: Bool = false
     @State private var showActionsheet: Bool = false
     @State private var actionType: CardActionSheet = .general
+    @State private var detailsTapped: Bool = false
     
     var width = UIScreen.screenWidth - 15
     @Binding var showAlert: Bool
@@ -28,46 +29,57 @@ struct CardView: View {
     var body: some View {
         
         VStack(spacing: 0) {
-            WebImage(url: URL(string: spot.imageUrls.first ?? ""))
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: width)
-                .overlay(
-                    ZStack {
-                        LinearGradient(colors: [Color.clear, Color.black], startPoint: .center, endPoint: .bottom)
-                     
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Image("pin_blue")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 30)
-                                Text(spot.spotName)
-                                    .font(.title)
-                                    .fontWeight(.thin)
-                                    .lineLimit(1)
+            ZStack {
+                
+                
+                WebImage(url: URL(string: spot.imageUrls.first ?? ""))
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: width)
+                    .overlay(
+                        ZStack {
+                            LinearGradient(colors: [Color.clear, Color.black], startPoint: .center, endPoint: .bottom)
+                         
+                            VStack {
                                 Spacer()
-                                
-                                VStack {
-                                    if spot.distanceFromUser < 10 {
-                                        Image("walking")
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 20)
-                                    }
-                                    Text(vm.getDistanceMessage(spot: spot))
-                                        .font(.caption)
+                                HStack {
+                                    Image("pin_blue")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 30)
+                                    Text(spot.spotName)
+                                        .font(.title)
                                         .fontWeight(.thin)
+                                        .lineLimit(1)
+                                    Spacer()
                                     
+                                    VStack {
+                                        if spot.distanceFromUser < 10 {
+                                            Image("walking")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit)
+                                                .frame(width: 20)
+                                        }
+                                        Text(vm.getDistanceMessage(spot: spot))
+                                            .font(.caption)
+                                            .fontWeight(.thin)
+                                        
+                                    }
+                                 
                                 }
-                             
+                                .padding(.horizontal, 10)
+                                .padding(.bottom, 5)
+                                .opacity(detailsTapped ? 0 : 1)
+                                .animation(.easeOut(duration: 0.5), value: detailsTapped)
                             }
-                            .padding(.horizontal, 10)
-                            .padding(.bottom, 5)
                         }
-                    }
                 )
+                
+                DetailsView(spot: spot, showActionSheet: $showActionsheet, type: .CardView)
+                    .opacity(detailsTapped ? 1 : 0)
+                    .animation(.easeOut(duration: 0.5), value: detailsTapped)
+                
+            }
             
 
             
@@ -76,76 +88,37 @@ struct CardView: View {
             
             HStack(spacing: 10) {
 
-                Button {
-                    //To be continued
-                    showStreetPass.toggle()
-                    AnalyticsService.instance.viewStreetpass()
-                } label: {
-                    
-                    VStack(spacing: 0) {
-                        UserDotView(imageUrl: spot.ownerImageUrl, width: 25)
-                        Text(spot.ownerDisplayName)
-                            .font(.caption)
-                            .fontWeight(.thin)
-                            .lineLimit(1)
-                            .frame(width: 50)
-                    }
-                }
                 
                 
-                Button {
-                    showActionsheet.toggle()
-                } label: {
-                    VStack(spacing: 4) {
-                        Image(systemName: "flag.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 18)
-                        
-                        Text("Report")
-                            .font(.caption)
-                            .fontWeight(.thin)
-                    }
-                    .foregroundColor(.red)
-                }
                 
                 Spacer()
                 
                 Button {
                     //TBD
-                    alertMessage = "This spot will cost you \(spot.price) streetcred to save. You have \(wallet ?? 0) STC remaining"
-                    showAlert.toggle()
-                } label: {
-                    VStack {
-                        Text("\(spot.price)")
-                            .font(.title2)
-                            .fontWeight(.light)
-                            .frame(width: 20)
-                            .foregroundColor(.cx_green)
-
-                        
-                        Text("STC")
-                            .font(.caption)
-                            .fontWeight(.thin)
-                            .foregroundColor(.cx_green)
+                    if detailsTapped == false {
+                        DataService.instance.updatePostViewCount(postId: spot.id)
+                        AnalyticsService.instance.viewedDetails()
                     }
+                    detailsTapped.toggle()
+                } label: {
+                    Image("info")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 35)
+                        .padding(.leading, 4)
+                        .animation(.easeOut, value: detailsTapped)
+                        
                 }
-
                 
+                Spacer()
                 
 
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 10)
             .padding(.top, 10)
 
             
-            Text(spot.description ?? "")
-                .fontWeight(.thin)
-                .padding(.horizontal, 20)
-                .padding(.top, 20)
-                .lineLimit(3)
-                .padding(.bottom, 20)
-            
+        
          
             
             

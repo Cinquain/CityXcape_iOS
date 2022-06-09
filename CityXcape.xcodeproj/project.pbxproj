@@ -80,6 +80,7 @@
 		218ECBBF2709328E00D06603 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218ECBBE2709328E00D06603 /* DiscoverView.swift */; };
 		219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A526CF4E3D0089CE03 /* SecretSpot.swift */; };
 		219842A826CF57740089CE03 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A726CF57740089CE03 /* ImagePicker.swift */; };
+		219A9C102850E1F400BD6060 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 219A9C0F2850E1F400BD6060 /* CodeScanner */; };
 		219CA8F2275A61DD00F1C61E /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CA8F1275A61DD00F1C61E /* PostViewModel.swift */; };
 		21A4697927C12417009F337D /* StampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A4697827C12417009F337D /* StampView.swift */; };
 		21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA28DF26D13BB40001A02E /* StreetPass.swift */; };
@@ -248,6 +249,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				219A9C102850E1F400BD6060 /* CodeScanner in Frameworks */,
 				21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */,
 				B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */,
 				213E8ECA282D3F39002A1495 /* SwiftPieChart in Frameworks */,
@@ -563,6 +565,7 @@
 			packageProductDependencies = (
 				21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */,
 				213E8EC9282D3F39002A1495 /* SwiftPieChart */,
+				219A9C0F2850E1F400BD6060 /* CodeScanner */,
 			);
 			productName = CityXcape;
 			productReference = 217DA72426CC8F8B0039A145 /* CityXcape.app */;
@@ -596,6 +599,7 @@
 				21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				21806AD1274955EC00C641C7 /* XCRemoteSwiftPackageReference "JGProgressHUD-SwiftUI" */,
 				213E8EC8282D3F39002A1495 /* XCRemoteSwiftPackageReference "SwiftPieChart" */,
+				219A9C0E2850E1F400BD6060 /* XCRemoteSwiftPackageReference "CodeScanner" */,
 			);
 			productRefGroup = 217DA72526CC8F8B0039A145 /* Products */;
 			projectDirPath = "";
@@ -1028,6 +1032,14 @@
 				minimumVersion = 1.0.17;
 			};
 		};
+		219A9C0E2850E1F400BD6060 /* XCRemoteSwiftPackageReference "CodeScanner" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twostraws/CodeScanner.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
@@ -1043,6 +1055,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 213E8EC8282D3F39002A1495 /* XCRemoteSwiftPackageReference "SwiftPieChart" */;
 			productName = SwiftPieChart;
+		};
+		219A9C0F2850E1F400BD6060 /* CodeScanner */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 219A9C0E2850E1F400BD6060 /* XCRemoteSwiftPackageReference "CodeScanner" */;
+			productName = CodeScanner;
 		};
 		21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;

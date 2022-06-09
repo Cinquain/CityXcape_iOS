@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreLocation
 import Combine
+import CoreImage.CIFilterBuiltins
 import FirebaseFirestore
 
 class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionControllerDelegate {
@@ -38,6 +39,10 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     @Published var genericAlert: Bool = false
     @Published var didLike: Bool = false
     
+    @Published var presentScanner: Bool = false 
+    @Published var isOwner: Bool = false
+    @Published var showBarCode: Bool = false
+    @Published var barcode: UIImage?
     
     @Published var alertMessage: String = ""
     @Published var showAlert: Bool = false
@@ -87,7 +92,14 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
             
         }
     }
-
+    
+    func checkedOwner(spot: SecretSpot) {
+        
+        if spot.ownerId == userId {
+            isOwner = true
+        }
+        
+    }
     
     func spotDistance(spot: SecretSpot) -> Double {
         
@@ -143,6 +155,17 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
            }
        }
    }
+    
+    func loadBarCode(spot: SecretSpot) {
+        
+        if spot.id == userId {
+            showBarCode = true
+        } else {
+            sourceType = .camera
+            showPicker = true
+        }
+        AnalyticsService.instance.tappedBarCode()
+    }
     
     func getSavedbyUsers(postId: String) {
         
@@ -200,6 +223,22 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
         }
     }
     
+    func generateBarCode(spot: SecretSpot) -> UIImage {
+        let filter = CIFilter.qrCodeGenerator()
+        let context = CIContext()
+        let spotId = spot.id
+        let data = spotId.data(using: String.Encoding.ascii)
+        filter.setValue(data, forKey: "inputMessage")
+        let transform = CGAffineTransform(scaleX: 4, y: 4)
+
+        if let qrCodeImage = filter.outputImage?.transformed(by: transform) {
+            if let qrCodeCGImage = context.createCGImage(qrCodeImage, from: qrCodeImage.extent) {
+                return UIImage(cgImage: qrCodeCGImage)
+            }
+        }
+        
+        return UIImage(systemName: "xmark") ?? UIImage()
+    }
     
     
     func isTextAppropriate() -> Bool {
@@ -421,6 +460,17 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
             }
         } else {
             manager.requestWhenInUseAuthorization()
+        }
+    }
+    
+    
+    func checkInWithQrCode(spot: SecretSpot, qrString: String) {
+        AnalyticsService.instance.scannedBarCode()
+        if spot.id == qrString {
+            self.showCheckin = true
+        } else {
+            self.alertMessage = "This QR code is not for this spot"
+            self.showAlert = true
         }
     }
     

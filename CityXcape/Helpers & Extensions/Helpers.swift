@@ -190,6 +190,11 @@ enum SettingsEditTextOption {
     case social
 }
 
+enum DetailsMode {
+    case SpotDetails
+    case CardView
+}
+
 enum SecretSpotImageNumb: CaseIterable {
     case one
     case two

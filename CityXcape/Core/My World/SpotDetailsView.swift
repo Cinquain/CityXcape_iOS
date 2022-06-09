@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SDWebImageSwiftUI
+import CodeScanner
 
 struct SpotDetailsView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -14,32 +15,29 @@ struct SpotDetailsView: View {
     @State var spot: SecretSpot
     @StateObject var vm: SpotViewModel = SpotViewModel()
     @StateObject var mapViewModel: MapViewModel = MapViewModel()
-    
     let height = UIScreen.screenHeight
     
     @State var detailsTapped: Bool = false
     @State private var showUsers: Bool = false
     @State private var showMission: Bool = false
-    @State private var showAlert: Bool = false
-    @State private var alertMessage: String = ""
-  
+
+    @State var sourceType: UIImagePickerController.SourceType = .camera
+    @State var image: UIImage?
     
     init(spot: SecretSpot) {
         _spot = State(initialValue: spot)
-        vm.didLike = spot.likedByUser
     }
     
     var body: some View {
                 
                 VStack {
-
                     
                     ZStack {
                         
                         ImageSlider(images: spot.imageUrls)
 
                         
-                        DetailsView(spot: spot, vm: vm)
+                        DetailsView(spot: spot, showActionSheet: $vm.showActionSheet, type: .SpotDetails)
                             .opacity(detailsTapped ? 1 : 0)
                             .animation(.easeOut(duration: 0.5), value: detailsTapped)
                         
@@ -74,6 +72,7 @@ struct SpotDetailsView: View {
                                 .lineLimit(1)
                             Spacer()
                          
+                            Text(vm.getDistanceMessage(spot: spot))
                           
                         }
                         .padding(.horizontal, 10)
@@ -84,7 +83,6 @@ struct SpotDetailsView: View {
                         }
                     
                  
-    
                     
                     HStack(spacing: 10) {
                         
@@ -102,20 +100,23 @@ struct SpotDetailsView: View {
                                 
                         }
                         
-                        Button {
-                            vm.presentShareSheet(spot: spot)
-                        } label: {
-                            VStack(spacing: 0) {
-                                Image("share")
-                                     .resizable()
-                                     .aspectRatio(contentMode: .fit)
-                                     .frame(width: 50)
+                            Button {
+                                vm.isOwner ? vm.showBarCode.toggle()
+                                : vm.presentScanner.toggle()
+                            } label: {
+                                Image("Barcode")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 50)
                             }
-                        }
-                    
-                        
-              
-                        
+                            .sheet(isPresented: $vm.showBarCode) {
+                                Image(uiImage: vm.generateBarCode(spot: spot))
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 150, height: 150)
+                            }
+                            
+     
                         Button {
                             showUsers.toggle()
                             vm.getSavedbyUsers(postId: spot.id)
@@ -195,19 +196,35 @@ struct SpotDetailsView: View {
             .foregroundColor(.accent)
             .colorScheme(.dark)
             .onAppear(perform: {
+                vm.checkedOwner(spot: spot)
                 vm.analytics.viewedSecretSpot()
                 DataService.instance.updatePostViewCount(postId: spot.id)
                 vm.updateSecretSpot(postId: spot.id)
                 vm.checkIfPresent(spot: spot)
             })
+            .fullScreenCover(isPresented: $vm.showPicker, content: {
+                ImagePicker(imageSelected: $image, sourceType: $sourceType)
+            })
             .actionSheet(isPresented: $vm.showActionSheet, content: {
                 getActionSheet()
             })
-            .alert(isPresented: $showAlert) {
-                return Alert(title: Text(alertMessage))
+            .alert(isPresented: $vm.showAlert) {
+                return Alert(title: Text(vm.alertMessage))
             }
             .background(Color.black.edgesIgnoringSafeArea(.all))
-            
+            .sheet(isPresented: $vm.presentScanner) {
+                CodeScannerView(codeTypes: [.qr], scanMode: .once) { result in
+                    switch result {
+                    case .success(let result):
+                        vm.presentScanner = false
+                        vm.checkInWithQrCode(spot: spot, qrString: result.string)
+                    case .failure(let error):
+                        print("There was an error \(error.localizedDescription)")
+                        vm.alertMessage = error.localizedDescription
+                        vm.showAlert.toggle()
+                    }
+                }
+            }
 
         
         

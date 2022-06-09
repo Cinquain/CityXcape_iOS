@@ -50,7 +50,7 @@ struct CheckinView: View {
                             .opacity(vm.isLoading ? 1 : 0)
                     }
                     
-                    Text("Post reaction & photo \n for your moments")
+                    Text("Post comment & photo \n to finish checkin")
                         .fontWeight(.thin)
                         .multilineTextAlignment(.center)
                     
@@ -129,13 +129,8 @@ struct CheckinView: View {
                             .padding(.top, 20)
 
                     }
-
-
-
-
                 }
                 .foregroundColor(.white)
-
                 
             }
             

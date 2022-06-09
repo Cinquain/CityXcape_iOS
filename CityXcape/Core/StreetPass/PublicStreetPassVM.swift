@@ -23,6 +23,7 @@ class PublicStreetPassVM: NSObject, ObservableObject {
     
     
      func getVerificationForUser(userId: String) {
+        AnalyticsService.instance.checkUserJourney()
         DataService.instance.getVerifications(uid: userId) { [weak self] verifications in
             guard let self = self else {return}
             if verifications.count == 0 {

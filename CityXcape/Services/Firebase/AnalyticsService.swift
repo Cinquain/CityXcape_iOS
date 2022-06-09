@@ -153,6 +153,18 @@ class AnalyticsService {
     func viewedRanks() {
         Analytics.logEvent("viewed_ranks", parameters: nil)
     }
+    
+    func tappedBarCode() {
+        Analytics.logEvent("tapped_barcode", parameters: nil)
+    }
+    
+    func scannedBarCode() {
+        Analytics.logEvent("scanned_barcode", parameters: nil)
+    }
+    
+    func checkUserJourney() {
+        Analytics.logEvent("checked_user_journey", parameters: nil)
+    }
   
     
 }

@@ -57,7 +57,7 @@ struct StreetPass: View {
 
                     
                     Spacer()
-                        .frame(height: geo.size.width / 11)
+                        .frame(height: geo.size.width / 15)
                     
                     
                     HStack {
@@ -66,7 +66,7 @@ struct StreetPass: View {
                             Button(action: {
                                 isPresented.toggle()
                             }, label: {
-                                UserDotView(imageUrl: profileUrl, width: geo.size.width / 1.5)
+                                UserDotView(imageUrl: profileUrl, width: geo.size.width / 1.7)
                                     .shadow(radius: 5)
                                     .shadow(color: .orange, radius: 30, x: 0, y: 0)
                             })
@@ -104,7 +104,7 @@ struct StreetPass: View {
                                 .sheet(isPresented: $vm.showRanks) {
                                     Leaderboard(ranks: vm.ranking)
                             }
-                                .padding(.top, 20)
+                                .padding(.top, 10)
                             
                                 
                         }
@@ -126,7 +126,7 @@ struct StreetPass: View {
                                 Image("Scout Life")
                                      .resizable()
                                      .scaledToFit()
-                                     .frame(width: 35)
+                                     .frame(height: 30)
                                                              
                                     Text("My Journey")
                                          .font(.title2)
@@ -134,7 +134,7 @@ struct StreetPass: View {
                                          .foregroundColor(.white)
                                 
                             }
-                            .frame(width: 150)
+                            .frame(width: 150, height: 30)
                         
                         }
                         .fullScreenCover(isPresented: $vm.showJourney) {
@@ -160,7 +160,7 @@ struct StreetPass: View {
                                Image("graph")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(width: 35)
+                                    .frame(height: 25)
                                  
                                    Text("Analytics")
                                         .font(.title2)
@@ -169,7 +169,7 @@ struct StreetPass: View {
                                 Spacer()
 
                         }
-                        .frame(width: 150)
+                        .frame(width: 150, height: 30)
 
                         }
                         .fullScreenCover(isPresented: $vm.showStats) {
@@ -194,7 +194,7 @@ struct StreetPass: View {
                             Image(Icon.gear.rawValue)
                                 .resizable()
                                 .foregroundColor(.white)
-                                .frame(width: 50, height: 50)
+                                .frame(width: 35, height: 35)
                                 .shadow(color: .black, radius: 10, x: 0.0, y: 0.0)
                         })
                         .padding(.all, 20)
