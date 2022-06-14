@@ -14,6 +14,7 @@ struct PublicStreetPass: View {
 
    
     @State private var instagram: String = ""
+    @State private var showRanks: Bool = false
     @State private var showJourney: Bool = false
 
     @StateObject var vm: PublicStreetPassVM = PublicStreetPassVM()
@@ -63,10 +64,25 @@ struct PublicStreetPass: View {
                          
                          VStack(spacing: 0) {
                              HStack(alignment: .bottom) {
-                                 Text(user.displayName)
-                                     .fontWeight(.thin)
-                                     .foregroundColor(.accent)
-                                     .tracking(2)
+                                 VStack {
+                                     Text(user.displayName)
+                                         .fontWeight(.thin)
+                                         .foregroundColor(.accent)
+                                         .tracking(2)
+                                     
+                                     Button {
+                                         showRanks.toggle()
+                                     } label: {
+                                         Text(user.rank ?? "")
+                                             .font(.subheadline)
+                                             .foregroundColor(.gray)
+                                     }
+                                     .sheet(isPresented: $showRanks) {
+                                         Ranks()
+                                     }
+
+                                    
+                                 }
                                  
                                  if user.social != nil {
                                      Button {
@@ -98,26 +114,15 @@ struct PublicStreetPass: View {
                                          .fontWeight(.thin)
                                  }
                              }
+                             .padding(.top, 10)
+                             
                          }
                          
                          //Need a text liner for the bio
-                         VStack(spacing: 5) {
-                             Text(user.bio ?? "")
-                                 .font(.subheadline)
-                                 .foregroundColor(.gray)
                              
-                             if user.streetCred != nil {
-                                 Button {
-                                   
-                                 } label: {
-                                    
-                                     Text("\(user.streetCred ?? 0) StreetCred")
-                                         .font(.caption)
-                                         .foregroundColor(.gray)
-                                 }
-                             }
+                          
                             
-                         }
+                         
          
                         
                              

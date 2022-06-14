@@ -145,7 +145,7 @@ struct PostSpotForm: View {
                         
                     HStack {
                         Text("Price:")
-                            .foregroundColor(.white)
+                            .foregroundColor( vm.usd ? .green : .white )
                         TextField(" 1", text: $vm.priceString)
                             .padding(.vertical, 5)
                             .background(Color.white)
@@ -158,21 +158,27 @@ struct PostSpotForm: View {
                         }
                         
                         Button {
-                            vm.alertMessage = "Set the streetcred amount required for others to save this spot"
+                            vm.alertMessage = vm.usd ? "Set the dollar amount required to save this spot" : "Set the streetcred amount required to save this spot"
                             vm.showAlert = true
                         } label: {
                             VStack(spacing: 0) {
-                                Text("STC")
-                                    .foregroundColor(.white)
+                                Text(vm.usd ? "USD" : "STC")
+                                    .foregroundColor( vm.usd ? .green : .white )
                                     .font(.subheadline)
                                 
                                 Image(systemName:"info.circle")
                                     .resizable()
                                     .scaledToFit()
-                                    .foregroundColor(.white)
+                                    .foregroundColor( vm.usd ? .green : .white )
                                     .frame(width: 10)
                             }
                         }
+                        
+                        Toggle("", isOn: $vm.usd)
+                            .toggleStyle(SwitchToggleStyle(tint: .green))
+                            .frame(width: 55)
+                            .foregroundColor(.white)
+                            
 
                    
                     }

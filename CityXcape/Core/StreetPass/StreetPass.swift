@@ -48,13 +48,10 @@ struct StreetPass: View {
                         
                         Spacer()
                         
-                        if vm.totalStamps >= 0 {
-                            PlugLight(on: $vm.plugMode, handleButton: vm.turnOnPlugMode)
-                        }
+                    
                  
                     }
-                    .padding()
-
+                    .padding(.horizontal, 10)
                     
                     Spacer()
                         .frame(height: geo.size.width / 15)
@@ -178,6 +175,40 @@ struct StreetPass: View {
                         
                         Spacer()
                     }
+                    .padding(.top, 5)
+                    
+                    
+                    HStack {
+                        
+                        Spacer()
+                        
+                        Button {
+                            //Show Stats
+                            vm.showStore.toggle()
+                        } label: {
+                            HStack {
+                               Image("cx")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 30)
+                                 
+                                   Text("Store")
+                                        .font(.title2)
+                                        .fontWeight(.thin)
+                                        .foregroundColor(.white)
+                                Spacer()
+
+                        }
+                        .frame(width: 150, height: 30)
+
+                        }
+                        .fullScreenCover(isPresented: $vm.showStore) {
+                            StorePage()
+                        }
+                        
+                        Spacer()
+                    }
+                    .padding(.top, 5)
                     
                     
                     
@@ -194,7 +225,7 @@ struct StreetPass: View {
                             Image(Icon.gear.rawValue)
                                 .resizable()
                                 .foregroundColor(.white)
-                                .frame(width: 35, height: 35)
+                                .frame(width: 40, height: 40)
                                 .shadow(color: .black, radius: 10, x: 0.0, y: 0.0)
                         })
                         .padding(.all, 20)
@@ -283,6 +314,8 @@ struct StreetPass: View {
             
         }
     }
+    
+    
 }
 
 struct StreetPass_Previews: PreviewProvider {

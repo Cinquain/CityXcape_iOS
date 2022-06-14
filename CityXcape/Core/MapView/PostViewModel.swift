@@ -62,6 +62,8 @@ class PostViewModel: NSObject, ObservableObject {
     @Published var progressString: String = ""
     @Published var progressValue: CGFloat = 0
     
+    @Published var usd: Bool = false 
+    
     
     func isReady(mapItem: MKMapItem)  {
         price = Int(priceString) ?? 1

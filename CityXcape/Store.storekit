@@ -1,0 +1,33 @@
+{
+  "identifier" : "A161BF3B",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "C139461D",
+      "localizations" : [
+        {
+          "description" : "The currency of the streets",
+          "displayName" : "StreetCred",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.cityportal.CityXcape.streetcred",
+      "referenceName" : "StreetCred",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 1,
+    "minor" : 2
+  }
+}

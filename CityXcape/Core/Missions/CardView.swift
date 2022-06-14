@@ -31,49 +31,8 @@ struct CardView: View {
         VStack(spacing: 0) {
             ZStack {
                 
-                
-                WebImage(url: URL(string: spot.imageUrls.first ?? ""))
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
+                ImageSlider(images: spot.imageUrls)
                     .frame(width: width)
-                    .overlay(
-                        ZStack {
-                            LinearGradient(colors: [Color.clear, Color.black], startPoint: .center, endPoint: .bottom)
-                         
-                            VStack {
-                                Spacer()
-                                HStack {
-                                    Image("pin_blue")
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 30)
-                                    Text(spot.spotName)
-                                        .font(.title)
-                                        .fontWeight(.thin)
-                                        .lineLimit(1)
-                                    Spacer()
-                                    
-                                    VStack {
-                                        if spot.distanceFromUser < 10 {
-                                            Image("walking")
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit)
-                                                .frame(width: 20)
-                                        }
-                                        Text(vm.getDistanceMessage(spot: spot))
-                                            .font(.caption)
-                                            .fontWeight(.thin)
-                                        
-                                    }
-                                 
-                                }
-                                .padding(.horizontal, 10)
-                                .padding(.bottom, 5)
-                                .opacity(detailsTapped ? 0 : 1)
-                                .animation(.easeOut(duration: 0.5), value: detailsTapped)
-                            }
-                        }
-                )
                 
                 DetailsView(spot: spot, showActionSheet: $showActionsheet, type: .CardView)
                     .opacity(detailsTapped ? 1 : 0)
@@ -81,48 +40,9 @@ struct CardView: View {
                 
             }
             
+            bottomTab
 
             
-            
-            
-            
-            HStack(spacing: 10) {
-
-                
-                
-                
-                Spacer()
-                
-                Button {
-                    //TBD
-                    if detailsTapped == false {
-                        DataService.instance.updatePostViewCount(postId: spot.id)
-                        AnalyticsService.instance.viewedDetails()
-                    }
-                    detailsTapped.toggle()
-                } label: {
-                    Image("info")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 35)
-                        .padding(.leading, 4)
-                        .animation(.easeOut, value: detailsTapped)
-                        
-                }
-                
-                Spacer()
-                
-
-            }
-            .padding(.horizontal, 10)
-            .padding(.top, 10)
-
-            
-        
-         
-            
-            
-
         }
         .alert(isPresented: $showAlert) {
             return Alert(title: Text(alertMessage), message: nil)
@@ -201,6 +121,59 @@ struct CardView: View {
 
       }
 
+}
+
+
+extension CardView {
+    
+    private var bottomTab: some View {
+        HStack {
+            Image("pin_blue")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 30)
+                .opacity(detailsTapped ? 0 : 1)
+
+            Text(spot.spotName)
+                .font(.title)
+                .fontWeight(.thin)
+                .lineLimit(1)
+                .opacity(detailsTapped ? 0 : 1)
+
+            Spacer()
+            
+            VStack {
+                Button {
+                    //TBD
+                    if detailsTapped == false {
+                        DataService.instance.updatePostViewCount(postId: spot.id)
+                        AnalyticsService.instance.viewedDetails()
+                    }
+                    detailsTapped.toggle()
+                } label: {
+                    Image("info")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 35)
+                        .padding(.leading, 4)
+                        .animation(.easeOut, value: detailsTapped)
+                        
+                }
+                
+                Text(vm.getDistanceMessage(spot: spot))
+                    .font(.caption)
+                    .fontWeight(.thin)
+                
+            }
+         
+        }
+        .padding(.horizontal, 10)
+        .padding(.bottom, 5)
+        .animation(.easeOut(duration: 0.5), value: detailsTapped)
+    }
+    
+
+    
 }
 
 struct CardView_Previews: PreviewProvider {

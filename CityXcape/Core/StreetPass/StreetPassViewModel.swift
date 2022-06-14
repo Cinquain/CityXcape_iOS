@@ -5,7 +5,6 @@
 //  Created by James Allan on 4/4/22.
 //
 
-import Foundation
 import Combine
 import SwiftUI
 
@@ -19,7 +18,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
     
     @Published var showJourney: Bool = false
     @Published var showStats: Bool = false
-    @Published var showWorld: Bool = false
+    @Published var showStore: Bool = false 
     
     @Published var showStreetPass: Bool = false
     @Published var worldCompo: [String: Double] = [:]
@@ -82,6 +81,8 @@ class StreetPassViewModel: NSObject, ObservableObject {
     func turnOnPlugMode() {
         print("Plug mode is \(plugMode)")
     }
+    
+
     
     func calculateWorld()  {
         coreData.fetchSecretSpots()
@@ -183,6 +184,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
             self.ranking = ranks
         }
     }
+    
     
     
     

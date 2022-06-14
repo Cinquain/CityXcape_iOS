@@ -69,6 +69,7 @@ struct User: Identifiable, Hashable {
         self.streetCred = Int(streetcred)
         self.bio = userInfo["biography"] as? String ?? ""
         self.social = userInfo["instagram"] as? String ?? nil
+        self.rank = userInfo["rank"] as? String ?? ""
     }
     
     init(rank: Rank) {
@@ -76,6 +77,7 @@ struct User: Identifiable, Hashable {
         self.displayName = rank.displayName
         self.profileImageUrl = rank.profileImageUrl
         self.social = rank.social ?? nil
+        self.rank = rank.currentLevel 
     }
     
     

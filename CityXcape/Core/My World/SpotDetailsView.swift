@@ -99,22 +99,6 @@ struct SpotDetailsView: View {
                                 .animation(.easeOut, value: detailsTapped)
                                 
                         }
-                        
-                            Button {
-                                vm.isOwner ? vm.showBarCode.toggle()
-                                : vm.presentScanner.toggle()
-                            } label: {
-                                Image("Barcode")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 50)
-                            }
-                            .sheet(isPresented: $vm.showBarCode) {
-                                Image(uiImage: vm.generateBarCode(spot: spot))
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 150, height: 150)
-                            }
                             
      
                         Button {
@@ -149,6 +133,23 @@ struct SpotDetailsView: View {
                         .sheet(isPresented: $vm.showComments) {
                             CommentsView(spot: spot, vm: vm)
                         }
+                        
+                        
+                        Button {
+                            vm.isOwner ? vm.showBarCode.toggle()
+                            : vm.presentScanner.toggle()
+                        } label: {
+                            Image("Barcode")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50)
+                        }
+                        .sheet(isPresented: $vm.showBarCode) {
+                            Image(uiImage: vm.generateBarCode(spot: spot))
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 150, height: 150)
+                        }
 
                      
                     
@@ -165,7 +166,7 @@ struct SpotDetailsView: View {
                             showMission.toggle()
                             
                         } label: {
-                            Text("Start Mission")
+                            Text("Get Stamp")
                                 .foregroundColor(.white)
                                 .fontWeight(.light)
                                 .font(.subheadline)

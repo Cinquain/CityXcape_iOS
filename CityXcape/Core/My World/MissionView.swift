@@ -28,7 +28,6 @@ struct MissionView: View {
         VStack {
             
             header
-                .padding(.bottom, 20)
             
             Map(spot: spot, vm: vm, header: $heading)
                 .frame(width: width, height: isRouting ? routeHeight : height)
@@ -43,11 +42,6 @@ struct MissionView: View {
             }
             
             
-            Text("\(spot.spotName)")
-                .font(.title)
-                .fontWeight(.thin)
-                .foregroundColor(.white)
-                .padding(.bottom, 5)
             
             if isRouting {
                 Button {
@@ -128,16 +122,16 @@ struct MissionView: View {
     private var header: some View {
         return  HStack {
             Spacer()
-            
-            Image("Scout Life")
+            Image("pin_blue")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 30)
-              
-            Text("Explore Mission")
-                .font(.title3)
-                .foregroundColor(.white)
+                .frame(width: 40)
+            
+            Text("\(spot.spotName)")
+                .font(.title)
                 .fontWeight(.thin)
+                .foregroundColor(.white)
+                .padding(.bottom, 5)
             
             Spacer()
         }

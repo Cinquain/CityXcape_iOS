@@ -10,14 +10,18 @@ import Firebase
 import GoogleSignIn
 import UserNotifications
 import FirebaseMessaging
+import PartialSheet
 
 @main
 struct CityXcapeApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @AppStorage(CurrentUserDefaults.userId) var currentUserID: String?
+    @StateObject private var store = Store()
     @State private var showLaunchView: Bool = true
     let router = Router.shared
+    
+    
     
     var body: some Scene {
         WindowGroup {
@@ -27,6 +31,8 @@ struct CityXcapeApp: App {
             {
                 ZStack {
                     HomeView()
+                        .attachPartialSheetToRoot()
+                        .environmentObject(store)
                         .onOpenURL { url in
                             router.handleUrl(url: url)
                         }

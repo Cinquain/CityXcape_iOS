@@ -190,6 +190,11 @@ enum SettingsEditTextOption {
     case social
 }
 
+enum Currency: String {
+    case stc
+    case usd
+}
+
 enum DetailsMode {
     case SpotDetails
     case CardView
@@ -213,6 +218,10 @@ enum AnalyticsType: String, Identifiable {
     case saves
     case checkins
     case views 
+}
+
+enum PurchaseError: Error {
+    case failed
 }
 
 

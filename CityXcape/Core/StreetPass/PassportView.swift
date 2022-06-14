@@ -15,130 +15,19 @@ struct PassportView: View {
     var verification: Verification
     @StateObject var vm: JourneyViewModel
     var width: CGFloat = UIScreen.screenWidth
+    
     var body: some View {
         ScrollView {
             
-            VStack(spacing: 10) {
-                ZStack {
-                    Color.white
-                    WebImage(url: URL(string: verification.imageUrl))
-                        .resizable()
-                        .frame(width: width - 40, height: width - 40)
-                        
-                }
-                .frame(width: width - 20, height: width - 20)
-              
-                VStack(spacing: 0) {
-                    HStack {
-                        Spacer()
-                        Image("pin_blue")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 40)
-                            .padding(.bottom, 12)
-                         
-                        Text(verification.name)
-                            .font(Font.custom("Savoye LET", size: 42))
-                            .fontWeight(.thin)
-                            .foregroundColor(.black)
-                            .lineLimit(1)
-                            .multilineTextAlignment(.center)
-                 
-                        Spacer()
-                    }
-                    
-                    HStack {
-                        Text(verification.comment)
-                            .font(Font.custom("Savoye LET", size: 25))
-                            .foregroundColor(.black)
-                        
-                    }
-                    .padding(.horizontal, 20)
-                }
-                
-                
-            }
-            
-       
-   
-            
-            HStack(spacing: 0) {
-            
-                    Button {
-                        vm.showShareSheet.toggle()
-                   } label: {
-                        
-                        HStack {
-                            Text("Share")
-                                .font(Font.custom("Savoye LET", size: 35))
-                            .foregroundColor(.black)
-                            
-                            Image("spread")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 20)
-                                .offset(y: -5)
-                            
-                        }
-                        .padding(.horizontal, 20)
-                        .sheet(isPresented: $vm.showShareSheet) {
-                            ShareSheetView(photo: vm.passportImage ?? UIImage())
-                        }
-                        
-                    }
-                
-                Spacer()
-            }
-            .padding(.horizontal, 10)
-            .opacity(vm.allowshare ? 1 : 0)
-            .animation(.easeIn, value: vm.allowshare)
+            memoryView
+
+            buttonRow
 
             Spacer()
 
-            HStack {
-                Spacer()
-                Image("Stamp")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: width - 100 )
-                    .overlay(
-                        VStack(alignment: .center, spacing: 0) {
-                            
-                            Text(verification.time.formattedDate())
-                                .font(.title)
-                                .fontWeight(.medium)
-                                .foregroundColor(.stamp_red)
-                            
-                            Text("\(verification.name), \(verification.time.timeFormatter())")
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .foregroundColor(.stamp_red)
-                            
-                        
-                        }
-                        .rotationEffect(Angle(degrees: -30))
-                        )
-            }
-            .padding()
+            stamp
             
-            HStack {
-                
-                Spacer()
-                
-                Button {
-                    self.presentationMode.wrappedValue.dismiss()
-                } label: {
-                    Image("arrow")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 20)
-                        .opacity(0.5)
-                }
-                
-                Spacer()
-                
-            }
-            .padding(.horizontal, 10)
+            downArrow
             
             
         }
@@ -149,6 +38,141 @@ struct PassportView: View {
         }
        
     }
+}
+
+
+
+extension PassportView {
+    
+    private var memoryView: some View {
+        
+        VStack(spacing: 10) {
+            ZStack {
+                Color.white
+                WebImage(url: URL(string: verification.imageUrl))
+                    .resizable()
+                    .frame(width: width - 40, height: width - 40)
+                    
+            }
+            .frame(width: width - 20, height: width - 20)
+          
+            VStack(spacing: 0) {
+                HStack {
+                    Spacer()
+                    Image("pin_blue")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 40)
+                        .padding(.bottom, 12)
+                     
+                    Text(verification.name)
+                        .font(Font.custom("Savoye LET", size: 42))
+                        .fontWeight(.thin)
+                        .foregroundColor(.black)
+                        .lineLimit(1)
+                        .multilineTextAlignment(.center)
+             
+                    Spacer()
+                }
+                
+                HStack {
+                    Text(verification.comment)
+                        .font(Font.custom("Savoye LET", size: 25))
+                        .foregroundColor(.black)
+                    
+                }
+                .padding(.horizontal, 20)
+            }
+            
+            
+        }
+        
+    }
+    
+    private var stamp: some View {
+        HStack {
+            Spacer()
+            Image("Stamp")
+                .resizable()
+                .scaledToFit()
+                .frame(height: width - 100 )
+                .overlay(
+                    VStack(alignment: .center, spacing: 0) {
+                        
+                        Text(verification.time.formattedDate())
+                            .font(.title)
+                            .fontWeight(.medium)
+                            .foregroundColor(.stamp_red)
+                        
+                        Text("\(verification.name), \(verification.time.timeFormatter())")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                            .foregroundColor(.stamp_red)
+                        
+                    
+                    }
+                    .rotationEffect(Angle(degrees: -30))
+                    )
+        }
+        .padding()
+    }
+    
+    private var buttonRow: some View {
+        HStack(spacing: 0) {
+        
+                Button {
+                    vm.showShareSheet.toggle()
+               } label: {
+                    
+                    HStack {
+                        Text("Share")
+                            .font(Font.custom("Savoye LET", size: 35))
+                        .foregroundColor(.black)
+                        
+                        Image("spread")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20)
+                            .offset(y: -5)
+                        
+                    }
+                    .padding(.horizontal, 20)
+                    .sheet(isPresented: $vm.showShareSheet) {
+                        ShareSheetView(photo: vm.passportImage ?? UIImage())
+                    }
+                    
+                }
+            
+            Spacer()
+        }
+        .padding(.horizontal, 10)
+        .opacity(vm.allowshare ? 1 : 0)
+        .animation(.easeIn, value: vm.allowshare)
+    }
+    
+    
+    private var downArrow: some View {
+        HStack {
+            
+            Spacer()
+            
+            Button {
+                self.presentationMode.wrappedValue.dismiss()
+            } label: {
+                Image("arrow")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 20)
+                    .opacity(0.5)
+            }
+            
+            Spacer()
+            
+        }
+        .padding(.horizontal, 10)
+    }
+    
+    
 }
 
 struct PassportView_Previews: PreviewProvider {
