@@ -116,6 +116,7 @@ class PostViewModel: NSObject, ObservableObject {
         buttonDisabled = true
         guard let image = selectedImage else {return}
         
+        
         DataService.instance.uploadSecretSpot(spotName: spotName, description: details, image: image, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { [weak self] (success) in
             guard let self = self else {return}
             if success {

@@ -19,9 +19,9 @@ struct CityXcapeApp: App {
     @AppStorage(CurrentUserDefaults.userId) var currentUserID: String?
     @StateObject private var store = Store()
     @State private var showLaunchView: Bool = true
+    
     let router = Router.shared
-    
-    
+    let locManager = LocationService.instance
     
     var body: some Scene {
         WindowGroup {
@@ -39,7 +39,7 @@ struct CityXcapeApp: App {
                     
                     ZStack {
                         if showLaunchView {
-                            LaunchView(showLaunchView: $showLaunchView)
+                            LaunchView(message: locManager.loadMessgae, showView: $showLaunchView)
                                 .transition(.move(edge: .leading))
                         }
                     }

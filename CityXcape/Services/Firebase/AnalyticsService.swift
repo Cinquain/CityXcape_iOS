@@ -165,6 +165,10 @@ class AnalyticsService {
     func checkUserJourney() {
         Analytics.logEvent("checked_user_journey", parameters: nil)
     }
+    
+    func purchasedStreetCred() {
+        Analytics.logEvent("purchased_streetcred", parameters: nil)
+    }
   
     
 }

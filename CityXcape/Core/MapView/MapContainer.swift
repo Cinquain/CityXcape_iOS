@@ -269,7 +269,6 @@ struct MapView: UIViewRepresentable {
             let annotation = MKPointAnnotation()
             guard let newCoordinate = newCoordinates else {return}
             AnalyticsService.instance.droppedPin()
-            
             annotation.coordinate = newCoordinate
             let addedPlacemark = MKPlacemark(coordinate: newCoordinate)
             let mapItem = MKMapItem(placemark: addedPlacemark)

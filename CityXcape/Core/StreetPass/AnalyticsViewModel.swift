@@ -94,7 +94,7 @@ class AnalyticsViewModel: NSObject, ObservableObject {
         (self.rank,
          self.progressString,
          self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpotsPosted, totalSaves: totalSaves, totalStamps: totalStamps)
-        
+        UserDefaults.standard.set(rank, forKey: CurrentUserDefaults.rank)
         saveToLeaderboard()
 
     }
@@ -244,9 +244,10 @@ class AnalyticsViewModel: NSObject, ObservableObject {
             UserField.community: topWorld,
             UserField.world : worldCompo
         ]
+        
         guard let uid = userId else {return}
         AuthService.instance.updateUserField(uid: uid, data: userData)
-
+        UserDefaults.standard.set(worldCompo, forKey: CurrentUserDefaults.world)
     }
     
     func generateColors() -> [Color] {

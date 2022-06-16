@@ -33,6 +33,7 @@ class StorePageViewModel: NSObject, ObservableObject {
             UserField.streetCred: amount
         ]
         AuthService.instance.updateUserField(uid: uid, data: data)
+        AnalyticsService.instance.purchasedStreetCred()
         
     }
     

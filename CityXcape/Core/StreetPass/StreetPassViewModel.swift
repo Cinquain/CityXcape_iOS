@@ -165,8 +165,6 @@ class StreetPassViewModel: NSObject, ObservableObject {
          self.progressString,
          self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpotsPosted, totalSaves: totalSaves, totalStamps: totalStamps)
         
-        
-
         guard let uid = userId else {return}
         guard let imageUrl = profileUrl else {return}
         guard let username = displayName else {return}
@@ -174,6 +172,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
         guard let streetcred = wallet else {return}
         let ranking = Rank(id: uid, profileImageUrl: imageUrl, displayName: username, streetCred: streetcred, streetFollowers: 0, bio: bio, currentLevel: rank, totalSpots: totalSpotsPosted, totalStamps: totalStamps, totalSaves: totalSaves, totalUserVerifications: totalVerifications, totalPeopleMet: totalCities, totalCities: totalCities, progress: progressValue, social: nil)
        
+        UserDefaults.standard.set(rank, forKey: CurrentUserDefaults.rank)
         DataService.instance.saveUserRanking(rank: ranking)
     }
     

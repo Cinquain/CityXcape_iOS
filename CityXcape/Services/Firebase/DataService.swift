@@ -43,7 +43,15 @@ class DataService {
         let address = mapItem.getAddress()
         let longitude = mapItem.placemark.coordinate.longitude
         let latitude = mapItem.placemark.coordinate.latitude
-        let city = mapItem.getCity()
+        var spotCity = mapItem.getCity()
+        
+        if spotCity == "" {
+            let location = CLLocationCoordinate2D(latitude: mapItem.placemark.coordinate.latitude, longitude: mapItem.placemark.coordinate.longitude)
+            location.fetchCityAndCountry { city, country, error in
+                spotCity = city ?? ""
+            }
+        }
+        
         let zipCode = mapItem.getPostCode()
         
         
@@ -76,7 +84,7 @@ class DataService {
                     SecretSpotField.price: price,
                     SecretSpotField.viewCount: 1,
                     SecretSpotField.saveCount: 1,
-                    SecretSpotField.city: city,
+                    SecretSpotField.city: spotCity,
                     SecretSpotField.zipcode: zipCode,
                     SecretSpotField.world: world,
                     SecretSpotField.isPublic: isPublic,
@@ -86,7 +94,7 @@ class DataService {
                     SecretSpotField.ownerIg: instagram
                 ]
                 
-                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: city, didLike: false, likedCount: 0, verifierCount: 0, commentCount: 0, social: instagram)
+                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: spotCity, didLike: false, likedCount: 0, verifierCount: 0, commentCount: 0, social: instagram)
                 
                 document.setData(spotData) { (error) in
                     if let err = error {

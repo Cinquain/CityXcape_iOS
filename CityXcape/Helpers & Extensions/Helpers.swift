@@ -30,6 +30,7 @@ struct UserField {
     static let world = "world"
     static let community = "top_world"
     static let rank = "rank"
+    static let city = "city"
 }
 
 struct SecretSpotField {
@@ -122,7 +123,10 @@ struct CurrentUserDefaults {
     static let userLocation = "userLocation"
     static let wallet = "wallet"
     static let social = "instagram"
-    
+    static let loadMessgae = "loadMessage"
+    static let city = "city"
+    static let rank = "rank"
+    static let world = "world"
 }
 
 

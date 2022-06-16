@@ -165,13 +165,3 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
   
 
 
-class LocationService: NSObject, CLLocationManagerDelegate {
-    
-    static let instance = LocationService()
-    
-    let manager = CLLocationManager()
-    
-    
-    
-    private override init() {}
-}

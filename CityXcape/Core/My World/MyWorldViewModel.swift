@@ -170,6 +170,7 @@ class MyWorldViewModel: NSObject, ObservableObject {
         (self.rank,
          self.progressString,
          self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpotsPosted, totalSaves: totalSaves, totalStamps: totalStamps)
+        UserDefaults.standard.set(rank, forKey: CurrentUserDefaults.rank)
         
         
     }

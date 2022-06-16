@@ -283,6 +283,14 @@ extension UIScreen {
     
 }
 
+extension CLLocationCoordinate2D {
+    
+    func fetchCityAndCountry(completion: @escaping (_ city: String?, _ country:  String?, _ error: Error?) -> ()) {
+        let location = CLLocation(latitude: self.latitude, longitude: self.longitude)
+        CLGeocoder().reverseGeocodeLocation(location) { completion($0?.first?.locality, $0?.first?.country, $1) }
+    }
+}
+
 extension Date {
     
     func formattedDate() -> String {

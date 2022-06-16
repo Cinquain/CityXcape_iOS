@@ -115,6 +115,10 @@ struct MyWorld: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                             vm.fetchSecretSpots()
                         }
+                        
+                        let user = User()
+                        print("User info is:", user.displayName, user.bio, user.city, user.id)
+                      
                     }
                    
             

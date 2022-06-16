@@ -6,16 +6,28 @@
 //
 
 import SwiftUI
+import Combine
 
 struct LaunchView: View {
     
-    @State private var loadingText: [String] = "Loading your city...".map({String($0)})
+    @Binding var showLaunchView: Bool
+    @State private var loadingText: [String]
     @State private var showLoadingText: Bool = false
     @State private var counter: Int = 0
     @State private var loops: Int = 0
     @State private var scale: Int = 1
-    @Binding var showLaunchView: Bool
-    let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    let timer: Publishers.Autoconnect<Timer.TimerPublisher>
+    
+    init(message: String, showView: Binding<Bool>) {
+        
+        self.loadingText = message.map({String($0)})
+        self._showLaunchView = showView
+        self.counter = 0
+        self.loops = 0
+        self.scale = 1
+        self.timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+        
+    }
     
     
     
@@ -75,6 +87,6 @@ struct LaunchView: View {
 
 struct LaunchView_Previews: PreviewProvider {
     static var previews: some View {
-        LaunchView(showLaunchView: .constant(true))
+        LaunchView(message: "Loading Your City", showView: .constant(true))
     }
 }
