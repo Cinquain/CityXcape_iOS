@@ -38,6 +38,7 @@
 		214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214FAC6C26E2F16300F37B80 /* ImageManager.swift */; };
 		215B30DD27C860D300D627A4 /* VerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215B30DC27C860D300D627A4 /* VerificationView.swift */; };
 		2167AEA2283949B100E9F36E /* PublicStreetPassVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2167AEA1283949B100E9F36E /* PublicStreetPassVM.swift */; };
+		2168555B2860B2E400E445EB /* SpotSelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2168555A2860B2E400E445EB /* SpotSelectionList.swift */; };
 		216A5CDE27AA0F31006AA7B4 /* SavesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A5CDD27AA0F31006AA7B4 /* SavesView.swift */; };
 		21730A8D27C5B0380036549F /* GetStampedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21730A8C27C5B0380036549F /* GetStampedButton.swift */; };
 		217657D327FC642C0077B0A0 /* UserDiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217657D227FC642C0077B0A0 /* UserDiscoveryView.swift */; };
@@ -86,6 +87,7 @@
 		219842A826CF57740089CE03 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219842A726CF57740089CE03 /* ImagePicker.swift */; };
 		219A9C102850E1F400BD6060 /* CodeScanner in Frameworks */ = {isa = PBXBuildFile; productRef = 219A9C0F2850E1F400BD6060 /* CodeScanner */; };
 		219CA8F2275A61DD00F1C61E /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219CA8F1275A61DD00F1C61E /* PostViewModel.swift */; };
+		21A01F36285E131B00FAD74C /* SpotListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A01F35285E131B00FAD74C /* SpotListView.swift */; };
 		21A4697927C12417009F337D /* StampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21A4697827C12417009F337D /* StampView.swift */; };
 		21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AA28DF26D13BB40001A02E /* StreetPass.swift */; };
 		21ACA5D42814281E0034D0AD /* LaunchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21ACA5D32814281E0034D0AD /* LaunchView.swift */; };
@@ -126,6 +128,9 @@
 		21E92CB628552572005D11DE /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E92CB528552572005D11DE /* StoreKit.framework */; };
 		21E92CB82855266B005D11DE /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E92CB72855266B005D11DE /* Store.swift */; };
 		21EA999A27D1006D00A13C6C /* JourneyViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EA999927D1006D00A13C6C /* JourneyViewModel.swift */; };
+		21EE8A29285CB0A400719D0B /* Trail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE8A28285CB0A400719D0B /* Trail.swift */; };
+		21EE8A2B285CB45600719D0B /* PostTrailForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE8A2A285CB45600719D0B /* PostTrailForm.swift */; };
+		21EE8A2D285CB5FC00719D0B /* PostTrailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE8A2C285CB5FC00719D0B /* PostTrailViewModel.swift */; };
 		21F039C328074E4E003438D0 /* ImageSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F039C228074E4E003438D0 /* ImageSlider.swift */; };
 		21F039C528075576003438D0 /* DetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F039C428075576003438D0 /* DetailsView.swift */; };
 		21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F8D9C526E8D7CC0016DF9D /* DataService.swift */; };
@@ -164,6 +169,7 @@
 		214FAC6C26E2F16300F37B80 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		215B30DC27C860D300D627A4 /* VerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationView.swift; sourceTree = "<group>"; };
 		2167AEA1283949B100E9F36E /* PublicStreetPassVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStreetPassVM.swift; sourceTree = "<group>"; };
+		2168555A2860B2E400E445EB /* SpotSelectionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotSelectionList.swift; sourceTree = "<group>"; };
 		216A5CDD27AA0F31006AA7B4 /* SavesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavesView.swift; sourceTree = "<group>"; };
 		21730A8C27C5B0380036549F /* GetStampedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetStampedButton.swift; sourceTree = "<group>"; };
 		217657D227FC642C0077B0A0 /* UserDiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDiscoveryView.swift; sourceTree = "<group>"; };
@@ -214,6 +220,7 @@
 		219842A526CF4E3D0089CE03 /* SecretSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretSpot.swift; sourceTree = "<group>"; };
 		219842A726CF57740089CE03 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		219CA8F1275A61DD00F1C61E /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
+		21A01F35285E131B00FAD74C /* SpotListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotListView.swift; sourceTree = "<group>"; };
 		21A4697827C12417009F337D /* StampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampView.swift; sourceTree = "<group>"; };
 		21AA28DF26D13BB40001A02E /* StreetPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetPass.swift; sourceTree = "<group>"; };
 		21ACA5D32814281E0034D0AD /* LaunchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchView.swift; sourceTree = "<group>"; };
@@ -254,6 +261,9 @@
 		21E92CB528552572005D11DE /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		21E92CB72855266B005D11DE /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		21EA999927D1006D00A13C6C /* JourneyViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyViewModel.swift; sourceTree = "<group>"; };
+		21EE8A28285CB0A400719D0B /* Trail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trail.swift; sourceTree = "<group>"; };
+		21EE8A2A285CB45600719D0B /* PostTrailForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTrailForm.swift; sourceTree = "<group>"; };
+		21EE8A2C285CB5FC00719D0B /* PostTrailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTrailViewModel.swift; sourceTree = "<group>"; };
 		21F039C228074E4E003438D0 /* ImageSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlider.swift; sourceTree = "<group>"; };
 		21F039C428075576003438D0 /* DetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsView.swift; sourceTree = "<group>"; };
 		21F8D9C526E8D7CC0016DF9D /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
@@ -467,6 +477,8 @@
 				2117A7E4282573A20001C76C /* StampImage.swift */,
 				213E8ECB282D4F70002A1495 /* WorldCompositionView.swift */,
 				2106A9CD2848EA05000BCD10 /* PlugLight.swift */,
+				21A01F35285E131B00FAD74C /* SpotListView.swift */,
+				2168555A2860B2E400E445EB /* SpotSelectionList.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -507,6 +519,8 @@
 				219CA8F1275A61DD00F1C61E /* PostViewModel.swift */,
 				21B1A4C0280D843F00B0AFE2 /* EditSpotView.swift */,
 				21B1A4C2280D84B700B0AFE2 /* EditViewModel.swift */,
+				21EE8A2A285CB45600719D0B /* PostTrailForm.swift */,
+				21EE8A2C285CB5FC00719D0B /* PostTrailViewModel.swift */,
 			);
 			path = MapView;
 			sourceTree = "<group>";
@@ -523,6 +537,7 @@
 				21DCF82627E63090000BD1B3 /* Follower.swift */,
 				21C91E6227E8AD330050D06F /* Level.swift */,
 				211F6AB028577EFF00441790 /* Product.swift */,
+				21EE8A28285CB0A400719D0B /* Trail.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -754,6 +769,7 @@
 				219CA8F2275A61DD00F1C61E /* PostViewModel.swift in Sources */,
 				2106A9CE2848EA05000BCD10 /* PlugLight.swift in Sources */,
 				21B611F627E753F700361508 /* RowView.swift in Sources */,
+				21A01F36285E131B00FAD74C /* SpotListView.swift in Sources */,
 				217C08E026D1CC4500751933 /* OnboardingViewII.swift in Sources */,
 				21730A8D27C5B0380036549F /* GetStampedButton.swift in Sources */,
 				212EE32F27A4640500232992 /* CommentsView.swift in Sources */,
@@ -777,6 +793,7 @@
 				211EC5DF27C65EB800F0B0A8 /* MissionView.swift in Sources */,
 				212057A027DE1C2E00602EE8 /* SoundManager.swift in Sources */,
 				21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */,
+				2168555B2860B2E400E445EB /* SpotSelectionList.swift in Sources */,
 				21BB328A27FB2043005241BE /* StreetFollowersView.swift in Sources */,
 				217DAF3426CD97D400A395BC /* SpotRowHeader.swift in Sources */,
 				2178C4532719166800B4C395 /* TextFieldView.swift in Sources */,
@@ -784,6 +801,7 @@
 				21469EC327B68B5600626FEE /* EmailSigninViewModel.swift in Sources */,
 				21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */,
 				219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */,
+				21EE8A2B285CB45600719D0B /* PostTrailForm.swift in Sources */,
 				21BB328827FB2004005241BE /* StreetPassViewModel.swift in Sources */,
 				217E9AA6270B404500F45077 /* Mission.swift in Sources */,
 				214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */,
@@ -799,6 +817,7 @@
 				217884F926E17B870066C719 /* SignInWithApple.swift in Sources */,
 				212EE33327A4689F00232992 /* Comment.swift in Sources */,
 				217C08D726D1AFF400751933 /* MapContainer.swift in Sources */,
+				21EE8A2D285CB5FC00719D0B /* PostTrailViewModel.swift in Sources */,
 				2179853927E362D40002CEBA /* Leaderboard.swift in Sources */,
 				21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */,
 				217AA0C226FB5C5300B994B3 /* Onboarding.swift in Sources */,
@@ -821,6 +840,7 @@
 				14EF54BE282044BE004D9610 /* ShareSheetView.swift in Sources */,
 				217DA73A26CC95A50039A145 /* Extensions.swift in Sources */,
 				214A0AA4285A19070008792D /* LocationService.swift in Sources */,
+				21EE8A29285CB0A400719D0B /* Trail.swift in Sources */,
 				21F039C328074E4E003438D0 /* ImageSlider.swift in Sources */,
 				21DCF82727E63090000BD1B3 /* Follower.swift in Sources */,
 				217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */,
@@ -997,7 +1017,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.6;
+				MARKETING_VERSION = 1.4.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1022,7 +1042,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.6;
+				MARKETING_VERSION = 1.4.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

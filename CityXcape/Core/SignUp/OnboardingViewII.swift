@@ -32,102 +32,32 @@ struct OnboardingViewII: View {
     
     var body: some View {
         
-        GeometryReader { geo in
             
             VStack(spacing: 20) {
                 Spacer()
-                    .frame(height: geo.size.width / 5)
+                    .frame(height: UIScreen.screenWidth / 5)
                 
-       
                 
                 HStack(alignment: .center) {
      
                     ZStack {
-                        Button(action: {
-                            showPicker.toggle()
-                        }, label: {
-                            VStack(spacing: 25){
-                                Image(Icon.dot.rawValue)
-                                    .resizable()
-                                    .frame(width: geo.size.width / 2, height: geo.size.width / 2)
-                                    .shadow(color: .orange, radius: 30, x: 0, y: 0)
-                                    .overlay(
-                                        Image(uiImage: userImage ?? UIImage())
-                                            .resizable()
-                                            .frame(width: geo.size.width / 3, height: geo.size.width / 3)
-                                            .cornerRadius((geo.size.width / 3) / 2)
-                                    )
-                                Text(displayName)
-                                    .font(.title3)
-                                    .fontWeight(.thin)
-                            }
-                    })
-                        ProgressView()
-                            .frame(width: 100, height: 100)
-                            .scaleEffect(3)
-                            .opacity(disableInteraction ? 1 : 0)
-                            .offset(y: -20)
+                        profileImageButton
+                        loadingCircle
                     }
+                    
+                    
                 }
-            
-                TextField("Create a Username", text: $displayName)
-                    .placeholder(when: displayName.isEmpty) {
-                        Text("Create a Username").foregroundColor(.gray)
+                
+                Form {
+                    
+                    TextField("Create a Username", text: $displayName)
+                        .frame(height: 40)
+                    addImageButton
+                    finishButton
+                    
                 }
-                    .padding()
-                    .frame(height: 60)
-                    .frame(maxWidth: .infinity)
-                    .background(colorScheme == .dark ? Color.orange.opacity(0.5) : .white)
-                    .cornerRadius(8)
-                    .font(.headline)
-                    .autocapitalization(.sentences)
-                    .padding(.horizontal)
-                
-                
-                Button(action: {
-                    showPicker.toggle()
-                }, label: {
-                    Text("Finish: Add Profile Picture")
-                        .font(.headline)
-                        .fontWeight(.bold)
-                        .padding()
-                        .frame(height: 60)
-                        .frame(maxWidth: .infinity)
-                        .background(Color.orange)
-                        .cornerRadius(8)
-                        .opacity(displayName.count > 3 ? 1.0 : 1.0)
-                        .animation(.easeOut(duration: 1.0))
-                        .padding(.horizontal)
-                })
-                
-                
-                Spacer()
-                    .frame(height: 60)
-                
-                Button(action: {
-                    createProfile()
-                }, label: {
-                    HStack {
-                        Image(Icon.check.rawValue)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 30, height: 30)
-                        
-                        Text(buttonMessage)
-                            .font(.title3)
-                            .foregroundColor(.black)
-                            .fontWeight(.light)
-                            
-                    }
-                    .padding()
-                    .background(Color.white)
-                    .cornerRadius(3)
-                    .shadow(color: .white, radius: 5, x: 0, y: 0)
-                })
-                .opacity(opacity)
-                .animation(.easeOut(duration: 0.5))
-                .disabled(disableInteraction)
-                
+                .colorScheme(.dark)
+        
 
 
                 
@@ -148,7 +78,7 @@ struct OnboardingViewII: View {
                 return Alert(title: Text(message))
             })
             
-        }
+        
     }
     
     fileprivate func createProfile() {
@@ -210,6 +140,71 @@ struct OnboardingViewII: View {
     }
     
   
+}
+
+
+extension OnboardingViewII {
+    
+    private var profileImageButton: some View {
+        Button(action: {
+            showPicker.toggle()
+        }, label: {
+            VStack(spacing: 25){
+                Image(Icon.dot.rawValue)
+                    .resizable()
+                    .frame(width: UIScreen.screenWidth / 2, height: UIScreen.screenWidth / 2)
+                    .shadow(color: .orange, radius: 30, x: 0, y: 0)
+                    .overlay(
+                        Image(uiImage: userImage ?? UIImage())
+                            .resizable()
+                            .frame(width: UIScreen.screenWidth / 3, height: UIScreen.screenWidth / 3)
+                            .cornerRadius((UIScreen.screenWidth / 3) / 2)
+                    )
+                Text(displayName)
+                    .font(.title3)
+                    .fontWeight(.thin)
+            }
+    })
+        
+    }
+    
+    private var loadingCircle: some View {
+        ProgressView()
+            .frame(width: 100, height: 100)
+            .scaleEffect(3)
+            .opacity(disableInteraction ? 1 : 0)
+            .offset(y: -20)
+    }
+    
+    private var addImageButton: some View {
+        Button(action: {
+            showPicker.toggle()
+        }, label: {
+            HStack(spacing: 8) {
+                Image(systemName: "person.crop.circle")
+                Text("Add Profile Picture")
+                    
+            }
+   
+        })
+    }
+    
+    private var finishButton: some View {
+        Button(action: {
+            createProfile()
+        }, label: {
+            HStack {
+               Spacer()
+                Text(buttonMessage)
+                    .fontWeight(.light)
+                Spacer()
+            }
+            .foregroundColor(.blue)
+        })
+      
+        
+    }
+    
 }
 
 struct OnboardingViewII_Previews: PreviewProvider {

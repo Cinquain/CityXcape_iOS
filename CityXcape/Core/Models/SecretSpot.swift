@@ -13,7 +13,7 @@ import SwiftUI
 
 
 
-struct SecretSpot:  Hashable, Identifiable {
+struct SecretSpot:  Hashable, Identifiable, Equatable {
     
     let id: String
     var spotName: String

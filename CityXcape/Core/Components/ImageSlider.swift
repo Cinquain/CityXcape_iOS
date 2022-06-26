@@ -20,12 +20,14 @@ struct ImageSlider: View {
                     WebImage(url: URL(string: url))
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: .infinity)
+                        .frame(width: UIScreen.screenWidth)
+                        .clipped()
                         .overlay(
                             ZStack {
                                 LinearGradient(colors: [Color.clear, Color.black], startPoint: .center, endPoint: .bottom)
                         
                             })
+                        .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 10)
             }
       
         }

@@ -25,7 +25,12 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var spotComplete: Bool = false
     @Published var addedPin: Bool = false
-    
+    @Published var showTrailForm: Bool = false 
+    @Published var showForm: Bool = false
+    @Published var showActionSheet: Bool = false
+    @Published var showAlert: Bool = false
+    @Published var alertMessgae: String = ""
+
     private var region: MKCoordinateRegion?
     
     var cancellable: AnyCancellable?

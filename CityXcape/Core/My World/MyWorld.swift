@@ -27,100 +27,71 @@ struct MyWorld: View {
     var body: some View {
         
    
-            VStack {
-                
-                Ticker(searchText: $searchTerm, handlesearch: {
-                        vm.performSearch(searchTerm: searchTerm)
-                    })
+            NavigationView {
+                 
+                    ScrollView {
                         
                         
-                    if vm.showOnboarding {
-                        
-                        
-                        Image("marker")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 250)
-                        
-                        Text("Start building your world by saving \n spots you want to visit ")
-                            .foregroundColor(.white)
-                            .font(.title3)
-                            .fontWeight(.thin)
-                            .multilineTextAlignment(.center)
-                        
-                        Button {
-                            selectedTab = 1
-                        } label: {
-                            Text("Find Spots")
-                                .padding()
-                                .foregroundColor(.black)
-                                .background(Color.white)
-                                .cornerRadius(5)
-                        }
-                        .padding(.top, 40)
+                        if vm.showOnboarding {
+                            confusedPin
+                           
+                            discoverButton
 
-
-                        Spacer()
-                    } else {
-                        
-                        Picker("Picker", selection: $vm.showVisited) {
-                            Text("To Visit")
-                                .tag(false)
-                                .foregroundColor(.white)
+                            Spacer()
+                          
+                        } else {
                             
-                            Text("Visited")
-                                .tag(true)
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                        .foregroundColor(.cx_orange)
-                        .colorScheme(.dark)
-                        .padding()
-                        
-                            ScrollView {
-                                VStack(spacing: 25) {
-                                    ForEach(vm.currentSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.id) { spot in
+                            VStack(spacing: 5) {
+                                ForEach(vm.currentSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.id) { spot in
+                                    
+                                    VStack {
+
+                                        PreviewCard(spot: spot)
+                                            .onTapGesture(perform: {
+                                                
+                                                self.currentSpot = spot
+                                                AnalyticsService.instance.viewedSecretSpot()
+                                            })
+                                            .sheet(item: $currentSpot) {
+                                                //Dismiss Code
+                                            } content: { spot in
+                                                SpotDetailsView(spot: spot)
+                                            }
+
                                         
-                                        VStack {
-                                            
-                                            PreviewCard(spot: spot)
-                                                .onTapGesture(perform: {
-                                                    
-                                                    self.currentSpot = spot
-                                                    AnalyticsService.instance.viewedSecretSpot()
-                                                })
-                                                .sheet(item: $currentSpot) {
-                                                    //Dismiss Code
-                                                } content: { spot in
-                                                    SpotDetailsView(spot: spot)
-                                                }
-                                            
-                                        }
-                                        
-                                     //End of VStack
-                                        Divider()
                                     }
+                                    
+                                 //End of VStack
+                                    Divider()
                                 }
-                                
                             }
-                            .colorScheme(.dark)
-                        
-                    }
-                        
-                        
-                        
-                    }
-                    .background(Color.background.edgesIgnoringSafeArea(.all))
-                    .onAppear {
-                        manager.fetchSecretSpots()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            vm.fetchSecretSpots()
                         }
                         
-                        let user = User()
-                        print("User info is:", user.displayName, user.bio, user.city, user.id)
-                      
+                        
+                        //End of Scrollview
                     }
-                   
+                    .navigationBarItems(trailing: toggleButton)
+                    .toolbar {
+                       ToolbarItem(placement: .principal) {
+                           tabIcon
+                       }
+                    }
+                
+            }
+            .colorScheme(.dark)
+            .tint(.white)
+            .background(Color.background.edgesIgnoringSafeArea(.all))
+            .onAppear {
+                manager.fetchSecretSpots()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                    vm.fetchSecretSpots()
+                }
+                
+                let user = User()
+                print("User info is:", user.displayName, user.bio, user.city, user.id)
+              
+            }
+           
             
         
         //End of body
@@ -129,6 +100,74 @@ struct MyWorld: View {
 
     
   
+}
+
+extension MyWorld {
+    
+    private var confusedPin: some View {
+        VStack {
+            Image("marker")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 250)
+            
+            Text("Start building your world by saving \n spots you want to visit ")
+                .foregroundColor(.white)
+                .font(.title3)
+                .fontWeight(.thin)
+                .multilineTextAlignment(.center)
+        }
+    }
+    
+    private var discoverButton: some View {
+        Button {
+            selectedTab = 1
+        } label: {
+            Text("Find Spots")
+                .padding()
+                .foregroundColor(.black)
+                .background(Color.white)
+                .cornerRadius(5)
+        }
+        .padding(.top, 40)
+
+    }
+    
+    private var tabIcon: some View {
+        VStack(spacing: 0) {
+            Image("logo")
+                .resizable()
+                .scaledToFit()
+            .frame(height: 25)
+            Text(getMessage())
+                .fontWeight(.thin)
+                .foregroundColor(.white)
+                .font(.caption)
+        }
+    }
+    
+    private var toggleButton: some View {
+        
+        Button {
+            vm.showVisited.toggle()
+        } label: {
+            Image(systemName: "checkmark.seal")
+                .resizable()
+                .scaledToFit()
+                .opacity(0.7)
+        }
+    }
+    
+    
+    fileprivate func getMessage() -> String {
+        if vm.showVisited {
+            return "\(vm.currentSpots.count) spots visited"
+        } else {
+            return "\(vm.currentSpots.count) spots to visit"
+        }
+    }
+    
+    
 }
 
 struct MyJourney_Previews: PreviewProvider {

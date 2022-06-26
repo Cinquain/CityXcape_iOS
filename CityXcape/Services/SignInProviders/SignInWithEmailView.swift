@@ -18,164 +18,36 @@ struct SignInWithEmailView: View {
     var body: some View {
         
         VStack {
-        
-           Spacer()
-            
-            VStack(spacing: 10) {
-               
-                Picker("Picker", selection: $isLogin) {
-                    Text("Login")
-                        .tag(true)
-                        .foregroundColor(.white)
-                    
-                    Text("Create Account")
-                        .tag(false)
+          
+             Image("logo")
+                 .resizable()
+                 .aspectRatio( contentMode: .fit)
+                 .frame(height: 50)
+                 .padding(.bottom, 30)
+            if !isLogin {
+                withAnimation(.easeOut(duration: 0.3)) {
+                    addImageButton
                 }
-                .pickerStyle(SegmentedPickerStyle())
-                .colorScheme(.dark)
-                .padding()
-                
-                if isLogin {
-                    Image("logo")
-                        .resizable()
-                        .aspectRatio( contentMode: .fit)
-                        .frame(height: 50)
-                        .padding(.bottom, 30)
-                }
-                
-                if !isLogin {
-                    Button {
-                        vm.showPicker.toggle()
-                    } label: {
-                        VStack(spacing: 0) {
-                            
-                            if let image = vm.userImage {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 130)
-                                    .clipShape(Circle())
-                            } else {
-                                Image("profile")
-                                    .resizable()
-                                    .aspectRatio( contentMode: .fit)
-                                    .frame(width: 150)
-                            }
-                           
-                     Text("Tap to add profile image")
-                                .font(.caption)
-                                .fontWeight(.thin)
-                                .foregroundColor(.white)
-                                .opacity(vm.addedPic ? 0 : 1)
-                        }
-                    }
-                    
-                    TextField("Username", text: $vm.username)
-                        .placeholder(when: vm.username.isEmpty) {
-                            Text("Username").foregroundColor(.gray)
-                    }
-                        .keyboardType(.emailAddress)
-                        .frame(width: vm.width * 0.9, height: 40)
-                        .padding(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 6))
-                        .background(Color.white)
-                        .foregroundColor(.black)
-                        .cornerRadius(25)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.black, lineWidth: 0.7)
-                        )
-                    
-                    
-                }
-                
-                TextField("Email", text: $vm.email)
-                    .placeholder(when: vm.email.isEmpty) {
-                        Text("Email").foregroundColor(.gray)
-                }
-                    .keyboardType(.emailAddress)
-                    .frame(width: vm.width * 0.9, height: 40)
-                    .padding(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 6))
-                    .background(Color.white)
-                    .foregroundColor(.black)
-                    .cornerRadius(25)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.black, lineWidth: 0.7)
-                            .clipped()
-
-                    )
-                    
-
-                    
-                SecureField("Password", text: $vm.password)
-                    .placeholder(when: vm.password.isEmpty) {
-                        Text("Password").foregroundColor(.gray)
-                }
-                    .frame(width: vm.width * 0.9, height: 40)
-                    .padding(EdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 6))
-                    .background(Color.white)
-                    .foregroundColor(.black)
-                    .cornerRadius(25)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.black, lineWidth: 0.7)
-                    )
-                
-                Button {
-                    
-                    if isLogin {
-                        vm.login { success in
-                            if success {
-                                self.presentationMode.wrappedValue.dismiss()
-                            } else {
-                                alertMessage = vm.message
-                                showAlert.toggle()
-                            }
-                        }
-                    } else {
-                        vm.createNewAccount { success in
-                            if success {
-                                self.presentationMode.wrappedValue.dismiss()
-                            } else {
-                                alertMessage = vm.message
-                                showAlert.toggle()
-                            }
-                        }
-                    }
-                    
-              
-                } label: {
-                    
-                    Text(isLogin ? "Login" : "Create Account")
-                        .font(.subheadline)
-                        .foregroundColor(isLogin ? .black : .white)
-                        .fontWeight(.light)
-                
-                   
-                }
-                .frame(width: 170, height: 40)
-                .background(isLogin ? Color.white : Color.dark_grey)
-                .cornerRadius(25)
-                .padding(.top, 20)
-                .disabled(vm.disable)
-
-                   
-                
-                Spacer()
-                
             }
-            .frame(width: vm.width, height: isLogin ? vm.height : vm.height + 150)
-            .background(Color.black)
-            .animation(.easeOut)
-            .cornerRadius(12)
-            .shadow(color: .white, radius: 1)
-
+     
+                 
+            Form {
+           
+                Toggle(isLogin ?"Login" : "Signup", isOn: $isLogin)
+                if !isLogin {
+                    TextField("Create a username", text: $vm.username)
+                }
+                TextField("Email", text: $vm.email)
+                    .keyboardType(.emailAddress)
+                SecureField("Password", text: $vm.password)
+                finishButton
+            }
+            .colorScheme(.dark)
             
-            Spacer()
+            
         }
         .frame(width: UIScreen.screenWidth)
-        .background(
-            LinearGradient(gradient: Gradient(colors: [Color.black, Color.cx_orange,]), startPoint: .center, endPoint: .bottom).edgesIgnoringSafeArea(.all))
+        .background(Color.black)
         .alert(isPresented: $showAlert) {
             return Alert(title: Text(alertMessage))
         }
@@ -192,6 +64,71 @@ struct SignInWithEmailView: View {
     }
     
 
+    
+}
+
+extension SignInWithEmailView {
+    
+    private var addImageButton: some View {
+        Button {
+              vm.showPicker.toggle()
+          } label: {
+              VStack(spacing: 0) {
+                  if let image = vm.userImage {
+                      Image(uiImage: image)
+                          .resizable()
+                          .aspectRatio(contentMode: .fit)
+                          .frame(width: 130)
+                          .clipShape(Circle())
+                  } else {
+                      Image("profile")
+                          .resizable()
+                          .aspectRatio( contentMode: .fit)
+                          .frame(width: 150)
+                  }
+              }
+          }
+    }
+    
+    private var finishButton: some View {
+        
+           Button {
+               
+               if isLogin {
+                   vm.login { success in
+                       if success {
+                           self.presentationMode.wrappedValue.dismiss()
+                       } else {
+                           alertMessage = vm.message
+                           showAlert.toggle()
+                       }
+                   }
+               } else {
+                   vm.createNewAccount { success in
+                       if success {
+                           self.presentationMode.wrappedValue.dismiss()
+                       } else {
+                           alertMessage = vm.message
+                           showAlert.toggle()
+                       }
+                   }
+               }
+               
+         
+           } label: {
+               
+               HStack {
+                   Spacer()
+                   Text(isLogin ? "Login" : "Create Account")
+                    .font(.subheadline)
+                   .fontWeight(.light)
+                   .foregroundColor(.blue)
+                   Spacer()
+               }
+           
+              
+           }
+    }
     
 }
 

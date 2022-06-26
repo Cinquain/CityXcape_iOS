@@ -30,9 +30,10 @@ class DataService {
     private var REF_POST = DB_BASE.collection("posts")
     private var REF_USERS = DB_BASE.collection("users")
     private var REF_REPORTS = DB_BASE.collection("reports")
-    private var REF_WORLD = DB_BASE.collection("world")
+    private var REF_WORLD = DB_BASE.collection(ServerPath.world)
     private var REF_FOLLOWERS = DB_BASE.collection("followers")
     private var REF_Rankings = DB_BASE.collection("rankings")
+    private var REF_TRAILS = DB_BASE.collection(ServerPath.trail)
     
     //MARK: CREATE FUNCTIONS
     
@@ -192,6 +193,62 @@ class DataService {
 
     }
     
+    
+    func createTrail(name: String, details: String, image: UIImage, world: String, user: User, price: Int, spots: [SecretSpot]) {
+        
+        let users = [user]
+        let document = REF_TRAILS.document()
+        let trailId = document.documentID
+        let userWorldRef = REF_TRAILS.document("private").collection(user.id).document(trailId)
+
+        ImageManager.instance.uploadTrailImage(image: image, numb: 1, trailId: trailId) { result in
+            switch result {
+            case .success(let imageUrl):
+                let data: [String: Any] = [
+                    TrailField.id: trailId,
+                    TrailField.name: name,
+                    TrailField.description: details,
+                    TrailField.imageUrls: [imageUrl],
+                    TrailField.ownerId: user.id,
+                    TrailField.ownerName: user.displayName,
+                    TrailField.ownerImage: user.profileImageUrl,
+                    TrailField.ownerRank: user.rank ?? "tourist",
+                    TrailField.world: world,
+                    TrailField.price: price,
+                    TrailField.spots : spots.map({$0.id}),
+                    TrailField.users: users.map({$0.id})
+                ]
+                
+                document.setData(data) { error in
+                    
+                    if let error = error {
+                        print("Error uploading trail to database", error.localizedDescription)
+                    }
+                    
+                    print("Successfully saved trail to database")
+                    let savedData: [String: Any] =
+                        ["savedOn": FieldValue.serverTimestamp()]
+                    userWorldRef.setData(savedData)
+                    
+                    //Increment user's wallet and world
+                    let increment: Int64 = 2
+                    let userData : [String: Any] = [
+                        UserField.world : [world: FieldValue.increment(increment)],
+                        UserField.streetCred : FieldValue.increment(increment)
+                    ]
+                    let rankData: [String: Any] = [
+                        RankingField.totalTrails: FieldValue.increment(increment)
+                    ]
+                    
+                    //Save to users profile and rank
+                    AuthService.instance.updateUserField(uid: user.id, data: userData)
+                    self.REF_Rankings.document(user.id).updateData(rankData)
+                }
+            case .failure(let error):
+                print("There was error uploading image", error.localizedDescription)
+            }
+        }
+    }
     
     
     func postComment(postId: String, uid: String, username: String, bio: String, imageUrl: String, content: String, completion: @escaping (_ success: Bool, _ commentId: String?) -> ()) {
@@ -510,6 +567,7 @@ class DataService {
             
             self.REF_POST
                 .order(by: SecretSpotField.dateCreated, descending: true)
+                .limit(to: 25)
                 .getDocuments { querysnapshot, error in
                     let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
                     let filteredResults = results.filter({$0.isPublic == true
@@ -519,7 +577,6 @@ class DataService {
                 }
         }
     
-//            .limit(to: 12)
     }
     
     func saveUserRanking(rank: Rank) {

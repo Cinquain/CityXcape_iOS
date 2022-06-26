@@ -36,6 +36,8 @@ class DiscoverViewModel: ObservableObject {
     
     @Published var rankings: [Rank] = []
     @Published var showStreetPass: Bool = false
+    @Published var newlySaved: Int = 0
+    @Published var isSearching: Bool = false
 
     init() {
         getScoutLeaders()
@@ -131,6 +133,7 @@ class DiscoverViewModel: ObservableObject {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     if let index = self?.newSecretSpots.firstIndex(of: spot) {
                         self?.newSecretSpots.remove(at: index)
+                        self?.newlySaved += 1
                     }
                 }
             }

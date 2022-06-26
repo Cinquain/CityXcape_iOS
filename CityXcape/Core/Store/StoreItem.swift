@@ -87,7 +87,7 @@ extension StoreItem {
                     store.purchaseProduct(product, completion: { result in
                         switch result {
                         case .success(_):
-                            vm.alertMessage = "Successfuly purchased 100 STC"
+                            vm.alertMessage = "Successfully purchased 100 STC"
                             vm.showAlert.toggle()
                             vm.updateStreetCred()
                         case .failure(_):

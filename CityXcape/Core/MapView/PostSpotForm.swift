@@ -27,7 +27,7 @@ struct PostSpotForm: View {
                         .font(.title)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 40)
+                        .padding(.vertical, 20)
                     
                     TextField("Secret Spot Name", text: $vm.spotName)
                         .placeholder(when: vm.spotName.isEmpty) {
@@ -41,23 +41,10 @@ struct PostSpotForm: View {
                         .padding(.horizontal, 12)
                     
                      Spacer()
-                        .frame(maxHeight: 30)
+                        .frame(maxHeight: 20)
                     
                     VStack(spacing: 10) {
-                        HStack {
-                            
-                            Image(Icon.history.rawValue)
-                                .resizable()
-                                .renderingMode(.template)
-                                .frame(width: 25, height: 25)
-                                .aspectRatio(contentMode: .fit)
-                                .foregroundColor(.white)
-                            Text("Description")
-                                .fontWeight(.light)
-                                .lineLimit(6)
-        
-                        }
-                        .foregroundColor(.white)
+                   
                         
                         TextField(vm.detailsPlaceHolder, text: $vm.details)
                             .placeholder(when: vm.details.isEmpty) {
@@ -131,7 +118,10 @@ struct PostSpotForm: View {
                                         .frame(maxWidth: .infinity)
                                         .cornerRadius(12)
                                 } else {
-                                    LocationCamera(height: 150, color: .white)
+                                    Image("spot_image")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: UIScreen.screenWidth - 20)
                                 }
                                 
                                 ProgressView()
@@ -150,7 +140,7 @@ struct PostSpotForm: View {
                             .padding(.vertical, 5)
                             .background(Color.white)
                             .accentColor(.black)
-                            .keyboardType(.alphabet)
+                            .keyboardType(.numberPad)
                             .foregroundColor(.black)
                             .frame(width: 50)
                             .placeholder(when: vm.priceString.isEmpty) {
@@ -174,11 +164,7 @@ struct PostSpotForm: View {
                             }
                         }
                         
-                        Toggle("", isOn: $vm.usd)
-                            .toggleStyle(SwitchToggleStyle(tint: .green))
-                            .frame(width: 55)
-                            .foregroundColor(.white)
-                            
+                        
 
                    
                     }

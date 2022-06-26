@@ -35,7 +35,7 @@ struct SpotDetailsView: View {
                     ZStack {
                         
                         ImageSlider(images: spot.imageUrls)
-
+                           
                         
                         DetailsView(spot: spot, showActionSheet: $vm.showActionSheet, type: .SpotDetails)
                             .opacity(detailsTapped ? 1 : 0)
@@ -61,45 +61,32 @@ struct SpotDetailsView: View {
                         //End of Image ZStack
                     }
                     
-                        HStack {
-                            Image("pin_blue")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 30)
-                            Text(spot.spotName)
-                                .font(.title)
-                                .fontWeight(.thin)
-                                .lineLimit(1)
-                            Spacer()
-                         
-                            Text(vm.getDistanceMessage(spot: spot))
-                          
-                        }
-                        .padding(.horizontal, 10)
-                        .padding(.bottom, 5)
-                        .frame(width: UIScreen.screenWidth)
-                        .fullScreenCover(isPresented: $vm.showCheckin) {
-                            CheckinView(spot: spot, vm: vm)
-                        }
                     
+                    HStack {
+                        Image("pin_blue")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 30)
+                        Text(spot.spotName)
+                            .font(.title)
+                            .fontWeight(.thin)
+                            .lineLimit(1)
+                        Spacer()
+                     
+                        Text(vm.getDistanceMessage(spot: spot))
+                      
+                    }
+                    .padding(.horizontal, 10)
+                    .padding(.bottom, 5)
+                    .frame(width: UIScreen.screenWidth)
+                    .fullScreenCover(isPresented: $vm.showCheckin) {
+                        CheckinView(spot: spot, vm: vm)
+                    }
+                
                  
                     
                     HStack(spacing: 10) {
-                        
-                        Button {
-                            //TBD
-                            vm.analytics.viewedDetails()
-                            detailsTapped.toggle()
-                        } label: {
-                            Image("info")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 50)
-                                .padding(.leading, 4)
-                                .animation(.easeOut, value: detailsTapped)
-                                
-                        }
-                            
+
      
                         Button {
                             showUsers.toggle()
@@ -110,7 +97,7 @@ struct SpotDetailsView: View {
                                Image("save")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
-                                    .frame(width: 50)
+                                    .frame(width: 55)
                                 
                             }
 
@@ -121,19 +108,33 @@ struct SpotDetailsView: View {
 
                         
                         Button {
-                            vm.getComments(postId: spot.id)
-                            vm.showComments.toggle()
-                            vm.analytics.viewedComments()
+                            vm.analytics.viewedMission()
+                            showMission.toggle()
+                        
                         } label: {
-                            Image("comment")
+                            Image("route")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(width: 55)
+                                .shadow(color: .cx_green, radius: 20, x: 0, y: 5)
                         }
                         .sheet(isPresented: $vm.showComments) {
                             CommentsView(spot: spot, vm: vm)
                         }
                         
+                        Button {
+                            //TBD
+                            vm.analytics.viewedDetails()
+                            detailsTapped.toggle()
+                        } label: {
+                            Image("info")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 55)
+                                .padding(.leading, 4)
+                                .animation(.easeOut, value: detailsTapped)
+                                
+                        }
                         
                         Button {
                             vm.isOwner ? vm.showBarCode.toggle()
@@ -142,7 +143,7 @@ struct SpotDetailsView: View {
                             Image("Barcode")
                                 .resizable()
                                 .scaledToFit()
-                                .frame(width: 50)
+                                .frame(width: 55)
                         }
                         .sheet(isPresented: $vm.showBarCode) {
                             Image(uiImage: vm.generateBarCode(spot: spot))
@@ -150,49 +151,37 @@ struct SpotDetailsView: View {
                                 .scaledToFit()
                                 .frame(width: 150, height: 150)
                         }
-
-                     
-                    
-                       
-                    }
-                    .padding(.top, 10)
-                    
-                    
-                    HStack {
-                      
-                        Button {
-                            //Load Route Screen
-                            vm.analytics.viewedMission()
-                            showMission.toggle()
-                            
-                        } label: {
-                            Text("Get Stamp")
-                                .foregroundColor(.white)
-                                .fontWeight(.light)
-                                .font(.subheadline)
-                                .frame(width: 160, height: 45)
-                                .overlay(
-                                   Rectangle()
-                                       .stroke(Color.white, lineWidth: 1)
-                                       )
-                                .animation(.easeOut, value: showMission)
-                                
-                        }
                         .fullScreenCover(isPresented: $showMission, onDismiss: {
                             //TBD
                         }, content: {
                             MissionView(spot: spot, vm: mapViewModel, spotModel: vm)
                         })
                         
-                  
 
+                     
+                    
+                       
                     }
-                    .padding(.top, 50)
+                    .padding(.top, 10)
+                    .padding(.bottom, 15)
+                    .fullScreenCover(isPresented: $vm.showCheckin) {
+                        CheckinView(spot: spot, vm: vm)
+                    }
+                
+                    
+                    
+          
                
 
                     
                 
                 
+            }
+            .navigationBarTitle("\(spot.spotName)", displayMode: .inline)
+            .toolbar {
+               ToolbarItem(placement: .principal) {
+                   titleView
+               }
             }
             .foregroundColor(.accent)
             .colorScheme(.dark)
@@ -288,6 +277,30 @@ struct SpotDetailsView: View {
     }
     
   
+    
+}
+
+
+extension SpotDetailsView {
+    
+    private var titleView: some View {
+        
+        HStack {
+                Image("pin_blue")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            
+                Text(spot.spotName)
+                    .font(.title)
+                    .fontWeight(.thin)
+                    .lineLimit(1)
+             
+
+            }
+        .frame(width: UIScreen.screenWidth / 1.5)
+
+    }
+    
     
 }
 

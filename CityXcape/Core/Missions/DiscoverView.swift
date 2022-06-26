@@ -23,145 +23,193 @@ struct DiscoverView: View {
     @Binding var selectedTab: Int
     
     @StateObject var vm: DiscoverViewModel 
-
+   
     
     var body: some View {
-        
-      
-        
-        VStack(spacing: 20) {
-            
-            Ticker(searchText: $searchTerm, handlesearch: {
-                vm.performSearch(searchTerm: searchTerm)
-            })
-            
-            
+ 
+        NavigationView {
+                    
+    
             ScrollView {
+                    
                 if vm.newSecretSpots.isEmpty {
-                    VStack {
-                            Image("404")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 200)
-                            Text("No Secret Spot Found")
-                                .font(.title2)
-                                .fontWeight(.thin)
+                         VStack {
+                               emptyStateIcon
+                               refreshButton
+                         }
+                                 
+                 } else {
+                
+                ForEach(vm.newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})) { spot in
+
+                        ZStack {
+                          
+                            CardView(showAlert: $vm.showAlert, alertMessage: $vm.alertMessage, spot: spot)
+                                .animation(Animation.linear(duration: 0.4))
+
+                            
+                            VStack(alignment: .center) {
+                                LikeAnimationView(color: .cx_green, didLike: $vm.passed, size: 200)
+                                   
+                                    .animation(Animation.linear(duration: 0.5))
+                                
+                                Text(" - \(currentSpot?.price ?? 1) StreetCred")
+                                    .font(.title)
+                                    .fontWeight(.thin)
+                                    .foregroundColor(.red)
+                            }
+                            .opacity(currentSpot == spot && vm.saved ? 1 : 0)
+                                
+                            passAnimation
+                                .opacity(currentSpot == spot && vm.passed ? 1 : 0)
+                                .animation(Animation.linear(duration: 0.5))
+                        }
+                        
+                        HStack {
+                            Button {
+                                //TBD
+                                currentSpot = spot
+                                vm.passed = true
+                                vm.dismissCard(spot: spot)
+                            } label: {
+                                VStack {
+                                    Image(systemName: "hand.thumbsdown")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .foregroundColor(.stamp_red)
+                                        .frame(height: 30)
+
+                                    Text("pass")
+                                        .font(.caption)
+                                        .foregroundColor(.stamp_red)
+                                }
+
+                            }
+                            
+                            Spacer()
                             
                             Button {
-                                vm.refreshSecretSpots()
-                                AnalyticsService.instance.loadedNewSpots()
+                                //TBD
+                                currentSpot = spot
+                                vm.saved = true
+                                vm.saveCardToUserWorld(spot: spot)
                             } label: {
-                                    Text("Refresh")
-                                        .font(.subheadline)
-                                        .fontWeight(.semibold)
-                                        .frame(width: 120, height: 40)
-                                        .background(Color.white)
-                                        .foregroundColor(.cx_blue)
-                                        .cornerRadius(20)
-                        }
-                    }
-                    
-                } else {
-                    
-                    withAnimation(_: .easeOut) {
-                        ForEach(vm.newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})) { spot in
-
-                            ZStack {
-                              
-                                CardView(showAlert: $vm.showAlert, alertMessage: $vm.alertMessage, spot: spot)
-                                    .animation(Animation.linear(duration: 0.4))
-
-                                
-                                VStack(alignment: .center) {
-                                    LikeAnimationView(color: .cx_green, didLike: $vm.passed, size: 200)
-                                       
-                                        .animation(Animation.linear(duration: 0.5))
-                                    Text(" - \(currentSpot?.price ?? 1) StreetCred")
-                                        .font(.title)
-                                        .fontWeight(.thin)
-                                        .foregroundColor(.red)
-                                }
-                                .opacity(currentSpot == spot && vm.saved ? 1 : 0)
+                                VStack {
+                                    Image(systemName: "heart")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .foregroundColor(.cx_green)
+                                        .frame(height: 30)
                                     
-                                Image(systemName: "hand.thumbsdown.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 200)
-                                    .foregroundColor(.stamp_red)
-                                    .opacity(currentSpot == spot && vm.passed ? 1 : 0)
-                                    .animation(Animation.linear(duration: 0.5))
-                            }
-                            
-                            HStack {
-                                Button {
-                                    //TBD
-                                    currentSpot = spot
-                                    vm.passed = true
-                                    vm.dismissCard(spot: spot)
-                                } label: {
-                                    VStack {
-                                        Image(systemName: "hand.thumbsdown")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .foregroundColor(.stamp_red)
-                                            .frame(height: 30)
-
-                                        Text("pass")
-                                            .font(.caption)
-                                            .foregroundColor(.stamp_red)
-                                    }
-
+                                    Text("save")
+                                        .font(.caption)
+                                        .foregroundColor(.cx_green)
                                 }
-                                
-                                Spacer()
-                                
-                                Button {
-                                    //TBD
-                                    currentSpot = spot
-                                    vm.saved = true
-                                    vm.saveCardToUserWorld(spot: spot)
-                                } label: {
-                                    VStack {
-                                        Image(systemName: "heart")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .foregroundColor(.cx_green)
-                                            .frame(height: 30)
-                                        
-                                        Text("save")
-                                            .font(.caption)
-                                            .foregroundColor(.cx_green)
-                                    }
-                                }
-
-
                             }
-                            .padding(.horizontal, 20)
-                            
-                            Divider()
-                                .frame(height: 0.5)
-                                .background(Color.white)
-                                .padding(.bottom, 10)
+
 
                         }
+                        .padding(.horizontal, 20)
+                        
+              
+                        
+                        Divider()
+                            .frame(height: 0.5)
+                            .background(Color.white)
+                            .padding(.bottom, 10)
+
                     }
-                }
+                    
+                             }
+
+                
                
-            
             }
-            .frame(width: UIScreen.screenWidth)
-          
-  
-            
+            .navigationBarItems(trailing: searchButton)
+            .toolbar {
+               ToolbarItem(placement: .principal) {
+                   tabIcon
+               }
+            }
+
             
         }
+        .colorScheme(.dark)
         .foregroundColor(.white)
-        .background(Color.black.edgesIgnoringSafeArea(.all))
         .alert(isPresented: $vm.showAlert) {
             return Alert(title: Text(vm.alertMessage))
         }
+        
     }
+
 }
+
+extension DiscoverView {
+    
+    private var passAnimation: some View {
+        Image(systemName: "hand.thumbsdown.fill")
+            .resizable()
+            .scaledToFit()
+            .frame(height: 200)
+            .foregroundColor(.stamp_red)
+    }
+    
+    private var searchButton: some View {
+        
+        Button {
+            vm.isSearching.toggle()
+        } label: {
+            Image(systemName: "magnifyingglass")
+                .resizable()
+                .scaledToFit()
+        }
+    }
+    
+    private var refreshButton: some View {
+        Button {
+            vm.refreshSecretSpots()
+            AnalyticsService.instance.loadedNewSpots()
+        } label: {
+                Text("Refresh")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .frame(width: 120, height: 40)
+                    .background(Color.white)
+                    .foregroundColor(.cx_blue)
+                    .cornerRadius(20)
+    }
+
+    }
+    
+    private var tabIcon: some View {
+        VStack(spacing: 0) {
+            Image("logo")
+                .resizable()
+                .scaledToFit()
+            .frame(height: 25)
+            Text("Save Spots to Visit")
+                .fontWeight(.thin)
+                .foregroundColor(.white)
+                .font(.caption)
+        }
+    }
+    
+    private var emptyStateIcon: some View {
+        VStack {
+            Image("404")
+                .resizable()
+                .scaledToFit()
+            .frame(height: 200)
+            Text("No Secret Spot Found")
+                .font(.title2)
+                .fontWeight(.thin)
+        }
+       
+    }
+    
+    
+}
+
 
 struct MissionsView_Previews: PreviewProvider {
     @State static var selection: Int = 0

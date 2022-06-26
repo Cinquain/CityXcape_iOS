@@ -10,7 +10,7 @@ import Firebase
 import FirebaseMessaging
 
 
-struct User: Identifiable, Hashable {
+struct User: Identifiable, Hashable, Equatable {
     
     let id: String
     let displayName: String
@@ -27,6 +27,12 @@ struct User: Identifiable, Hashable {
     var verified: Date?
     var membership: Date?
     var world: [String: Double]?
+    
+    
+    static func == (lhs: User, rhs: User) -> Bool {
+        lhs.id == rhs.id
+    }
+    
     
     init(id: String, displayName: String, profileImageUrl: String) {
         self.id = id

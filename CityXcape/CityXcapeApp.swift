@@ -19,7 +19,7 @@ struct CityXcapeApp: App {
     @AppStorage(CurrentUserDefaults.userId) var currentUserID: String?
     @StateObject private var store = Store()
     @State private var showLaunchView: Bool = true
-    
+    let user = User()
     let router = Router.shared
     let locManager = LocationService.instance
     

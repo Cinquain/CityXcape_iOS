@@ -13,12 +13,10 @@ struct MapContainer: View {
     @Environment(\.presentationMode) var presentationMode
     
     @Binding var selectedTab: Int
+    @State var isHunt: Bool = false
     
     @ObservedObject var vm = MapSearchViewModel()
-    @State private var showForm: Bool = false
-    @State private var refresh: Bool = false
     @State var isMission: Bool
-    
     @State var mapItem: MKMapItem = MKMapItem()
     
     var body: some View {
@@ -52,11 +50,9 @@ struct MapContainer: View {
                         ForEach(vm.mapItems, id: \.self) { mapItem in
                             
                             Button(action: {
-
                                 vm.selectedMapItem = mapItem
                                 self.mapItem = mapItem
-                              
-                                showForm.toggle()
+                                isHunt ? vm.showTrailForm.toggle() : vm.showForm.toggle()
                                 
                             }, label: {
                                 
@@ -87,6 +83,22 @@ struct MapContainer: View {
 
                 
                 HStack {
+                    
+//                    Button {
+//                        vm.showActionSheet.toggle()
+//                    } label: {
+//                        Image("trail")
+//                            .resizable()
+//                            .scaledToFit()
+//                            .frame(height: 45)
+//                    }
+//                    .fullScreenCover(isPresented: $vm.showTrailForm) {
+//                        isHunt = false
+//                    } content: {
+//                        PostTrailForm(isHunt: $isHunt, mapItem: mapItem)
+//                    }
+
+
                     Button(action: {
                         vm.searchQuery = ""
                     }, label: {
@@ -111,22 +123,26 @@ struct MapContainer: View {
                     .animation(.easeOut(duration: 0.5))
                     .opacity(vm.mapItems.count >= 1 ? 1 : 0)
                     
-                    
-                    
-                    Button {
-                        AnalyticsService.instance.droppedPin()
-                        vm.dropPin()
-                    } label: {
-                        Image("Post Pin")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 45)
-                    }
+
+                        
+                        Button {
+                            AnalyticsService.instance.droppedPin()
+                            vm.dropPin()
+                        } label: {
+                            Image("Post Pin")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 45)
+                        }
                     .opacity(vm.mapItems.count >= 1 ? 0 : 1)
+                        
+                    
 
                 }
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 15)
 
+                Spacer()
+                    .frame(height: 50)
              
                 Spacer()
                     .frame(height: vm.keyboardHeight)
@@ -135,15 +151,33 @@ struct MapContainer: View {
             
         }
         .edgesIgnoringSafeArea(.all)
-        .sheet(isPresented: $showForm, onDismiss: {
+        .sheet(isPresented: $vm.showForm, onDismiss: {
             withAnimation {
                 self.isMission = false
             }
         }, content: {
             PostSpotForm(selectedTab: $selectedTab, mapItem: mapItem)
 
-        })       
-      
+        })
+        .actionSheet(isPresented: $vm.showActionSheet) {
+            return ActionSheet(title: Text("What type of trail is this?"), message: nil, buttons: [
+                
+            .default(Text("Normal Trail"), action: {
+                vm.showTrailForm.toggle()
+            }),
+            
+            .default(Text("Scavenger Hunt"), action: {
+                isHunt = true
+                vm.alertMessgae = "Start by choosing a starting location"
+                vm.showAlert.toggle()
+            }),
+            
+            .cancel()
+        ])
+        }
+        .alert(isPresented: $vm.showAlert) {
+            return Alert(title: Text(vm.alertMessgae))
+        }
         
 
     }

@@ -132,6 +132,7 @@ struct MissionView: View {
                 .fontWeight(.thin)
                 .foregroundColor(.white)
                 .padding(.bottom, 5)
+                .lineLimit(1)
             
             Spacer()
         }

@@ -34,8 +34,14 @@ struct SignUpView: View {
                     Button(action: {
                         showSignUp.toggle()
                     }, label: {
-                        Text("Login / Signup")
-                            .standardButtonFormatting(textColor: .black, color: .white)
+                        Text("Login or Signup")
+                            .fontWeight(.light)
+                            .font(.subheadline)
+                            .frame(width: 200, height: 45)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 25)
+                                   .stroke(Color.white, lineWidth: 1)
+                                   )
 
                     })
                     .padding(.top, 50)
@@ -52,8 +58,9 @@ struct SignUpView: View {
             Image(Icon.compass.rawValue)
                 .resizable()
                 .renderingMode(.template)
+                .scaledToFit()
                 .foregroundColor(.white)
-                .frame(width: 300, height: 300)
+                .frame(width: 200, height: 200)
                 .opacity(0.07)
         }
         .fullScreenCover(isPresented: $showSignUp, content: {

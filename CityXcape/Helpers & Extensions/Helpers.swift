@@ -92,6 +92,7 @@ struct RankingField {
     static let totalCities = "city_count"
     static let progress = "progress"
     static let ig = "instagram"
+    static let totalTrails = "total_trails"
 }
 
 struct DatabaseReportField {
@@ -112,6 +113,7 @@ struct ServerPath {
     static let rankings = "rankings"
     static let users = "users"
     static let world = "world"
+    static let trail = "trails"
 }
 
 struct CurrentUserDefaults {
@@ -129,6 +131,24 @@ struct CurrentUserDefaults {
     static let world = "world"
 }
 
+struct TrailField {
+    static let id = "id"
+    static let name = "name"
+    static let description = "description"
+    static let imageUrls = "image_urls"
+    static let price = "price"
+    static let ownerId = "owner_id"
+    static let world = "world"
+    static let ownerName = "owner_name"
+    static let ownerImage = "owner_image_url"
+    static let ownerRank = "owner_rank"
+    static let spots = "spots"
+    static let users = "users"
+    static let longitude = "longitude"
+    static let latitude = "latitude"
+    static let startDate = "start_date"
+    static let endDate = "end_date"
+}
 
 struct CheckinField {
     static let comment = "comment"
@@ -226,6 +246,10 @@ enum AnalyticsType: String, Identifiable {
 
 enum PurchaseError: Error {
     case failed
+}
+
+enum UploadError: Error {
+    case failed 
 }
 
 

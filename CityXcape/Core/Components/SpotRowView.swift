@@ -23,10 +23,12 @@ struct SpotRowView: View {
             
             HStack {
                 Text(name)
+                    .lineLimit(1)
                 Spacer()
             }
-            .frame(maxWidth: width / 2)
             .padding(.leading, 20)
+            .frame(maxWidth: width / 2)
+
             
             Spacer()
             
@@ -37,7 +39,7 @@ struct SpotRowView: View {
             .frame(width: width / 4)
             
         }
-        .frame(width: .infinity, height: 80)
+        .frame(height: 80)
         .padding()
     }
     

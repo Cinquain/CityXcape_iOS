@@ -16,14 +16,17 @@ struct HomeView: View {
     @StateObject var discoverVM: DiscoverViewModel = DiscoverViewModel()
     
     init() {
-        UITabBar.appearance().isTranslucent = false
-        UITabBar.appearance().barTintColor = .black
+        let tabBarAppearance = UITabBarAppearance()
+        tabBarAppearance.configureWithOpaqueBackground()
+        tabBarAppearance.backgroundColor = UIColor.black
+        UITabBar.appearance().standardAppearance = tabBarAppearance
     }
     
     var body: some View {
        
         TabView(selection: $selectedTab) {
-    
+            
+            
                 MyWorld(selectedTab: $selectedTab)
                 .tabItem {
                     Image(Icon.tabItemI.rawValue)
@@ -31,6 +34,11 @@ struct HomeView: View {
                     Text(Labels.tab1.rawValue)
                 }
                 .tag(0)
+                .badge(discoverVM.newlySaved)
+                .onAppear {
+                    discoverVM.newlySaved = 0
+                }
+            
             
             DiscoverView(selectedTab: $selectedTab, vm: discoverVM)
                     .tabItem {
@@ -40,8 +48,9 @@ struct HomeView: View {
                     }
                     .tag(1)
                     .badge(discoverVM.newSecretSpots.count)
-                    
             
+    
+     
             MapContainer(selectedTab: $selectedTab, isMission: false)
                 .edgesIgnoringSafeArea(.top)
                 .tabItem {

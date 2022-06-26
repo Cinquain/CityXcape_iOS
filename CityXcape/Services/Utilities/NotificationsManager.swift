@@ -5,24 +5,27 @@
 //  Created by James Allan on 11/2/21.
 //
 
-import Foundation
 import Combine
 import SwiftUI
 import FirebaseMessaging
+import MapKit
 
 
 class NotificationsManager: ObservableObject {
     
     
     static let instance = NotificationsManager()
-    private init() {}
+    
+    private init() {
+        setupLocationlNotifications()
+    }
     
     @Published var hasUserNotification: Bool = false
     @Published var user: User?
     
     @Published var hasSpotNotification: Bool = false
     @Published var spotId: String?
-    
+    let dataManager = CoreDataManager.instance
     
     let manager = UNUserNotificationCenter.current()
     
@@ -64,5 +67,31 @@ class NotificationsManager: ObservableObject {
                 
             }
         }
+    }
+    
+    
+    fileprivate func setupLocationlNotifications() {
+        let allspots = dataManager
+                        .spotEntities.map({SecretSpot(entity: $0)})
+      
+        allspots.forEach { spot in
+            
+            let content = UNMutableNotificationContent()
+            content.title = "\(spot.spotName) is nearby"
+            content.subtitle = "Go inside to get your stamp"
+            content.sound = .default
+            content.badge = 1
+            
+            let coordinate = CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude)
+            let region = CLCircularRegion(center: coordinate, radius: 500, identifier: spot.spotName)
+            region.notifyOnEntry = true
+            region.notifyOnExit = false
+            let trigger = UNLocationNotificationTrigger(region: region, repeats: true)
+            let request = UNNotificationRequest(identifier: spot.spotName, content: content, trigger: trigger)
+            manager.add(request)
+            
+        }
+        print("Location notification scheduled")
+        
     }
 }

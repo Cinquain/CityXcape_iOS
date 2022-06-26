@@ -33,7 +33,7 @@ class ImageManager {
     
     func uploadSecretSpotImage(image: UIImage, postId: String, completion: @escaping (_ url: String?) -> ()) {
         
-        let path = getSpotImagePath(spotId: postId, imageNum: 1)
+        let path = getSpotImagePath(spotId: postId, imageNumb: 1)
         
         uploadImage(path: path, image: image) { (success, downloadUrl) in
             if success {
@@ -42,8 +42,22 @@ class ImageManager {
         }
     }
     
+    func uploadTrailImage(image: UIImage, numb: Int, trailId: String, completion: @escaping (Result<String?,Error>) -> Void) {
+        
+        let path = getTrailImagePath(trailId: trailId, imageNumb: numb)
+        
+        uploadImage(path: path, image: image) { success, imageUrl in
+            if success {
+                completion(.success(imageUrl))
+            } else {
+                completion(.failure(UploadError.failed))
+            }
+        }
+        
+    }
+    
     func deleteSecretSpotImage(postId: String, imageNumb: Int) {
-        let path = getSpotImagePath(spotId: postId, imageNum: imageNumb)
+        let path = getSpotImagePath(spotId: postId, imageNumb: imageNumb)
         path.delete { error in
             if let error = error {
                 print("Error deleting file in buck", error.localizedDescription)
@@ -68,7 +82,7 @@ class ImageManager {
     
     func updateSecretSpotImage(image: UIImage, postId: String, number: Int, completion: @escaping (_ url: String?) -> ()) {
         
-        let path = getSpotImagePath(spotId: postId, imageNum: number)
+        let path = getSpotImagePath(spotId: postId, imageNumb: number)
         
         uploadImage(path: path, image: image) { success, imageUrl in
             if success {
@@ -102,9 +116,15 @@ class ImageManager {
         return storagePath
     }
     
-    fileprivate func getSpotImagePath(spotId: String, imageNum: Int) -> StorageReference {
-        let postPath = "posts/\(spotId)/\(imageNum)"
+    fileprivate func getSpotImagePath(spotId: String, imageNumb: Int) -> StorageReference {
+        let postPath = "posts/\(spotId)/\(imageNumb)"
         let storagePath = REF_STORE.reference(withPath: postPath)
+        return storagePath
+    }
+    
+    fileprivate func getTrailImagePath(trailId: String, imageNumb: Int) -> StorageReference {
+        let trailPath = "trails/\(trailId)/\(imageNumb)"
+        let storagePath = REF_STORE.reference(withPath: trailPath)
         return storagePath
     }
     
