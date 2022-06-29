@@ -125,23 +125,35 @@ extension PassportView {
                } label: {
                     
                     HStack {
-                        Text("Share")
-                            .font(Font.custom("Savoye LET", size: 35))
-                        .foregroundColor(.black)
                         
-                        Image("spread")
+                        Image("text_share")
+                            .renderingMode(.template)
                             .resizable()
                             .scaledToFit()
-                            .frame(width: 20)
-                            .offset(y: -5)
+                            .frame(width: 35)
+                            .foregroundColor(.black)
                         
                     }
                     .padding(.horizontal, 20)
                     .sheet(isPresented: $vm.showShareSheet) {
-                        ShareSheetView(photo: vm.passportImage ?? UIImage())
+                        ShareSheetView(photo: vm.passportImage ?? UIImage(), title: verification.name)
                     }
                     
                 }
+            
+            
+            Button {
+                vm.shareInstaStamp(object: verification)
+            } label: {
+                Image("ig_share")
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 35)
+                    .foregroundColor(.black)
+
+            }
+
             
             Spacer()
         }

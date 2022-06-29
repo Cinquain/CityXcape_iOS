@@ -30,6 +30,7 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     @Published var comment: String = ""
     @Published var commentString: String = ""
     @Published var journeyImage: UIImage?
+    @Published var stampImage: UIImage?
     @Published var showStamp: Bool = false
     @Published var showVerifiers: Bool = false
     @Published var showComments: Bool = false
@@ -66,6 +67,8 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     @Published var rank: String = ""
     @Published var progressString: String = ""
     @Published var progressValue: CGFloat = 0
+    
+    
     
     let analytics = AnalyticsService.instance
     let manager = CoreDataManager.instance
@@ -301,29 +304,27 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     }
     
     func shareStampImage(spot: SecretSpot) {
-        let stampImage = generateStampImage(spot: spot)
-        let activityVC = UIActivityViewController(activityItems: [stampImage], applicationActivities: nil)
-        UIApplication.shared.windows.first?.rootViewController?.presentedViewController?.present(activityVC, animated: true, completion: nil)
+        stampImage = generateStampImage(spot: spot)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            self?.showShareSheet.toggle()
+        }
     }
     
-    func shareInstaStamp(spot: SecretSpot) {
-        guard let instagramUrl = URL(string:"instagram-stories://share?source_application=com.cityportal.CityXcape")
-                                else {return}
-        
+    func shareInstaStamp(spot: SecretSpot) { 
         let image = journeyImage ?? UIImage()
-        
-        let stampImage = StampImage(width: 500, height: 500, image: image, title: spot.spotName, date: Date())
+        let passportImage = StampImage(width: 500, height: 500, image: image, title: spot.spotName, date: Date())
                             .snapshot()
-                            .jpegData(compressionQuality: 1)
+        
+        guard let instagramUrl = URL(string:"instagram://share") else {return}
+        let imageSaver = ImageSaver()
+        imageSaver.writeToPhotoAlbum(image: passportImage)
         
         if UIApplication.shared.canOpenURL(instagramUrl) {
-            let pasteboardItem = ["com.instagram.sharedSticker.backgroundImage": stampImage]
-            let pasteboardOptions = [UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(60 * 5)]
-            UIPasteboard.general.setItems([pasteboardItem], options: pasteboardOptions)
-            UIApplication.shared.open(instagramUrl, options: [:], completionHandler: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                UIApplication.shared.open(instagramUrl, options: [:], completionHandler: nil)
+            }
         } else {
-            alertmessage = "Cannot Find Instagram on Device"
-            showAlert.toggle()
+            print("Cannot Find Instagram on Device")
         }
     }
     

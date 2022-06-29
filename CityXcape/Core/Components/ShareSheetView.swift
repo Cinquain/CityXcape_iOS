@@ -13,9 +13,10 @@ import LinkPresentation
 struct ShareSheetView: UIViewControllerRepresentable {
     
     let photo: UIImage
+    let title: String
     
     func makeUIViewController(context: Context) -> UIActivityViewController {
-        let text = "Checkout my stamp"
+        let text = "Checkout my stamp for \(title)"
         let itemSource = ShareActivityItemSource(shareText: text, shareImage: photo)
         let activityItems: [Any] = [photo, text, itemSource]
         let controller = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)

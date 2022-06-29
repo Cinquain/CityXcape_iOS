@@ -8,63 +8,94 @@
 import SwiftUI
 
 struct StampImage: View {
+    
     let width: CGFloat
     let height: CGFloat
     let image: UIImage
     let title: String
     let date: Date
     
+    let screenWidth = UIScreen.screenWidth
+    
     var body: some View {
         
+            ZStack {
+              
+                imageFrame
+                
+                stamp
+                
+            }
+            .background(Color.white)
+            .frame(width: width, height: height)
+            .clipShape(Rectangle())
+
+
+
+    }
+    
+}
+
+extension StampImage {
+    
+    private var titleBar: some View {
+        HStack {
+            Image("pin_blue")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 30)
+            Text(title)
+                .font(.title2)
+                .fontWeight(.thin)
+        }
+    }
+    private var imageFrame: some View {
         ZStack {
-            VStack {
+            Rectangle()
+                .fill(.white)
+                .frame(width: width, height: height)
+            
+            
                 Image(uiImage: image)
                     .resizable()
-                    .frame(width: width, height: height)
                     .scaledToFit()
-                    .overlay(
-                        ZStack {
-                            LinearGradient(colors: [Color.clear, Color.black], startPoint: .center, endPoint: .bottom)
-                            VStack {
-                                Spacer()
-                                HStack {
-                                    Spacer()
-                                    Image("logo")
-                                        .resizable()
-                                        .scaledToFit()
-                                    .frame(width: 100)
-                                }
-                            }
-                            .background(Color.clear)
-                            .padding(20)
-                        }
-                        .frame(width: width, height: height)
-                        .clipped()
-                    )
-
-            }
-            .clipped()
-            
-            Image("Stamp")
-                .resizable()
-                .frame(width: width / 2, height: width / 2)
-                .scaledToFit()
-                .rotationEffect(Angle(degrees: -30))
-                .overlay(
-                    VStack {
-                        Text(title)
-                        Text(date.formattedDate())
-                            .font(.caption2)
-                    }
-                    .foregroundColor(.stamp_red)
-                    .rotationEffect(Angle(degrees: -60))
-                )
-
-
+                    .frame(width: width - 20, height: height - 20)
+        
         }
-        .frame(width: width, height: height)
-        .clipped().edgesIgnoringSafeArea(.all)
+        .clipped()
     }
+    
+    private var stamp: some View {
+        Image("Stamp")
+          .resizable()
+          .frame(width: width / 2, height: width / 2)
+          .scaledToFit()
+          .rotationEffect(Angle(degrees: -30))
+          .overlay(
+              VStack {
+                  Text(title)
+                  Text(date.formattedDate())
+                      .font(.caption2)
+              }
+              .foregroundColor(.stamp_red)
+              .rotationEffect(Angle(degrees: -60))
+          )
+    }
+    
+    private var logoBrand: some View {
+          
+               HStack {
+                   Spacer()
+                   Image("logo")
+                       .resizable()
+                       .scaledToFit()
+                       .frame(width: 1000)
+                   Spacer()
+           }
+            .frame(width: width - 40)
+        
+    }
+    
 }
 
 struct InstagramView_Previews: PreviewProvider {

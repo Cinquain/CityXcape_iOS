@@ -21,93 +21,29 @@ struct ShareView: View {
             
             VStack {
                 Spacer()
-                    .frame(height: width / 4)
+                    .frame(height: width / 6)
                 
-                
-                Text("Congrats! \n You verified \(spot.spotName)")
-                    .foregroundColor(.white)
-                    .font(.title3)
-                    .fontWeight(.thin)
-                    .multilineTextAlignment(.center)
+                title
                 
                 StampImage(width: width, height: width, image: vm.journeyImage ?? UIImage(), title: spot.spotName, date: Date())
+                    .clipped()
                  
-                
-                Button {
-                        vm.analytics.viewedRanks()
-                        vm.showRanks.toggle()
-                } label: {
-                    VStack {
-                        Text("Your rank is: \(vm.rank)")
-                            .font(.title3)
-                            .fontWeight(.thin)
-                        
-                        BarView(progress: vm.progressValue)
-
-                        Text("\(vm.progressString)")
-                            .font(.caption)
-                            .fontWeight(.thin)
+                VStack(spacing: 0) {
+                    Text("Share")
+                        .font(Font.custom("Savoye LET", size: 35))
+                        .foregroundColor(.white)
+                    HStack {
+                        shareButton
+                        instagramButton
                     }
-                    .foregroundColor(.white)
-                    .padding(.bottom, 10)
-                }
-                .sheet(isPresented: $vm.showRanks) {
-                    Ranks()
-                }
-
-           
-                
-                HStack {
-                    
-                    Button {
-                        vm.analytics.viewedLeaderBoard()
-                        vm.getScoutLeaders()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            vm.showLeaderboard.toggle()
-                        }
-                    } label: {
-                        
-                        HStack(alignment: .center) {
-                            Spacer()
-                            Image("leaderboard")
-                                .resizable()
-                                .renderingMode(.template)
-                                .foregroundColor(.cx_orange)
-                                .scaledToFit()
-                            .frame(height: 30)
-                            
-                            
-                            Text("Leaderboard")
-                                .foregroundColor(.cx_orange)
-                                .font(.title3)
-                                .fontWeight(.thin)
-                            Spacer()
-                        }
-                        
-                   
-                    }
-                    .sheet(isPresented: $vm.showLeaderboard) {
-                        Leaderboard(ranks: vm.rankings)
-                    }
-                    
-                    
-                    Spacer()
                 }
 
                 
                 Spacer()
                 
-                Button {
-                    //
-                    self.presentationMode.wrappedValue.dismiss()
-                } label: {
-                    Image("arrow")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 20)
-                        .opacity(0.5)
-                }
-                .padding()
+                downArrow
+            
+                
             }
             
             //End of ZStack
@@ -116,6 +52,67 @@ struct ShareView: View {
         .edgesIgnoringSafeArea(.all)
     
     }
+}
+
+
+extension ShareView {
+    
+    private var title: some View {
+        Text("Congratulationss! \n You verified \(spot.spotName)")
+                .foregroundColor(.white)
+                .font(.title3)
+                .fontWeight(.thin)
+                .multilineTextAlignment(.center)
+    }
+    
+    private var shareButton: some View {
+        Button {
+            vm.shareStampImage(spot: spot)
+       } label: {
+ 
+           Image("text_share")
+                .renderingMode(.template)
+                .resizable()
+                .scaledToFit()
+                .foregroundColor(.white)
+                .frame(width: 40)
+            
+        }
+       .sheet(isPresented: $vm.showShareSheet) {
+           ShareSheetView(photo: vm.stampImage ?? UIImage(), title: spot.spotName)
+       }
+    }
+    
+    private var instagramButton: some View {
+        Button {
+            //TBD
+            vm.shareInstaStamp(spot: spot)
+        } label: {
+            Image("ig_share")
+                 .renderingMode(.template)
+                 .resizable()
+                 .scaledToFit()
+                 .foregroundColor(.white)
+                 .frame(width: 40)
+        }
+
+    }
+    
+    private var downArrow: some View {
+        Button {
+            //
+            self.presentationMode.wrappedValue.dismiss()
+        } label: {
+            Image("arrow")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 20)
+                .opacity(0.5)
+        }
+        .padding()
+        
+    }
+    
 }
 
 struct ShareView_Previews: PreviewProvider {

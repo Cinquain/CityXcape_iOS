@@ -8,7 +8,7 @@
 import Firebase
 import SwiftUI
 
-class JourneyViewModel: NSObject, ObservableObject {
+class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControllerDelegate {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
 
@@ -101,20 +101,14 @@ class JourneyViewModel: NSObject, ObservableObject {
     
     
     func shareInstaStamp(object: Verification) {
-        guard let instagramUrl = URL(string:"instagram-stories://share") else {return}
-        let stampImage = StampImage(width: 720, height: 1080, image: passportImage ?? UIImage(), title: object.name, date: object.time).snapshot()
+        guard let instagramUrl = URL(string:"instagram://share") else {return}
+        let imageSaver = ImageSaver()
+        imageSaver.writeToPhotoAlbum(image: passportImage ?? UIImage())
         
         if UIApplication.shared.canOpenURL(instagramUrl) {
-            
-            let pasteboardItem = [
-                "com.instagram.sharedSticker.backgroundImage": stampImage
-            ]
-            
-            
-            let pasteboardOptions = [UIPasteboard.OptionsKey.expirationDate: Date().addingTimeInterval(60 * 5)]
-            UIPasteboard.general.setItems([pasteboardItem], options: pasteboardOptions)
-            UIApplication.shared.open(instagramUrl, options: [:], completionHandler: nil)
-            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                UIApplication.shared.open(instagramUrl, options: [:], completionHandler: nil)
+            }
         } else {
             print("Cannot Find Instagram on Device")
         }
