@@ -93,6 +93,7 @@ struct RankingField {
     static let progress = "progress"
     static let ig = "instagram"
     static let totalTrails = "total_trails"
+    static let totalHunts = "total_hunts"
 }
 
 struct DatabaseReportField {
@@ -114,6 +115,9 @@ struct ServerPath {
     static let users = "users"
     static let world = "world"
     static let trail = "trails"
+    static let hunt = "hunts"
+    static let cities = "cities"
+    static let secure = "private"
 }
 
 struct CurrentUserDefaults {
@@ -144,10 +148,13 @@ struct TrailField {
     static let ownerRank = "owner_rank"
     static let spots = "spots"
     static let users = "users"
+    static let address = "address"
+    static let city = "city"
     static let longitude = "longitude"
     static let latitude = "latitude"
     static let startDate = "start_date"
     static let endDate = "end_date"
+    static let dateCreated = "date_created"
 }
 
 struct CheckinField {

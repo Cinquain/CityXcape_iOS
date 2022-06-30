@@ -56,6 +56,20 @@ class ImageManager {
         
     }
     
+    func uploadHuntImage(image: UIImage, num: Int, huntId: String, completion: @escaping (Result<String?, Error>) -> Void) {
+        
+        let path = getHuntImagePath(huntId: huntId, imageNumb: num)
+        
+        uploadImage(path: path, image: image) { success, imageUrl in
+            if success {
+                completion(.success(imageUrl))
+            } else {
+                completion(.failure(UploadError.failed))
+            }
+        }
+        
+    }
+    
     func deleteSecretSpotImage(postId: String, imageNumb: Int) {
         let path = getSpotImagePath(spotId: postId, imageNumb: imageNumb)
         path.delete { error in
@@ -125,6 +139,12 @@ class ImageManager {
     fileprivate func getTrailImagePath(trailId: String, imageNumb: Int) -> StorageReference {
         let trailPath = "trails/\(trailId)/\(imageNumb)"
         let storagePath = REF_STORE.reference(withPath: trailPath)
+        return storagePath
+    }
+    
+    fileprivate func getHuntImagePath(huntId: String, imageNumb: Int) -> StorageReference {
+        let huntPath = "hunts/\(huntId)/\(imageNumb)"
+        let storagePath = REF_STORE.reference(withPath: huntPath)
         return storagePath
     }
     

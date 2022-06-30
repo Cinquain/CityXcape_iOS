@@ -18,6 +18,21 @@
       "productID" : "com.cityportal.CityXcape.streetcred",
       "referenceName" : "StreetCred",
       "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "61F23438",
+      "localizations" : [
+        {
+          "description" : "A series of spots to find",
+          "displayName" : "Trail",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.cityportal.CityXcape.trail",
+      "referenceName" : "Trail",
+      "type" : "NonConsumable"
     }
   ],
   "settings" : {

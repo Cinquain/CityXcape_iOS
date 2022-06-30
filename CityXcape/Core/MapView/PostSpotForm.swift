@@ -21,92 +21,30 @@ struct PostSpotForm: View {
     
     var body: some View {
         
-            ScrollView {
-                VStack {
-                    Text("Post Spot")
-                        .font(.title)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 20)
-                    
+            NavigationView {
+                Form {
                     TextField("Secret Spot Name", text: $vm.spotName)
-                        .placeholder(when: vm.spotName.isEmpty) {
-                            Text("Secret Spot Name").foregroundColor(.gray)
-                    }
-                        .padding()
-                        .background(Color.white)
-                        .accentColor(.black)
-                        .foregroundColor(.black)
-                        .cornerRadius(4)
-                        .padding(.horizontal, 12)
+                        .frame(height: 40)
+                    TextField(vm.detailsPlaceHolder, text: $vm.details)
+                        .frame(height: 40)
                     
-                     Spacer()
-                        .frame(maxHeight: 20)
-                    
-                    VStack(spacing: 10) {
-                   
+                    Section("Community") {
+                        Toggle(vm.isPublic ? "Public" : "Private", isOn: $vm.isPublic)
                         
-                        TextField(vm.detailsPlaceHolder, text: $vm.details)
-                            .placeholder(when: vm.details.isEmpty) {
-                                Text(vm.detailsPlaceHolder).foregroundColor(.gray)
-                        }
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 70)
-                            .background(Color.white)
-                            .foregroundColor(.black)
-                            .multilineTextAlignment(.leading)
-                            .cornerRadius(4)
-                            .keyboardType(.alphabet)
-                    }
-                    .padding()
-                    
-                    VStack {
-                        Text("What community is this for?")
-                            .foregroundColor(.white)
-                            .fontWeight(.thin)
-                        HStack {
-                            Button(action: {
-                                vm.isPublic.toggle()
-                            }, label: {
-                                if vm.isPublic {
-                                    Image("world")
-                                        .resizable()
-                                        .renderingMode(.template)
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 40, height: 40)
-                                        .opacity(0.9)
-                                } else {
-                                    Image(systemName: "lock.fill")
-                                        .font(.largeTitle)
-                                        .foregroundColor(.yellow)
-                                }
-                             
+                        if vm.isPublic {
+                            TextField(vm.worldPlaceHolder, text: $vm.world, onCommit:  {
+                                vm.converToHashTag()
                             })
-                            
-                            if vm.isPublic {
-                                TextField(vm.worldPlaceHolder, text: $vm.world, onCommit:  {
-                                    vm.converToHashTag()
-                                })
-                                .placeholder(when: vm.world.isEmpty) {
-                                    Text(vm.worldPlaceHolder).foregroundColor(.gray)
-                            }
-                                .padding()
-                                .background(Color.white)
-                                .accentColor(.black)
-                                .foregroundColor(.black)
-                                .frame(maxWidth: UIScreen.main.bounds.width / 1.5)
-                                
-                            } else {
-                                Text(vm.privatePlaceHolder)
-                                    .foregroundColor(.white)
-                                   
-                            }
-                            
+                           
+                        } else {
+                            Text(vm.privatePlaceHolder)
+                                .foregroundColor(.white)
+                               
                         }
-                        .padding(.bottom, 10)
+                              
                     }
-                    
-                            
+    
+                    Section("Upload Image") {
                         Button(action: {
                             vm.showActionSheet.toggle()
                         }, label: {
@@ -121,7 +59,7 @@ struct PostSpotForm: View {
                                     Image("spot_image")
                                         .resizable()
                                         .scaledToFit()
-                                        .frame(width: UIScreen.screenWidth - 20)
+                                        
                                 }
                                 
                                 ProgressView()
@@ -129,85 +67,26 @@ struct PostSpotForm: View {
                                     .scaleEffect(3)
                             }
                             
-                    })
+                        })
+                        .listRowInsets(EdgeInsets())
+
+                    }
                     
+                    Section(header: Text("Price: \(vm.price) StreetCred" )) {
+                        Stepper("Number of StreetCred", value: $vm.price, in: 1...100)
+
+                    }
                             
-                        
-                    HStack {
-                        Text("Price:")
-                            .foregroundColor( vm.usd ? .green : .white )
-                        TextField(" 1", text: $vm.priceString)
-                            .padding(.vertical, 5)
-                            .background(Color.white)
-                            .accentColor(.black)
-                            .keyboardType(.numberPad)
-                            .foregroundColor(.black)
-                            .frame(width: 50)
-                            .placeholder(when: vm.priceString.isEmpty) {
-                                Text(vm.pricePlaceHolder).foregroundColor(.gray)
-                        }
-                        
-                        Button {
-                            vm.alertMessage = vm.usd ? "Set the dollar amount required to save this spot" : "Set the streetcred amount required to save this spot"
-                            vm.showAlert = true
-                        } label: {
-                            VStack(spacing: 0) {
-                                Text(vm.usd ? "USD" : "STC")
-                                    .foregroundColor( vm.usd ? .green : .white )
-                                    .font(.subheadline)
-                                
-                                Image(systemName:"info.circle")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .foregroundColor( vm.usd ? .green : .white )
-                                    .frame(width: 10)
-                            }
-                        }
-                        
-                        
-
-                   
+                    locationView
+                         
+                    Section(header: Text("Finish")) {
+                            finishButton
                     }
                     
-                    HStack {
-                        Image(Icon.pin.rawValue)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 25, height: 25)
-                        
-                        Text(mapItem.getAddress())
-                            .multilineTextAlignment(.center)
-                            .lineLimit(3)
-                    }
-                    .foregroundColor(.white)
-                    .padding()
-                
-                        
-                            Button(action: {
-                                vm.isReady(mapItem: mapItem)
-                            }, label: {
-                                HStack {
-                                    Image(Icon.pin.rawValue)
-                                        .resizable()
-                                        .renderingMode(.template)
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(width: 30, height: 30)
-                                    Text("Create Spot")
-                                        .font(.headline)
-                                }
-                                    .padding()
-                                    .foregroundColor(.blue)
-                                    .background(Color.white)
-                                    .cornerRadius(4)
-                                    .padding()
 
-                            })
-                            .animation(.easeOut(duration: 0.5))
-                            .disabled(vm.buttonDisabled)
-
-                    
-            
                 }
+                .navigationBarTitle("Post Spot", displayMode: .inline)
+                .navigationBarItems(trailing: closeButton)
                 .sheet(isPresented: $vm.showPicker, content: {
                     ImagePicker(imageSelected: $vm.selectedImage, sourceType: $vm.sourceType)
                         .colorScheme(.dark)
@@ -230,29 +109,87 @@ struct PostSpotForm: View {
                 .popover(isPresented: $vm.presentPopover, content: {
                     Text(vm.worldDefinition)
                 })
-                .actionSheet(isPresented: $vm.showActionSheet) {
-                    ActionSheet(title: Text("Source Options"), message: nil, buttons: [
-                        .default(Text("Camera"), action: {
-                            vm.sourceType = .camera
-                            vm.showPicker.toggle()
-                        }),
-                        .default(Text("Photo Library"), action: {
-                            vm.sourceType = .photoLibrary
-                            vm.showPicker.toggle()
-                        })
-                    ])
-                    
-                }
+              
                         
             }
-            .background(Color.black.edgesIgnoringSafeArea(.all))
+            .colorScheme(.dark)
+            .actionSheet(isPresented: $vm.showActionSheet) {
+                ActionSheet(title: Text("Source Options"), message: nil, buttons: [
+                    .default(Text("Camera"), action: {
+                        vm.sourceType = .camera
+                        vm.showPicker.toggle()
+                    }),
+                    .default(Text("Photo Library"), action: {
+                        vm.sourceType = .photoLibrary
+                        vm.showPicker.toggle()
+                    })
+                ])
+                
+            }
 
 
-    
+    //End of Body
     }
     
     
     
+    
+}
+
+extension PostSpotForm {
+    
+    private var locationView: some View {
+        HStack {
+            Spacer()
+             Image(systemName: "location.fill")
+                 .resizable()
+                 .scaledToFit()
+                 .frame(height: 20)
+             
+             Text(mapItem.getAddress())
+                 .multilineTextAlignment(.center)
+                 .lineLimit(1)
+            Spacer()
+         }
+         .foregroundColor(.white)
+    }
+    
+    private var finishButton: some View {
+        Button(action: {
+            vm.isReady(mapItem: mapItem)
+        }, label: {
+                
+            HStack {
+                Spacer()
+                Image(Icon.pin.rawValue)
+                    .renderingMode(.template)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 25, height: 25)
+                Text("Create Spot")
+                    .font(.headline)
+                Spacer()
+            }
+            .foregroundColor(.cx_blue)
+
+
+        })
+        .animation(.easeOut(duration: 0.5))
+        .disabled(vm.buttonDisabled)
+    }
+    
+    
+    private var closeButton: some View {
+        Button(action: {
+            presentationMode.wrappedValue.dismiss()
+        }, label: {
+            Image(systemName: "xmark.seal")
+                .resizable()
+                .scaledToFit()
+                .foregroundColor(.white)
+                .frame(height: 25)
+        })
+    }
     
 }
 

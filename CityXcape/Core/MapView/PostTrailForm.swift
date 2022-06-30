@@ -167,7 +167,7 @@ extension PostTrailForm {
     private var publishButton: some View {
         Button {
             //Post to DB
-            vm.postTrailtoDb(location: mapItem)
+            vm.postTrailtoDb(location: mapItem, isHunt: isHunt)
         } label: {
             HStack {
                 Spacer()

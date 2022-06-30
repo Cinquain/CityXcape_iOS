@@ -20,12 +20,11 @@ class PostViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     
     
-    var worldPlaceHolder = "i.e: #Artists #Skaters #Urbex"
+    var worldPlaceHolder = "What community? i.e: #Artists #Urbex"
     var privatePlaceHolder = "Secret Spot is Private"
     var worldDefinition = "Different World Different Spots"
-    var detailsPlaceHolder = "  Describe why this spot is special"
-    var pricePlaceHolder = " 1"
-    var price: Int = 1
+    var detailsPlaceHolder = "Describe why this spot is special"
+    var pricePlaceHolder = "1"
     let manager = CoreDataManager.instance
     let analytics = AnalyticsService.instance
     
@@ -36,6 +35,7 @@ class PostViewModel: NSObject, ObservableObject {
     @Published var refresh: Bool = false
     @Published var priceString: String = ""
     @Published var isLoading: Bool = false
+    @Published var price: Int = 1
 
     
     @Published var showPicker: Bool = false

@@ -14,7 +14,7 @@ struct SignInWithEmailView: View {
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
     @State private var isLogin: Bool = false
-  
+    @State private var disableInteraction: Bool = false
     var body: some View {
         
         VStack {
@@ -75,19 +75,32 @@ extension SignInWithEmailView {
           } label: {
               VStack(spacing: 0) {
                   if let image = vm.userImage {
-                      Image(uiImage: image)
-                          .resizable()
-                          .aspectRatio(contentMode: .fit)
-                          .frame(width: 130)
-                          .clipShape(Circle())
+                      ZStack {
+                          Image(uiImage: image)
+                              .resizable()
+                              .aspectRatio(contentMode: .fit)
+                              .frame(width: 130)
+                              .clipShape(Circle())
+                          loadingCircle
+                      }
                   } else {
-                      Image("profile")
-                          .resizable()
-                          .aspectRatio( contentMode: .fit)
-                          .frame(width: 150)
+                      ZStack {
+                          Image("profile")
+                              .resizable()
+                              .aspectRatio( contentMode: .fit)
+                              .frame(width: 150)
+                          loadingCircle
+                      }
                   }
               }
           }
+    }
+    
+    private var loadingCircle: some View {
+        ProgressView()
+            .frame(width: 80, height: 80)
+            .scaleEffect(3)
+            .opacity(disableInteraction ? 1 : 0)
     }
     
     private var finishButton: some View {
@@ -95,21 +108,25 @@ extension SignInWithEmailView {
            Button {
                
                if isLogin {
+                   disableInteraction = true
                    vm.login { success in
                        if success {
                            self.presentationMode.wrappedValue.dismiss()
                        } else {
                            alertMessage = vm.message
                            showAlert.toggle()
+                           disableInteraction = false
                        }
                    }
                } else {
+                   disableInteraction = true
                    vm.createNewAccount { success in
                        if success {
                            self.presentationMode.wrappedValue.dismiss()
                        } else {
                            alertMessage = vm.message
                            showAlert.toggle()
+                           disableInteraction = false
                        }
                    }
                }
@@ -128,6 +145,7 @@ extension SignInWithEmailView {
            
               
            }
+           .disabled(disableInteraction)
     }
     
 }

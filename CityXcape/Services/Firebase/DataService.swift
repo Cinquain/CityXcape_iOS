@@ -31,10 +31,10 @@ class DataService {
     private var REF_USERS = DB_BASE.collection("users")
     private var REF_REPORTS = DB_BASE.collection("reports")
     private var REF_WORLD = DB_BASE.collection(ServerPath.world)
-    private var REF_FOLLOWERS = DB_BASE.collection("followers")
+    private var REF_FOLLOWERS = DB_BASE.collection(ServerPath.followers)
     private var REF_Rankings = DB_BASE.collection("rankings")
     private var REF_TRAILS = DB_BASE.collection(ServerPath.trail)
-    
+    private var REF_HUNTS = DB_BASE.collection(ServerPath.hunt)
     //MARK: CREATE FUNCTIONS
     
     func uploadSecretSpot(spotName: String, description: String, image: UIImage, price: Int, world: String, mapItem: MKMapItem, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
@@ -199,7 +199,7 @@ class DataService {
         let users = [user]
         let document = REF_TRAILS.document()
         let trailId = document.documentID
-        let userWorldRef = REF_TRAILS.document("private").collection(user.id).document(trailId)
+        let userWorldRef = REF_TRAILS.document(ServerPath.secure).collection(user.id).document(trailId)
 
         ImageManager.instance.uploadTrailImage(image: image, numb: 1, trailId: trailId) { result in
             switch result {
@@ -209,6 +209,7 @@ class DataService {
                     TrailField.name: name,
                     TrailField.description: details,
                     TrailField.imageUrls: [imageUrl],
+                    TrailField.dateCreated : FieldValue.serverTimestamp(),
                     TrailField.ownerId: user.id,
                     TrailField.ownerName: user.displayName,
                     TrailField.ownerImage: user.profileImageUrl,
@@ -231,13 +232,14 @@ class DataService {
                     userWorldRef.setData(savedData)
                     
                     //Increment user's wallet and world
-                    let increment: Int64 = 2
+                    let increment: Int64 = 3
                     let userData : [String: Any] = [
                         UserField.world : [world: FieldValue.increment(increment)],
                         UserField.streetCred : FieldValue.increment(increment)
                     ]
+                    
                     let rankData: [String: Any] = [
-                        RankingField.totalTrails: FieldValue.increment(increment)
+                        RankingField.totalTrails: FieldValue.increment(Int64(1))
                     ]
                     
                     //Save to users profile and rank
@@ -249,6 +251,77 @@ class DataService {
             }
         }
     }
+    
+    func createHunt(name: String, details: String, image: UIImage, startDate: Date, endDate: Date, location: MKMapItem, world: String, user: User, price: Int, spots: [SecretSpot]) {
+        
+        let users = [user]
+        let address = location.getAddress()
+        let longitude = location.placemark.coordinate.longitude
+        let latitude = location.placemark.coordinate.latitude
+        let city = location.getCity()
+        
+        let document = REF_HUNTS.document()
+        let huntId = document.documentID
+        let userWorldRef = REF_HUNTS.document(ServerPath.secure).collection(user.id).document(huntId)
+
+        ImageManager.instance.uploadHuntImage(image: image, num: 1, huntId: huntId) { result in
+            switch result {
+            case .success(let imageUrl):
+                let data: [String: Any] = [
+                    TrailField.id: huntId,
+                    TrailField.name: name,
+                    TrailField.description: details,
+                    TrailField.imageUrls: [imageUrl],
+                    TrailField.address: address,
+                    TrailField.longitude : longitude,
+                    TrailField.latitude : latitude,
+                    TrailField.city : city,
+                    TrailField.startDate: startDate,
+                    TrailField.endDate : endDate,
+                    TrailField.dateCreated : FieldValue.serverTimestamp(),
+                    TrailField.ownerId: user.id,
+                    TrailField.ownerName: user.displayName,
+                    TrailField.ownerImage: user.profileImageUrl,
+                    TrailField.ownerRank: user.rank ?? "tourist",
+                    TrailField.world: world,
+                    TrailField.price: price,
+                    TrailField.spots : spots.map({$0.id}),
+                    TrailField.users: users.map({$0.id})
+                ]
+                
+                document.setData(data) { error in
+                    
+                    if let error = error {
+                        print("Error uploading trail to database", error.localizedDescription)
+                    }
+                    
+                    print("Successfully saved trail to database")
+                    
+                    //Save trail on User branch
+                    let savedData: [String: Any] =
+                        ["savedOn": FieldValue.serverTimestamp()]
+                    userWorldRef.setData(savedData)
+                    
+                    //Increment user's wallet and world
+                    let increment: Int64 = 3
+                    let userData : [String: Any] = [
+                        UserField.world : [world: FieldValue.increment(increment)],
+                        UserField.streetCred : FieldValue.increment(increment)
+                    ]
+                    let rankData: [String: Any] = [
+                        RankingField.totalHunts: FieldValue.increment(Int64(1))
+                    ]
+                    
+                    //Save to users profile and rank
+                    AuthService.instance.updateUserField(uid: user.id, data: userData)
+                    self.REF_Rankings.document(user.id).updateData(rankData)
+                }
+            case .failure(let error):
+                print("There was error uploading image", error.localizedDescription)
+            }
+        }
+    }
+    
     
     
     func postComment(postId: String, uid: String, username: String, bio: String, imageUrl: String, content: String, completion: @escaping (_ success: Bool, _ commentId: String?) -> ()) {

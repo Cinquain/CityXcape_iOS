@@ -90,14 +90,19 @@ class PostTrailViewModel: NSObject, ObservableObject {
         }
     }
     
-    func postTrailtoDb(location: MKMapItem) {
+    func postTrailtoDb(location: MKMapItem, isHunt: Bool) {
         let user = User()
         let price = Int(priceString) ?? 10
         let image = selectedImage ?? UIImage()
-        
-        
-        DataService.instance.createTrail(name: trailName, details: trailDetails, image: image, world: world, user: user, price: price, spots: selectedSpots)
-       
+        if isHunt {
+            DataService.instance.createHunt(name: trailName, details: trailDetails, image: image, startDate: startDate, endDate: endDate, location: location, world: world, user: user, price: price, spots: selectedSpots)
+            AnalyticsService.instance.createdTrail()
+        } else {
+            DataService.instance.createTrail(name: trailName, details: trailDetails, image: image, world: world, user: user, price: price, spots: selectedSpots)
+            AnalyticsService.instance.createdHunt()
+        }
     }
+    
+    
     
 }

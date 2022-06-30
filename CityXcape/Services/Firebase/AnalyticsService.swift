@@ -170,5 +170,12 @@ class AnalyticsService {
         Analytics.logEvent("purchased_streetcred", parameters: nil)
     }
   
+    func createdTrail() {
+        Analytics.logEvent("created_trail", parameters: nil)
+    }
+    
+    func createdHunt() {
+        Analytics.logEvent("created_hunt", parameters: nil)
+    }
     
 }

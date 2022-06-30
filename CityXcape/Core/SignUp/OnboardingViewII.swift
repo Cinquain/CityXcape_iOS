@@ -201,7 +201,7 @@ extension OnboardingViewII {
             }
             .foregroundColor(.blue)
         })
-      
+        .disabled(disableInteraction)
         
     }
     
