@@ -20,6 +20,27 @@ struct Comment: Identifiable, Hashable {
     let content: String
     let dateCreated: Date
     
+    
+    init(id: String, user: User, comment: String) {
+        self.id = id
+        self.content = comment
+        self.dateCreated = Date()
+        self.uid = user.id
+        self.username = user.displayName
+        self.imageUrl = user.profileImageUrl
+        self.bio = user.bio ?? ""
+    }
+    
+    init(id: String, uid: String, username: String, imageUrl: String, bio: String, content: String, dateCreated: Date) {
+        self.id = id
+        self.uid = uid
+        self.username = username
+        self.imageUrl = imageUrl
+        self.bio = bio
+        self.content = content
+        self.dateCreated = dateCreated
+    }
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

@@ -13,7 +13,7 @@ pod 'Firebase/Firestore'
 pod 'FirebaseFirestoreSwift'
 pod 'Firebase/Storage'
 pod 'Firebase/Messaging'
-
+pod 'GeoFire', '~> 4.0'
 pod 'GoogleSignIn'
 pod 'GooglePlaces'
 pod 'Charts'

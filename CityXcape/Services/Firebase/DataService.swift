@@ -11,7 +11,7 @@ import FirebaseFirestore
 import CoreLocation
 import MapKit
 import FirebaseMessaging
-
+import GeoFire
 
 class DataService {
     
@@ -35,6 +35,7 @@ class DataService {
     private var REF_Rankings = DB_BASE.collection("rankings")
     private var REF_TRAILS = DB_BASE.collection(ServerPath.trail)
     private var REF_HUNTS = DB_BASE.collection(ServerPath.hunt)
+    private var REF_CITY = DB_BASE.collection(ServerPath.cities)
     //MARK: CREATE FUNCTIONS
     
     func uploadSecretSpot(spotName: String, description: String, image: UIImage, price: Int, world: String, mapItem: MKMapItem, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
@@ -45,16 +46,16 @@ class DataService {
         let longitude = mapItem.placemark.coordinate.longitude
         let latitude = mapItem.placemark.coordinate.latitude
         var spotCity = mapItem.getCity()
-        
+        let zipCode = mapItem.getPostCode()
+        let location = CLLocationCoordinate2D(latitude: mapItem.placemark.coordinate.latitude,
+                                              longitude: mapItem.placemark.coordinate.longitude)
         if spotCity == "" {
-            let location = CLLocationCoordinate2D(latitude: mapItem.placemark.coordinate.latitude, longitude: mapItem.placemark.coordinate.longitude)
             location.fetchCityAndCountry { city, country, error in
                 spotCity = city ?? ""
             }
         }
         
-        let zipCode = mapItem.getPostCode()
-        
+        let geohash = GFUtils.geoHash(forLocation: location)
         
         guard let uid = userId,
               let ownerImageUrl = profileUrl,
@@ -65,11 +66,11 @@ class DataService {
         }
         let instagram = social ?? ""
         
+        let cityRef = REF_CITY.document(spotCity).collection("spots")
         let userWorldRef = REF_WORLD.document("private").collection(uid).document(spotId)
         ImageManager.instance.uploadSecretSpotImage(image: image, postId: spotId) { (urlString) in
             
             if let downloadUrl = urlString {
-                
                 
                 let spotData: [String: Any] = [
                     SecretSpotField.spotId: spotId,
@@ -77,6 +78,7 @@ class DataService {
                     SecretSpotField.description: description,
                     SecretSpotField.spotImageUrl: downloadUrl,
                     SecretSpotField.address: address,
+                    SecretSpotField.geohash: geohash,
                     SecretSpotField.latitude: latitude,
                     SecretSpotField.longitude: longitude,
                     SecretSpotField.ownerId: uid,
@@ -105,10 +107,12 @@ class DataService {
                     } else {
                         
                     print("Successfully saved secret spots to public world")
+                    //Save to respective city
+                    cityRef.document(spotId).setData(spotData)
+
                     let savedData: [String: Any] =
                         ["savedOn": FieldValue.serverTimestamp()]
                     userWorldRef.setData(savedData)
-                    
                     //Increment User StreetCred & world dictionary
                     let increment: Int64 = 1
                     let userData : [String: Any] = [
@@ -361,6 +365,52 @@ class DataService {
         
     }
     
+    func postStampComment(spotId: String, content: String, verifierId: String, user: User, completion: @escaping (Result<String?, UploadError>) -> Void) {
+        let reference = REF_WORLD.document("verified").collection(verifierId).document(spotId).collection("comments").document()
+        let commentId = reference.documentID
+        
+        let data: [String: Any] = [
+            CommentField.id : commentId,
+            CommentField.uid : user.id,
+            CommentField.username : user.displayName,
+            CommentField.bio : user.bio,
+            CommentField.imageUrl : user.profileImageUrl,
+            CommentField.content : content,
+            CommentField.dateCreated : FieldValue.serverTimestamp()
+        ]
+        
+       
+        
+        reference.setData(data) { [weak self] error in
+            if let error = error {
+                completion(.failure(.failed))
+            } else {
+                let increment: Int64 = 1
+                let checkinData: [String: Any] = [
+                    CheckinField.commentCount: FieldValue.increment(increment),
+                ]
+                self?.REF_WORLD.document("verified").collection(verifierId).document(spotId).updateData(checkinData)
+                AnalyticsService.instance.postedComment()
+                completion(.success(commentId))
+                return
+            }
+           
+        }
+
+    }
+    
+    func downloadStampComments(verificationId: String, uid: String, completion: @escaping (_ comments: [Comment]) -> ()) {
+        
+        REF_WORLD.document("verified").collection(uid).document(verificationId).collection("comments").order(by: CommentField.dateCreated, descending: false).getDocuments { querysnapshot, error in
+            guard let snapshot = querysnapshot else {return}
+            DispatchQueue.main.async {
+                completion(self.getCommentsFromSnapshot(snapshot: snapshot))
+            }
+        }
+        
+    }
+    
+
 
     
     

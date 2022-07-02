@@ -14,6 +14,8 @@
 		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
 		2106A9CE2848EA05000BCD10 /* PlugLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106A9CD2848EA05000BCD10 /* PlugLight.swift */; };
 		2106A9D02848F585000BCD10 /* Beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2106A9CF2848F585000BCD10 /* Beep.mp3 */; };
+		2110D052286F2151003B71DA /* PublicStampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D051286F2151003B71DA /* PublicStampView.swift */; };
+		2110D054286F4141003B71DA /* PostCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D053286F4141003B71DA /* PostCommentView.swift */; };
 		2117A7E5282573A20001C76C /* StampImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2117A7E4282573A20001C76C /* StampImage.swift */; };
 		211EC5DF27C65EB800F0B0A8 /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211EC5DE27C65EB800F0B0A8 /* MissionView.swift */; };
 		211F664427D247800035DB83 /* StampCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211F664327D247800035DB83 /* StampCollectionView.swift */; };
@@ -148,6 +150,8 @@
 		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
 		2106A9CD2848EA05000BCD10 /* PlugLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlugLight.swift; sourceTree = "<group>"; };
 		2106A9CF2848F585000BCD10 /* Beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Beep.mp3; sourceTree = "<group>"; };
+		2110D051286F2151003B71DA /* PublicStampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStampView.swift; sourceTree = "<group>"; };
+		2110D053286F4141003B71DA /* PostCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentView.swift; sourceTree = "<group>"; };
 		2117A7E4282573A20001C76C /* StampImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampImage.swift; sourceTree = "<group>"; };
 		211EC5DE27C65EB800F0B0A8 /* MissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
 		211F664327D247800035DB83 /* StampCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampCollectionView.swift; sourceTree = "<group>"; };
@@ -482,6 +486,8 @@
 				2106A9CD2848EA05000BCD10 /* PlugLight.swift */,
 				21A01F35285E131B00FAD74C /* SpotListView.swift */,
 				2168555A2860B2E400E445EB /* SpotSelectionList.swift */,
+				2110D051286F2151003B71DA /* PublicStampView.swift */,
+				2110D053286F4141003B71DA /* PostCommentView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -793,6 +799,7 @@
 				214A4A3B278D340300B5950A /* User.swift in Sources */,
 				21E8F3EE2826ADC000AFFCAE /* ShareView.swift in Sources */,
 				218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */,
+				2110D052286F2151003B71DA /* PublicStampView.swift in Sources */,
 				211EC5DF27C65EB800F0B0A8 /* MissionView.swift in Sources */,
 				212057A027DE1C2E00602EE8 /* SoundManager.swift in Sources */,
 				21785D9426D536B30049CE2D /* SettingsLabelView.swift in Sources */,
@@ -879,6 +886,7 @@
 				21A4697927C12417009F337D /* StampView.swift in Sources */,
 				21C85939271122C9008224E5 /* CardView.swift in Sources */,
 				21EA999A27D1006D00A13C6C /* JourneyViewModel.swift in Sources */,
+				2110D054286F4141003B71DA /* PostCommentView.swift in Sources */,
 				217657D327FC642C0077B0A0 /* UserDiscoveryView.swift in Sources */,
 				218115ED2731860700026AAD /* PublicStreetPass.swift in Sources */,
 				21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */,

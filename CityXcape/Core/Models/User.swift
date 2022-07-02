@@ -69,6 +69,12 @@ struct User: Identifiable, Hashable, Equatable {
         self.bio = comment.bio
     }
     
+    init(verification: Verification) {
+        self.id = verification.verifierId
+        self.displayName = verification.verifierName
+        self.profileImageUrl  = verification.verifierImage
+    }
+    
     init(userInfo: [AnyHashable: Any]) {
         self.id = userInfo["userid"] as? String ?? ""
         self.profileImageUrl = userInfo["profileUrl"] as? String ?? ""

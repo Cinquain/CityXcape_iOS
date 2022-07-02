@@ -54,6 +54,7 @@ struct SecretSpotField {
     static let zipcode = "zip_code"
     static let verified = "verified"
     static let world = "world"
+    static let geohash = "geohash"
     static let isPublic = "isPublic"
     static let spotImageUrls = "spotImageUrls"
     static let likeCount = "like_count" //Int
@@ -171,6 +172,7 @@ struct CheckinField {
     static let longitude = "longitude"
     static let country =  "country"
     static let timestamp = "time"
+    static let commentCount = "comment_count"
 }
 
 enum Icon: String {
