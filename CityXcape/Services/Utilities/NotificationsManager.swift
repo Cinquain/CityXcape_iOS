@@ -15,19 +15,24 @@ class NotificationsManager: ObservableObject {
     
     
     static let instance = NotificationsManager()
+    @Published var showPublicPass: Bool = false
     
-    private init() {
-        setupLocationlNotifications()
-    }
-    
+
     @Published var hasUserNotification: Bool = false
     @Published var user: User?
     
     @Published var hasSpotNotification: Bool = false
     @Published var spotId: String?
+    @Published var stamp: Verification?
+    
     let dataManager = CoreDataManager.instance
     
     let manager = UNUserNotificationCenter.current()
+    
+    private init() {
+        setupLocationlNotifications()
+    }
+    
     
     func checkAuthorizationStatus(completion: @escaping (_ fcmToken: String?) -> ()) {
         

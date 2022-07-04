@@ -47,6 +47,29 @@ struct Verification: Identifiable, Hashable {
         self.commentCount = data[CheckinField.commentCount] as? Int? ?? 0
     }
     
+    init(userInfo: [AnyHashable: Any]) {
+        self.postId =  userInfo["postId"] as? String ?? ""
+        self.name = userInfo["stampName"] as? String ?? ""
+        self.imageUrl =  userInfo["image"] as? String ?? ""
+        self.comment =  userInfo["content"] as? String ?? ""
+        let timestamp = userInfo["time"] as? String ?? ""
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssZZZ"
+        self.time = dateFormatter.date(from: timestamp) ?? Date()
+        let lat =  userInfo["latitude"] as? String ?? ""
+        let long =  userInfo["longitude"] as? String ?? ""
+        let count = userInfo["count"] as? String ?? ""
+        self.latitude = Double(lat) ?? 0
+        self.longitude = Double(long) ?? 0
+        self.city =  userInfo["city"] as? String ?? ""
+        self.country =  userInfo["country"] as? String ?? ""
+        self.spotOwnerId =  userInfo["ownerId"] as? String ?? ""
+        self.commentCount =  Int(count) ?? 0
+        self.verifierId =  userInfo["verifierId"] as? String ?? ""
+        self.verifierName =  userInfo["verifierName"] as? String ?? ""
+        self.verifierImage =  userInfo["verifierImage"] as? String ?? ""
+    }
+    
     static let data: [String: Any] = [
         CheckinField.spotName : "Dance Competion",
         CheckinField.image: "https://pics.filmaffinity.com/White_Chicks-973832641-large.jpg",

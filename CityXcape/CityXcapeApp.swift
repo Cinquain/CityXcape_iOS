@@ -19,7 +19,7 @@ struct CityXcapeApp: App {
     @AppStorage(CurrentUserDefaults.userId) var currentUserID: String?
     @StateObject private var store = Store()
     @State private var showLaunchView: Bool = true
-    let user = User()
+    
     let router = Router.shared
     let locManager = LocationService.instance
     
@@ -121,21 +121,27 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        
+        let notification = NotificationsManager.instance
         
         let userInfo = response.notification.request.content.userInfo
         print("the user info is", userInfo)
         
         if let spotId = userInfo["spotId"] as? String {
-            NotificationsManager.instance.spotId = spotId
-            NotificationsManager.instance.hasSpotNotification = true
+            notification.spotId = spotId
+            notification.hasSpotNotification = true
+            return
+        }
+        
+        if let stamp = userInfo["stampName"] as? String {
+            notification.stamp = Verification(userInfo: userInfo)
+            notification.showPublicPass = true
             return
         }
         
         
         let user = User(userInfo: userInfo)
-        NotificationsManager.instance.user = user
-        NotificationsManager.instance.hasUserNotification = true
+        notification.user = user
+        notification.hasUserNotification = true
         completionHandler()
         
     }

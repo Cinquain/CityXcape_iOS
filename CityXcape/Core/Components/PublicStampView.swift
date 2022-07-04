@@ -9,7 +9,8 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct PublicStampView: View {
-    
+    @Environment(\.presentationMode) var presentationMode
+
     let verification: Verification
     let width: CGFloat = UIScreen.screenWidth
 
@@ -21,6 +22,7 @@ struct PublicStampView: View {
             imageFrame
             commentButton
             stamp
+            downArrow
             Spacer()
         }
         .background(LinearGradient(gradient: Gradient(stops: [
@@ -38,7 +40,6 @@ struct PublicStampView: View {
 }
 
 
-
 extension PublicStampView {
     
     private var header: some View {
@@ -46,7 +47,13 @@ extension PublicStampView {
             Button {
                 showUser.toggle()
             } label: {
-                UserDotView(imageUrl: verification.verifierImage, width: 40)
+                VStack(spacing: 0) {
+                    UserDotView(imageUrl: verification.verifierImage, width: 40)
+                    Text(verification.verifierName)
+                        .font(.caption)
+                        .fontWeight(.thin)
+                        .foregroundColor(.white)
+                }
             }
             .sheet(isPresented: $showUser) {
                 let user = User(verification: verification)
@@ -117,6 +124,18 @@ extension PublicStampView {
             
         }
         .padding(.horizontal, 20)
+    }
+    
+    private var downArrow: some View {
+        Button {
+            self.presentationMode.wrappedValue.dismiss()
+        } label: {
+            Image("arrow")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 20)
+                .opacity(0.5)
+        }
     }
     
     private var stamp: some View {

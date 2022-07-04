@@ -35,6 +35,11 @@ struct HomeView: View {
                 }
                 .tag(0)
                 .badge(discoverVM.newlySaved)
+                .fullScreenCover(isPresented: $manager.showPublicPass, content: {
+                    if let verification  = manager.stamp {
+                        PublicStampView(verification: verification)
+                    }
+                })
                 .onAppear {
                     discoverVM.newlySaved = 0
                 }
