@@ -42,6 +42,7 @@
 		2167AEA2283949B100E9F36E /* PublicStreetPassVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2167AEA1283949B100E9F36E /* PublicStreetPassVM.swift */; };
 		2168555B2860B2E400E445EB /* SpotSelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2168555A2860B2E400E445EB /* SpotSelectionList.swift */; };
 		216A5CDE27AA0F31006AA7B4 /* SavesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A5CDD27AA0F31006AA7B4 /* SavesView.swift */; };
+		216AA7192875D17F00C719D3 /* EditMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216AA7182875D17F00C719D3 /* EditMap.swift */; };
 		21730A8D27C5B0380036549F /* GetStampedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21730A8C27C5B0380036549F /* GetStampedButton.swift */; };
 		217657D327FC642C0077B0A0 /* UserDiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217657D227FC642C0077B0A0 /* UserDiscoveryView.swift */; };
 		21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */; };
@@ -176,6 +177,7 @@
 		2167AEA1283949B100E9F36E /* PublicStreetPassVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStreetPassVM.swift; sourceTree = "<group>"; };
 		2168555A2860B2E400E445EB /* SpotSelectionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotSelectionList.swift; sourceTree = "<group>"; };
 		216A5CDD27AA0F31006AA7B4 /* SavesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavesView.swift; sourceTree = "<group>"; };
+		216AA7182875D17F00C719D3 /* EditMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMap.swift; sourceTree = "<group>"; };
 		21730A8C27C5B0380036549F /* GetStampedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetStampedButton.swift; sourceTree = "<group>"; };
 		217657D227FC642C0077B0A0 /* UserDiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDiscoveryView.swift; sourceTree = "<group>"; };
 		21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewModel.swift; sourceTree = "<group>"; };
@@ -530,6 +532,7 @@
 				21B1A4C2280D84B700B0AFE2 /* EditViewModel.swift */,
 				21EE8A2A285CB45600719D0B /* PostTrailForm.swift */,
 				21EE8A2C285CB5FC00719D0B /* PostTrailViewModel.swift */,
+				216AA7182875D17F00C719D3 /* EditMap.swift */,
 			);
 			path = MapView;
 			sourceTree = "<group>";
@@ -859,6 +862,7 @@
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,
 				2167AEA2283949B100E9F36E /* PublicStreetPassVM.swift in Sources */,
 				2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */,
+				216AA7192875D17F00C719D3 /* EditMap.swift in Sources */,
 				217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */,
 				217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */,
 				21C1629127E4BF1A001DC9BF /* BarView.swift in Sources */,
@@ -1029,7 +1033,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.7;
+				MARKETING_VERSION = 1.4.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1054,7 +1058,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.4.7;
+				MARKETING_VERSION = 1.4.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

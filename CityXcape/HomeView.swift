@@ -56,7 +56,7 @@ struct HomeView: View {
             
     
      
-            MapContainer(selectedTab: $selectedTab, isMission: false)
+            MapContainer(selectedTab: $selectedTab)
                 .edgesIgnoringSafeArea(.top)
                 .tabItem {
                     Image(Icon.tabItemII.rawValue)

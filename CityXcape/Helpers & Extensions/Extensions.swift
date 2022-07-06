@@ -149,6 +149,29 @@ extension MKMapItem {
         return city
     }
     
+    func getState() -> String {
+        let placemark = self.placemark
+        var location = CLLocation(latitude: placemark.coordinate.latitude, longitude: placemark.coordinate.longitude) //changed!!!
+
+        var state: String = ""
+        if placemark.administrativeArea != nil {
+            state = placemark.locality!
+        }
+        
+        if state == "" {
+            CLGeocoder().reverseGeocodeLocation(location, completionHandler: {(placemarks, error) -> Void in
+                   guard error == nil else {
+                       print("Error finding reverse geo-location")
+                       return
+                   }
+                    guard placemarks?.count ?? 0 > 0 else {return}
+                    let pm = placemarks?[0]
+                    state = pm?.administrativeArea ?? ""
+               })
+        }
+        return state
+    }
+    
     func getPostCode() -> Int {
         let placemark = self.placemark
         var zipcode: Int = 0

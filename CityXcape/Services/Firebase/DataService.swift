@@ -54,6 +54,7 @@ class DataService {
                 spotCity = city ?? ""
             }
         }
+        let state = mapItem.getState()
         
         let geohash = GFUtils.geoHash(forLocation: location)
         
@@ -65,8 +66,7 @@ class DataService {
             return
         }
         let instagram = social ?? ""
-        
-        let cityRef = REF_CITY.document(spotCity).collection("spots")
+        let cityRef = REF_CITY.document("\(spotCity),\(state)").collection("spots")
         let userWorldRef = REF_WORLD.document("private").collection(uid).document(spotId)
         ImageManager.instance.uploadSecretSpotImage(image: image, postId: spotId) { (urlString) in
             

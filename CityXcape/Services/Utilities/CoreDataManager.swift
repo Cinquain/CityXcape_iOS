@@ -128,6 +128,14 @@ class CoreDataManager {
         save()
     }
     
+    func updateLocation(spotId: String, long: Double, lat: Double, city: String) {
+        let entity = spotEntities.first(where: {$0.spotId == spotId})
+        entity?.latitude = lat
+        entity?.longitude = long
+        entity?.city = city
+        save()
+    }
+    
     func updateCommentCount(spotId: String, count: Int) {
         let entity = spotEntities.first(where: {$0.spotId == spotId})
         entity?.commentCount = Double(count)

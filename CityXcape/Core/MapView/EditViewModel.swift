@@ -5,11 +5,10 @@
 //  Created by James Allan on 4/18/22.
 //
 
-import Foundation
 import Combine
-import UIKit
 import FirebaseFirestore
 import SwiftUI
+import MapKit
 
 class EditViewModel: ObservableObject {
     
@@ -21,10 +20,14 @@ class EditViewModel: ObservableObject {
     @Published var address: String = ""
     @Published var streetcred: String = "1"
     @Published var isLoading: Bool = false
+    @Published var selectedMapItem: MKMapItem = MKMapItem()
+    @Published var showCoordinates: Bool = false
+
     
     @Published var editDescription: Bool = false
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
+    @Published var showMap: Bool = false 
     
     @Published var image: UIImage?
     @Published var index: Int = 0
@@ -66,6 +69,48 @@ class EditViewModel: ObservableObject {
         }
     }
     
+    func getAddress() -> String {
+        if showCoordinates {
+            return selectedMapItem.getAddress()
+        } else {
+            return "Change Location"
+        }
+    }
+    
+    func updateLocation(spotId: String) {
+        var spotCity = selectedMapItem.getCity()
+        let long = selectedMapItem.placemark.coordinate.longitude
+        let lat = selectedMapItem.placemark.coordinate.latitude
+        let location = CLLocationCoordinate2D(latitude: selectedMapItem.placemark.coordinate.latitude,
+                                              longitude: selectedMapItem.placemark.coordinate.longitude)
+        if spotCity == "" {
+            location.fetchCityAndCountry { city, _, error in
+                spotCity = city ?? ""
+            }
+        }
+      
+        let data: [String: Any] = [
+            SecretSpotField.longitude: long,
+            SecretSpotField.latitude: lat,
+            SecretSpotField.city: spotCity,
+        ]
+        
+        DataService.instance.updateSpotField(postId: spotId, data: data) { [weak self] success in
+            
+            if success {
+                self?.alertMessage = "Successfully updated spot location"
+                self?.manager.updateLocation(spotId: spotId, long: long, lat: lat, city: spotCity)
+                self?.showAlert = true
+                return
+            } else {
+                self?.alertMessage = "Failed to update spot name"
+                self?.showAlert = true
+                return
+            }
+            
+        }
+        
+    }
     
     
     func editSpotDescription(postId: String) {
@@ -294,7 +339,7 @@ class EditViewModel: ObservableObject {
         let data: [String: Any] = [
             SecretSpotField.spotImageUrls : FieldValue.arrayRemove([url])
         ]
-       
+
         DataService.instance.updateSpotField(postId: postId, data: data) { [weak self] success in
             guard let self = self else {return}
             if success {

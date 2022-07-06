@@ -23,6 +23,7 @@ struct EditSpotView: View {
                 editDescription
                 editWorld
                 editPrice
+                changeLocation
 
             //End of Scroll View
         }
@@ -52,23 +53,6 @@ struct EditSpotView_Previews: PreviewProvider {
             .preferredColorScheme(.dark)
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -113,7 +97,32 @@ extension EditSpotView {
         .frame(height: height)
     }
     
-    
+    private var changeLocation: some View {
+        
+        Button {
+            vm.showMap.toggle()
+        } label: {
+            HStack {
+                
+                Image("pin_blue")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 35)
+                
+                Text(vm.getAddress())
+                    .fontWeight(.thin)
+                    .foregroundColor(.white)
+            }
+        }
+        .sheet(isPresented: $vm.showMap, onDismiss: {
+            vm.showCoordinates = true
+            vm.updateLocation(spotId: spot.id)
+        }, content: {
+            EditMap(mapItem: $vm.selectedMapItem)
+                .colorScheme(.dark)
+        })
+        
+    }
     
     private var editTitle: some View {
         HStack {
