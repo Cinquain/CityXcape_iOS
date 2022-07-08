@@ -29,7 +29,8 @@ class DiscoverViewModel: ObservableObject {
     @Published var hasNewSpots: Bool = false
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
-    
+    @Published var searchTerm: String = ""
+
     @Published var finished: Bool = false
     @Published var saved: Bool = false
     @Published var passed: Bool = false
@@ -46,8 +47,7 @@ class DiscoverViewModel: ObservableObject {
     
     func getNewSecretSpots() {
         
-        DataService.instance.getNewSecretSpots(lastSecretSpot: lastSecretSpot) { [weak self] secretspots in
-            print("This is secret spots inside mission model", secretspots)
+        DataService.instance.getNewSecretSpots() { [weak self] secretspots in
             self?.allspots = secretspots
             self?.newSecretSpots = secretspots
             self?.finished = true
@@ -62,8 +62,7 @@ class DiscoverViewModel: ObservableObject {
     
     func refreshSecretSpots() {
         
-        DataService.instance.getNewSecretSpots(lastSecretSpot: lastSecretSpot) { [weak self] secretspots in
-            print("This is secret spots inside mission model", secretspots)
+        DataService.instance.refreshSecretSpots { [weak self] secretspots in
             self?.newSecretSpots = secretspots
             self?.subscribetoRouter()
 
@@ -74,20 +73,21 @@ class DiscoverViewModel: ObservableObject {
                 self?.alertMessage = "No new spot recently posted 😭"
                 self?.showAlert = true
             }
-            
         }
         
     }
     
     
-    func performSearch(searchTerm: String) {
+    func performSearch() {
         if searchTerm.isEmpty {
             newSecretSpots = allspots
+            isSearching = false 
             return
         }
         newSecretSpots = allspots.filter({$0.city.lowercased().contains(searchTerm.lowercased())
                             || $0.world.lowercased().contains(searchTerm.lowercased())
                             || $0.spotName.lowercased().contains(searchTerm.lowercased())})
+        isSearching = false
     }
     
     

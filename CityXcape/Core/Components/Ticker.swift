@@ -14,26 +14,24 @@ struct Ticker: View {
     
     
     
-    let width: CGFloat = UIScreen.screenWidth
+    let width: CGFloat
     var body: some View {
         
         HStack {
-            Image("cx")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 60)
-                .background(Color.black)
-                .clipShape(Circle())
-            
+           
+          
             TextField("Search...", text: $searchText, onCommit: handlesearch)
-               
+                .padding(.vertical, 10)
+                .padding(.horizontal, 20)
+                .frame(width: width / 1.5)
+
             
         }
         .font(.headline)
-        .frame(width: width)
         .overlay(
                   RoundedRectangle(cornerRadius: 30)
                     .stroke(Color.white, lineWidth: 0.5)
+                    .frame(width: width / 1.5)
                   
               )
  
@@ -50,10 +48,10 @@ struct Ticker: View {
 struct Ticker_Previews: PreviewProvider {
     @State static var search: String = ""
     static let searchFunction: () -> () = {print("123")}
+    static let width: CGFloat = 100
 
     static var previews: some View {
-       
-        Ticker(searchText: $search, handlesearch: searchFunction)
+        Ticker(searchText: $search, handlesearch: searchFunction, width: width)
             .preferredColorScheme(.dark)
             .previewLayout(.sizeThatFits)
     }

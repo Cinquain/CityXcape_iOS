@@ -679,15 +679,16 @@ class DataService {
 }
     
     
-    func getNewSecretSpots(lastSecretSpot: String?, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
+    func getNewSecretSpots(completion: @escaping (_ spots: [SecretSpot]) -> ()) {
         guard let uid = userId else {return}
         var history : [String] = []
         
-        getUserHistory { [self] returnedHistory in
+        
+        getUserHistory { [weak self] returnedHistory in
+            
             history = returnedHistory
-            print("printing history inside new spots", history)
-            
-            
+            guard let self = self else {return}
+
             self.REF_POST
                 .order(by: SecretSpotField.dateCreated, descending: true)
                 .limit(to: 25)
@@ -698,9 +699,50 @@ class DataService {
                                                             && !history.contains($0.id)})
                     completion(filteredResults)
                 }
+            
         }
     
     }
+    
+    func refreshSecretSpots(completion: @escaping (_ spots: [SecretSpot]) -> ()) {
+        guard let uid = userId else {return}
+        var history: [String] = []
+        var lastSnapshot: QueryDocumentSnapshot?
+
+        getUserHistory { [weak self] returnedHistory in
+            guard let self = self else {return}
+            history = returnedHistory
+            
+            if let snapshot = lastSnapshot {
+                self.REF_POST
+                    .start(afterDocument: snapshot)
+                    .limit(to: 25)
+                    .getDocuments { querysnapshot, error in
+                        let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
+                        let filteredResults = results.filter({$0.isPublic == true
+                                                                && $0.ownerId != uid
+                                                                && !history.contains($0.id)})
+                        completion(filteredResults)
+                        lastSnapshot = querysnapshot?.documents.last
+                    }
+            } else {
+                self.REF_POST
+                    .limit(to: 25)
+                    .getDocuments { querysnapshot, error in
+                        let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
+                        let filteredResults = results.filter({$0.isPublic == true
+                                                                && $0.ownerId != uid
+                                                                && !history.contains($0.id)})
+                        completion(filteredResults)
+                        lastSnapshot = querysnapshot?.documents.last
+            }
+           
+        }
+        
+    }
+    
+}
+    
     
     func saveUserRanking(rank: Rank) {
         

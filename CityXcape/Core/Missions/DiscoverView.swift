@@ -17,7 +17,6 @@ struct DiscoverView: View {
     @State private var alertMessage: String = ""
     @State private var passed: Bool = false
     @State private var saved: Bool = false
-    @State var searchTerm: String = ""
 
     let manager = CoreDataManager.instance
     @Binding var selectedTab: Int
@@ -28,9 +27,10 @@ struct DiscoverView: View {
     var body: some View {
  
         NavigationView {
-                    
+          
     
             ScrollView {
+                
                     
                 if vm.newSecretSpots.isEmpty {
                          VStack {
@@ -128,7 +128,18 @@ struct DiscoverView: View {
             .navigationBarItems(trailing: searchButton)
             .toolbar {
                ToolbarItem(placement: .principal) {
-                   tabIcon
+                   ZStack {
+                       
+                       Ticker(searchText: $vm.searchTerm, handlesearch: {
+                           vm.performSearch()
+                       }, width: UIScreen.screenWidth  )
+                       .frame(width: UIScreen.screenWidth / 2 )
+                       .opacity(vm.isSearching ? 1 : 0)
+
+                       tabIcon
+                           .opacity(vm.isSearching ? 0 : 1)
+                   }
+                   
                }
             }
 
@@ -163,6 +174,7 @@ extension DiscoverView {
                 .resizable()
                 .scaledToFit()
         }
+        .opacity(vm.isSearching ? 0 : 1)
     }
     
     private var refreshButton: some View {
