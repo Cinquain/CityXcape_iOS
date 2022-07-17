@@ -16,7 +16,7 @@ class DiscoverViewModel: ObservableObject {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
-    
+
     let notificationManager = NotificationsManager.instance
     let manager = CoreDataManager.instance
     let router = Router.shared
@@ -41,6 +41,11 @@ class DiscoverViewModel: ObservableObject {
     @Published var isSearching: Bool = false
 
     init() {
+        if notificationManager.hasSpotNotification {
+            if let postId = notificationManager.spotId {
+                findSpecificSpot(spotId: postId)
+            }
+        }
         getScoutLeaders()
         getNewSecretSpots()
     }
@@ -59,6 +64,20 @@ class DiscoverViewModel: ObservableObject {
         }
     }
     
+    func findSpecificSpot(spotId: String) {
+        DataService.instance.getSpecificSpot(postId: spotId) { result in
+            switch result {
+            case .failure(let error):
+                print("error fetching spot", error.localizedDescription)
+            case .success(let spot):
+                self.newSecretSpots.removeAll()
+                self.allspots.append(spot)
+                self.newSecretSpots.insert(spot, at: 0)
+            }
+        }
+    }
+    
+  
     
     func refreshSecretSpots() {
         

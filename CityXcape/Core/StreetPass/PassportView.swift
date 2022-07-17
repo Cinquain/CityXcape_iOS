@@ -12,9 +12,11 @@ import Firebase
 struct PassportView: View {
     
     @Environment(\.presentationMode) var presentationMode
-    var verification: Verification
+    @State var verification: Verification
     @StateObject var vm: JourneyViewModel
     var width: CGFloat = UIScreen.screenWidth
+    @State private var currentObject: Verification?
+    @State private var obect2: Verification?
     
     var body: some View {
         ScrollView {
@@ -32,7 +34,11 @@ struct PassportView: View {
             
         }
         .background(Color.cx_cream.edgesIgnoringSafeArea(.all))
+        .onDisappear(perform: {
+            vm.url = nil
+        })
         .onAppear {
+            vm.url = nil
             vm.allowshare = false
             vm.getVerificationImage(object: verification)
         }
@@ -47,14 +53,32 @@ extension PassportView {
     private var memoryView: some View {
         
         VStack(spacing: 10) {
-            ZStack {
-                Color.white
-                WebImage(url: URL(string: verification.imageUrl))
-                    .resizable()
-                    .frame(width: width - 40, height: width - 40)
-                    
+            Button {
+               currentObject = verification
+            } label: {
+                ZStack {
+                    Color.white
+                    WebImage(url: URL(string: vm.url == nil ? verification.imageUrl : vm.url ?? ""))
+                        .resizable()
+                        .frame(width: width - 40, height: width - 40)
+                        
+                }
+                .frame(width: width - 20, height: width - 20)
             }
-            .frame(width: width - 20, height: width - 20)
+            .actionSheet(item: $currentObject) { item in
+                getActionSheet(object: item)
+            }
+            .sheet(isPresented: $vm.showPicker, onDismiss: {
+                vm.replaceStampImage { url in
+                    vm.url = url
+                }
+            }, content: {
+                ImagePicker(imageSelected: $vm.passportImage, sourceType: $vm.sourceType)
+            })
+           
+
+
+           
           
             VStack(spacing: 0) {
                 HStack {
@@ -82,6 +106,9 @@ extension PassportView {
                     
                 }
                 .padding(.horizontal, 20)
+            }
+            .alert(isPresented: $vm.showAlert) {
+                return Alert(title: Text(vm.alertMessage))
             }
             
             
@@ -182,6 +209,32 @@ extension PassportView {
             
         }
         .padding(.horizontal, 10)
+    }
+    
+    func getActionSheet(object: Verification) -> ActionSheet {
+          
+            return ActionSheet(title: Text("Image Source"), message: nil, buttons: [
+                
+            .default(Text("Camera"), action: {
+                vm.updateStampId = ""
+                vm.updateStampId = object.postId
+                vm.sourceType = .camera
+                vm.showPicker = true
+             
+            }),
+            
+            .default(Text("Photo Library"), action: {
+                vm.updateStampId = ""
+                vm.updateStampId = object.postId
+                vm.sourceType = .photoLibrary
+                vm.showPicker = true
+               
+            }),
+            
+            .cancel()
+            ])
+
+        
     }
     
     

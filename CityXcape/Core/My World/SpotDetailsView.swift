@@ -54,7 +54,7 @@ struct SpotDetailsView: View {
                                     self.presentationMode.wrappedValue.dismiss()
                                 
                                 } content: {
-                                    ShareView(vm: vm, spot: spot)
+                                    ShareView(vm: vm, spot: spot, comment: vm.comment)
                                 }
 
                         }

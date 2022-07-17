@@ -37,7 +37,7 @@ class TotalsViewModel: NSObject, ObservableObject {
         case .saves:
             return "\(spot.saveCounts)"
         case .checkins:
-            return "\(spot.verifierCount)"
+            return "\(spot.verifyCount)"
         case .views:
             return "\(spot.viewCount)"
         }

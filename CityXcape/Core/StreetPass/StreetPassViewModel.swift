@@ -149,7 +149,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
         let ownerSpots = allspots.filter({$0.ownerId == userId})
         let totalSpotsPosted = ownerSpots.count
         let totalSaves = ownerSpots.reduce(0, {$0 + $1.saveCounts})
-        let totalVerifications = ownerSpots.reduce(0, {$0 + $1.verifierCount})
+        let totalVerifications = ownerSpots.reduce(0, {$0 + $1.verifyCount})
         var totalCities: Int = 0
         var cities: [String: Int] = [:]
         verifiedSpots.forEach { spot in

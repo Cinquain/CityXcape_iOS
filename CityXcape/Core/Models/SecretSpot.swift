@@ -34,13 +34,14 @@ struct SecretSpot:  Hashable, Identifiable, Equatable {
     var likedCount: Int
     var viewCount: Int
     var commentCount: Int
-    var verifierCount: Int
+    var verifyCount: Int = 0
     var description: String?
     
     let ownerId: String
     var ownerDisplayName: String
     var ownerImageUrl: String
     var ownerIg: String?
+    var lastVerified: Date?
     
     
     var distanceFromUser: Double {
@@ -88,7 +89,7 @@ struct SecretSpot:  Hashable, Identifiable, Equatable {
     }
     
     
-    init(postId: String, spotName: String, imageUrls: [String], longitude: Double, latitude: Double, address: String, description: String, city: String, zipcode: Int, world: String, dateCreated: Date, price: Int, viewCount: Int, saveCounts: Int, isPublic: Bool, ownerId: String, ownerDisplayName: String, ownerImageUrl: String, likeCount: Int, verifierCount: Int, commentCount: Int, didLike: Bool, verified: Bool) {
+    init(postId: String, spotName: String, imageUrls: [String], longitude: Double, latitude: Double, address: String, description: String, city: String, zipcode: Int, world: String, dateCreated: Date, price: Int, viewCount: Int, saveCounts: Int, isPublic: Bool, ownerId: String, ownerDisplayName: String, ownerImageUrl: String, likeCount: Int, commentCount: Int, didLike: Bool, verified: Bool) {
 
             self.id = postId
             self.spotName = spotName
@@ -109,7 +110,6 @@ struct SecretSpot:  Hashable, Identifiable, Equatable {
             self.ownerImageUrl = ownerImageUrl
             self.price = price
             self.likedCount = likeCount
-            self.verifierCount = verifierCount
             self.commentCount = commentCount
             self.likedByUser  = didLike
             self.verified = verified
@@ -128,7 +128,7 @@ struct SecretSpot:  Hashable, Identifiable, Equatable {
             ownerImageUrl = entity.ownerImageUrl ?? ""
             isPublic = entity.isPublic
             saveCounts = Int(entity.saveCount)
-            verifierCount = Int(entity.verifierCount)
+            verifyCount = Int(entity.verifierCount)
             viewCount = Int(entity.viewCount)
             price = Int(entity.price)
             world = entity.world ?? ""
@@ -138,7 +138,7 @@ struct SecretSpot:  Hashable, Identifiable, Equatable {
             likedCount = Int(entity.likedCount)
             likedByUser = entity.didLike
             verified = entity.verified
-            verifierCount = Int(entity.verifierCount)
+            verifyCount = Int(entity.verifierCount)
             commentCount = Int(entity.commentCount)
         }
     
@@ -176,14 +176,13 @@ struct SecretSpot:  Hashable, Identifiable, Equatable {
         self.isPublic = data?[SecretSpotField.isPublic] as? Bool ?? false
         self.world = data?[SecretSpotField.world] as? String ?? ""
         self.likedCount = data?[SecretSpotField.likeCount] as? Int ?? 0
-        self.verifierCount = data?[SecretSpotField.verifierCount] as? Int ?? 0
         self.commentCount = data?[SecretSpotField.commentCount] as? Int ?? 0
         self.ownerIg = data?[SecretSpotField.ownerIg] as? String ?? nil
         self.likedByUser = false
         self.verified = false
     }
     
-    static let spot = SecretSpot(postId: "disnf", spotName: "The Magic Garden", imageUrls: ["https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2F3rD6bKzwCbOEpfU51sYF%2F1?alt=media&token=2c45942e-5a44-4dd1-aa83-a678bb848c4b","https://cdn10.phillymag.com/wp-content/uploads/sites/3/2018/07/Emily-Smith-Cory-J-Popp-900x600.jpg", "https://apricotabroaddotco.files.wordpress.com/2019/03/philadelphia-magic-gardens.jpg"], longitude: 1010, latitude: 01202, address: "1229 Spann avenue", description: "This is the best secret spot in the world. Learn all about fractal mathematics", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), price: 1, viewCount: 1, saveCounts: 1, isPublic: true, ownerId: "q4SALDGpjtZLIVtVibHMQa8NpwD3", ownerDisplayName: "Cinquain", ownerImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", likeCount: 10, verifierCount: 0, commentCount: 0, didLike: true, verified: false)
+    static let spot = SecretSpot(postId: "disnf", spotName: "The Magic Garden", imageUrls: ["https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2F3rD6bKzwCbOEpfU51sYF%2F1?alt=media&token=2c45942e-5a44-4dd1-aa83-a678bb848c4b","https://cdn10.phillymag.com/wp-content/uploads/sites/3/2018/07/Emily-Smith-Cory-J-Popp-900x600.jpg", "https://apricotabroaddotco.files.wordpress.com/2019/03/philadelphia-magic-gardens.jpg"], longitude: 1010, latitude: 01202, address: "1229 Spann avenue", description: "This is the best secret spot in the world. Learn all about fractal mathematics", city: "Brooklyn", zipcode: 42304, world: "#Urbex", dateCreated: Date(), price: 1, viewCount: 1, saveCounts: 1, isPublic: true, ownerId: "q4SALDGpjtZLIVtVibHMQa8NpwD3", ownerDisplayName: "Cinquain", ownerImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073", likeCount: 10, commentCount: 0, didLike: true, verified: false)
     
     
 }

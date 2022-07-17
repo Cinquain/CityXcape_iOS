@@ -12,7 +12,7 @@ import Firebase
 struct Verification: Identifiable, Hashable {
     
     var id: String { return postId }
-    let imageUrl: String
+    var imageUrl: String
     let comment: String
     let time: Date
     let name: String

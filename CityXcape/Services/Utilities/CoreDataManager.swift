@@ -148,10 +148,19 @@ class CoreDataManager {
         save()
     }
     
+    func updateLastVerified(spotId: String, date: Date) {
+        let entity = spotEntities.first(where: {$0.spotId == spotId})
+        entity?.lastVerified = date
+        entity?.verifierCount += 1
+        entity?.verified = true
+        save()
+    }
+    
     func updateVerification(spotId: String, verified: Bool) {
         let entity = spotEntities.first(where: {$0.spotId == spotId})
         entity?.verified = verified
         entity?.verifierCount += 1
+        entity?.lastVerified = Date()
         save()
     }
     
@@ -206,7 +215,7 @@ class CoreDataManager {
         secretSpotEntity.isPublic = spot.isPublic
         secretSpotEntity.dateCreated = spot.dateCreated
         secretSpotEntity.city = spot.city
-        secretSpotEntity.verifierCount = Double(spot.verifierCount)
+        secretSpotEntity.verifierCount = Double(spot.verifyCount)
         secretSpotEntity.didLike = spot.likedByUser
         secretSpotEntity.likedCount = Double(spot.likedCount)
         secretSpotEntity.verified = spot.verified
@@ -263,7 +272,7 @@ class CoreDataManager {
         entity?.city = spot.city
         entity?.likedCount = Double(spot.likedCount)
         entity?.didLike = spot.likedByUser
-        entity?.verifierCount = Double(spot.verifierCount)
+        entity?.verifierCount = Double(spot.verifyCount)
         entity?.commentCount = Double(spot.commentCount)
         entity?.ownerIg = spot.ownerIg
         save()

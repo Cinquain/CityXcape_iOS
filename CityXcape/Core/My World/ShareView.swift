@@ -13,7 +13,7 @@ struct ShareView: View {
     @StateObject var vm: SpotViewModel
     @State var spot: SecretSpot
     var width: CGFloat = UIScreen.screenWidth
-
+    var comment: String
     var body: some View {
         
         ZStack {
@@ -25,8 +25,10 @@ struct ShareView: View {
                 
                 title
                 
-                StampImage(width: width, height: width, image: vm.journeyImage ?? UIImage(), title: spot.spotName, date: Date())
+                StampImage(image: vm.journeyImage ?? UIImage(), title: spot.spotName, date: Date(), comment: comment)
+                    .frame(width: 500, height: 500)
                     .clipped()
+
                  
                 VStack(spacing: 0) {
                     Text("Share")
@@ -117,6 +119,6 @@ extension ShareView {
 
 struct ShareView_Previews: PreviewProvider {
     static var previews: some View {
-        ShareView(vm: SpotViewModel(), spot: SecretSpot.spot)
+        ShareView(vm: SpotViewModel(), spot: SecretSpot.spot, comment: "Awesome!")
     }
 }

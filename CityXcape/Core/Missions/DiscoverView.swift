@@ -12,14 +12,14 @@ struct DiscoverView: View {
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @State private var isPresented: Bool = false
     @State private var currentSpot: SecretSpot?
-    
+    @Binding var selectedTab: Int
+
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
     @State private var passed: Bool = false
     @State private var saved: Bool = false
 
     let manager = CoreDataManager.instance
-    @Binding var selectedTab: Int
     
     @StateObject var vm: DiscoverViewModel 
    
@@ -226,6 +226,6 @@ extension DiscoverView {
 struct MissionsView_Previews: PreviewProvider {
     @State static var selection: Int = 0
     static var previews: some View {
-        DiscoverView(selectedTab: $selection, vm: DiscoverViewModel())
+        DiscoverView(selectedTab: .constant(2), vm: DiscoverViewModel())
     }
 }

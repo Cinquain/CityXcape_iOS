@@ -41,6 +41,9 @@ struct HomeView: View {
                     }
                 })
                 .onAppear {
+                    if manager.hasSpotNotification {
+                        selectedTab = 1
+                    }
                     discoverVM.newlySaved = 0
                 }
             

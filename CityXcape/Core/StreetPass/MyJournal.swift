@@ -12,13 +12,13 @@ struct MyJournal: View {
     @Environment(\.presentationMode) var presentationMode
     
     @StateObject var vm: JourneyViewModel
-
+  
     var body: some View {
         
         ScrollView {
             TabView {
                 
-                    ForEach(vm.verifications.sorted(by: {$0.time > $1.time})) { verification in
+                ForEach(vm.verifications.sorted(by: {$0.time > $1.time}), id: \.id) { verification in
                         PassportView(verification: verification, vm: vm)
                             .onTapGesture {
                                 self.presentationMode.wrappedValue.dismiss()
@@ -32,10 +32,12 @@ struct MyJournal: View {
             
         }
         .background(Color.cx_cream.edgesIgnoringSafeArea(.all))
+      
         
         
         //End of VStack
     }
+   
 }
 
 //struct MyJournal_Previews: PreviewProvider {

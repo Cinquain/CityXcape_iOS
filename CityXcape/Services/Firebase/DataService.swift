@@ -411,7 +411,98 @@ class DataService {
     }
     
 
+    func checkIfVerificationExist(spotId: String, completion: @escaping(Result<Bool,Error>) -> Void) {
+        guard let uid = userId else {return}
+        
+        let ref = REF_WORLD.document(ServerPath.verified).collection(uid).document(spotId)
+        
+        ref.getDocument { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let snapshot = snapshot else {completion(.success(false)); return}
+            if snapshot.exists {
+                completion(.success(true))
+            }
+        }
+    }
+    
+    
+    func updateStamp(spot: SecretSpot, image: UIImage?, comment: String?, completion: @escaping (Result<Bool, Error>) -> ()) {
+        guard let uid = userId, let profileUrl = profileUrl else {return}
+        let postId = spot.id
+        let ownerId = spot.ownerId
+        let ref = REF_WORLD.document(ServerPath.verified).collection(uid).document(postId)
+        let dateFormatter = DateFormatter()
+        let date = Date()
+        dateFormatter.locale = Locale(identifier: "en_US")
+        dateFormatter.setLocalizedDateFormatFromTemplate("MMMMd")
+        let time = dateFormatter.string(from: date)
+        
 
+        let updateData: [String: Any] = [
+            CheckinField.timestamp: FieldValue.serverTimestamp(),
+            CheckinField.verifierImage : profileUrl,
+            CheckinField.checkins: [time:FieldValue.serverTimestamp()]
+        ]
+        
+        if let image = image {
+            let imageSaver = ImageSaver()
+            imageSaver.writeToPhotoAlbum(image: image)
+            ImageManager.instance.uploadVerifyImage(image: image, userId: uid, postId: postId) { url in
+                if let imageUrl = url {
+                    let imageData: [String: Any] = [
+                        CheckinField.image: imageUrl
+                    ]
+                    ref.updateData(imageData)
+                }
+            }
+        }
+        
+        if let comment = comment {
+            if !comment.isEmpty {
+                let commentData: [String: Any] = [
+                    CheckinField.comment: comment
+                ]
+                ref.updateData(commentData)
+            }
+        }
+        
+        ref.setData(updateData, merge: true) { [weak self] error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            //Update verifier wallet
+            let checkinIncrement: Int64 = 1
+            let verifierWalletData: [String: Any] = [
+                UserField.streetCred : FieldValue.increment(checkinIncrement)
+            ]
+            let verifierRankData: [String: Any] = [
+                RankingField.totalStamps: FieldValue.increment(checkinIncrement)
+            ]
+            self?.REF_Rankings.document(uid).updateData(verifierRankData)
+            AuthService.instance.updateUserField(uid: uid, data: verifierWalletData)
+            //Update owner wallet
+            let ownerWalletData: [String: Any] = [
+                UserField.streetCred : FieldValue.increment(checkinIncrement)
+            ]
+           
+            let ownerRankData: [String: Any] = [
+                RankingField.totalVerifications: FieldValue.increment(checkinIncrement)
+            ]
+            self?.REF_Rankings.document(ownerId).updateData(ownerRankData)
+            AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
+            
+            //Update Last Verified
+            self?.manager.updateLastVerified(spotId: postId, date: Date())
+            
+            completion(.success(true))
+        }
+        
+    }
+    
     
     
     func verifySecretSpot(spot: SecretSpot, image: UIImage, comment: String, completion: @escaping (_ success: Bool, _ error: String?) ->()) {
@@ -419,7 +510,13 @@ class DataService {
         
         let postId = spot.id
         let ownerId = spot.ownerId
+       
         
+        let dateFormatter = DateFormatter()
+        let date = Date()
+        dateFormatter.locale = Locale(identifier: "en_US")
+        dateFormatter.setLocalizedDateFormatFromTemplate("MMMMd")
+        let time = dateFormatter.string(from: date)
      
         ImageManager.instance.uploadVerifyImage(image: image, userId: uid, postId: postId) { [weak self] url in
             if let imageUrl = url {
@@ -437,10 +534,11 @@ class DataService {
                     CheckinField.latitude: spot.latitude,
                     CheckinField.longitude: spot.longitude,
                     CheckinField.country: spot.country,
-                    CheckinField.timestamp: FieldValue.serverTimestamp()
+                    CheckinField.timestamp: FieldValue.serverTimestamp(),
+                    CheckinField.checkins: [time:FieldValue.serverTimestamp()]
                 ]
                 
-                self?.REF_WORLD.document("verified").collection(uid).document(postId).setData(checkinData)
+                self?.REF_WORLD.document(ServerPath.verified).collection(uid).document(postId).setData(checkinData)
                 
                 let checkinIncrement: Int64 = 1
                 let fieldUpdate: [String: Any] = [
@@ -472,7 +570,6 @@ class DataService {
                     AuthService.instance.updateUserField(uid: uid, data: verifierWalletData)
                     
                     
-                    
                     //Update owner info
                     let ownerWalletData: [String: Any] = [
                         UserField.streetCred : FieldValue.increment(oneIncrement)
@@ -494,6 +591,28 @@ class DataService {
             }
         }
         
+    }
+    
+    func changeStampPhoto(postId: String, image: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let uid = userId else {return}
+        let ref = REF_WORLD.document(ServerPath.verified).collection(uid).document(postId)
+        
+        ImageManager.instance.uploadVerifyImage(image: image, userId: uid, postId: postId) { url in
+            if let imageUrl = url {
+                let imageData: [String: Any] = [
+                    CheckinField.image: imageUrl
+                ]
+                ref.updateData(imageData) { error in
+                    if let error = error {
+                        completion(.failure(error))
+                        return
+                    }
+                    
+                    completion(.success(imageUrl))
+                }
+                
+            }
+        }
     }
     
     func getVerifications(uid: String, completion: @escaping (_ verifications: [Verification]) ->()) {
@@ -702,6 +821,24 @@ class DataService {
             
         }
     
+    }
+    
+    func getSpecificSpot(postId: String, completion: @escaping (Result<SecretSpot, NetworkError>) -> Void) {
+        
+        REF_POST
+            .whereField(SecretSpotField.spotId, isEqualTo: postId)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    completion(.failure(.failed))
+                    print("Error loading spot", error.localizedDescription)
+                }
+                guard let snap = snapshot else {return}
+                snap.documents.forEach { document in
+                    let data = document.data()
+                    let spot = SecretSpot(data: data)
+                    completion(.success(spot))
+                }
+            }
     }
     
     func refreshSecretSpots(completion: @escaping (_ spots: [SecretSpot]) -> ()) {

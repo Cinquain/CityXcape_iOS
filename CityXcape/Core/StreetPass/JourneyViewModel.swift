@@ -22,10 +22,15 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     @Published var showShareSheet: Bool = false
     @Published var passportImage: UIImage?
     @Published var allowshare: Bool = false
+    @Published var url: String?
+    
+    @Published var updateStampId: String = ""
+    @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
+    @Published var showPicker: Bool = false
     
     override init() {
         super.init()
-        getVerificationForUser()
+        getVerificationsForUser()
     }
     
     fileprivate func getCities() {
@@ -41,7 +46,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
         
     }
     
-    fileprivate func getVerificationForUser() {
+    fileprivate func getVerificationsForUser() {
         guard let uid = userId else {return}
         DataService.instance.getVerifications(uid: uid) { [weak self] verifications in
             self?.verifications = verifications
@@ -86,6 +91,26 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
         }
     }
     
+    func replaceStampImage(completion: @escaping (_ url: String) -> ()) {
+        if let image = passportImage {
+            DataService.instance.changeStampPhoto(postId: updateStampId, image: image) { [weak self] result in
+                guard let self = self else {return}
+                switch result {
+                case .success(let imageUrl):
+                    DispatchQueue.main.async {
+                        self.url = imageUrl
+                        self.alertMessage = "Successfully replaced image."
+                        self.showAlert = true
+                        self.getVerificationsForUser()
+                        completion(imageUrl)
+                    }
+                case .failure(let error):
+                    self.alertMessage = "Error upload image: \(error.localizedDescription)"
+                    self.showAlert = true
+                }
+            }
+        }
+    }
     
     func shareStampImage(object: Verification) {
         let stampImage = generateStampImage(object: object)
@@ -94,7 +119,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     }
     
     func generateStampImage(object: Verification) -> UIImage {
-        return StampImage(width: 500, height: 500, image: passportImage ?? UIImage(), title: object.name, date: object.time).snapshot()
+        return StampImage(image: passportImage ?? UIImage(), title: object.name, date: object.time, comment: object.comment).snapshot()
     }
 
     
@@ -126,8 +151,8 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
             guard let data = data else {return}
              DispatchQueue.main.async { [weak self] in
                  guard let self = self else {return}
-                  let tempImage = UIImage(data: data)
-                 self.passportImage = StampImage(width: 500, height: 600, image: tempImage ?? UIImage(), title: object.name, date: object.time).snapshot()
+                let tempImage = UIImage(data: data)
+                 self.passportImage = StampImage(image: tempImage ?? UIImage(), title: object.name, date: object.time, comment: object.comment).snapshot()
                  self.allowshare = true 
              }
             

@@ -80,7 +80,7 @@ class AnalyticsViewModel: NSObject, ObservableObject {
         totalSpotsPosted = ownerSpots.count
         totalSaves = ownerSpots.reduce(0, {$0 + $1.saveCounts})
         totalViews = ownerSpots.reduce(0, {$0 + $1.viewCount})
-        totalVerifications = ownerSpots.reduce(0, {$0 + $1.verifierCount})
+        totalVerifications = ownerSpots.reduce(0, {$0 + $1.verifyCount})
         
         verifiedSpots.forEach { spot in
             if let count = cities[spot.city] {

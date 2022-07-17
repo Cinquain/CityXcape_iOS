@@ -173,6 +173,8 @@ struct CheckinField {
     static let country =  "country"
     static let timestamp = "time"
     static let commentCount = "comment_count"
+    static let checkinCount = "check-in_count"
+    static let checkins = "checkins"
 }
 
 enum Icon: String {
@@ -259,6 +261,11 @@ enum PurchaseError: Error {
 
 enum UploadError: Error {
     case failed 
+}
+
+enum NetworkError: Error {
+    case failed
+    case badURL
 }
 
 

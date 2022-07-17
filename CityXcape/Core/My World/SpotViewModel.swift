@@ -312,12 +312,13 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     
     func shareInstaStamp(spot: SecretSpot) { 
         let image = journeyImage ?? UIImage()
-        let passportImage = StampImage(width: 500, height: 500, image: image, title: spot.spotName, date: Date())
+        let passportImage = StampImage(image: image, title: spot.spotName, date: Date(), comment: comment)
                             .snapshot()
-        
-        guard let instagramUrl = URL(string:"instagram://share") else {return}
         let imageSaver = ImageSaver()
         imageSaver.writeToPhotoAlbum(image: passportImage)
+        
+        guard let instagramUrl = URL(string:"instagram://share") else {return}
+       
         
         if UIApplication.shared.canOpenURL(instagramUrl) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -329,7 +330,7 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     }
     
     func generateStampImage(spot: SecretSpot) -> UIImage {
-        return StampImage(width: 500, height: 500, image: journeyImage ?? UIImage(), title: spot.spotName, date: Date()).snapshot()
+        return StampImage(image: journeyImage ?? UIImage(), title: spot.spotName, date: Date(), comment: comment).snapshot()
     }
     
     func getComments(postId: String) {
@@ -353,33 +354,69 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
         }
     }
     
-    func getVerificationStamp(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
-        
-        if self.comment.isEmpty {
-            alertMessage = "Leave a comment for your journey"
-            showAlert = true
-            return
-        }
-        
-        if self.journeyImage == nil {
-            alertMessage = "Take a picture for your journey"
-            showAlert = true
-            return
-        }
+    func updateVerificationStamp(spot: SecretSpot, completion: @escaping (Bool) -> Void) {
         isLoading = true
-        let image = journeyImage ?? UIImage()
+        if let lastDate = spot.lastVerified {
+           let now = Date()
+           let minimumTime: TimeInterval = 60 * 60 * 24
+           let timeInterval = lastDate.timeIntervalSince(now)
+            if timeInterval < minimumTime {
+                self.alertmessage = "You can only check-in once per day"
+                self.showAlert = true
+                isLoading = false
+                completion(false)
+                return
+            }
+        }
         
-        DataService.instance.verifySecretSpot(spot: spot, image: image, comment: comment) { [weak self] (success, message) in
-            guard let self = self else {return}
-            if success {
-                self.manager.updateVerification(spotId: spot.id, verified: true)
-                completion(success)
-            } else {
-                self.isLoading = false
-                self.alertMessage = message ?? "Failed to verifiy Secret Spot"
+        
+        DataService.instance.updateStamp(spot: spot, image: journeyImage, comment: comment) { result in
+            switch result {
+            case .success(let complete):
+                completion(complete)
+            case .failure(let error):
+                print("Error updating stamp", error.localizedDescription)
+                self.alertmessage = "Error updating stamp"
                 self.showAlert = true
             }
         }
+        
+    }
+    
+    
+    func getVerificationStamp(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
+            isLoading = true
+
+            if self.comment.isEmpty {
+                alertMessage = "Leave a comment for your journey"
+                showAlert = true
+                isLoading = false
+                return
+            }
+            
+            if self.journeyImage == nil {
+                alertMessage = "Take a picture for your journey"
+                showAlert = true
+                isLoading = false
+                return
+            }
+        
+            let imageSave = ImageSaver()
+            let image = journeyImage ?? UIImage()
+            imageSave.writeToPhotoAlbum(image: image)
+            
+            DataService.instance.verifySecretSpot(spot: spot, image: image, comment: comment) { [weak self] (success, message) in
+                guard let self = self else {return}
+                if success {
+                    self.manager.updateVerification(spotId: spot.id, verified: true)
+                    completion(success)
+                } else {
+                    self.isLoading = false
+                    self.alertMessage = message ?? "Failed to verifiy Secret Spot"
+                    self.showAlert = true
+                }
+            }
+        
         
     }
     
@@ -419,7 +456,7 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
         let ownerSpots = allspots.filter({$0.ownerId == userId})
         let totalSpotsPosted = ownerSpots.count
         let totalSaves = ownerSpots.reduce(0, {$0 + $1.saveCounts})
-        let totalVerifications = ownerSpots.reduce(0, {$0 + $1.verifierCount})
+        let totalVerifications = ownerSpots.reduce(0, {$0 + $1.verifyCount})
         var totalCities: Int = 0
         var cities: [String: Int] = [:]
         verifiedSpots.forEach { spot in
