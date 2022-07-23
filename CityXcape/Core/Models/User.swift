@@ -93,6 +93,14 @@ struct User: Identifiable, Hashable, Equatable {
         self.social = rank.social ?? nil
         self.rank = rank.currentLevel 
     }
+    
+    init(feed: Feed) {
+        self.id = feed.uid
+        self.displayName = feed.username
+        self.profileImageUrl = feed.userImageUrl
+        self.bio = feed.userBio
+        self.rank = feed.userRank
+    }
  
     init() {
         self.id = UserDefaults.standard.value(forKey: CurrentUserDefaults.userId) as? String ?? ""

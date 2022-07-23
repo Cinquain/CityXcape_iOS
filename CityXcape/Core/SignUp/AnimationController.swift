@@ -45,8 +45,6 @@ extension AnimationController{
         bubbleImageView.image = UIImage(named: "dot")
         
         let intRandom = self.generateIntRandomNumber(min: 1, max: 6)
-        
-       
         let size = self.randomFloatBetweenNumbers(firstNum: 9, secondNum: 40)
         
         let randomOriginX = self.randomFloatBetweenNumbers(firstNum: self.view.frame.minX, secondNum: self.view.frame.maxX)

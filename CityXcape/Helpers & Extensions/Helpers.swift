@@ -13,7 +13,7 @@ import SwiftUI
 enum DeepLink: String, CaseIterable {
     case home
     case discover
-    case streetPass 
+    case streetPass
 }
 
 struct UserField {
@@ -119,6 +119,29 @@ struct ServerPath {
     static let hunt = "hunts"
     static let cities = "cities"
     static let secure = "private"
+    static let feed = "feed"
+    static let report = "reports"
+    static let save = "savedBy"
+}
+
+struct FeedField {
+    static let id = "id"
+    static let uid = "uid"
+    static let username = "username"
+    static let profileUrl = "profile_url"
+    static let bio = "user_bio"
+    static let rank = "user_rank"
+    static let content = "content"
+    static let date = "date"
+    static let type = "type"
+    static let geohash = "geohash"
+    static let longitude = "longitude"
+    static let latitude = "latitude"
+    static let stamp = "stamp"
+    static let spot = "spot"
+    static let message = "message"
+    static let spotId = "post_id"
+    static let userId = "user_id"
 }
 
 struct CurrentUserDefaults {
@@ -194,14 +217,17 @@ enum Icon: String {
     case tabItemI = "my_world"
     case tabItemII = "tab2"
     case tabItemIII = "tab3"
+    case grid = "grid_tab"
     case history = "history"
 }
 
 enum Labels: String {
-    case tab0 = "Discover"
+    case tab0 = "Feed"
     case tab1 = "My World"
-    case tab2 = "Post Spot"
-    case tab3 = "StreetPass"
+    case tab2 = "Discover"
+    case tab3 = "Post Spot"
+    case tab4 = "StreetPass"
+    
 
     case headerName = "Name"
     case headerDistance = "Distance"
@@ -266,6 +292,15 @@ enum UploadError: Error {
 enum NetworkError: Error {
     case failed
     case badURL
+}
+
+enum FeedType: String, CaseIterable {
+    case stamp
+    case spot
+    case message
+    case save
+    case streetFollow
+    case signup
 }
 
 

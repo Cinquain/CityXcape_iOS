@@ -83,6 +83,7 @@
 		218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218980A626DC54C500A6FD23 /* LikeAnimationView.swift */; };
 		218CADBE26D5C94300496884 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CADBD26D5C94300496884 /* SettingsView.swift */; };
 		218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CADBF26D5D7E400496884 /* SettingsEditTextView.swift */; };
+		218CF043288594E400DF86FA /* FeedBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CF042288594E400DF86FA /* FeedBubbleView.swift */; };
 		218D904D2731D4F5000FB407 /* AnalyticsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218D904C2731D4F5000FB407 /* AnalyticsService.swift */; };
 		218E76F326DBB08A00F720F1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 218E76F226DBB08A00F720F1 /* LaunchScreen.storyboard */; };
 		218ECBBF2709328E00D06603 /* DiscoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218ECBBE2709328E00D06603 /* DiscoverView.swift */; };
@@ -113,12 +114,16 @@
 		21C91E5F27E8A3D50050D06F /* AnalyticsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C91E5E27E8A3D50050D06F /* AnalyticsViewModel.swift */; };
 		21C91E6127E8A9FD0050D06F /* Ranks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C91E6027E8A9FD0050D06F /* Ranks.swift */; };
 		21C91E6327E8AD330050D06F /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C91E6227E8AD330050D06F /* Level.swift */; };
+		21CB97EA2889750900F35464 /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CB97E92889750900F35464 /* FeedViewModel.swift */; };
+		21CB97ED2889933900F35464 /* Shimmer in Frameworks */ = {isa = PBXBuildFile; productRef = 21CB97EC2889933900F35464 /* Shimmer */; };
 		21CBDEC227B3DD9E000F0D85 /* SignInWithEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CBDEC127B3DD9E000F0D85 /* SignInWithEmailView.swift */; };
 		21D03594270938400071C643 /* MissionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D03593270938400071C643 /* MissionRowView.swift */; };
 		21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0359527093B770071C643 /* MissionRowHeader.swift */; };
 		21D0F07A27EC9604003E8748 /* UserReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0F07927EC9604003E8748 /* UserReportView.swift */; };
 		21D2413C27CCFE41004D3150 /* Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D2413B27CCFE41004D3150 /* Verification.swift */; };
 		21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */; };
+		21DA5AC828844D7E0051673E /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DA5AC728844D7E0051673E /* FeedView.swift */; };
+		21DA5ACA288453C70051673E /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DA5AC9288453C70051673E /* Feed.swift */; };
 		21DCF82327E60906000BD1B3 /* Rank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82227E60906000BD1B3 /* Rank.swift */; };
 		21DCF82527E61043000BD1B3 /* StreetReportCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82427E61043000BD1B3 /* StreetReportCard.swift */; };
 		21DCF82727E63090000BD1B3 /* Follower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82627E63090000BD1B3 /* Follower.swift */; };
@@ -221,6 +226,7 @@
 		218980A626DC54C500A6FD23 /* LikeAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAnimationView.swift; sourceTree = "<group>"; };
 		218CADBD26D5C94300496884 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		218CADBF26D5D7E400496884 /* SettingsEditTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditTextView.swift; sourceTree = "<group>"; };
+		218CF042288594E400DF86FA /* FeedBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedBubbleView.swift; sourceTree = "<group>"; };
 		218D904C2731D4F5000FB407 /* AnalyticsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsService.swift; sourceTree = "<group>"; };
 		218E76F226DBB08A00F720F1 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		218ECBBE2709328E00D06603 /* DiscoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoverView.swift; sourceTree = "<group>"; };
@@ -250,11 +256,14 @@
 		21C91E5E27E8A3D50050D06F /* AnalyticsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsViewModel.swift; sourceTree = "<group>"; };
 		21C91E6027E8A9FD0050D06F /* Ranks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ranks.swift; sourceTree = "<group>"; };
 		21C91E6227E8AD330050D06F /* Level.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Level.swift; sourceTree = "<group>"; };
+		21CB97E92889750900F35464 /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
 		21CBDEC127B3DD9E000F0D85 /* SignInWithEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWithEmailView.swift; sourceTree = "<group>"; };
 		21D03593270938400071C643 /* MissionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowView.swift; sourceTree = "<group>"; };
 		21D0359527093B770071C643 /* MissionRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowHeader.swift; sourceTree = "<group>"; };
 		21D0F07927EC9604003E8748 /* UserReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReportView.swift; sourceTree = "<group>"; };
 		21D2413B27CCFE41004D3150 /* Verification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verification.swift; sourceTree = "<group>"; };
+		21DA5AC728844D7E0051673E /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
+		21DA5AC9288453C70051673E /* Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feed.swift; sourceTree = "<group>"; };
 		21DCF82227E60906000BD1B3 /* Rank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rank.swift; sourceTree = "<group>"; };
 		21DCF82427E61043000BD1B3 /* StreetReportCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetReportCard.swift; sourceTree = "<group>"; };
 		21DCF82627E63090000BD1B3 /* Follower.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Follower.swift; sourceTree = "<group>"; };
@@ -290,6 +299,7 @@
 				21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */,
 				21E92CB628552572005D11DE /* StoreKit.framework in Frameworks */,
 				B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */,
+				21CB97ED2889933900F35464 /* Shimmer in Frameworks */,
 				213E8ECA282D3F39002A1495 /* SwiftPieChart in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,6 +444,7 @@
 		217DA73726CC90F60039A145 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				21DA5AC628844CF80051673E /* Heatmap */,
 				21E908D8285638850039F703 /* Store */,
 				218ECBBD2709325E00D06603 /* Missions */,
 				217AA0C026FB5BFB00B994B3 /* Onboarding */,
@@ -490,6 +501,7 @@
 				2168555A2860B2E400E445EB /* SpotSelectionList.swift */,
 				2110D051286F2151003B71DA /* PublicStampView.swift */,
 				2110D053286F4141003B71DA /* PostCommentView.swift */,
+				218CF042288594E400DF86FA /* FeedBubbleView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -550,6 +562,7 @@
 				21C91E6227E8AD330050D06F /* Level.swift */,
 				211F6AB028577EFF00441790 /* Product.swift */,
 				21EE8A28285CB0A400719D0B /* Trail.swift */,
+				21DA5AC9288453C70051673E /* Feed.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -576,6 +589,15 @@
 				213E8E692858C12C00B04E24 /* StorePageViewModel.swift */,
 			);
 			path = StreetPass;
+			sourceTree = "<group>";
+		};
+		21DA5AC628844CF80051673E /* Heatmap */ = {
+			isa = PBXGroup;
+			children = (
+				21DA5AC728844D7E0051673E /* FeedView.swift */,
+				21CB97E92889750900F35464 /* FeedViewModel.swift */,
+			);
+			path = Heatmap;
 			sourceTree = "<group>";
 		};
 		21E908D8285638850039F703 /* Store */ = {
@@ -631,6 +653,7 @@
 				213E8EC9282D3F39002A1495 /* SwiftPieChart */,
 				219A9C0F2850E1F400BD6060 /* CodeScanner */,
 				211F6AB328578A8400441790 /* PartialSheet */,
+				21CB97EC2889933900F35464 /* Shimmer */,
 			);
 			productName = CityXcape;
 			productReference = 217DA72426CC8F8B0039A145 /* CityXcape.app */;
@@ -666,6 +689,7 @@
 				213E8EC8282D3F39002A1495 /* XCRemoteSwiftPackageReference "SwiftPieChart" */,
 				219A9C0E2850E1F400BD6060 /* XCRemoteSwiftPackageReference "CodeScanner" */,
 				211F6AB228578A8400441790 /* XCRemoteSwiftPackageReference "PartialSheet" */,
+				21CB97EB2889933900F35464 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
 			);
 			productRefGroup = 217DA72526CC8F8B0039A145 /* Products */;
 			projectDirPath = "";
@@ -776,8 +800,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				21B1A4C1280D843F00B0AFE2 /* EditSpotView.swift in Sources */,
+				21DA5AC828844D7E0051673E /* FeedView.swift in Sources */,
 				21ACA5D42814281E0034D0AD /* LaunchView.swift in Sources */,
 				21E908D7285637E10039F703 /* StoreItem.swift in Sources */,
+				21DA5ACA288453C70051673E /* Feed.swift in Sources */,
 				219CA8F2275A61DD00F1C61E /* PostViewModel.swift in Sources */,
 				2106A9CE2848EA05000BCD10 /* PlugLight.swift in Sources */,
 				21B611F627E753F700361508 /* RowView.swift in Sources */,
@@ -862,6 +888,7 @@
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,
 				2167AEA2283949B100E9F36E /* PublicStreetPassVM.swift in Sources */,
 				2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */,
+				21CB97EA2889750900F35464 /* FeedViewModel.swift in Sources */,
 				216AA7192875D17F00C719D3 /* EditMap.swift in Sources */,
 				217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */,
 				217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */,
@@ -873,6 +900,7 @@
 				21C91E6127E8A9FD0050D06F /* Ranks.swift in Sources */,
 				217DAF3026CD7A1C00A395BC /* SecretSpotView.swift in Sources */,
 				217C08DC26D1C38E00751933 /* OnboardingView.swift in Sources */,
+				218CF043288594E400DF86FA /* FeedBubbleView.swift in Sources */,
 				218115EB27315E9400026AAD /* NotificationsManager.swift in Sources */,
 				21785D9626D547AC0049CE2D /* SettingsRowView.swift in Sources */,
 				21D2413C27CCFE41004D3150 /* Verification.swift in Sources */,
@@ -1130,6 +1158,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		21CB97EB2889933900F35464 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markiv/SwiftUI-Shimmer";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
@@ -1155,6 +1191,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 219A9C0E2850E1F400BD6060 /* XCRemoteSwiftPackageReference "CodeScanner" */;
 			productName = CodeScanner;
+		};
+		21CB97EC2889933900F35464 /* Shimmer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21CB97EB2889933900F35464 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */;
+			productName = Shimmer;
 		};
 		21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;

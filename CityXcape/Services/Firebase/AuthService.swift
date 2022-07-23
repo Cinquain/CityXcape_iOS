@@ -10,7 +10,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseMessaging
 import UIKit
-
+import GeoFire
 
 let DB_BASE = Firestore.firestore()
 
@@ -19,10 +19,12 @@ class AuthService {
     
     
     static let instance = AuthService()
+    let locationManager = LocationService.instance
     private init() {}
     
     private var REF_USERS = DB_BASE.collection("users")
     private var REF_Rankings = DB_BASE.collection("rankings")
+    private var REF_FEED = DB_BASE.collection(ServerPath.feed)
 
     
     func loginUserToFirebase(credential: AuthCredential, completion: @escaping (_ providerId: String?, _ error: Bool, _ isNewUser: Bool?, _ userId: String?) -> ()) {
@@ -139,6 +141,10 @@ class AuthService {
         
         let document = REF_USERS.document()
         let userId = document.documentID
+        
+        let feedDocument = self.REF_FEED.document()
+        let feedId = feedDocument.documentID
+        
         var profileImageUrl = ""
         let fcmToken = Messaging.messaging().fcmToken ?? ""
         
@@ -158,12 +164,33 @@ class AuthService {
                 UserField.profileImageUrl: profileImageUrl,
                 UserField.dataCreated: FieldValue.serverTimestamp()
             ]
+           
+            let userLong = self.locationManager.userlocation?.longitude ?? 0
+            let userLat = self.locationManager.userlocation?.latitude ?? 0
+            let userHash = GFUtils.geoHash(forLocation: CLLocationCoordinate2D(latitude: userLat, longitude: userLong))
+            
+            let feedData: [String: Any] = [
+                FeedField.id: feedId,
+                FeedField.uid: userId,
+                FeedField.username: name,
+                FeedField.profileUrl: url,
+                FeedField.bio: "",
+                FeedField.rank: Ranking.Tourist.rawValue,
+                FeedField.date: FieldValue.serverTimestamp(),
+                FeedField.content: "\(name) just joined CityXcape",
+                FeedField.type: FeedType.signup.rawValue,
+                FeedField.longitude: userLong,
+                FeedField.latitude: userLat,
+                FeedField.geohash: userHash
+            ]
+            
             
             document.setData(userData) { (error) in
                 if let error = error {
                     print("Error uploading data to user document.", error.localizedDescription)
                     completion(nil)
                 } else {
+                    feedDocument.setData(feedData)
                     completion(userId)
                 }
             }
@@ -184,8 +211,9 @@ class AuthService {
             print("Successfully signed up with email")
             guard let uid = authResult?.user.uid else {return}
             
-            ImageManager.instance.uploadProfileImage(uid: uid, image: profileImage) { imageUrl in
+            ImageManager.instance.uploadProfileImage(uid: uid, image: profileImage) { [weak self] imageUrl in
                 guard let url = imageUrl else {return}
+                guard let self = self else {return}
                 let fcmToken = Messaging.messaging().fcmToken ?? ""
                 
                 let data: [String: Any] = [
@@ -201,6 +229,28 @@ class AuthService {
                     UserField.dataCreated: FieldValue.serverTimestamp()
                 ]
                 
+                let feedDocument = self.REF_FEED.document()
+                let feedId = feedDocument.documentID
+                let userLong = self.locationManager.userlocation?.longitude ?? 0
+                let userLat = self.locationManager.userlocation?.latitude ?? 0
+                let userHash = GFUtils.geoHash(forLocation: CLLocationCoordinate2D(latitude: userLat, longitude: userLong))
+                
+                let feedData: [String: Any] = [
+                    FeedField.id: feedId,
+                    FeedField.uid: uid,
+                    FeedField.username: username,
+                    FeedField.profileUrl: url,
+                    FeedField.bio: "",
+                    FeedField.rank: Ranking.Tourist.rawValue,
+                    FeedField.date: FieldValue.serverTimestamp(),
+                    FeedField.content: "\(username) just joined CityXcape",
+                    FeedField.type: FeedType.signup.rawValue,
+                    FeedField.longitude: userLong,
+                    FeedField.latitude: userLat,
+                    FeedField.geohash: userHash
+                ]
+                
+                
                 self.REF_USERS.document(uid).setData(data) { error in
                     
                     if let error = error {
@@ -209,6 +259,7 @@ class AuthService {
                     }
                     
                     print("Successfully uploaded data to Firestore")
+                    feedDocument.setData(feedData)
                     completion(uid, nil)
                 }
             }

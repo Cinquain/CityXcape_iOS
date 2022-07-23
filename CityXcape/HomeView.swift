@@ -26,55 +26,62 @@ struct HomeView: View {
        
         TabView(selection: $selectedTab) {
             
-            
-                MyWorld(selectedTab: $selectedTab)
+            FeedView()
                 .tabItem {
-                    Image(Icon.tabItemI.rawValue)
+                    Image(Icon.grid.rawValue)
                         .renderingMode(.template)
-                    Text(Labels.tab1.rawValue)
+                    Text(Labels.tab0.rawValue)
                 }
                 .tag(0)
-                .badge(discoverVM.newlySaved)
-                .fullScreenCover(isPresented: $manager.showPublicPass, content: {
-                    if let verification  = manager.stamp {
-                        PublicStampView(verification: verification)
-                    }
-                })
-                .onAppear {
-                    if manager.hasSpotNotification {
-                        selectedTab = 1
-                    }
-                    discoverVM.newlySaved = 0
-                }
-            
             
             DiscoverView(selectedTab: $selectedTab, vm: discoverVM)
                     .tabItem {
                         Image(Icon.tabItem0.rawValue)
                             .renderingMode(.template)
-                        Text(Labels.tab0.rawValue)
+                        Text(Labels.tab2.rawValue)
                     }
-                    .tag(1)
+                    .tag(2)
                     .badge(discoverVM.newSecretSpots.count)
             
-    
-     
-            MapContainer(selectedTab: $selectedTab)
-                .edgesIgnoringSafeArea(.top)
-                .tabItem {
-                    Image(Icon.tabItemII.rawValue)
-                        .renderingMode(.template)
-                    Text(Labels.tab2.rawValue)
+            
+           MapContainer(selectedTab: $selectedTab)
+               .edgesIgnoringSafeArea(.top)
+               .tabItem {
+                   Image(Icon.tabItemII.rawValue)
+                       .renderingMode(.template)
+                   Text(Labels.tab3.rawValue)
+               }
+               .tag(3)
+            
+            
+            MyWorld(selectedTab: $selectedTab)
+            .tabItem {
+                Image(Icon.tabItemI.rawValue)
+                    .renderingMode(.template)
+                Text(Labels.tab1.rawValue)
+            }
+            .tag(1)
+            .badge(discoverVM.newlySaved)
+            .fullScreenCover(isPresented: $manager.showPublicPass, content: {
+                if let verification  = manager.stamp {
+                    PublicStampView(verification: verification)
                 }
-                .tag(2)
+            })
+            .onAppear {
+                if manager.hasSpotNotification {
+                    selectedTab = 2
+                }
+                discoverVM.newlySaved = 0
+            }
+            
             
             StreetPass()
                 .tabItem {
                     Image(Icon.tabItemIII.rawValue)
                         .renderingMode(.template)
-                    Text(Labels.tab3.rawValue)
+                    Text(Labels.tab4.rawValue)
                 }
-                .tag(3)
+                .tag(4)
                 
         }
         .accentColor(.orange)

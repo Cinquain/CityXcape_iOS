@@ -11,8 +11,8 @@ import SwiftUI
 class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControllerDelegate {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
 
-    
     @Published var verifications: [Verification] = []
     @Published var cities: [String: Int] = [:]
     @Published var showCollection: Bool = false
@@ -92,24 +92,35 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     }
     
     func replaceStampImage(completion: @escaping (_ url: String) -> ()) {
-        if let image = passportImage {
-            DataService.instance.changeStampPhoto(postId: updateStampId, image: image) { [weak self] result in
-                guard let self = self else {return}
-                switch result {
-                case .success(let imageUrl):
-                    DispatchQueue.main.async {
-                        self.url = imageUrl
-                        self.alertMessage = "Successfully replaced image."
+        guard var wallet = wallet else {return}
+        if wallet >= 1 {
+            
+            wallet -= 1
+            UserDefaults.standard.set(wallet, forKey: CurrentUserDefaults.wallet)
+            if let image = passportImage {
+                DataService.instance.changeStampPhoto(postId: updateStampId, image: image) { [weak self] result in
+                    guard let self = self else {return}
+                    switch result {
+                    case .success(let imageUrl):
+                        DispatchQueue.main.async {
+                            self.url = imageUrl
+                            self.alertMessage = "Successfully replaced image. -1 StreetCred"
+                            self.showAlert = true
+                            self.getVerificationsForUser()
+                            completion(imageUrl)
+                        }
+                    case .failure(let error):
+                        self.alertMessage = "Error upload image: \(error.localizedDescription)"
                         self.showAlert = true
-                        self.getVerificationsForUser()
-                        completion(imageUrl)
                     }
-                case .failure(let error):
-                    self.alertMessage = "Error upload image: \(error.localizedDescription)"
-                    self.showAlert = true
                 }
             }
+            
+        } else {
+            self.alertMessage = "You need 1 Streetcred to change stamp photo"
+            self.showAlert = true
         }
+    
     }
     
     func shareStampImage(object: Verification) {

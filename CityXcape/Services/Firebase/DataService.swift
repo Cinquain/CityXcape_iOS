@@ -21,26 +21,34 @@ class DataService {
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     @AppStorage(CurrentUserDefaults.bio) var bio: String?
     @AppStorage(CurrentUserDefaults.social) var social: String?
+    @AppStorage(CurrentUserDefaults.rank) var rank: String?
+
 
     
     static let instance = DataService()
     let manager = CoreDataManager.instance
+    let locationManager = LocationService.instance
+    
     private init() {}
     
-    private var REF_POST = DB_BASE.collection("posts")
-    private var REF_USERS = DB_BASE.collection("users")
-    private var REF_REPORTS = DB_BASE.collection("reports")
+    private var REF_POST = DB_BASE.collection(ServerPath.posts)
+    private var REF_USERS = DB_BASE.collection(ServerPath.users)
+    private var REF_REPORTS = DB_BASE.collection(ServerPath.report)
     private var REF_WORLD = DB_BASE.collection(ServerPath.world)
     private var REF_FOLLOWERS = DB_BASE.collection(ServerPath.followers)
-    private var REF_Rankings = DB_BASE.collection("rankings")
+    private var REF_Rankings = DB_BASE.collection(ServerPath.rankings)
     private var REF_TRAILS = DB_BASE.collection(ServerPath.trail)
     private var REF_HUNTS = DB_BASE.collection(ServerPath.hunt)
     private var REF_CITY = DB_BASE.collection(ServerPath.cities)
+    private var REF_FEED = DB_BASE.collection(ServerPath.feed)
     //MARK: CREATE FUNCTIONS
     
     func uploadSecretSpot(spotName: String, description: String, image: UIImage, price: Int, world: String, mapItem: MKMapItem, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
         
         let document = REF_POST.document()
+        let feedDocument = REF_FEED.document()
+
+        let feedId = feedDocument.documentID
         let spotId = document.documentID
         let address = mapItem.getAddress()
         let longitude = mapItem.placemark.coordinate.longitude
@@ -49,26 +57,33 @@ class DataService {
         let zipCode = mapItem.getPostCode()
         let location = CLLocationCoordinate2D(latitude: mapItem.placemark.coordinate.latitude,
                                               longitude: mapItem.placemark.coordinate.longitude)
+        let geohash = GFUtils.geoHash(forLocation: location)
+
+        
+        let userLong = locationManager.userlocation?.longitude ?? 0
+        let userLat = locationManager.userlocation?.latitude ?? 0
+        let userHash = GFUtils.geoHash(forLocation: CLLocationCoordinate2D(latitude: userLat, longitude: userLong))
+        
         if spotCity == "" {
             location.fetchCityAndCountry { city, country, error in
                 spotCity = city ?? ""
             }
         }
-        let state = mapItem.getState()
         
-        let geohash = GFUtils.geoHash(forLocation: location)
         
         guard let uid = userId,
               let ownerImageUrl = profileUrl,
-              let ownerDisplayName = displayName
+              let ownerDisplayName = displayName,
+              let bio = bio
         else {
             print("Error getting user defaults at DataService")
             return
         }
         let instagram = social ?? ""
-        let cityRef = REF_CITY.document("\(spotCity),\(state)").collection("spots")
-        let userWorldRef = REF_WORLD.document("private").collection(uid).document(spotId)
-        ImageManager.instance.uploadSecretSpotImage(image: image, postId: spotId) { (urlString) in
+        let rank = rank ?? "tourist"
+        
+        ImageManager.instance.uploadSecretSpotImage(image: image, postId: spotId) { [weak self] (urlString) in
+            guard let self = self else {return}
             
             if let downloadUrl = urlString {
                 
@@ -107,12 +122,31 @@ class DataService {
                     } else {
                         
                     print("Successfully saved secret spots to public world")
-                    //Save to respective city
-                    cityRef.document(spotId).setData(spotData)
-
+                    //Save to Feed
+                    let feedData: [String: Any] = [
+                        FeedField.id: feedId,
+                        FeedField.uid: uid,
+                        FeedField.username: ownerDisplayName,
+                        FeedField.profileUrl: ownerImageUrl,
+                        FeedField.bio: bio,
+                        FeedField.rank: rank,
+                        FeedField.date: FieldValue.serverTimestamp(),
+                        FeedField.content: spotName,
+                        FeedField.type: FeedType.spot.rawValue,
+                        FeedField.longitude: userLong,
+                        FeedField.spotId: spotId,
+                        FeedField.latitude: userLat,
+                        FeedField.geohash: userHash
+                    ]
+                        
+                    feedDocument.setData(feedData)
+                        
+                    //Save to user's world
+                    let userWorldRef = self.REF_WORLD.document(ServerPath.secret).collection(uid).document(spotId)
                     let savedData: [String: Any] =
                         ["savedOn": FieldValue.serverTimestamp()]
                     userWorldRef.setData(savedData)
+                        
                     //Increment User StreetCred & world dictionary
                     let increment: Int64 = 1
                     let userData : [String: Any] = [
@@ -137,14 +171,20 @@ class DataService {
 }
     
     func saveToUserWorld(spot: SecretSpot, completion: @escaping (_ success: Bool) -> ()) {
-        
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName, let bio = bio
+        else {return}
         let spotId = spot.id
+        let feedDocument = REF_FEED.document()
+        let feedId = feedDocument.documentID
+
         //Save swipe to history
         let historyData: [String: Any] =
             ["savedOn": FieldValue.serverTimestamp()]
-        guard let uid = userId else {return}
-        REF_WORLD.document("history").collection(uid).document(spotId).setData(historyData)
-        
+        REF_WORLD.document(ServerPath.history)
+                        .collection(uid)
+                        .document(spotId)
+                        .setData(historyData)
+
         //Increment view and save count by one
         let increment: Int64 = 1
         let data: [String: Any] = [
@@ -158,42 +198,63 @@ class DataService {
         
         let savedData: [String: Any] =
             ["savedOn": FieldValue.serverTimestamp(),
-             UserField.displayName: displayName ?? "",
-             UserField.profileImageUrl: profileUrl ?? "",
+             UserField.displayName: displayName,
+             UserField.profileImageUrl: imageUrl,
              UserField.providerId: uid,
-             UserField.bio: bio ?? "",
+             UserField.bio: bio,
              UserField.ig: social ?? ""
             ]
         
-        REF_WORLD.document("private").collection(uid).document(spotId).setData(savedData)
+        REF_WORLD.document(ServerPath.secret).collection(uid).document(spotId).setData(savedData)
 
         //Add user to saved collection in spot
-        REF_POST.document(spotId).collection("savedBy").document(uid).setData(savedData) { error in
+        REF_POST.document(spotId).collection(ServerPath.save).document(uid).setData(savedData) { [weak self] error in
+            guard let self = self else {return}
             if let error = error {
                 print("Error saving user to saved collection of secret spot", error.localizedDescription)
                 completion(false)
                 return
             }
-            print("Successful saved user to saved collection of secret spot")
+            
+            //Decrement buyer wallet remotely
+            let decrement: Int64 = -1
+            let userData : [String: Any] = [
+                UserField.streetCred : FieldValue.increment(decrement)
+            ]
+            AuthService.instance.updateUserField(uid: uid, data: userData)
+            
+            
+            //Increment owner wallet
+            let ownerId = spot.ownerId
+            let ownerWalletData: [String: Any] = [
+                UserField.streetCred : FieldValue.increment(increment)
+            ]
+            AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
+            let rank = self.rank ?? "Tourist"
+            let userLong = self.locationManager.userlocation?.longitude ?? 0
+            let userLat = self.locationManager.userlocation?.latitude ?? 0
+            let userHash = GFUtils.geoHash(forLocation: CLLocationCoordinate2D(latitude: userLat, longitude: userLong))
+            
+            let feedData: [String: Any] = [
+                FeedField.id: feedId,
+                FeedField.uid: uid,
+                FeedField.username: displayName,
+                FeedField.profileUrl: imageUrl,
+                FeedField.bio: bio,
+                FeedField.rank: rank,
+                FeedField.date: FieldValue.serverTimestamp(),
+                FeedField.content: spot.spotName,
+                FeedField.type: FeedType.save.rawValue,
+                FeedField.spotId: spotId,
+                FeedField.longitude: userLong,
+                FeedField.latitude: userLat,
+                FeedField.geohash: userHash
+            ]
+            
+            feedDocument.setData(feedData)
             completion(true)
+            
         }
-        
-        //Decrement buyer wallet remotely 
-        let decrement: Int64 = -1
-        let userData : [String: Any] = [
-            UserField.streetCred : FieldValue.increment(decrement)
-        ]
-        
-        AuthService.instance.updateUserField(uid: uid, data: userData)
-        
-        
-        //Increment owner wallet
-        let ownerId = spot.ownerId
-        let ownerWalletData: [String: Any] = [
-            UserField.streetCred : FieldValue.increment(increment)
-        ]
-        AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
-       
 
     }
     
@@ -410,6 +471,52 @@ class DataService {
         
     }
     
+    func postFeedMessage(content: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName, let bio = bio
+        else {return}
+        let feedDocument = REF_FEED.document()
+        let feedId = feedDocument.documentID
+        
+        let rank = self.rank ?? "Tourist"
+        let userLong = self.locationManager.userlocation?.longitude ?? 0
+        let userLat = self.locationManager.userlocation?.latitude ?? 0
+        let userHash = GFUtils.geoHash(forLocation: CLLocationCoordinate2D(latitude: userLat, longitude: userLong))
+        
+        let feedData: [String: Any] = [
+            FeedField.id: feedId,
+            FeedField.uid: uid,
+            FeedField.username: displayName,
+            FeedField.profileUrl: imageUrl,
+            FeedField.bio: bio,
+            FeedField.rank: rank,
+            FeedField.date: FieldValue.serverTimestamp(),
+            FeedField.content: content,
+            FeedField.type: FeedType.message.rawValue,
+            FeedField.longitude: userLong,
+            FeedField.latitude: userLat,
+            FeedField.geohash: userHash
+        ]
+        
+        feedDocument.setData(feedData) { error in
+            
+            if let error = error {
+                print("Error sending feed to FB", error.localizedDescription)
+                completion(.failure(error))
+            }
+            
+            let decrement: Int64  = -1
+            let walletData: [String: Any] = [
+                UserField.streetCred : FieldValue.increment(decrement)
+            ]
+            
+            AuthService.instance.updateUserField(uid: uid, data: walletData)
+            completion(.success(true))
+            
+        }
+        
+        
+    }
+    
 
     func checkIfVerificationExist(spotId: String, completion: @escaping(Result<Bool,Error>) -> Void) {
         guard let uid = userId else {return}
@@ -430,9 +537,12 @@ class DataService {
     
     
     func updateStamp(spot: SecretSpot, image: UIImage?, comment: String?, completion: @escaping (Result<Bool, Error>) -> ()) {
-        guard let uid = userId, let profileUrl = profileUrl else {return}
+        guard let uid = userId, let profileUrl = profileUrl, let bio = bio, let displayName = displayName else {return}
         let postId = spot.id
         let ownerId = spot.ownerId
+        let feedDocument = REF_FEED.document()
+        let feedId = feedDocument.documentID
+        
         let ref = REF_WORLD.document(ServerPath.verified).collection(uid).document(postId)
         let dateFormatter = DateFormatter()
         let date = Date()
@@ -470,6 +580,7 @@ class DataService {
         }
         
         ref.setData(updateData, merge: true) { [weak self] error in
+            guard let self = self else {return}
             if let error = error {
                 completion(.failure(error))
                 return
@@ -482,7 +593,7 @@ class DataService {
             let verifierRankData: [String: Any] = [
                 RankingField.totalStamps: FieldValue.increment(checkinIncrement)
             ]
-            self?.REF_Rankings.document(uid).updateData(verifierRankData)
+            self.REF_Rankings.document(uid).updateData(verifierRankData)
             AuthService.instance.updateUserField(uid: uid, data: verifierWalletData)
             //Update owner wallet
             let ownerWalletData: [String: Any] = [
@@ -492,12 +603,35 @@ class DataService {
             let ownerRankData: [String: Any] = [
                 RankingField.totalVerifications: FieldValue.increment(checkinIncrement)
             ]
-            self?.REF_Rankings.document(ownerId).updateData(ownerRankData)
+            self.REF_Rankings.document(ownerId).updateData(ownerRankData)
             AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
             
             //Update Last Verified
-            self?.manager.updateLastVerified(spotId: postId, date: Date())
+            self.manager.updateLastVerified(spotId: postId, date: Date())
             
+            //Update Feed
+            let rank = self.rank ?? "Tourist"
+            let userLong = self.locationManager.userlocation?.longitude ?? 0
+            let userLat = self.locationManager.userlocation?.latitude ?? 0
+            let userHash = GFUtils.geoHash(forLocation: CLLocationCoordinate2D(latitude: userLat, longitude: userLong))
+            
+            let feedData: [String: Any] = [
+                FeedField.id: feedId,
+                FeedField.uid: uid,
+                FeedField.username: displayName,
+                FeedField.profileUrl: profileUrl,
+                FeedField.bio: bio,
+                FeedField.rank: rank,
+                FeedField.date: FieldValue.serverTimestamp(),
+                FeedField.content: spot.spotName,
+                FeedField.type: FeedType.stamp.rawValue,
+                FeedField.spotId: postId,
+                FeedField.longitude: userLong,
+                FeedField.latitude: userLat,
+                FeedField.geohash: userHash
+            ]
+            
+            feedDocument.setData(feedData)
             completion(.success(true))
         }
         
@@ -506,8 +640,9 @@ class DataService {
     
     
     func verifySecretSpot(spot: SecretSpot, image: UIImage, comment: String, completion: @escaping (_ success: Bool, _ error: String?) ->()) {
-        guard let uid = userId, let username = displayName, let profileUrl = profileUrl else {return}
-        
+        guard let uid = userId, let username = displayName, let profileUrl = profileUrl, let bio = bio else {return}
+        let feedDocument = REF_FEED.document()
+        let feedId = feedDocument.documentID
         let postId = spot.id
         let ownerId = spot.ownerId
        
@@ -548,8 +683,8 @@ class DataService {
                 
                 self?.REF_POST.document(postId).updateData(fieldUpdate)
                 
-                self?.REF_POST.document(postId).collection("verifiers").document(uid).setData(checkinData) { error in
-                    
+                self?.REF_POST.document(postId).collection("verifiers").document(uid).setData(checkinData) { [weak self] error in
+                    guard let self = self else {return}
                     if let error = error {
                         print("Error saving check-in to database", error.localizedDescription)
                         completion(false, error.localizedDescription)
@@ -566,7 +701,7 @@ class DataService {
                     let verifierRankData: [String: Any] = [
                         RankingField.totalStamps: FieldValue.increment(oneIncrement)
                     ]
-                    self?.REF_Rankings.document(uid).updateData(verifierRankData)
+                    self.REF_Rankings.document(uid).updateData(verifierRankData)
                     AuthService.instance.updateUserField(uid: uid, data: verifierWalletData)
                     
                     
@@ -578,10 +713,32 @@ class DataService {
                     let ownerRankData: [String: Any] = [
                         RankingField.totalVerifications: FieldValue.increment(oneIncrement)
                     ]
-                    self?.REF_Rankings.document(ownerId).updateData(ownerRankData)
+                    self.REF_Rankings.document(ownerId).updateData(ownerRankData)
                     AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
                     
-                    print("Successfully saved verification to DB")
+                    //Update Feed
+                    let rank = self.rank ?? "Tourist"
+                    let userLong = self.locationManager.userlocation?.longitude ?? 0
+                    let userLat = self.locationManager.userlocation?.latitude ?? 0
+                    let userHash = GFUtils.geoHash(forLocation: CLLocationCoordinate2D(latitude: userLat, longitude: userLong))
+                    
+                    let feedData: [String: Any] = [
+                        FeedField.id: feedId,
+                        FeedField.uid: uid,
+                        FeedField.username: username,
+                        FeedField.profileUrl: imageUrl,
+                        FeedField.bio: bio,
+                        FeedField.rank: rank,
+                        FeedField.date: FieldValue.serverTimestamp(),
+                        FeedField.content: spot.spotName,
+                        FeedField.type: FeedType.stamp.rawValue,
+                        FeedField.spotId: postId,
+                        FeedField.longitude: userLong,
+                        FeedField.latitude: userLat,
+                        FeedField.geohash: userHash
+                    ]
+                    
+                    feedDocument.setData(feedData)
                     completion(true, nil)
                 }
             } else {
@@ -597,11 +754,18 @@ class DataService {
         guard let uid = userId else {return}
         let ref = REF_WORLD.document(ServerPath.verified).collection(uid).document(postId)
         
+        let decrement: Int64 = -1
+        let walletData: [String: Any] = [
+            UserField.streetCred : FieldValue.increment(decrement)
+        ]
+        AuthService.instance.updateUserField(uid: uid, data: walletData)
+
         ImageManager.instance.uploadVerifyImage(image: image, userId: uid, postId: postId) { url in
             if let imageUrl = url {
                 let imageData: [String: Any] = [
                     CheckinField.image: imageUrl
                 ]
+                
                 ref.updateData(imageData) { error in
                     if let error = error {
                         completion(.failure(error))
@@ -613,6 +777,7 @@ class DataService {
                 
             }
         }
+        
     }
     
     func getVerifications(uid: String, completion: @escaping (_ verifications: [Verification]) ->()) {
@@ -762,6 +927,30 @@ class DataService {
         }
     }
     
+    func getCityFeed(completion: @escaping (Result<[Feed],Error>) -> Void) {
+        var feeds: [Feed] = []
+        REF_FEED
+            .order(by: FeedField.date, descending: true)
+            .limit(toLast: 25)
+            .addSnapshotListener { snapshot, error in
+                
+                if let error = error {
+                    print("Error fetching feed from database", error.localizedDescription)
+                    completion(.failure(error))
+                }
+                
+                if let snapshot = snapshot, snapshot.count > 0 {
+                    let documents = snapshot.documents
+                    
+                    documents.forEach { snap in
+                        let data = snap.data()
+                        let feed = Feed(data: data)
+                        feeds.append(feed)
+                    }
+                    completion(.success(feeds))
+                }
+            }
+    }
     
     func getSpotsFromWorld(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
         REF_WORLD.document("private").collection(userId).addSnapshotListener { snapshot, error in
@@ -914,9 +1103,11 @@ class DataService {
     
     func streetFollowUser(user: User, fcmToken: String, completion: @escaping (_ succcess: Bool) -> ()) {
         
-        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName else {return}
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName, let bio = bio else {return}
         let following = REF_WORLD.document(ServerPath.followers).collection(user.id).document(uid)
         let follower = REF_WORLD.document(ServerPath.following).collection(uid).document(user.id)
+        let feedDocument = REF_FEED.document()
+        let feedId = feedDocument.documentID
 
         let followerData: [String: Any] = [
             UserField.providerId: uid,
@@ -934,6 +1125,44 @@ class DataService {
         
         follower.setData(followingData)
         
+        let rank = self.rank ?? "Tourist"
+        let userLong = self.locationManager.userlocation?.longitude ?? 0
+        let userLat = self.locationManager.userlocation?.latitude ?? 0
+        let userHash = GFUtils.geoHash(forLocation: CLLocationCoordinate2D(latitude: userLat, longitude: userLong))
+        
+        let feedData: [String: Any] = [
+            FeedField.id: feedId,
+            FeedField.uid: uid,
+            FeedField.username: displayName,
+            FeedField.profileUrl: imageUrl,
+            FeedField.bio: bio,
+            FeedField.rank: rank,
+            FeedField.date: FieldValue.serverTimestamp(),
+            FeedField.content: user.displayName,
+            FeedField.type: FeedType.streetFollow.rawValue,
+            FeedField.userId: user.id,
+            FeedField.longitude: userLong,
+            FeedField.latitude: userLat,
+            FeedField.geohash: userHash
+        ]
+        
+        feedDocument.setData(feedData)
+        
+        //Decrement follower's wallet remotely
+        let decrement: Int64 = -1
+        let followerWallet : [String: Any] = [
+            UserField.streetCred : FieldValue.increment(decrement)
+        ]
+        AuthService.instance.updateUserField(uid: uid, data: followerWallet)
+        
+        //Increment following's wallet remotely
+        let increment: Int64 = 1
+        let follwingWallet: [String: Any] = [
+            UserField.streetCred : FieldValue.increment(increment)
+        ]
+        AuthService.instance.updateUserField(uid: user.id, data: follwingWallet)
+
+     
         following.setData(followerData) { error in
             if let err = error {
                 print("Error saving new Street Follower", err.localizedDescription)

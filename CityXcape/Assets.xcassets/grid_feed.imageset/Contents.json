@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "grid_feed.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
