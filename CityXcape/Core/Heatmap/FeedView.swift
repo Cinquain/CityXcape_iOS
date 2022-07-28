@@ -13,7 +13,7 @@ struct FeedView: View {
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
 
     
-    @StateObject var vm: FeedViewModel = FeedViewModel()
+    @StateObject var vm: FeedViewModel
     
     var body: some View {
 
@@ -29,6 +29,11 @@ struct FeedView: View {
                 
             }
             commentField
+                .opacity(0.8)
+                .sheet(item: $vm.secretSpot) { spot in
+                    SecretSpotPage(spot: spot)
+                }
+               
             
         }
         .background(
@@ -60,11 +65,15 @@ extension FeedView {
                 .resizable()
                 .scaledToFit()
                 .frame(height: 50)
+              
+            
             Spacer()
         }
         .padding(.horizontal, 20)
         .foregroundColor(.white)
     }
+    
+    
     private var streetBackground: some View {
         Image("colored-paths")
             .resizable()
@@ -72,7 +81,9 @@ extension FeedView {
             .frame(height: UIScreen.screenHeight)
             .clipped()
             .opacity(0.7)
+          
     }
+    
     private var commentField: some View {
         HStack {
             UserDotView(imageUrl: profileUrl ?? "", width: 30)
@@ -104,6 +115,6 @@ extension FeedView {
 
 struct Feed_Previews: PreviewProvider {
     static var previews: some View {
-        FeedView()
+        FeedView(vm: FeedViewModel())
     }
 }

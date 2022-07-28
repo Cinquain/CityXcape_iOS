@@ -40,10 +40,10 @@ class PublicStreetPassVM: NSObject, ObservableObject {
         DataService.instance.streetFollowUser(user: user, fcmToken: fcm) { [weak self] succcess in
             guard let self = self else {return}
             if succcess {
-                self.alertMessage = "Following \(user.displayName)"
+                self.alertMessage = "Street Following \(user.displayName)"
                 self.showAlert = true
             } else {
-                self.alertMessage = "Cannot follow \(user.displayName)"
+                self.alertMessage = "Cannot street follow \(user.displayName)"
                 self.showAlert = true
             }
         }

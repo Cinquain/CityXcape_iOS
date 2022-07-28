@@ -14,7 +14,8 @@ struct HomeView: View {
     @State var selectedTab: Int = 0
     @StateObject var manager = NotificationsManager.instance
     @StateObject var discoverVM: DiscoverViewModel = DiscoverViewModel()
-    
+    @StateObject var feedVM: FeedViewModel = FeedViewModel()
+
     init() {
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithOpaqueBackground()
@@ -26,22 +27,33 @@ struct HomeView: View {
        
         TabView(selection: $selectedTab) {
             
-            FeedView()
+            FeedView(vm: feedVM)
                 .tabItem {
                     Image(Icon.grid.rawValue)
                         .renderingMode(.template)
                     Text(Labels.tab0.rawValue)
                 }
                 .tag(0)
+                .badge(feedVM.newFeeds)
+                .onAppear {
+                    feedVM.newFeeds = 0
+                }
+                .fullScreenCover(item: $manager.stamp, content: { verification in
+                    PublicStampView(verification: verification)
+                })
             
-            DiscoverView(selectedTab: $selectedTab, vm: discoverVM)
-                    .tabItem {
-                        Image(Icon.tabItem0.rawValue)
-                            .renderingMode(.template)
-                        Text(Labels.tab2.rawValue)
-                    }
-                    .tag(2)
-                    .badge(discoverVM.newSecretSpots.count)
+            
+            MyWorld(selectedTab: $selectedTab)
+            .tabItem {
+                Image(Icon.tabItemI.rawValue)
+                    .renderingMode(.template)
+                Text(Labels.tab1.rawValue)
+            }
+            .tag(1)
+            .badge(discoverVM.newlySaved)
+            .fullScreenCover(item: $manager.secretSpot) { spot in
+                SecretSpotPage(spot: spot)
+            }
             
             
            MapContainer(selectedTab: $selectedTab)
@@ -54,25 +66,18 @@ struct HomeView: View {
                .tag(3)
             
             
-            MyWorld(selectedTab: $selectedTab)
-            .tabItem {
-                Image(Icon.tabItemI.rawValue)
-                    .renderingMode(.template)
-                Text(Labels.tab1.rawValue)
-            }
-            .tag(1)
-            .badge(discoverVM.newlySaved)
-            .fullScreenCover(isPresented: $manager.showPublicPass, content: {
-                if let verification  = manager.stamp {
-                    PublicStampView(verification: verification)
+            DiscoverView(selectedTab: $selectedTab, vm: discoverVM)
+                .tabItem {
+                    Image(Icon.tabItem0.rawValue)
+                        .renderingMode(.template)
+                    Text(Labels.tab2.rawValue)
                 }
-            })
-            .onAppear {
-                if manager.hasSpotNotification {
-                    selectedTab = 2
+                .tag(2)
+                .badge(discoverVM.newSecretSpots.count)
+                .sheet(item: $manager.user) { user in
+                    PublicStreetPass(user: user)
                 }
-                discoverVM.newlySaved = 0
-            }
+        
             
             
             StreetPass()

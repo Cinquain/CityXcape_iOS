@@ -10,10 +10,9 @@ import SwiftUI
 struct FeedBubbleView: View {
     
     var feed: Feed
-    var vm: FeedViewModel
+    @StateObject var vm: FeedViewModel
     
     var width: CGFloat = UIScreen.screenWidth
-    @State private var showPass: Bool = false
     
     var body: some View {
  
@@ -25,6 +24,7 @@ struct FeedBubbleView: View {
             }
             .background(Color.black.opacity(0.5))
             .cornerRadius(12)
+       
             
 
     }
@@ -34,39 +34,43 @@ struct FeedBubbleView: View {
 extension FeedBubbleView {
     
     private var buttonContent: some View {
+        
         Button {
-            //TBD
+            vm.calculateAction(feed: feed)
         } label: {
-          
             vm.calculateView(feed: feed)
                 .fontWeight(.thin)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.white)
-            
         }
-
+        .sheet(item: $vm.user) { user in
+            PublicStreetPass(user: user)
+        }
+        
     }
     
     private var stamp: some View {
+        
         Image("Stamp")
             .resizable()
             .scaledToFit()
             .frame(height: 40)
             .padding(.leading, 20)
+    
     }
     
     private var userButton: some View {
         Button {
-            showPass.toggle()
+            vm.showView.toggle()
         } label: {
             UserDotView(imageUrl: feed.userImageUrl, width: 60)
         }
         .padding(.leading, 20)
-        .sheet(isPresented: $showPass) {
-            let user = User(feed: feed)
-            PublicStreetPass(user: user)
+        .fullScreenCover(item: $vm.verification) { verification in
+            PublicStampView(verification: verification)
         }
+
     }
     
     

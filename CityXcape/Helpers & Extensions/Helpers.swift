@@ -142,6 +142,9 @@ struct FeedField {
     static let message = "message"
     static let spotId = "post_id"
     static let userId = "user_id"
+    static let stampImageUrl = "stamp_image"
+    static let followingImage = "following_image"
+    static let followingName = "following_username"
 }
 
 struct CurrentUserDefaults {
@@ -223,7 +226,7 @@ enum Icon: String {
 
 enum Labels: String {
     case tab0 = "Feed"
-    case tab1 = "My World"
+    case tab1 = "My Spots"
     case tab2 = "Discover"
     case tab3 = "Post Spot"
     case tab4 = "StreetPass"

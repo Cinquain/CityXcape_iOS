@@ -136,7 +136,8 @@ class DataService {
                         FeedField.longitude: userLong,
                         FeedField.spotId: spotId,
                         FeedField.latitude: userLat,
-                        FeedField.geohash: userHash
+                        FeedField.geohash: userHash,
+                        FeedField.stampImageUrl: downloadUrl
                     ]
                         
                     feedDocument.setData(feedData)
@@ -1021,13 +1022,38 @@ class DataService {
                     completion(.failure(.failed))
                     print("Error loading spot", error.localizedDescription)
                 }
+                print("Found specific spot")
                 guard let snap = snapshot else {return}
                 snap.documents.forEach { document in
                     let data = document.data()
                     let spot = SecretSpot(data: data)
+                    print(spot)
                     completion(.success(spot))
                 }
             }
+    }
+    
+    func getSpecificVerification(postId: String, uid: String, completion: @escaping (Result<Verification, NetworkError>) -> Void) {
+        
+        
+        REF_WORLD
+            .document(ServerPath.verified)
+            .collection(uid)
+            .document(postId)
+            .getDocument { snapshot, error in
+                if let error = error {
+                    print("Error retrieving verification object", error.localizedDescription)
+                    completion(.failure(.failed))
+                }
+                print("Found specific verification")
+                guard let data = snapshot?.data() else {return}
+                print("Data is found")
+                let verification = Verification(data: data)
+                print(verification)
+                completion(.success(verification))
+                
+            }
+        
     }
     
     func refreshSecretSpots(completion: @escaping (_ spots: [SecretSpot]) -> ()) {
@@ -1141,6 +1167,8 @@ class DataService {
             FeedField.content: user.displayName,
             FeedField.type: FeedType.streetFollow.rawValue,
             FeedField.userId: user.id,
+            FeedField.followingImage: user.profileImageUrl,
+            FeedField.followingName: user.displayName,
             FeedField.longitude: userLong,
             FeedField.latitude: userLat,
             FeedField.geohash: userHash

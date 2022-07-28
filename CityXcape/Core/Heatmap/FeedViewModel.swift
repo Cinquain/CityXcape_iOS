@@ -19,10 +19,13 @@ class FeedViewModel: ObservableObject {
     @Published var submissionText: String = ""
     @Published var alertMessage: String = ""
     @Published var showAlert: Bool = false
+    @Published var newFeeds: Int = 0
     
+    @Published var showView: Bool = false
     
-    
-    
+    @Published var secretSpot: SecretSpot?
+    @Published var verification: Verification?
+    @Published var user: User?
     
     init() {
         fetchFeeds()
@@ -36,6 +39,7 @@ class FeedViewModel: ObservableObject {
             switch result {
             case .success(let returnedFeeds):
                 self.feeds = returnedFeeds
+                self.newFeeds = returnedFeeds.count
             case .failure(let error):
                 self.alertMessage = "Error getting feeds, \(error.localizedDescription)"
                 self.showAlert = true
@@ -51,6 +55,12 @@ class FeedViewModel: ObservableObject {
         
         if wallet >= 1 {
             //Decremement wallet locally
+            if submissionText.count < 2 {
+                alertMessage = "Cannot broadcast empty message to the city"
+                showAlert = true
+                return
+            }
+            
             wallet -= 1
             UserDefaults.standard.set(wallet, forKey: CurrentUserDefaults.wallet)
             
@@ -91,6 +101,60 @@ class FeedViewModel: ObservableObject {
             case .streetFollow:
                 return Text("\(feed.username) started street following \(Image("Running_feed")) \(feed.content)")
         }
+    }
+    
+    func calculateAction(feed: Feed) {
+        
+        switch feed.type {
+            case .spot:
+                getSecretSpot(spotId: feed.spotId ?? "")
+            case .signup:
+                let user = User(feed: feed)
+                self.user = user
+            case .streetFollow:
+                let user = User(id: feed.userId ?? "", displayName: feed.followingDisplayName ?? "", profileImageUrl: feed.followingImage ?? "")
+                self.user = user
+            case .stamp:
+                getVerification(feed: feed)
+            case .save:
+                getSecretSpot(spotId: feed.spotId ?? "")
+            case .message:
+                let user = User(feed: feed)
+                self.user = user
+        }
+        
+    }
+    
+    func getSecretSpot(spotId: String) {
+        DataService.instance.getSpecificSpot(postId: spotId) { [weak self] result in
+            guard let self = self else {return}
+                switch result {
+                    case .failure(let error):
+                        self.alertMessage = error.localizedDescription
+                        self.showAlert = true
+                    case .success(let spot):
+                        print("Setting secret spot")
+                        self.secretSpot = spot
+                }
+        }
+    }
+    
+    func getVerification(feed: Feed) {
+        let spotId = feed.spotId ?? ""
+        let uid = feed.uid
+        DataService.instance.getSpecificVerification(postId: spotId, uid: uid) { [weak self] result in
+            guard let self = self else {return}
+                switch result {
+                    case .failure(let error):
+                        self.alertMessage = error.localizedDescription
+                        self.showAlert = true
+                    case .success(let verification):
+                        self.verification = verification
+                }
+
+        }
+                                                     
+                                                     
     }
     
     

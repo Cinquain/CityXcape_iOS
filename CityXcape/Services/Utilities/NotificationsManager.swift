@@ -19,11 +19,13 @@ class NotificationsManager: ObservableObject {
     
 
     @Published var hasUserNotification: Bool = false
-    @Published var user: User?
     
+    @Published var user: User?
+    @Published var secretSpot: SecretSpot?
+    @Published var stamp: Verification?
+
     @Published var hasSpotNotification: Bool = false
     @Published var spotId: String?
-    @Published var stamp: Verification?
     
     let dataManager = CoreDataManager.instance
     
@@ -73,6 +75,21 @@ class NotificationsManager: ObservableObject {
             }
         }
     }
+    
+    
+    func getSecretSpot(spotId: String) {
+        DataService.instance.getSpecificSpot(postId: spotId) { [weak self] result in
+            guard let self = self else {return}
+                switch result {
+                    case .failure(let error):
+                    print("Error getting secret spot", error.localizedDescription)
+                    case .success(let spot):
+                        print("Setting secret spot")
+                        self.secretSpot = spot
+                }
+        }
+    }
+
     
     
     fileprivate func setupLocationlNotifications() {

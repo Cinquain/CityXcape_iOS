@@ -121,28 +121,26 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
     
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        let notification = NotificationsManager.instance
         
-        let userInfo = response.notification.request.content.userInfo
-        print("the user info is", userInfo)
-        
-        if let spotId = userInfo["spotId"] as? String {
-            notification.spotId = spotId
-            notification.hasSpotNotification = true
-            return
-        }
-        
-        if let stamp = userInfo["stampName"] as? String {
-            notification.stamp = Verification(userInfo: userInfo)
-            notification.showPublicPass = true
-            return
-        }
-        
-        
-        let user = User(userInfo: userInfo)
-        notification.user = user
-        notification.hasUserNotification = true
-        completionHandler()
+            let notification = NotificationsManager.instance
+            
+            let userInfo = response.notification.request.content.userInfo
+            print("the user info is", userInfo)
+            
+            if let spotId = userInfo["spotId"] as? String {
+                notification.spotId = spotId
+                notification.getSecretSpot(spotId: spotId)
+                return
+            }
+            
+            if let stamp = userInfo["stampName"] as? String {
+                notification.stamp = Verification(userInfo: userInfo)
+                return
+            }
+            
+            let user = User(userInfo: userInfo)
+            notification.user = user
+            completionHandler()
         
     }
     

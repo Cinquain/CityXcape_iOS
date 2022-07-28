@@ -30,13 +30,13 @@ struct MissionView: View {
             header
             
             Map(spot: spot, vm: vm, header: $heading)
-                .frame(width: width, height: isRouting ? routeHeight : height)
+            .frame(width: width, height: isRouting ? routeHeight : height)
             .colorScheme(.dark)
             .padding(insets)
             .cornerRadius(5)
             .animation(.easeOut)
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                     heading = 180
                 }
             }
@@ -60,23 +60,14 @@ struct MissionView: View {
             
             Button {
                 //
-                if isRouting {
-                    vm.checkIfVerifiable(spot: spot)
-                } else {
-                   
-                    isRouting = true
-                    vm.calculateRoute(spot: spot)
-                    vm.routeText = "\(String(format: "%.1f", spot.distanceFromUser)) miles away."
-                    
-                }
-             
+                vm.checkIfVerifiable(spot: spot)
             } label: {
-                Text(isRouting ? "Checkin" : "Route")
+                Text("Checkin")
                     .foregroundColor(.black)
                     .fontWeight(.thin)
                     .font(.title3)
                     .frame(width: 180, height: 45)
-                    .background(isRouting ? routeColor : missionColor)
+                    .background(routeColor)
                     .cornerRadius(25)
                     .animation(.easeOut)
                    
@@ -90,12 +81,7 @@ struct MissionView: View {
 
             
             Button {
-                if isRouting {
-                    isRouting = false
-                    vm.route = nil
-                } else {
-                    presentationMode.wrappedValue.dismiss()
-                }
+                presentationMode.wrappedValue.dismiss()
             } label: {
                 Text("Cancel")
                     .font(.subheadline)
@@ -114,6 +100,13 @@ struct MissionView: View {
         )
         .alert(isPresented: $vm.showAlert) {
             return Alert(title: Text(vm.alertMessage))
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.3) {
+                 isRouting = true
+                 vm.calculateRoute(spot: spot)
+                 vm.routeText = "\(String(format: "%.1f", spot.distanceFromUser)) miles away."
+            }
         }
     }
     

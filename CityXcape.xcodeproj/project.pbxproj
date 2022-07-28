@@ -81,6 +81,7 @@
 		218115EB27315E9400026AAD /* NotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218115EA27315E9400026AAD /* NotificationsManager.swift */; };
 		218115ED2731860700026AAD /* PublicStreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218115EC2731860700026AAD /* PublicStreetPass.swift */; };
 		218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218980A626DC54C500A6FD23 /* LikeAnimationView.swift */; };
+		218B6A99289170420005CF3B /* SecretSpotPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218B6A98289170420005CF3B /* SecretSpotPage.swift */; };
 		218CADBE26D5C94300496884 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CADBD26D5C94300496884 /* SettingsView.swift */; };
 		218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CADBF26D5D7E400496884 /* SettingsEditTextView.swift */; };
 		218CF043288594E400DF86FA /* FeedBubbleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CF042288594E400DF86FA /* FeedBubbleView.swift */; };
@@ -224,6 +225,7 @@
 		218115EA27315E9400026AAD /* NotificationsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsManager.swift; sourceTree = "<group>"; };
 		218115EC2731860700026AAD /* PublicStreetPass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStreetPass.swift; sourceTree = "<group>"; };
 		218980A626DC54C500A6FD23 /* LikeAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeAnimationView.swift; sourceTree = "<group>"; };
+		218B6A98289170420005CF3B /* SecretSpotPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecretSpotPage.swift; sourceTree = "<group>"; };
 		218CADBD26D5C94300496884 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		218CADBF26D5D7E400496884 /* SettingsEditTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsEditTextView.swift; sourceTree = "<group>"; };
 		218CF042288594E400DF86FA /* FeedBubbleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedBubbleView.swift; sourceTree = "<group>"; };
@@ -502,6 +504,7 @@
 				2110D051286F2151003B71DA /* PublicStampView.swift */,
 				2110D053286F4141003B71DA /* PostCommentView.swift */,
 				218CF042288594E400DF86FA /* FeedBubbleView.swift */,
+				218B6A98289170420005CF3B /* SecretSpotPage.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -847,6 +850,7 @@
 				21D0F07A27EC9604003E8748 /* UserReportView.swift in Sources */,
 				1493C3F3277394BA002010A6 /* ActivityIndicator.swift in Sources */,
 				21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */,
+				218B6A99289170420005CF3B /* SecretSpotPage.swift in Sources */,
 				21B1A4C3280D84B700B0AFE2 /* EditViewModel.swift in Sources */,
 				217DA74126CCAFDD0039A145 /* UserDotView.swift in Sources */,
 				217DA72A26CC8F8B0039A145 /* HomeView.swift in Sources */,
@@ -1061,7 +1065,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1086,7 +1090,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.1;
+				MARKETING_VERSION = 1.5.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
