@@ -21,7 +21,7 @@ struct MapContainer: View {
     var body: some View {
         
         ZStack(alignment: .top) {
-            MapView(viewModel: vm)
+            MainMapView(viewModel: vm)
                 
             VStack(spacing: 12) {
                 HStack(spacing: 10) {
@@ -183,7 +183,7 @@ struct MapContainer: View {
     
 }
 
-struct MapView: UIViewRepresentable {
+struct MainMapView: UIViewRepresentable {
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -261,9 +261,9 @@ struct MapView: UIViewRepresentable {
     }
     
     class Coordinator: NSObject, MKMapViewDelegate {
-        var parent: MapView
+        var parent: MainMapView
         
-        init(_ parent: MapView) {
+        init(_ parent: MainMapView) {
             self.parent = parent
         }
         
@@ -285,7 +285,7 @@ struct MapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
             
-            NotificationCenter.default.post(name: MapView.Coordinator.regionChangedNofication, object: mapView.region)
+            NotificationCenter.default.post(name: MainMapView.Coordinator.regionChangedNofication, object: mapView.region)
             
         }
         

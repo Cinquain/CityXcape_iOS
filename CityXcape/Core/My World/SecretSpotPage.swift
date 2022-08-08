@@ -13,8 +13,9 @@ struct SecretSpotPage: View {
     @Environment(\.presentationMode) var presentationMode
     
     var spot: SecretSpot
+    var vm: DiscoverViewModel
+
     var width: CGFloat = UIScreen.screenWidth
-    
     @State private var showActionsheet: Bool = false
     @State private var actionType: CardActionSheet = .general
     @State var showAlert: Bool = false
@@ -49,8 +50,12 @@ struct SecretSpotPage: View {
             buttonRow
             
             Spacer()
+            
+            arrowButton
+           
+            
         }
-        .background(LinearGradient(gradient: Gradient(colors: [Color.black,  Color.cx_blue]), startPoint: .center, endPoint: .bottom).edgesIgnoringSafeArea(.all))
+        .background(LinearGradient(gradient: Gradient(colors: [Color.black,  Color.orange]), startPoint: .center, endPoint: .bottom).edgesIgnoringSafeArea(.all))
     }
 }
 
@@ -92,7 +97,7 @@ extension SecretSpotPage {
                         
                 }
                 
-                Text(getDistanceMessage(spot: spot))
+                Text(vm.getDistanceMessage(spot: spot))
                     .font(.caption)
                     .fontWeight(.thin)
                     .foregroundColor(.white)
@@ -109,7 +114,8 @@ extension SecretSpotPage {
         HStack(spacing: 75) {
             
             Button {
-                dismissCard(spot: spot)
+                vm.dismissCard(spot: spot)
+                presentationMode.wrappedValue.dismiss()
             } label: {
                 VStack {
                     Image(systemName: "hand.thumbsdown.fill")
@@ -126,7 +132,10 @@ extension SecretSpotPage {
             }
             
             Button {
-                saveCardToUserWorld(spot: spot)
+                vm.saveCardToUserWorld(spot: spot)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    presentationMode.wrappedValue.dismiss()
+                }
             } label: {
                 VStack {
                     Image(systemName: "heart.fill")
@@ -146,73 +155,21 @@ extension SecretSpotPage {
     }
     
     
-    func getDistanceMessage(spot: SecretSpot) -> String {
-        
-        if spot.distanceFromUser > 1 {
-            return "\(String(format: "%.1f", spot.distanceFromUser)) miles"
-        } else {
-            return "\(String(format: "%.1f", spot.distanceFromUser)) mile"
-        }
-    }
-    
-    func saveCardToUserWorld(spot: SecretSpot) {
-        guard var wallet = wallet else {return}
-        if manager.spotEntities.contains(where: {$0.spotId == spot.id}) {
-            alertMessage = "You already saved this spot"
-            showAlert = true
-            return
-        }
-        if wallet >= spot.price {
-            //Decremement wallet locally
-            wallet -= spot.price
-            UserDefaults.standard.set(wallet, forKey: CurrentUserDefaults.wallet)
-            print("Saving to user's world")
-            //Save to DB
-            DataService.instance.saveToUserWorld(spot: spot) { success in
-                
-                if !success {
-                    print("Error saving to user's world")
-                    saved = false
-                    return
-                }
-                print("successfully saved spot to user's world")
-                AnalyticsService.instance.savedSecretSpot()
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    self.saved = false
-                    self.manager.addEntityFromSpot(spot: spot)
-                    self.presentationMode.wrappedValue.dismiss()
-                }
-                
-               
-            }
-            
-         
-        } else {
-            saved = false
-            alertMessage = "Insufficient StreetCred. Your wallet has a balance of \(wallet) STC."
-            showAlert.toggle()
-        }
-        
-    }
-    
-    
-    func dismissCard(spot: SecretSpot) {
-        print("Removing from user's world")
-        
-        DataService.instance.dismissCard(spot: spot) {  success in
-            if !success {
-                print("Error dismissing card")
-                presentationMode.wrappedValue.dismiss()
-                return
-            }
-            
-            print("successfully dismissed card to DB")
-            AnalyticsService.instance.passedSecretSpot()
+  
+    private var arrowButton: some View {
+        Button {
             self.presentationMode.wrappedValue.dismiss()
+        } label: {
+            Image("arrow")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 20)
+                .opacity(0.5)
         }
-        
     }
+    
+    
+   
     
     
     
@@ -222,6 +179,6 @@ extension SecretSpotPage {
 
 struct SecretSpotPage_Previews: PreviewProvider {
     static var previews: some View {
-        SecretSpotPage(spot: SecretSpot.spot)
+        SecretSpotPage(spot: SecretSpot.spot, vm: DiscoverViewModel())
     }
 }

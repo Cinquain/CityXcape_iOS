@@ -122,6 +122,8 @@ struct ServerPath {
     static let feed = "feed"
     static let report = "reports"
     static let save = "savedBy"
+    static let friends = "friends"
+    static let request = "request"
 }
 
 struct FeedField {

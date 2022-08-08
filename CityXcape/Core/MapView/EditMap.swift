@@ -20,7 +20,7 @@ struct EditMap: View {
     var body: some View {
         
         ZStack(alignment: .top) {
-            MapView(viewModel: vm)
+            MainMapView(viewModel: vm)
                 
             VStack(spacing: 12) {
                 HStack(spacing: 10) {

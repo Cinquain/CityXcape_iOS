@@ -12,7 +12,7 @@ struct FeedView: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
 
-    
+    @StateObject var discoverVM: DiscoverViewModel
     @StateObject var vm: FeedViewModel
     
     var body: some View {
@@ -31,7 +31,7 @@ struct FeedView: View {
             commentField
                 .opacity(0.8)
                 .sheet(item: $vm.secretSpot) { spot in
-                    SecretSpotPage(spot: spot)
+                    SecretSpotPage(spot: spot, vm: discoverVM)
                 }
                
             
@@ -115,6 +115,6 @@ extension FeedView {
 
 struct Feed_Previews: PreviewProvider {
     static var previews: some View {
-        FeedView(vm: FeedViewModel())
+        FeedView(discoverVM: DiscoverViewModel(), vm: FeedViewModel())
     }
 }

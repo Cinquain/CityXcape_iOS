@@ -62,7 +62,7 @@ extension FeedBubbleView {
     
     private var userButton: some View {
         Button {
-            vm.showView.toggle()
+            vm.user = User(feed: feed)
         } label: {
             UserDotView(imageUrl: feed.userImageUrl, width: 60)
         }

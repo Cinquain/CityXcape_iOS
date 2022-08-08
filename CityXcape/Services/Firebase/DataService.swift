@@ -41,6 +41,8 @@ class DataService {
     private var REF_HUNTS = DB_BASE.collection(ServerPath.hunt)
     private var REF_CITY = DB_BASE.collection(ServerPath.cities)
     private var REF_FEED = DB_BASE.collection(ServerPath.feed)
+    
+    
     //MARK: CREATE FUNCTIONS
     
     func uploadSecretSpot(spotName: String, description: String, image: UIImage, price: Int, world: String, mapItem: MKMapItem, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
@@ -727,7 +729,7 @@ class DataService {
                         FeedField.id: feedId,
                         FeedField.uid: uid,
                         FeedField.username: username,
-                        FeedField.profileUrl: imageUrl,
+                        FeedField.profileUrl: profileUrl,
                         FeedField.bio: bio,
                         FeedField.rank: rank,
                         FeedField.date: FieldValue.serverTimestamp(),
@@ -928,30 +930,31 @@ class DataService {
         }
     }
     
+    
     func getCityFeed(completion: @escaping (Result<[Feed],Error>) -> Void) {
         var feeds: [Feed] = []
         REF_FEED
             .order(by: FeedField.date, descending: true)
-            .limit(toLast: 25)
-            .addSnapshotListener { snapshot, error in
+            .limit(to: 30)
+            .addSnapshotListener { querySnapshot, error in
                 
                 if let error = error {
                     print("Error fetching feed from database", error.localizedDescription)
                     completion(.failure(error))
                 }
                 
-                if let snapshot = snapshot, snapshot.count > 0 {
-                    let documents = snapshot.documents
-                    
-                    documents.forEach { snap in
-                        let data = snap.data()
+                querySnapshot?.documentChanges.forEach({ change in
+                    if change.type == .added {
+                        let data = change.document.data()
                         let feed = Feed(data: data)
                         feeds.append(feed)
                     }
-                    completion(.success(feeds))
-                }
+                })
+                completion(.success(feeds))
+
             }
     }
+    
     
     func getSpotsFromWorld(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
         REF_WORLD.document("private").collection(userId).addSnapshotListener { snapshot, error in
@@ -1000,7 +1003,7 @@ class DataService {
 
             self.REF_POST
                 .order(by: SecretSpotField.dateCreated, descending: true)
-                .limit(to: 25)
+                .limit(to: 30)
                 .getDocuments { querysnapshot, error in
                     let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
                     let filteredResults = results.filter({$0.isPublic == true
@@ -1068,7 +1071,7 @@ class DataService {
             if let snapshot = lastSnapshot {
                 self.REF_POST
                     .start(afterDocument: snapshot)
-                    .limit(to: 25)
+                    .limit(to: 30)
                     .getDocuments { querysnapshot, error in
                         let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
                         let filteredResults = results.filter({$0.isPublic == true
@@ -1079,7 +1082,7 @@ class DataService {
                     }
             } else {
                 self.REF_POST
-                    .limit(to: 25)
+                    .limit(to: 30)
                     .getDocuments { querysnapshot, error in
                         let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
                         let filteredResults = results.filter({$0.isPublic == true
@@ -1094,6 +1097,108 @@ class DataService {
     }
     
 }
+    
+    func fetchAllUserFriends(completion: @escaping (Result<[User],NetworkError>) -> Void) {
+        guard let uid = userId else {return}
+        var users: [User] = []
+        REF_WORLD
+            .document(ServerPath.friends)
+            .collection(uid)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Error finding friends in user path", error.localizedDescription)
+                    completion(.failure(.failed))
+                    return
+                }
+                
+                guard let snapshot = snapshot, snapshot.documents.count > 0 else {return}
+                snapshot.documents.forEach { document in
+                    let data = document.data()
+                    let user = User(data: data)
+                    users.append(user)
+                }
+                completion(.success(users))
+                
+            }
+          
+    }
+    
+    
+    func saveNewUserAsFriend(user: User, completion: @escaping (Result<Bool, NetworkError>) -> Void) {
+        guard let uid = userId,
+        let imageUrl = profileUrl,
+        let username = displayName,
+        let bio = bio, let rank = rank else {return}
+        
+        let userData: [String: Any] = [
+            UserField.providerId: uid,
+            UserField.displayName: username,
+            UserField.profileImageUrl: imageUrl,
+            UserField.bio: bio,
+            UserField.rank: rank
+        ]
+        
+        let requesterData: [String: Any] = [
+            UserField.providerId: user.id,
+            UserField.displayName: user.displayName,
+            UserField.profileImageUrl: user.profileImageUrl,
+            UserField.bio: user.bio ?? "",
+            UserField.rank: user.rank ?? ""
+        ]
+        
+        //Set at requestor's branch
+        
+        REF_WORLD
+            .document(ServerPath.friends)
+            .collection(user.id)
+            .document(uid)
+            .setData(userData)
+        
+        //Set at user branch
+        REF_WORLD
+            .document(ServerPath.friends)
+            .collection(uid)
+            .document(user.id)
+            .setData(requesterData) { error in
+                if let error = error {
+                    print("Error saving user to DB", error.localizedDescription)
+                    completion(.failure(.failed))
+                    return
+                }
+                completion(.success(true))
+            }
+    }
+    
+    
+    func sendFriendRequest(uId: String, completion: @escaping (Result<Bool, NetworkError>) -> Void) {
+        guard let uid = userId,
+            let imageUrl = profileUrl,
+            let username = displayName,
+            let bio = bio, let rank = rank else {return}
+        let data: [String: Any] = [
+            "uid": uid,
+            "displayName": username,
+            "profileUrl": imageUrl,
+            "bio": bio,
+            "rank": rank,
+            "requestedOn": FieldValue.serverTimestamp()
+        ]
+        REF_USERS
+            .document(uId)
+            .collection(ServerPath.request)
+            .document(uid)
+            .setData(data) { error in
+                if let error = error {
+                    print("Error making friend request", error.localizedDescription)
+                    completion(.failure(.failed))
+                    return
+                }
+                print("Successfully made friend request")
+                completion(.success(true))
+            }
+            
+    }
+    
     
     
     func saveUserRanking(rank: Rank) {

@@ -47,7 +47,7 @@ struct JourneyView: View {
                     .animation(.easeOut(duration: 0.5))
             } else {
                 
-                JourneyMap(verifications: vm.verifications)
+                JourneyMap(vm: vm, verifications: vm.verifications)
                     .frame(width: width, height: height)
                     .colorScheme(.dark)
                     .cornerRadius(5)
@@ -80,6 +80,9 @@ struct JourneyView: View {
                             .frame(width: 100, height: 50, alignment: .leading)
                         }
                     }
+                    .sheet(item: $vm.verification) { verification in
+                        PublicStampView(verification: verification)
+                    }
 
                     Button {
                         //TBD
@@ -99,6 +102,7 @@ struct JourneyView: View {
                             .frame(width: 100, height: 50, alignment: .leading)
                         }
                     }
+                    
 
   
                     
@@ -164,9 +168,10 @@ struct JourneyView: View {
 
 struct JourneyMap: UIViewRepresentable {
     func makeCoordinator() -> Coordinator {
-        Coordinator(mapview)
+        Coordinator(mapview, vm)
     }
     
+    let vm: JourneyViewModel
     let verifications: [Verification]
     let mapview = MKMapView()
     
@@ -182,13 +187,20 @@ struct JourneyMap: UIViewRepresentable {
     }
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
+        
+        if let selectionAnnotation = mapview.selectedAnnotations.first {
+            let coordinates = selectionAnnotation.coordinate
+            print("Coming from mapview", coordinates)
+        }
         //TBD
         if verifications.isEmpty {return}
         uiView.removeAnnotations(mapview.annotations)
         let annotations = verifications.map({MKPointAnnotation(__coordinate: .init(latitude: $0.latitude, longitude: $0.longitude))})
         uiView.addAnnotations(annotations)
         uiView.showAnnotations(mapview.annotations.filter({$0 is MKPointAnnotation}), animated: true)
+        
     }
+    
     
     
     typealias UIViewType = MKMapView
@@ -196,9 +208,10 @@ struct JourneyMap: UIViewRepresentable {
     
     class Coordinator: NSObject, MKMapViewDelegate {
         var parent: MKMapView
-        
-        init(_ parent: MKMapView) {
+        var vm: JourneyViewModel
+        init(_ parent: MKMapView, _ vm: JourneyViewModel) {
             self.parent = parent
+            self.vm = vm
         }
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -209,6 +222,14 @@ struct JourneyMap: UIViewRepresentable {
                 return annotationView
             }
             return nil
+        }
+        
+        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+            let annotation = view.annotation as? MKPointAnnotation
+            let coordinates = annotation?.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
+            if let object = vm.verifications.first(where: {$0.latitude == coordinates.latitude && $0.longitude == coordinates.longitude}) {
+                vm.verification = object
+            }
         }
         
     }

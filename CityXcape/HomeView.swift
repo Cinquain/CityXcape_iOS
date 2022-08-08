@@ -27,7 +27,7 @@ struct HomeView: View {
        
         TabView(selection: $selectedTab) {
             
-            FeedView(vm: feedVM)
+            FeedView(discoverVM: discoverVM, vm: feedVM)
                 .tabItem {
                     Image(Icon.grid.rawValue)
                         .renderingMode(.template)
@@ -52,7 +52,7 @@ struct HomeView: View {
             .tag(1)
             .badge(discoverVM.newlySaved)
             .fullScreenCover(item: $manager.secretSpot) { spot in
-                SecretSpotPage(spot: spot)
+                SecretSpotPage(spot: spot, vm: discoverVM)
             }
             
             
@@ -94,28 +94,14 @@ struct HomeView: View {
             
         })
         .colorScheme(.dark)
-        .onReceive(manager.$hasSpotNotification, perform: { bool in
-            if bool {
-                selectedTab = 1
-            }
-        })
-        .sheet(isPresented: $manager.hasUserNotification) {
-
-        } content: {
-            
-            if let user = NotificationsManager.instance.user {
-                PublicStreetPass(user: user)
-            }
-            
-        }
         .onReceive(router.$link) { deepLink in
             switch deepLink {
             case .home:
-                selectedTab = 0
-            case .discover:
                 selectedTab = 1
+            case .discover:
+                selectedTab = 2
             case .streetPass:
-                selectedTab = 3
+                selectedTab = 4
             case .none:
                 break
             }

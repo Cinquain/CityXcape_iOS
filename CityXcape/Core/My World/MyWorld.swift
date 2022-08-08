@@ -41,7 +41,7 @@ struct MyWorld: View {
                           
                         } else {
                             
-                            VStack(spacing: 5) {
+                            LazyVStack(spacing: 5) {
                                 ForEach(vm.currentSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.id) { spot in
                                     
                                     VStack {

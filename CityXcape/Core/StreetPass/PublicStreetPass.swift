@@ -17,7 +17,7 @@ struct PublicStreetPass: View {
     @State private var showRanks: Bool = false
     @State private var showJourney: Bool = false
 
-    @StateObject var vm: PublicStreetPassVM = PublicStreetPassVM()
+    @StateObject var vm: JourneyViewModel = JourneyViewModel()
     let manager = NotificationsManager.instance
 
     let width: CGFloat = UIScreen.main.bounds.size.width / 5
@@ -27,11 +27,16 @@ struct PublicStreetPass: View {
             VStack {
                 
                 HStack {
-                    Text("StreetPass".uppercased())
-                          .foregroundColor(.white)
-                          .fontWeight(.thin)
-                          .tracking(5)
-                          .font(.title)
+                    VStack(alignment: .leading) {
+                        Text("\(user.displayName)'s")
+                            .fontWeight(.thin)
+                            .foregroundColor(.white)
+                        Text("StreetPass".uppercased())
+                              .foregroundColor(.white)
+                              .fontWeight(.thin)
+                              .tracking(5)
+                          .font(.title2)
+                    }
                          
 
                     Spacer()
@@ -50,7 +55,8 @@ struct PublicStreetPass: View {
                          
                          if vm.showJourney {
                              withAnimation(.easeOut(duration: 0.4)) {
-                                 JourneyMap(verifications: vm.verifications)
+                                 JourneyMap(vm: vm, verifications: vm.verifications)
+                                     .colorScheme(.dark)
                              }
                          } else {
                              withAnimation(.easeOut(duration: 0.4)) {
@@ -93,6 +99,7 @@ struct PublicStreetPass: View {
                                              .scaledToFit()
                                              .frame(width: 15)
                                      }
+                                    
                                  }
 
                              }
@@ -115,6 +122,9 @@ struct PublicStreetPass: View {
                                  }
                              }
                              .padding(.top, 10)
+                             .sheet(item: $vm.verification) { verification in
+                                 PublicStampView(verification: verification)
+                             }
                              
                          }
                          

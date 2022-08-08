@@ -73,7 +73,7 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         }
         
         
-        NotificationCenter.default.addObserver(forName: MapView.Coordinator.regionChangedNofication, object: nil, queue: .main) { [weak self] notification in
+        NotificationCenter.default.addObserver(forName: MainMapView.Coordinator.regionChangedNofication, object: nil, queue: .main) { [weak self] notification in
             
             self?.region = notification.object as? MKCoordinateRegion
         }

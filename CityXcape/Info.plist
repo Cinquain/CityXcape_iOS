@@ -40,7 +40,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>2820</string>
+	<string>2855</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
 	<array>
 		<string>link.cityxcape.com</string>
@@ -54,6 +54,8 @@
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MBXAccessToken</key>
+	<string>sk.eyJ1IjoiY2lucXVhaW4iLCJhIjoiY2w2N3d0dThhMHE2eDNub2JlbWF2ZHVjOCJ9.8cbFZQuczFpoXA5qkXFQ3Q</string>
 	<key>NSCameraUsageDescription</key>
 	<string>CityXcape needs to access your camera for secret spot images</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

@@ -15,11 +15,7 @@ class NotificationsManager: ObservableObject {
     
     
     static let instance = NotificationsManager()
-    @Published var showPublicPass: Bool = false
-    
-
-    @Published var hasUserNotification: Bool = false
-    
+        
     @Published var user: User?
     @Published var secretSpot: SecretSpot?
     @Published var stamp: Verification?

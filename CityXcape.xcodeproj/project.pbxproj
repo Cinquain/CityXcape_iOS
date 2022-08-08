@@ -14,6 +14,8 @@
 		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
 		2106A9CE2848EA05000BCD10 /* PlugLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106A9CD2848EA05000BCD10 /* PlugLight.swift */; };
 		2106A9D02848F585000BCD10 /* Beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2106A9CF2848F585000BCD10 /* Beep.mp3 */; };
+		210700F428946D710014FF6D /* UserChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210700F328946D710014FF6D /* UserChatView.swift */; };
+		210700F62894715E0014FF6D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210700F52894715E0014FF6D /* Message.swift */; };
 		2110D052286F2151003B71DA /* PublicStampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D051286F2151003B71DA /* PublicStampView.swift */; };
 		2110D054286F4141003B71DA /* PostCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D053286F4141003B71DA /* PostCommentView.swift */; };
 		2117A7E5282573A20001C76C /* StampImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2117A7E4282573A20001C76C /* StampImage.swift */; };
@@ -25,6 +27,8 @@
 		212057A027DE1C2E00602EE8 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120579F27DE1C2E00602EE8 /* SoundManager.swift */; };
 		2120CE66275FA254006367FE /* LocationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120CE65275FA254006367FE /* LocationCamera.swift */; };
 		21251A8127EB3F4B0042BDF4 /* TotalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21251A8027EB3F4B0042BDF4 /* TotalView.swift */; };
+		2129F512289957A2008B27D9 /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2129F511289957A2008B27D9 /* NewMessageView.swift */; };
+		2129F514289957ED008B27D9 /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2129F513289957ED008B27D9 /* MessageViewModel.swift */; };
 		212EE32F27A4640500232992 /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE32E27A4640500232992 /* CommentsView.swift */; };
 		212EE33127A4667500232992 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE33027A4667500232992 /* MessageView.swift */; };
 		212EE33327A4689F00232992 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE33227A4689F00232992 /* Comment.swift */; };
@@ -39,10 +43,10 @@
 		214A4A3B278D340300B5950A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214A4A3A278D340300B5950A /* User.swift */; };
 		214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214FAC6C26E2F16300F37B80 /* ImageManager.swift */; };
 		215B30DD27C860D300D627A4 /* VerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215B30DC27C860D300D627A4 /* VerificationView.swift */; };
-		2167AEA2283949B100E9F36E /* PublicStreetPassVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2167AEA1283949B100E9F36E /* PublicStreetPassVM.swift */; };
 		2168555B2860B2E400E445EB /* SpotSelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2168555A2860B2E400E445EB /* SpotSelectionList.swift */; };
 		216A5CDE27AA0F31006AA7B4 /* SavesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A5CDD27AA0F31006AA7B4 /* SavesView.swift */; };
 		216AA7192875D17F00C719D3 /* EditMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216AA7182875D17F00C719D3 /* EditMap.swift */; };
+		216BE1892893170A00746CAF /* MainMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216BE1882893170A00746CAF /* MainMessageView.swift */; };
 		21730A8D27C5B0380036549F /* GetStampedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21730A8C27C5B0380036549F /* GetStampedButton.swift */; };
 		217657D327FC642C0077B0A0 /* UserDiscoveryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217657D227FC642C0077B0A0 /* UserDiscoveryView.swift */; };
 		21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */; };
@@ -128,6 +132,9 @@
 		21DCF82327E60906000BD1B3 /* Rank.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82227E60906000BD1B3 /* Rank.swift */; };
 		21DCF82527E61043000BD1B3 /* StreetReportCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82427E61043000BD1B3 /* StreetReportCard.swift */; };
 		21DCF82727E63090000BD1B3 /* Follower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82627E63090000BD1B3 /* Follower.swift */; };
+		21DEA243289D6DFB00629426 /* ChatLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DEA242289D6DFB00629426 /* ChatLogView.swift */; };
+		21E0DB702895679D00C34761 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 21E0DB6F2895679D00C34761 /* MapboxMaps */; };
+		21E0DB722895685D00C34761 /* HeatMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E0DB712895685D00C34761 /* HeatMap.swift */; };
 		21E2861527CE56150068208E /* MyJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E2861427CE56150068208E /* MyJournal.swift */; };
 		21E4DC072753D8D9004276D2 /* CheckinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E4DC062753D8D9004276D2 /* CheckinView.swift */; };
 		21E854C3286B37FC00B4B5B0 /* ImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E854C2286B37FC00B4B5B0 /* ImageSaver.swift */; };
@@ -157,6 +164,8 @@
 		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
 		2106A9CD2848EA05000BCD10 /* PlugLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlugLight.swift; sourceTree = "<group>"; };
 		2106A9CF2848F585000BCD10 /* Beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Beep.mp3; sourceTree = "<group>"; };
+		210700F328946D710014FF6D /* UserChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChatView.swift; sourceTree = "<group>"; };
+		210700F52894715E0014FF6D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		2110D051286F2151003B71DA /* PublicStampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStampView.swift; sourceTree = "<group>"; };
 		2110D053286F4141003B71DA /* PostCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentView.swift; sourceTree = "<group>"; };
 		2117A7E4282573A20001C76C /* StampImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampImage.swift; sourceTree = "<group>"; };
@@ -167,6 +176,8 @@
 		2120579F27DE1C2E00602EE8 /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		2120CE65275FA254006367FE /* LocationCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCamera.swift; sourceTree = "<group>"; };
 		21251A8027EB3F4B0042BDF4 /* TotalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalView.swift; sourceTree = "<group>"; };
+		2129F511289957A2008B27D9 /* NewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageView.swift; sourceTree = "<group>"; };
+		2129F513289957ED008B27D9 /* MessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
 		212EE32E27A4640500232992 /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 		212EE33027A4667500232992 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		212EE33227A4689F00232992 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
@@ -180,10 +191,10 @@
 		214A4A3A278D340300B5950A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		214FAC6C26E2F16300F37B80 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		215B30DC27C860D300D627A4 /* VerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationView.swift; sourceTree = "<group>"; };
-		2167AEA1283949B100E9F36E /* PublicStreetPassVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStreetPassVM.swift; sourceTree = "<group>"; };
 		2168555A2860B2E400E445EB /* SpotSelectionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotSelectionList.swift; sourceTree = "<group>"; };
 		216A5CDD27AA0F31006AA7B4 /* SavesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavesView.swift; sourceTree = "<group>"; };
 		216AA7182875D17F00C719D3 /* EditMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMap.swift; sourceTree = "<group>"; };
+		216BE1882893170A00746CAF /* MainMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMessageView.swift; sourceTree = "<group>"; };
 		21730A8C27C5B0380036549F /* GetStampedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetStampedButton.swift; sourceTree = "<group>"; };
 		217657D227FC642C0077B0A0 /* UserDiscoveryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDiscoveryView.swift; sourceTree = "<group>"; };
 		21785D9126D5295B0049CE2D /* MapSearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchViewModel.swift; sourceTree = "<group>"; };
@@ -269,6 +280,8 @@
 		21DCF82227E60906000BD1B3 /* Rank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rank.swift; sourceTree = "<group>"; };
 		21DCF82427E61043000BD1B3 /* StreetReportCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetReportCard.swift; sourceTree = "<group>"; };
 		21DCF82627E63090000BD1B3 /* Follower.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Follower.swift; sourceTree = "<group>"; };
+		21DEA242289D6DFB00629426 /* ChatLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogView.swift; sourceTree = "<group>"; };
+		21E0DB712895685D00C34761 /* HeatMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatMap.swift; sourceTree = "<group>"; };
 		21E2861427CE56150068208E /* MyJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyJournal.swift; sourceTree = "<group>"; };
 		21E4DC062753D8D9004276D2 /* CheckinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinView.swift; sourceTree = "<group>"; };
 		21E854C2286B37FC00B4B5B0 /* ImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaver.swift; sourceTree = "<group>"; };
@@ -298,6 +311,7 @@
 			files = (
 				211F6AB428578A8400441790 /* PartialSheet in Frameworks */,
 				219A9C102850E1F400BD6060 /* CodeScanner in Frameworks */,
+				21E0DB702895679D00C34761 /* MapboxMaps in Frameworks */,
 				21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */,
 				21E92CB628552572005D11DE /* StoreKit.framework in Frameworks */,
 				B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */,
@@ -331,6 +345,18 @@
 				21E854C2286B37FC00B4B5B0 /* ImageSaver.swift */,
 			);
 			path = Utilities;
+			sourceTree = "<group>";
+		};
+		216BE187289316E900746CAF /* Messaging */ = {
+			isa = PBXGroup;
+			children = (
+				216BE1882893170A00746CAF /* MainMessageView.swift */,
+				210700F328946D710014FF6D /* UserChatView.swift */,
+				2129F511289957A2008B27D9 /* NewMessageView.swift */,
+				2129F513289957ED008B27D9 /* MessageViewModel.swift */,
+				21DEA242289D6DFB00629426 /* ChatLogView.swift */,
+			);
+			path = Messaging;
 			sourceTree = "<group>";
 		};
 		217884F626E17B5F0066C719 /* Services */ = {
@@ -446,6 +472,7 @@
 		217DA73726CC90F60039A145 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				216BE187289316E900746CAF /* Messaging */,
 				21DA5AC628844CF80051673E /* Heatmap */,
 				21E908D8285638850039F703 /* Store */,
 				218ECBBD2709325E00D06603 /* Missions */,
@@ -504,7 +531,6 @@
 				2110D051286F2151003B71DA /* PublicStampView.swift */,
 				2110D053286F4141003B71DA /* PostCommentView.swift */,
 				218CF042288594E400DF86FA /* FeedBubbleView.swift */,
-				218B6A98289170420005CF3B /* SecretSpotPage.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -518,6 +544,7 @@
 				2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */,
 				211EC5DE27C65EB800F0B0A8 /* MissionView.swift */,
 				21E4DC062753D8D9004276D2 /* CheckinView.swift */,
+				218B6A98289170420005CF3B /* SecretSpotPage.swift */,
 				21E8F3ED2826ADC000AFFCAE /* ShareView.swift */,
 				2138B6A627C70C6A004C9B3C /* MapViewModel.swift */,
 			);
@@ -566,6 +593,7 @@
 				211F6AB028577EFF00441790 /* Product.swift */,
 				21EE8A28285CB0A400719D0B /* Trail.swift */,
 				21DA5AC9288453C70051673E /* Feed.swift */,
+				210700F52894715E0014FF6D /* Message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -587,7 +615,6 @@
 				21251A8027EB3F4B0042BDF4 /* TotalView.swift */,
 				21BB328727FB2004005241BE /* StreetPassViewModel.swift */,
 				21BB328927FB2043005241BE /* StreetFollowersView.swift */,
-				2167AEA1283949B100E9F36E /* PublicStreetPassVM.swift */,
 				21C8F64A27CEA3CB00006042 /* PassportView.swift */,
 				213E8E692858C12C00B04E24 /* StorePageViewModel.swift */,
 			);
@@ -599,6 +626,7 @@
 			children = (
 				21DA5AC728844D7E0051673E /* FeedView.swift */,
 				21CB97E92889750900F35464 /* FeedViewModel.swift */,
+				21E0DB712895685D00C34761 /* HeatMap.swift */,
 			);
 			path = Heatmap;
 			sourceTree = "<group>";
@@ -657,6 +685,7 @@
 				219A9C0F2850E1F400BD6060 /* CodeScanner */,
 				211F6AB328578A8400441790 /* PartialSheet */,
 				21CB97EC2889933900F35464 /* Shimmer */,
+				21E0DB6F2895679D00C34761 /* MapboxMaps */,
 			);
 			productName = CityXcape;
 			productReference = 217DA72426CC8F8B0039A145 /* CityXcape.app */;
@@ -693,6 +722,7 @@
 				219A9C0E2850E1F400BD6060 /* XCRemoteSwiftPackageReference "CodeScanner" */,
 				211F6AB228578A8400441790 /* XCRemoteSwiftPackageReference "PartialSheet" */,
 				21CB97EB2889933900F35464 /* XCRemoteSwiftPackageReference "SwiftUI-Shimmer" */,
+				21E0DB6E2895679D00C34761 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */,
 			);
 			productRefGroup = 217DA72526CC8F8B0039A145 /* Products */;
 			projectDirPath = "";
@@ -810,6 +840,7 @@
 				219CA8F2275A61DD00F1C61E /* PostViewModel.swift in Sources */,
 				2106A9CE2848EA05000BCD10 /* PlugLight.swift in Sources */,
 				21B611F627E753F700361508 /* RowView.swift in Sources */,
+				21E0DB722895685D00C34761 /* HeatMap.swift in Sources */,
 				21A01F36285E131B00FAD74C /* SpotListView.swift in Sources */,
 				217C08E026D1CC4500751933 /* OnboardingViewII.swift in Sources */,
 				21730A8D27C5B0380036549F /* GetStampedButton.swift in Sources */,
@@ -852,6 +883,7 @@
 				21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */,
 				218B6A99289170420005CF3B /* SecretSpotPage.swift in Sources */,
 				21B1A4C3280D84B700B0AFE2 /* EditViewModel.swift in Sources */,
+				2129F512289957A2008B27D9 /* NewMessageView.swift in Sources */,
 				217DA74126CCAFDD0039A145 /* UserDotView.swift in Sources */,
 				217DA72A26CC8F8B0039A145 /* HomeView.swift in Sources */,
 				21C91E5F27E8A3D50050D06F /* AnalyticsViewModel.swift in Sources */,
@@ -859,8 +891,10 @@
 				21F039C528075576003438D0 /* DetailsView.swift in Sources */,
 				217884F926E17B870066C719 /* SignInWithApple.swift in Sources */,
 				212EE33327A4689F00232992 /* Comment.swift in Sources */,
+				210700F428946D710014FF6D /* UserChatView.swift in Sources */,
 				217C08D726D1AFF400751933 /* MapContainer.swift in Sources */,
 				21EE8A2D285CB5FC00719D0B /* PostTrailViewModel.swift in Sources */,
+				2129F514289957ED008B27D9 /* MessageViewModel.swift in Sources */,
 				2179853927E362D40002CEBA /* Leaderboard.swift in Sources */,
 				21B7AB8526D03DD5009A5253 /* SpotDetailsView.swift in Sources */,
 				217AA0C226FB5C5300B994B3 /* Onboarding.swift in Sources */,
@@ -869,6 +903,7 @@
 				218CADC026D5D7E400496884 /* SettingsEditTextView.swift in Sources */,
 				21E4DC072753D8D9004276D2 /* CheckinView.swift in Sources */,
 				21FAC218278538550035F07F /* PreviewCard.swift in Sources */,
+				216BE1892893170A00746CAF /* MainMessageView.swift in Sources */,
 				218D904D2731D4F5000FB407 /* AnalyticsService.swift in Sources */,
 				213E8E6A2858C12C00B04E24 /* StorePageViewModel.swift in Sources */,
 				2142EF4927827E9700EA489D /* SecretSpotContainer.xcdatamodeld in Sources */,
@@ -887,10 +922,11 @@
 				21F039C328074E4E003438D0 /* ImageSlider.swift in Sources */,
 				21DCF82727E63090000BD1B3 /* Follower.swift in Sources */,
 				217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */,
+				21DEA243289D6DFB00629426 /* ChatLogView.swift in Sources */,
 				21251A8127EB3F4B0042BDF4 /* TotalView.swift in Sources */,
 				21BA347727F32A3400CF2E53 /* TotalsViewModel.swift in Sources */,
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,
-				2167AEA2283949B100E9F36E /* PublicStreetPassVM.swift in Sources */,
+				210700F62894715E0014FF6D /* Message.swift in Sources */,
 				2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */,
 				21CB97EA2889750900F35464 /* FeedViewModel.swift in Sources */,
 				216AA7192875D17F00C719D3 /* EditMap.swift in Sources */,
@@ -1065,7 +1101,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1090,7 +1126,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.2;
+				MARKETING_VERSION = 1.5.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1178,6 +1214,14 @@
 				minimumVersion = 2.0.2;
 			};
 		};
+		21E0DB6E2895679D00C34761 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/mapbox-maps-ios.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1205,6 +1249,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
+		};
+		21E0DB6F2895679D00C34761 /* MapboxMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21E0DB6E2895679D00C34761 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */;
+			productName = MapboxMaps;
 		};
 /* End XCSwiftPackageProductDependency section */
 
