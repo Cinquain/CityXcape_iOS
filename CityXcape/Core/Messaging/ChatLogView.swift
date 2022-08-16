@@ -10,7 +10,7 @@ import SwiftUI
 struct ChatLogView: View {
     
     @State var user: User?
-    @State private var chatText: String = ""
+    @StateObject var vm: ChatLogViewModel = ChatLogViewModel()
     var body: some View {
         ZStack {
             messageView
@@ -22,17 +22,20 @@ struct ChatLogView: View {
         }
         .navigationTitle("Cinquain")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            vm.fetchMessages(userId: user?.id ?? "")
+        }
     }
 }
 
 extension ChatLogView {
     private var messageView: some View {
         ScrollView {
-            ForEach(0..<15) { num in
+            ForEach(vm.messages) { message in
                 HStack {
                     Spacer()
                     HStack {
-                        Text("Fake message for for now \(num)")
+                        Text("Fake message for for now \(message.content)")
                             .foregroundColor(.white)
                     }
                     .padding()
@@ -59,7 +62,7 @@ extension ChatLogView {
                     .font(.system(size: 24))
                     .foregroundColor(.black)
             }
-            TextField("Description", text: $chatText)
+            TextField("Description", text: $vm.message)
             Button {
                 //TBD
             } label: {
@@ -78,6 +81,6 @@ extension ChatLogView {
 
 struct ChatLogView_Previews: PreviewProvider {
     static var previews: some View {
-        ChatLogView()
+        ChatLogView(user: User())
     }
 }

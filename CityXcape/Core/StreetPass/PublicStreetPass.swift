@@ -4,19 +4,21 @@
 //
 //  Created by James Allan on 11/2/21.
 //
-
+import Shimmer
 import SwiftUI
 import FirebaseMessaging
 
 struct PublicStreetPass: View {
     
-    var user: User
+    @State var user: User
 
    
     @State private var instagram: String = ""
     @State private var showRanks: Bool = false
     @State private var showJourney: Bool = false
-
+    @State private var showRequest: Bool = false
+    
+    @Environment(\.presentationMode) var presentationMode
     @StateObject var vm: JourneyViewModel = JourneyViewModel()
     let manager = NotificationsManager.instance
 
@@ -26,25 +28,7 @@ struct PublicStreetPass: View {
                     
             VStack {
                 
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("\(user.displayName)'s")
-                            .fontWeight(.thin)
-                            .foregroundColor(.white)
-                        Text("StreetPass".uppercased())
-                              .foregroundColor(.white)
-                              .fontWeight(.thin)
-                              .tracking(5)
-                          .font(.title2)
-                    }
-                         
-
-                    Spacer()
-                    
-                 
-                }
-                .padding()
-            
+                headerTitle
 
                 Spacer()
                     .frame(height: width)
@@ -76,97 +60,35 @@ struct PublicStreetPass: View {
                                          .foregroundColor(.accent)
                                          .tracking(2)
                                      
-                                     Button {
-                                         showRanks.toggle()
-                                     } label: {
-                                         Text(user.rank ?? "")
-                                             .font(.subheadline)
-                                             .foregroundColor(.gray)
-                                     }
-                                     .sheet(isPresented: $showRanks) {
-                                         Ranks()
-                                     }
-
-                                    
+                                     ranksButton
                                  }
                                  
                                  if user.social != nil {
-                                     Button {
-                                         vm.openInstagram(username: user.social ?? "")
-                                     } label: {
-                                         Image("instagram")
-                                             .resizable()
-                                             .scaledToFit()
-                                             .frame(width: 15)
-                                     }
-                                    
+                                    instaButton
                                  }
 
                              }
                              .padding(.top, 10)
-
-                             Button {
-                                 vm.showJourney ? vm.showJourney.toggle() :
-                                 vm.getVerificationForUser(userId: user.id)
-                             } label: {
-                                 
-                                 HStack {
-                                     Image("Footprints")
-                                         .resizable()
-                                         .scaledToFit()
-                                         .frame(width: 20)
-                                         .opacity(0.8)
-                                     
-                                     Text("Their Journey")
-                                         .fontWeight(.thin)
-                                 }
+                             
+                             if user.newFriend ?? false {
+                                friendRequestView
                              }
-                             .padding(.top, 10)
-                             .sheet(item: $vm.verification) { verification in
-                                 PublicStampView(verification: verification)
-                             }
+                          
+                             journeyButton
+                           
                              
                          }
-                         
-                         //Need a text liner for the bio
-                             
                           
-                            
-                         
-         
-                        
-                             
                      }
                      Spacer()
                  }
                 
+                
                 Spacer()
                     .frame(height: width / 1.5)
                 
-                Button {
-                    
-                    manager.checkAuthorizationStatus { fcmToken in
-                        if let token = fcmToken {
-                            vm.streetFollowerUser(fcm: token, user: user)
-                        } else {
-                            vm.alertMessage = "CityXcape needs notification permission to follow user"
-                            vm.showAlert.toggle()
-                        }
-                    }
-                   
-                } label: {
-                    
-                    Text("Street Follow")
-                        .fontWeight(.light)
-                  
-                }
-                .padding()
-                .frame(width: 220)
-                .frame(height: 45)
-                .background(Color.orange.opacity(0.7))
-                .cornerRadius(25)
-
-                
+                threeButtons
+       
 
             
                 Spacer()
@@ -180,6 +102,184 @@ struct PublicStreetPass: View {
     }
     //End of body
    
+}
+
+extension PublicStreetPass {
+    
+    private var friendRequestView: some View {
+        VStack {
+            Text("Wants to be Friends")
+                .font(.title3)
+                .foregroundColor(.white)
+                .fontWeight(.thin)
+                .shimmering(active: true, duration: 1.4, bounce: true)
+            
+            HStack {
+                Button {
+                    vm.tappedNo.toggle()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        user.newFriend = false
+                        vm.tappedNo.toggle()
+                    }
+                } label: {
+                    VStack(spacing: 0) {
+                        Image(systemName: "hand.thumbsdown.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 30)
+                            .foregroundColor(vm.tappedNo ? .red : .black)
+                            .animation(.easeOut)
+                        Text("Nah")
+                            .font(.callout)
+                            .fontWeight(.thin)
+                            .foregroundColor(vm.tappedNo ? .red : .black)
+
+                    }
+                    .foregroundColor(.black)
+
+                }
+                
+                Spacer()
+                
+                Button {
+                    vm.acceptFriendRequest(user: user) {
+                        user.newFriend = false
+                    }
+                } label: {
+                    VStack(spacing: 0) {
+                        Image(systemName: "heart.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 30)
+                            .foregroundColor(vm.tappedYes ? .green : .black)
+                            .animation(.easeOut)
+                        Text("Yes")
+                            .font(.callout)
+                            .fontWeight(.thin)
+                            .foregroundColor(vm.tappedYes ? .green : .black)
+                    }
+
+                }
+
+
+            }
+            .frame(width: 120)
+        }
+        .animation(.easeOut(duration: 1), value: showRequest)
+    }
+    
+    
+    private var threeButtons: some View {
+        HStack {
+            Button {
+                vm.handleMessage()
+            } label: {
+                Image("message")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 50)
+            }
+            
+            Button {
+                manager.checkAuthorizationStatus { fcmToken in
+                    if let token = fcmToken {
+                        vm.streetFollowerUser(fcm: token, user: user)
+                    } else {
+                        vm.alertMessage = "CityXcape needs notification permission to follow user"
+                        vm.showAlert.toggle()
+                    }
+                }
+            } label: {
+                Image("streetfollow")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 60)
+            }
+            
+            Button {
+                manager.checkAuthorizationStatus { fcmToken in
+                    if let token = fcmToken {
+                        vm.sendFriendRequest(uid: user.id, token: token)
+                    } else {
+                        vm.alertMessage = "CityXcape needs notification permission to send friend request"
+                        vm.showAlert.toggle()
+                    }
+                }
+            } label: {
+                Image("request")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 50)
+            }
+        }
+    }
+    
+    private var journeyButton: some View {
+        Button {
+            vm.showJourney ? vm.showJourney.toggle() :
+            vm.getVerificationForUser(userId: user.id)
+        } label: {
+            HStack {
+                Image("Footprints")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20)
+                    .opacity(0.8)
+                
+                Text("Their Journey")
+                    .fontWeight(.thin)
+            }
+        }
+        .padding(.top, 10)
+        .sheet(item: $vm.verification) { verification in
+            PublicStampView(verification: verification)
+        }
+    }
+    
+    private var instaButton: some View {
+        Button {
+            vm.openInstagram(username: user.social ?? "")
+        } label: {
+            Image("instagram")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 15)
+        }
+    }
+    
+    private var ranksButton: some View {
+        Button {
+            showRanks.toggle()
+        } label: {
+            Text(user.rank ?? "")
+                .font(.subheadline)
+                .foregroundColor(.gray)
+        }
+        .sheet(isPresented: $showRanks) {
+            Ranks()
+        }
+    }
+    
+    private var headerTitle: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("\(user.displayName)'s")
+                    .fontWeight(.thin)
+                    .foregroundColor(.white)
+                Text("StreetPass".uppercased())
+                      .foregroundColor(.white)
+                      .fontWeight(.thin)
+                      .tracking(5)
+                  .font(.title2)
+            }
+
+            Spacer()
+         
+        }
+        .padding()
+    }
+    
+    //end of extension
 }
 
 struct PublicStreetPass_Previews: PreviewProvider {

@@ -27,6 +27,7 @@ struct User: Identifiable, Hashable, Equatable {
     var verified: Date?
     var membership: Date?
     var world: [String: Double]?
+    var newFriend: Bool?
     
     
     static func == (lhs: User, rhs: User) -> Bool {
@@ -50,7 +51,7 @@ struct User: Identifiable, Hashable, Equatable {
         self.profileImageUrl = data?[UserField.profileImageUrl] as? String ?? ""
         self.social = data?[UserField.ig] as? String ?? nil
         self.world = data?[UserField.world] as? [String: Double] ?? [:]
-        self.rank = data?[UserField.rank] as? String ?? ""
+        self.rank = data?[UserField.rank] as? String ?? "Tourist"
         let timestamp = data?[UserField.dataCreated] as? Timestamp
         self.membership = timestamp?.dateValue()
     }
@@ -84,6 +85,10 @@ struct User: Identifiable, Hashable, Equatable {
         self.bio = userInfo["biography"] as? String ?? ""
         self.social = userInfo["instagram"] as? String ?? nil
         self.rank = userInfo["rank"] as? String ?? ""
+        if let _ = userInfo["friend"] as? String {
+            self.newFriend = true
+        }
+        self.fcmToken = userInfo["fcmToken"] as? String ?? ""
     }
     
     init(rank: Rank) {

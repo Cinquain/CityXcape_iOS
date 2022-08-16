@@ -25,10 +25,11 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     @Published var allowshare: Bool = false
     @Published var url: String?
     @Published var showJourney: Bool = false
-
     @Published var updateStampId: String = ""
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @Published var showPicker: Bool = false
+    @Published var tappedYes: Bool = false
+    @Published var tappedNo: Bool = false
     
     override init() {
         super.init()
@@ -227,9 +228,53 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
       
   }
    
+    
+
+    func sendFriendRequest(uid: String, token: String) {
+        guard let wallet = wallet else {return}
+        if wallet < 1 {
+            self.alertMessage = "You need 1 StreetCred to send friend request"
+            self.showAlert = true
+            return
+        }
+        DataService.instance.sendFriendRequest(uId: uid, token: token) { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+                case .success(let success):
+                    if success {
+                        self.alertMessage = "Friend request sent"
+                        self.showAlert = true
+                    }
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                    self.showAlert = true
+            }
+        }
+    }
  
+    func handleMessage() {
+        self.alertMessage = "Feature Coming Soon..."
+        self.showAlert = true 
+    }
     
     
+    func acceptFriendRequest(user: User, completion: @escaping () -> Void) {
+        self.tappedYes = true 
+        DataService.instance.saveNewUserAsFriend(user: user) { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+                case .success(_):
+                    self.alertMessage = "\(user.displayName) has been added as a friend"
+                    self.showAlert = true
+                    self.tappedYes = false
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                    self.showAlert = true
+                    self.tappedYes = false
+            }
+        }
+       
+    }
     
     
     

@@ -100,6 +100,8 @@ class FeedViewModel: ObservableObject {
                 return Text(feed.content)
             case .streetFollow:
                 return Text("\(feed.username) started street following \(Image("Running_feed")) \(feed.content)")
+            case .friends:
+                return Text("\(feed.username) is now friends with \(feed.content)")
         }
     }
     
@@ -120,6 +122,9 @@ class FeedViewModel: ObservableObject {
                 getSecretSpot(spotId: feed.spotId ?? "")
             case .message:
                 let user = User(feed: feed)
+                self.user = user
+            case .friends:
+                let user = User(id: feed.userId ?? "", displayName: feed.followingDisplayName ?? "", profileImageUrl: feed.followingImage ?? "")
                 self.user = user
         }
         

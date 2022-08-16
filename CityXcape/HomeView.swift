@@ -41,7 +41,7 @@ struct HomeView: View {
                 .fullScreenCover(item: $manager.stamp, content: { verification in
                     PublicStampView(verification: verification)
                 })
-            
+              
             
             MyWorld(selectedTab: $selectedTab)
             .tabItem {
@@ -74,9 +74,7 @@ struct HomeView: View {
                 }
                 .tag(2)
                 .badge(discoverVM.newSecretSpots.count)
-                .sheet(item: $manager.user) { user in
-                    PublicStreetPass(user: user)
-                }
+               
         
             
             
@@ -88,6 +86,9 @@ struct HomeView: View {
                 }
                 .tag(4)
                 
+        }
+        .sheet(item: $manager.user) { user in
+            PublicStreetPass(user: user)
         }
         .accentColor(.orange)
         .onAppear(perform: {

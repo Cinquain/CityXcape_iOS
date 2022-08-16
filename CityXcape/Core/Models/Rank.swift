@@ -146,15 +146,3 @@ struct Rank: Identifiable, Hashable {
     }
     
 }
-
-enum Ranking: String {
-     case Tourist
-     case Visitor
-     case Observer
-     case Local
-     case Informant
-     case Scout
-     case Recon
-     case ForceRecon
-     case Bond = "007"
-}

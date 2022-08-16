@@ -32,13 +32,12 @@ struct MainMessageView: View {
                 .padding(.horizontal)
                 
                 ScrollView {
-                    ForEach(0..<10, id: \.self) { num in
+                    ForEach(vm.users) { user in
                         
                         NavigationLink {
-                            //Pass in user from iteration
-                            ChatLogView()
+                            ChatLogView(user: user)
                         } label: {
-                            UserChatView(message: vm.message)
+                            UserChatView(user: User())
                         }
                         
                         Divider()

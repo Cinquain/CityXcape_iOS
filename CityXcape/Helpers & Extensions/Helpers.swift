@@ -124,6 +124,7 @@ struct ServerPath {
     static let save = "savedBy"
     static let friends = "friends"
     static let request = "request"
+    static let messages = "messages"
 }
 
 struct FeedField {
@@ -203,6 +204,13 @@ struct CheckinField {
     static let commentCount = "comment_count"
     static let checkinCount = "check-in_count"
     static let checkins = "checkins"
+}
+
+struct MessageField {
+    static let fromId = "fromId"
+    static let toId = "toId"
+    static let content = "content"
+    static let timestamp = "timestamp"
 }
 
 enum Icon: String {
@@ -306,7 +314,22 @@ enum FeedType: String, CaseIterable {
     case save
     case streetFollow
     case signup
+    case friends
 }
+
+
+enum Ranking: String {
+     case Tourist
+     case Visitor
+     case Observer
+     case Local
+     case Informant
+     case Scout
+     case Recon
+     case ForceRecon
+     case Bond = "007"
+}
+
 
 
 

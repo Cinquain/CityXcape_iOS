@@ -16,6 +16,7 @@
 		2106A9D02848F585000BCD10 /* Beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2106A9CF2848F585000BCD10 /* Beep.mp3 */; };
 		210700F428946D710014FF6D /* UserChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210700F328946D710014FF6D /* UserChatView.swift */; };
 		210700F62894715E0014FF6D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210700F52894715E0014FF6D /* Message.swift */; };
+		210A941128A296CA00954F6C /* ChatLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210A941028A296CA00954F6C /* ChatLogViewModel.swift */; };
 		2110D052286F2151003B71DA /* PublicStampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D051286F2151003B71DA /* PublicStampView.swift */; };
 		2110D054286F4141003B71DA /* PostCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D053286F4141003B71DA /* PostCommentView.swift */; };
 		2117A7E5282573A20001C76C /* StampImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2117A7E4282573A20001C76C /* StampImage.swift */; };
@@ -166,6 +167,7 @@
 		2106A9CF2848F585000BCD10 /* Beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Beep.mp3; sourceTree = "<group>"; };
 		210700F328946D710014FF6D /* UserChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChatView.swift; sourceTree = "<group>"; };
 		210700F52894715E0014FF6D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		210A941028A296CA00954F6C /* ChatLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogViewModel.swift; sourceTree = "<group>"; };
 		2110D051286F2151003B71DA /* PublicStampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStampView.swift; sourceTree = "<group>"; };
 		2110D053286F4141003B71DA /* PostCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentView.swift; sourceTree = "<group>"; };
 		2117A7E4282573A20001C76C /* StampImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampImage.swift; sourceTree = "<group>"; };
@@ -355,6 +357,7 @@
 				2129F511289957A2008B27D9 /* NewMessageView.swift */,
 				2129F513289957ED008B27D9 /* MessageViewModel.swift */,
 				21DEA242289D6DFB00629426 /* ChatLogView.swift */,
+				210A941028A296CA00954F6C /* ChatLogViewModel.swift */,
 			);
 			path = Messaging;
 			sourceTree = "<group>";
@@ -928,6 +931,7 @@
 				217DAF2E26CD789300A395BC /* SpotRowView.swift in Sources */,
 				210700F62894715E0014FF6D /* Message.swift in Sources */,
 				2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */,
+				210A941128A296CA00954F6C /* ChatLogViewModel.swift in Sources */,
 				21CB97EA2889750900F35464 /* FeedViewModel.swift in Sources */,
 				216AA7192875D17F00C719D3 /* EditMap.swift in Sources */,
 				217884FB26E181CE0066C719 /* SignInWithGoogle.swift in Sources */,
@@ -1101,7 +1105,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.4;
+				MARKETING_VERSION = 1.5.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1126,7 +1130,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.4;
+				MARKETING_VERSION = 1.5.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
