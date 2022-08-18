@@ -31,11 +31,11 @@ struct CheckinView: View {
                 .foregroundColor(.white)
                 
                 
-                if spot.verified {
+                if !spot.verified {
                     buttonRow
                 }
                 
-                if !spot.verified {
+                if spot.verified {
                     buttonRow
                         .animation(.easeOut(duration: 0.5), value: showButtons)
                         .opacity(showButtons ? 1 : 0)

@@ -1196,7 +1196,8 @@ class DataService {
             UserField.displayName: username,
             UserField.profileImageUrl: imageUrl,
             UserField.bio: bio,
-            UserField.rank: rank
+            UserField.rank: rank,
+            UserField.dataCreated: FieldValue.serverTimestamp()
         ]
         
         let requesterData: [String: Any] = [
@@ -1205,7 +1206,8 @@ class DataService {
             UserField.profileImageUrl: user.profileImageUrl,
             UserField.fcmToken: user.fcmToken ?? "",
             UserField.bio: user.bio ?? "",
-            UserField.rank: user.rank ?? "Tourist"
+            UserField.rank: user.rank ?? "Tourist",
+            UserField.dataCreated: FieldValue.serverTimestamp()
         ]
         
     

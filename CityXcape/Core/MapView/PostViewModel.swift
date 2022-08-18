@@ -37,7 +37,7 @@ class PostViewModel: NSObject, ObservableObject {
     @Published var isLoading: Bool = false
     @Published var price: Int = 1
 
-    
+    @Published var didFinish: Bool = false
     @Published var showPicker: Bool = false
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @Published var selectedImage: UIImage?

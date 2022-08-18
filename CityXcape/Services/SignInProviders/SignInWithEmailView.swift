@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SignInWithEmailView: View {
     @Environment(\.presentationMode) var presentationMode
-
+    @Binding var didFinish: Bool
     @StateObject var vm: EmailSigninViewModel = EmailSigninViewModel()
     @State private var showAlert: Bool = false
     @State private var alertMessage: String = ""
@@ -44,6 +44,19 @@ struct SignInWithEmailView: View {
             }
             .colorScheme(.dark)
             
+            HStack {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                }, label: {
+                    Image(systemName: "arrow.uturn.backward")
+                        .resizable()
+                        .frame(width: 30, height: 30)
+                        .padding()
+                })
+               
+                Spacer()
+            }
+            .padding()
             
         }
         .frame(width: UIScreen.screenWidth)
@@ -111,6 +124,7 @@ extension SignInWithEmailView {
                    disableInteraction = true
                    vm.login { success in
                        if success {
+                           didFinish = true
                            self.presentationMode.wrappedValue.dismiss()
                        } else {
                            alertMessage = vm.message
@@ -122,6 +136,7 @@ extension SignInWithEmailView {
                    disableInteraction = true
                    vm.createNewAccount { success in
                        if success {
+                           didFinish = true
                            self.presentationMode.wrappedValue.dismiss()
                        } else {
                            alertMessage = vm.message
@@ -152,6 +167,6 @@ extension SignInWithEmailView {
 
 struct SignInWithEmail_Previews: PreviewProvider {
     static var previews: some View {
-        SignInWithEmailView()
+        SignInWithEmailView(didFinish: .constant(false))
     }
 }

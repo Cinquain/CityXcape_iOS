@@ -144,6 +144,39 @@ struct StreetPass: View {
                     .padding(.top, 20)
                     
                     
+                    HStack {
+                        
+                        Spacer()
+                        
+                        Button {
+                            //Show Stats
+                            vm.showFriends.toggle()
+                        } label: {
+                            HStack {
+                               Image("friend")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 25)
+                                 
+                                   Text("Friends")
+                                        .font(.title2)
+                                        .fontWeight(.thin)
+                                        .foregroundColor(.white)
+                                Spacer()
+
+                        }
+                        .frame(width: 150, height: 30)
+
+                        }
+                        .fullScreenCover(isPresented: $vm.showFriends) {
+                            FriendsView(vm: vm)
+                        }
+                        
+                        Spacer()
+                    }
+                    .padding(.top, 5)
+                    
+                    
                     
                     HStack {
                         

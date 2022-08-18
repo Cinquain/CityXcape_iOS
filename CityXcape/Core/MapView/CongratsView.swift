@@ -104,6 +104,7 @@ struct CongratsView: View {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             vm.checkforNotifications()
                             vm.analytics.postSecretSpot()
+                            vm.didFinish = true
                             presentationMode.wrappedValue.dismiss()
                         }
                     }, label: {

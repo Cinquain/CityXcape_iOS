@@ -14,7 +14,7 @@ struct MainMessageView: View {
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
     @Environment(\.presentationMode) var presentationMode
-    @StateObject var vm: MessageViewModel = MessageViewModel()
+    @StateObject var vm: StreetPassViewModel
    
 
     var body: some View {
@@ -50,13 +50,13 @@ struct MainMessageView: View {
                 //End of VStack
                 
                 NavigationLink("", isActive: $vm.showLogView) {
-                    ChatLogView(user: vm.user)
+                    ChatLogView(user: vm.friend)
                 }
                 
                 
                 newMessageButton
                     .fullScreenCover(isPresented: $vm.createNewMessage) {
-                        NewMessageView(vm: vm)
+                        FriendsView(vm: vm)
                     }
 
               
@@ -120,6 +120,6 @@ extension MainMessageView {
 
 struct MainMessageView_Previews: PreviewProvider {
     static var previews: some View {
-        MainMessageView()
+        MainMessageView(vm: StreetPassViewModel())
     }
 }

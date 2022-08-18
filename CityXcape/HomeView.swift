@@ -51,9 +51,7 @@ struct HomeView: View {
             }
             .tag(1)
             .badge(discoverVM.newlySaved)
-            .fullScreenCover(item: $manager.secretSpot) { spot in
-                SecretSpotPage(spot: spot, vm: discoverVM)
-            }
+           
             
             
            MapContainer(selectedTab: $selectedTab)
@@ -91,6 +89,9 @@ struct HomeView: View {
             PublicStreetPass(user: user)
         }
         .accentColor(.orange)
+        .fullScreenCover(item: $manager.secretSpot) { spot in
+            SecretSpotPage(spot: spot, vm: discoverVM)
+        }
         .onAppear(perform: {
             
         })

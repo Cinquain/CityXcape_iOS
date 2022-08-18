@@ -34,10 +34,10 @@ struct SignUpView: View {
                     Button(action: {
                         showSignUp.toggle()
                     }, label: {
-                        Text("Login or Signup")
+                        Text("Start Exploring")
                             .fontWeight(.light)
                             .font(.subheadline)
-                            .frame(width: 200, height: 45)
+                            .frame(width: 210, height: 50)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 25)
                                    .stroke(Color.white, lineWidth: 1)

@@ -13,6 +13,7 @@ struct OnboardingView: View {
     @State var showError: Bool = false
     @State var showOnboardingII: Bool = false
     @State var showEmailSignup: Bool = false
+    @State var didFinish: Bool = false
     @Environment(\.presentationMode) var presentationMode
     
     @State var email: String = ""
@@ -26,7 +27,6 @@ struct OnboardingView: View {
                 Spacer()
                     .frame(height: geo.size.width / 3)
             
-                VStack(spacing: 0) {
                     HStack {
                         Spacer()
                         Image("fire")
@@ -35,61 +35,78 @@ struct OnboardingView: View {
                             .frame(height: geo.size.height / 3)
                         Spacer()
                     }
-                    Text("  CityXcape")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .fontWeight(.thin)
-                        .opacity(1)
-                }
+                 
+                
               
                 Spacer()
                     .frame(height: 40)
-                Button(action: {
-                    SignInWithApple.instance.startSignInWithAppleFlow(view: self)
-                }, label: {
-                    SignInWithAppleButton()
-                        .frame(height: 60)
-                        .frame(maxWidth: .infinity)
-                        .cornerRadius(8)
-                })
                 
-                Button(action: {
-                    SignInWithGoogle.instance.startSignInWithGoogleFlow(view: self)
-                }, label: {
-                    HStack {
-                        Image(Icon.globe.rawValue)
-                            .resizable()
-                            .renderingMode(.template)
-                            .frame(width: 30, height: 30)
-                        
-                        Text("Sign in with Google")
-                            .font(.title2)
-                    }
-                    .frame(height: 60)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.orange)
-                    .cornerRadius(8)
+                VStack {
+                    Text("Signin or Signup using")
+                        .font(.callout)
+                        .fontWeight(.thin)
+                        .foregroundColor(.white)
                     
-                })
-                
-                Button(action: {
-                    showEmailSignup.toggle()
-                }, label: {
-                    HStack {
-                        Image(systemName: "envelope.badge.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(height: 30)
+                    HStack(alignment: .bottom, spacing: 30) {
                         
-                        Text("Sign in using Email")
-                            .font(.title2)
+                        Button(action: {
+                            SignInWithApple.instance.startSignInWithAppleFlow(view: self)
+                        }, label: {
+                            VStack {
+                                Image("Apple")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 55)
+                                Text("Apple ID")
+                                    .font(.caption)
+                                    .fontWeight(.thin)
+                                
+                            }
+                        })
+                        
+                        Button(action: {
+                            SignInWithGoogle.instance.startSignInWithGoogleFlow(view: self)
+                        }, label: {
+                            VStack {
+                                Image("Google")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 45)
+                                Text("Gmail")
+                                    .font(.caption)
+                                    .fontWeight(.thin)
+                            }
+                            
+                        })
+                        
+                        Button(action: {
+                            showEmailSignup.toggle()
+                        }, label: {
+                            
+                            VStack {
+                                Image(systemName: "globe")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 45)
+                                    .foregroundColor(.gray)
+                                
+                                Text("Email")
+                                    .font(.caption)
+                                    .fontWeight(.thin)
+                            }
+                            
+                        })
+                        .fullScreenCover(isPresented: $showEmailSignup, onDismiss: {
+                            if didFinish {
+                                self.presentationMode.wrappedValue.dismiss()
+                            }
+                        }, content: {
+                            SignInWithEmailView(didFinish: $didFinish)
+                        })
+                        
                     }
-                    .frame(height: 60)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.dark_grey)
-                    .cornerRadius(8)
-                    
-                })
+                }
+         
                 
                 
                 Spacer()
@@ -97,7 +114,7 @@ struct OnboardingView: View {
                     Button(action: {
                         presentationMode.wrappedValue.dismiss()
                     }, label: {
-                        Image(Icon.back.rawValue)
+                        Image(systemName: "arrow.uturn.backward")
                             .resizable()
                             .frame(width: 30, height: 30)
                             .padding()
@@ -113,11 +130,6 @@ struct OnboardingView: View {
                 self.presentationMode.wrappedValue.dismiss()
             }, content: {
                 OnboardingViewII(email: $email, name: $name, providerId: $providerId, provider: $provider)
-            })
-            .fullScreenCover(isPresented: $showEmailSignup, onDismiss: {
-                self.presentationMode.wrappedValue.dismiss()
-            }, content: {
-                SignInWithEmailView()
             })
             .alert(isPresented: $showError, content: {
                 return Alert(title: Text("Error Signing In 😭"))
