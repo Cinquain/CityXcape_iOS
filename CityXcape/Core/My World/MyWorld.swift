@@ -58,7 +58,6 @@ struct MyWorld: View {
                                                 SpotDetailsView(spot: spot)
                                             }
 
-                                        
                                     }
                                     
                                  //End of VStack
@@ -144,6 +143,18 @@ extension MyWorld {
                 .foregroundColor(.white)
                 .font(.caption)
         }
+    }
+    
+    private var heatmap: some View {
+        Button {
+            vm.showOnboarding.toggle()
+        } label: {
+            Image("grid")
+                .resizable()
+                .scaledToFit()
+                .frame(height: 25)
+        }
+
     }
     
     private var toggleButton: some View {

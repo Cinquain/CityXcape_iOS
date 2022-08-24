@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FirebaseAuth
+import Shimmer
 
 struct OnboardingView: View {
     
@@ -53,14 +54,13 @@ struct OnboardingView: View {
                             SignInWithApple.instance.startSignInWithAppleFlow(view: self)
                         }, label: {
                             VStack {
+                               
                                 Image("Apple")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: 55)
-                                Text("Apple ID")
-                                    .font(.caption)
-                                    .fontWeight(.thin)
-                                
+                                    .frame(height: 66)
+                                    .clipShape(Circle())
+ 
                             }
                         })
                         
@@ -71,10 +71,8 @@ struct OnboardingView: View {
                                 Image("Google")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: 45)
-                                Text("Gmail")
-                                    .font(.caption)
-                                    .fontWeight(.thin)
+                                    .frame(height: 60)
+                         
                             }
                             
                         })
@@ -87,12 +85,8 @@ struct OnboardingView: View {
                                 Image(systemName: "globe")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: 45)
+                                    .frame(height: 60)
                                     .foregroundColor(.gray)
-                                
-                                Text("Email")
-                                    .font(.caption)
-                                    .fontWeight(.thin)
                             }
                             
                         })

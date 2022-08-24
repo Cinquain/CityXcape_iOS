@@ -25,14 +25,13 @@ struct FeedView: View {
                 ForEach(vm.feeds) { feed in
                     FeedBubbleView(feed: feed, vm: vm)
                         .padding(.top, 10)
+                        .sheet(item: $vm.secretSpot) { spot in
+                            SecretSpotPage(spot: spot, vm: discoverVM)
+                        }
                 }
                 
             }
-            commentField
-                .opacity(0.8)
-                .sheet(item: $vm.secretSpot) { spot in
-                    SecretSpotPage(spot: spot, vm: discoverVM)
-                }
+            
                
             
         }

@@ -30,6 +30,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     @Published var showPicker: Bool = false
     @Published var tappedYes: Bool = false
     @Published var tappedNo: Bool = false
+    @Published var showChatLog: Bool = false
     
     override init() {
         super.init()

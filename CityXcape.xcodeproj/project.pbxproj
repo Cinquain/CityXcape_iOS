@@ -10,12 +10,14 @@
 		1493C3F3277394BA002010A6 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1493C3F2277394BA002010A6 /* ActivityIndicator.swift */; };
 		14EF54BE282044BE004D9610 /* ShareSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF54BD282044BE004D9610 /* ShareSheetView.swift */; };
 		14F43354281ED757000F8479 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F43353281ED757000F8479 /* Router.swift */; };
+		21024D6128B10DCA0092B58A /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21024D6028B10DCA0092B58A /* MessageBubble.swift */; };
 		2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */; };
 		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
 		2106A9CE2848EA05000BCD10 /* PlugLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106A9CD2848EA05000BCD10 /* PlugLight.swift */; };
 		2106A9D02848F585000BCD10 /* Beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2106A9CF2848F585000BCD10 /* Beep.mp3 */; };
 		210700F428946D710014FF6D /* UserChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210700F328946D710014FF6D /* UserChatView.swift */; };
 		210700F62894715E0014FF6D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210700F52894715E0014FF6D /* Message.swift */; };
+		210A3C1228B65ED400D2F87B /* MessagePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210A3C1128B65ED400D2F87B /* MessagePreview.swift */; };
 		210A941128A296CA00954F6C /* ChatLogViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210A941028A296CA00954F6C /* ChatLogViewModel.swift */; };
 		2110D052286F2151003B71DA /* PublicStampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D051286F2151003B71DA /* PublicStampView.swift */; };
 		2110D054286F4141003B71DA /* PostCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D053286F4141003B71DA /* PostCommentView.swift */; };
@@ -161,12 +163,14 @@
 		1493C3F2277394BA002010A6 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		14EF54BD282044BE004D9610 /* ShareSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheetView.swift; sourceTree = "<group>"; };
 		14F43353281ED757000F8479 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		21024D6028B10DCA0092B58A /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
 		2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotViewModel.swift; sourceTree = "<group>"; };
 		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
 		2106A9CD2848EA05000BCD10 /* PlugLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlugLight.swift; sourceTree = "<group>"; };
 		2106A9CF2848F585000BCD10 /* Beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Beep.mp3; sourceTree = "<group>"; };
 		210700F328946D710014FF6D /* UserChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChatView.swift; sourceTree = "<group>"; };
 		210700F52894715E0014FF6D /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		210A3C1128B65ED400D2F87B /* MessagePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePreview.swift; sourceTree = "<group>"; };
 		210A941028A296CA00954F6C /* ChatLogViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogViewModel.swift; sourceTree = "<group>"; };
 		2110D051286F2151003B71DA /* PublicStampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStampView.swift; sourceTree = "<group>"; };
 		2110D053286F4141003B71DA /* PostCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentView.swift; sourceTree = "<group>"; };
@@ -533,6 +537,8 @@
 				2110D053286F4141003B71DA /* PostCommentView.swift */,
 				218CF042288594E400DF86FA /* FeedBubbleView.swift */,
 				21E318CD28AD367200F8A9A2 /* UserView.swift */,
+				21024D6028B10DCA0092B58A /* MessageBubble.swift */,
+				210A3C1128B65ED400D2F87B /* MessagePreview.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -854,6 +860,7 @@
 				211F664427D247800035DB83 /* StampCollectionView.swift in Sources */,
 				218CADBE26D5C94300496884 /* SettingsView.swift in Sources */,
 				219842A826CF57740089CE03 /* ImagePicker.swift in Sources */,
+				210A3C1228B65ED400D2F87B /* MessagePreview.swift in Sources */,
 				21B611F427E74FAB00361508 /* AnalyticsView.swift in Sources */,
 				212EE33127A4667500232992 /* MessageView.swift in Sources */,
 				21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */,
@@ -878,6 +885,7 @@
 				21469EC327B68B5600626FEE /* EmailSigninViewModel.swift in Sources */,
 				21E318CE28AD367200F8A9A2 /* UserView.swift in Sources */,
 				21AA28E026D13BB40001A02E /* StreetPass.swift in Sources */,
+				21024D6128B10DCA0092B58A /* MessageBubble.swift in Sources */,
 				219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */,
 				21EE8A2B285CB45600719D0B /* PostTrailForm.swift in Sources */,
 				21BB328827FB2004005241BE /* StreetPassViewModel.swift in Sources */,
@@ -1105,7 +1113,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.5;
+				MARKETING_VERSION = 1.5.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1130,7 +1138,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.5;
+				MARKETING_VERSION = 1.5.9;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

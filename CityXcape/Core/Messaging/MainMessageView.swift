@@ -32,13 +32,14 @@ struct MainMessageView: View {
                 .padding(.horizontal)
                 
                 ScrollView {
-                    ForEach(vm.users) { user in
+                    ForEach(vm.recentMessages) { message in
                         
                         NavigationLink {
-                            ChatLogView(user: user)
+                            ChatLogView(user: User(message: message))
                         } label: {
-                            UserChatView(user: User())
+                            MessagePreview(message: message)
                         }
+                        
                         
                         Divider()
                     }
@@ -50,7 +51,7 @@ struct MainMessageView: View {
                 //End of VStack
                 
                 NavigationLink("", isActive: $vm.showLogView) {
-                    ChatLogView(user: vm.friend)
+                    ChatLogView(user: vm.friend ?? User())
                 }
                 
                 

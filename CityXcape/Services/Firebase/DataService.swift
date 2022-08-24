@@ -42,6 +42,7 @@ class DataService {
     private var REF_CITY = DB_BASE.collection(ServerPath.cities)
     private var REF_FEED = DB_BASE.collection(ServerPath.feed)
     private var REF_MESSAGES = DB_BASE.collection(ServerPath.messages)
+    private var REF_RECENTMESSAGE = DB_BASE.collection(ServerPath.recentMessage)
     
     
     //MARK: CREATE FUNCTIONS
@@ -464,20 +465,35 @@ class DataService {
 
     }
     
-    func sendMessage(toId: String, content: String, completion: @escaping (Result<Bool,UploadError>) -> ()) {
-        guard let fromId = userId else {return}
-        
-    
-        
-        let senderDocument = REF_MESSAGES.document(fromId).collection(toId).document()
-        let recipientDocument = REF_MESSAGES.document(toId).collection(fromId).document()
+    func sendMessage(user: User, content: String, completion: @escaping (Result<Message,UploadError>) -> ()) {
+        guard let fromId = userId, let profileUrl = profileUrl, let bio = bio, let displayName = displayName, let rank = rank else {return}
+
+        let senderDocument = REF_MESSAGES.document(fromId).collection(user.id).document()
+        let recipientDocument = REF_MESSAGES.document(user.id).collection(fromId).document()
         
         let messageData: [String: Any] = [
+            MessageField.id: senderDocument.documentID,
             MessageField.fromId: fromId,
-            MessageField.toId: toId,
+            MessageField.toId: user.id,
             MessageField.content: content,
             MessageField.timestamp: FieldValue.serverTimestamp()
         ]
+        
+        let recentMessageData: [String: Any] = [
+            MessageField.id: senderDocument.documentID,
+            MessageField.timestamp: FieldValue.serverTimestamp(),
+            MessageField.fromId: fromId,
+            MessageField.profileUrl: profileUrl,
+            MessageField.displayName: displayName,
+            MessageField.rank: rank,
+            MessageField.bio: bio,
+            MessageField.toId: user.id,
+            MessageField.content: content,
+            MessageField.userId: fromId
+        ]
+        
+        let message = Message(data: messageData)
+        persistRecentMessage(toId: user.id, data: recentMessageData)
         
         recipientDocument.setData(messageData) { error in
             if let error = error {
@@ -490,10 +506,52 @@ class DataService {
                     print("Error logging message to sender", error.localizedDescription)
                     completion(.failure(.failed))
                 }
-                completion(.success(true))
+                DispatchQueue.main.async {
+                    completion(.success(message))
+                }
             }
         }
     }
+    
+    func persistRecentMessage(toId: String, data: [String: Any]) {
+        guard let fromId = userId else {return}
+        
+        let document = REF_RECENTMESSAGE
+                            .document(toId)
+                            .collection("messages")
+                            .document(fromId)
+        
+        
+        document.setData(data)
+    }
+    
+    func fetchRecentMessages(completion: @escaping (Result<[RecentMessage], Error>) -> Void) {
+        guard let uid = userId else {return}
+        var messages: [RecentMessage] = []
+        REF_RECENTMESSAGE
+            .document(uid)
+            .collection("messages")
+            .addSnapshotListener { querySnapshot, error in
+                
+                if let error = error {
+                    print("Error fetching recent messages", error.localizedDescription)
+                    completion(.failure(error))
+                }
+                
+                guard let snapshot = querySnapshot else {return}
+                
+                snapshot.documentChanges.forEach({ change in
+                    if change.type == .added {
+                        let data = change.document.data()
+                        let message = RecentMessage(data: data)
+                        messages.insert(message, at: 0)
+                    }
+                })
+                completion(.success(messages))
+            }
+        
+    }
+    
     
     func downloadStampComments(verificationId: String, uid: String, completion: @escaping (_ comments: [Comment]) -> ()) {
         
@@ -1003,12 +1061,13 @@ class DataService {
                 querySnapshot?.documentChanges.forEach({ change in
                     if change.type == .added {
                         let data = change.document.data()
-                        let id = change.document.documentID
-                        let message = Message(id: id, data: data)
+                        let message = Message(data: data)
                         messages.append(message)
                     }
                 })
-                completion(.success(messages))
+                DispatchQueue.main.async {
+                    completion(.success(messages))
+                }
             }
         
     }

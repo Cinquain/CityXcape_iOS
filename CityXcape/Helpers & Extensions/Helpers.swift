@@ -16,6 +16,10 @@ enum DeepLink: String, CaseIterable {
     case streetPass
 }
 
+struct Keys {
+    static let proxy = "proxy"
+}
+
 struct UserField {
     static let displayName = "displayName"
     static let email = "email"
@@ -125,6 +129,7 @@ struct ServerPath {
     static let friends = "friends"
     static let request = "request"
     static let messages = "messages"
+    static let recentMessage = "recent_messages"
 }
 
 struct FeedField {
@@ -207,10 +212,16 @@ struct CheckinField {
 }
 
 struct MessageField {
+    static let id = "id"
     static let fromId = "fromId"
     static let toId = "toId"
     static let content = "content"
     static let timestamp = "timestamp"
+    static let profileUrl = "profileUrl"
+    static let displayName = "displayName"
+    static let rank = "rank"
+    static let bio = "bio"
+    static let userId = "userId"
 }
 
 enum Icon: String {

@@ -172,12 +172,15 @@ extension PublicStreetPass {
     private var threeButtons: some View {
         HStack {
             Button {
-                vm.handleMessage()
+                vm.showChatLog.toggle()
             } label: {
                 Image("message")
                     .resizable()
                     .scaledToFit()
                     .frame(height: 50)
+            }
+            .sheet(isPresented: $vm.showChatLog) {
+                ChatLogView(user: user)
             }
             
             Button {
@@ -262,6 +265,9 @@ extension PublicStreetPass {
     
     private var headerTitle: some View {
         HStack {
+            if vm.showJourney {
+                UserDotView(imageUrl: user.profileImageUrl, width: 40)
+            }
             VStack(alignment: .leading) {
                 Text("\(user.displayName)'s")
                     .fontWeight(.thin)

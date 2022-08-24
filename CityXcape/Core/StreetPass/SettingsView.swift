@@ -35,7 +35,7 @@ struct SettingsView: View {
                             .scaledToFit()
                             .frame(width: 80, height: 80, alignment: .center)
                             .padding()
-                        Text("CityXcape is an app to save your spots in one place. You can also use this app to discover the secret spots of other explorers.")
+                        Text("CityXcape is an app to save places you want to visit. For any questions, reach us at info@cityXcape.com")
                             .font(.footnote)
                     })
                 })
@@ -69,6 +69,12 @@ struct SettingsView: View {
                         destination: SettingsEditImageView(profileUrl: $profileUrl, title: "Profile Picture", description: "Your profile picture will be shown on your streetpass and on the secret spots you post. Please make it an image of yourself", selectedImage: UIImage(named: "User")!),
                         label: {
                             SettingsRowView(text: "Profile Picture", leftIcon: "photo", color: .cx_blue)
+                        })
+                    
+                    NavigationLink(
+                        destination: StorePage(),
+                        label: {
+                            SettingsRowView(text: "Store", leftIcon: "cart.fill", color: .cx_blue)
                         })
                     
                     Button(action: {
@@ -197,10 +203,12 @@ struct SettingsView: View {
                 message = "Account Deleted"
                 showAlert.toggle()
                 self.presentationMode.wrappedValue.dismiss()
+                signOut()
 
             } else {
-                message = "Error deleting your account"
+                message = "Account Deleted!"
                 showAlert.toggle()
+                signOut()
             }
             
         }

@@ -9,69 +9,76 @@ import SwiftUI
 
 struct ChatLogView: View {
     
-    @State var user: User?
+    @State var user: User
     @StateObject var vm: ChatLogViewModel = ChatLogViewModel()
+ 
+    
     var body: some View {
         ZStack {
             messageView
             VStack {
                 Spacer()
                 chatBottomBar
-                    .background(Color.white)
+                    .background(Color.dark_grey)
             }
         }
-        .navigationTitle("Cinquain")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            vm.fetchMessages(userId: user?.id ?? "")
+            vm.fetchMessages(userId: user.id)
         }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                HStack {
+                    UserDotView(imageUrl: user.profileImageUrl, width: 35)
+                    Text(user.displayName)
+                }.foregroundColor(.white)
+            }
+        }
+        
     }
 }
 
 extension ChatLogView {
     private var messageView: some View {
         ScrollView {
-            ForEach(vm.messages) { message in
-                HStack {
-                    Spacer()
-                    HStack {
-                        Text("Fake message for for now \(message.content)")
-                            .foregroundColor(.white)
-                    }
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(8)
+            ScrollViewReader { proxy in
+                ForEach(vm.messages.sorted(by: {$0.date < $1.date})) { message in
+                    MessageBubble(message: message)
                 }
-                .padding(.horizontal)
-                .padding(.top, 8)
-                
+               
+                HStack{ Spacer() }
+                    .id(Keys.proxy)
+                    .onReceive(vm.$count) { _ in
+                        withAnimation(.easeOut(duration: 0.5)) {
+                            proxy.scrollTo(Keys.proxy)
+                        }
+                    }
             }
-           
-            HStack{ Spacer() }
+        
             
         }
-        .background(Color(.init(white: 0.95, alpha: 1)))
+        .background(Color.black)
     }
     
     private var chatBottomBar: some View {
         HStack {
             Button {
-                //
             } label: {
                 Image(systemName: "photo.on.rectangle")
                     .font(.system(size: 24))
-                    .foregroundColor(.black)
+                    .foregroundColor(.cx_orange)
             }
             TextField("Description", text: $vm.message)
+                .foregroundColor(.cx_orange)
             Button {
-                //TBD
+                vm.sendMessage(user: user)
             } label: {
                 Text("Send")
-                    .foregroundColor(.white)
+                    .foregroundColor(.black)
             }
             .padding(.horizontal)
             .padding(.vertical, 8)
-            .background(Color.blue)
+            .background(Color.cx_orange)
             .cornerRadius(4)
         }
         .padding(.horizontal)

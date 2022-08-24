@@ -21,13 +21,11 @@ struct FriendsView: View {
             List {
                 ForEach(vm.friends) { user in
                     VStack {
-                        Button {
-                            vm.friend = user
+                     
+                        NavigationLink {
+                            ChatLogView(user: user)
                         } label: {
-                            UserView(user: user)
-                        }
-                        .sheet(item: $vm.friend) { user in
-                            PublicStreetPass(user: user)
+                            UserChatView(user: user)
                         }
                         
                         Divider()

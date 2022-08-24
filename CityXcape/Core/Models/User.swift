@@ -106,6 +106,14 @@ struct User: Identifiable, Hashable, Equatable {
         self.bio = feed.userBio
         self.rank = feed.userRank
     }
+    
+    init(message: RecentMessage) {
+        self.id = message.userId
+        self.displayName = message.displayName
+        self.profileImageUrl = message.profileUrl
+        self.bio = message.bio
+        self.rank = message.rank
+    }
  
     init() {
         self.id = UserDefaults.standard.value(forKey: CurrentUserDefaults.userId) as? String ?? ""

@@ -36,7 +36,7 @@ struct UserChatView: View {
             
             Spacer()
             
-            VStack {
+            VStack(spacing: 0) {
                 Image(user.rank ?? "Tourist")
                     .resizable()
                     .scaledToFit()
@@ -45,9 +45,9 @@ struct UserChatView: View {
                     .fontWeight(.thin)
                     .font(.caption)
             }
-            .padding(.trailing, 30)
             .foregroundColor(.white)
         }
+        .padding(.horizontal, 20)
         .foregroundColor(.white)
         .background(Color.black)
         

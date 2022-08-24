@@ -43,6 +43,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
     
     @Published var showLogView: Bool = false
     @Published var createNewMessage: Bool = false
+    @Published var recentMessages: [RecentMessage] = []
     
     let coreData = CoreDataManager.instance
     let manager = NotificationsManager.instance
@@ -53,6 +54,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
         calculateRank()
         getScoutLeaders()
         fetchAllFriends()
+        getRecentMessages()
     }
     
     func generateColors() -> [Color] {
@@ -228,7 +230,18 @@ class StreetPassViewModel: NSObject, ObservableObject {
         }
     }
     
+    func getRecentMessages() {
+        DataService.instance.fetchRecentMessages { result in
+            switch result {
+            case .success(let messages):
+                self.recentMessages = messages
+            case .failure(let error):
+                self.error = error.localizedDescription
+            }
+        }
+    }
     
+ 
     
     
     

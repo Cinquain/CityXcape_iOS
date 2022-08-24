@@ -53,16 +53,7 @@ struct StorePage: View {
                     
             }
             
-            Button {
-                //
-                self.presentationMode.wrappedValue.dismiss()
-            } label: {
-                Image("arrow")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 20)
-                    .opacity(0.5)
-            }
+         
             
         }
         .background(LinearGradient(gradient: Gradient(stops: [

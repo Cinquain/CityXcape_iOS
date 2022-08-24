@@ -15,13 +15,21 @@ class ChatLogViewModel: ObservableObject {
     @Published var message: String = ""
     @Published var errorMessage: String = ""
     @Published var messages: [Message] = []
+    @Published var count: Int = 0
     
-    func sendMessage(toId: String) {
-        DataService.instance.sendMessage(toId: toId, content: message) { [weak self] result in
+    init() {
+
+    }
+    
+    func sendMessage(user: User) {
+        DataService.instance.sendMessage(user: user, content: message) { [weak self] result in
             guard let self = self else {return}
             switch result {
-                case .success(let success):
-                    print("Successfully sent message", success)
+                case .success(let message):
+                    print("Successfully sent message")
+                    self.messages.append(message)
+                    self.message = ""
+                    self.count += 1
                 case .failure(let error):
                     self.errorMessage = error.localizedDescription
             }
@@ -37,8 +45,13 @@ class ChatLogViewModel: ObservableObject {
                     self.errorMessage = error.localizedDescription
                 case .success(let returnedMessages):
                     self.messages = returnedMessages
+                    self.count += 1
             }
         }
+        
+    }
+    
+    fileprivate func persistRecentMessage() {
         
     }
     

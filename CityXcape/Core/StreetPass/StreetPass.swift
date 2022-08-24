@@ -45,9 +45,24 @@ struct StreetPass: View {
                             .fontWeight(.thin)
                             .tracking(5)
                             .font(.title)
+                            .minimumScaleFactor(0.5)
+                            .lineLimit(1)
                         
-                        Spacer()
-                        
+                        HStack {
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                AnalyticsService.instance.touchedSettings()
+                                presentSettings.toggle()
+                            }, label: {
+                                Image(Icon.gear.rawValue)
+                                    .resizable()
+                                    .foregroundColor(.white)
+                                    .frame(width: 40, height: 40)
+                                    .shadow(color: .black, radius: 10, x: 0.0, y: 0.0)
+                            })
+                        }
                     
                  
                     }
@@ -210,60 +225,13 @@ struct StreetPass: View {
                     }
                     .padding(.top, 5)
                     
-                    
-                    HStack {
-                        
-                        Spacer()
-                        
-                        Button {
-                            //Show Stats
-                            vm.showStore.toggle()
-                        } label: {
-                            HStack {
-                               Image("cx")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 30)
-                                 
-                                   Text("Store")
-                                        .font(.title2)
-                                        .fontWeight(.thin)
-                                        .foregroundColor(.white)
-                                Spacer()
-
-                        }
-                        .frame(width: 150, height: 30)
-
-                        }
-                        .fullScreenCover(isPresented: $vm.showStore) {
-                            StorePage()
-                        }
-                        
-                        Spacer()
-                    }
-                    .padding(.top, 5)
+           
                     
                     
                     
                     Spacer()
                     
-                    HStack {
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            AnalyticsService.instance.touchedSettings()
-                            presentSettings.toggle()
-                        }, label: {
-                            Image(Icon.gear.rawValue)
-                                .resizable()
-                                .foregroundColor(.white)
-                                .frame(width: 40, height: 40)
-                                .shadow(color: .black, radius: 10, x: 0.0, y: 0.0)
-                        })
-                        .padding(.all, 20)
-                        .padding(.trailing, 20)
-                    }
+                 
                     
                     
             //End of Geometry Reader

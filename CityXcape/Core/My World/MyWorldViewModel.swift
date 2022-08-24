@@ -5,7 +5,7 @@
 //  Created by James Allan on 9/11/21.
 //
 
-import Foundation
+import MapboxMaps
 import SwiftUI
 import Combine
 
@@ -27,6 +27,10 @@ class MyWorldViewModel: NSObject, ObservableObject {
     
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
+    
+    
+    @Published var annotations: [PointAnnotation] = []
+    
     
     
     var cancellables = Set<AnyCancellable>()
@@ -119,9 +123,18 @@ class MyWorldViewModel: NSObject, ObservableObject {
         } else {
             print("Core Data Entities Found!")
             self.allSpots.removeAll()
+            self.annotations.removeAll()
             self.allSpots = spots
             self.currentSpots = self.allSpots.filter({$0.verified == false})
+            let markers = self.currentSpots
+                .map({PointAnnotation(coordinate: .init(latitude: $0.latitude, longitude: $0.longitude))})
+            markers.forEach { point in
+                var annotation = PointAnnotation(coordinate: point.point.coordinates)
+                annotation.image = .init(image: createGridImage(), name: "grid")
+                annotations.append(annotation)
+            }
         }
+        
             
     }
     
@@ -145,7 +158,19 @@ class MyWorldViewModel: NSObject, ObservableObject {
         
     }
     
-    
+    func createGridImage() -> UIImage {
+        let image = UIImage(named: "grid")!
+        let targetSize = CGSize(width: 100, height: 100)
+        let targetHeight = targetSize.height / image.size.height
+        let targetWidth = targetSize.width / image.size.width
+        let scaleFactor = min(targetWidth, targetHeight)
+        let scaleImageSize = CGSize(width: image.size.width * scaleFactor, height: image.size.height * scaleFactor)
+        let renderer =  UIGraphicsImageRenderer(size: scaleImageSize)
+        let scaledImage = renderer.image { _ in
+            image.draw(in: CGRect(origin: .zero, size: scaleImageSize))
+        }
+        return scaledImage
+    }
     
     
     func calculateRank() {
