@@ -173,11 +173,13 @@ extension PublicStreetPass {
         HStack {
             Button {
                 vm.showChatLog.toggle()
+                AnalyticsService.instance.sentMessage()
             } label: {
                 Image("message")
                     .resizable()
                     .scaledToFit()
                     .frame(height: 50)
+                    
             }
             .sheet(isPresented: $vm.showChatLog) {
                 ChatLogView(user: user)

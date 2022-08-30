@@ -8,6 +8,7 @@
 import MapboxMaps
 import SwiftUI
 import Combine
+import MapKit
 
 class MyWorldViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
@@ -19,7 +20,7 @@ class MyWorldViewModel: NSObject, ObservableObject {
     @Published var users: [User] = []
     @Published var showOnboarding: Bool = false
     @Published var showVisited: Bool = false
-    
+    @Published var showSearch: Bool = false 
     
     @Published var rank: String = ""
     @Published var progressString: String = ""
@@ -27,9 +28,9 @@ class MyWorldViewModel: NSObject, ObservableObject {
     
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
+    @Published var searchTerm: String = ""
     
-    
-    @Published var annotations: [PointAnnotation] = []
+    @Published var annotations: [MKPointAnnotation] = []
     
     
     
@@ -56,6 +57,23 @@ class MyWorldViewModel: NSObject, ObservableObject {
         }
     }
     
+    func performSearch() {
+        if searchTerm.isEmpty {
+            currentSpots = allSpots.filter({$0.verified == false}).sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
+            if self.currentSpots.count > 30 {
+                let count = self.currentSpots.count
+                let difference = count - 30
+                self.currentSpots.sort(by: {$0.distanceFromUser < $1.distanceFromUser})
+                self.currentSpots = self.currentSpots.dropLast(difference)
+            }
+            showSearch = false
+            return
+        }
+        currentSpots = allSpots.filter({$0.city.lowercased().contains(searchTerm.lowercased())
+                            || $0.world.lowercased().contains(searchTerm.lowercased())
+                            || $0.spotName.lowercased().contains(searchTerm.lowercased())})
+        showSearch = false
+    }
     
     
     func setupToggleObserver() {
@@ -67,6 +85,12 @@ class MyWorldViewModel: NSObject, ObservableObject {
                     self.currentSpots = self.allSpots.filter({$0.verified == true})
                 } else {
                     self.currentSpots = self.allSpots.filter({$0.verified == false})
+                    if self.currentSpots.count > 30 {
+                        let count = self.currentSpots.count
+                        let difference = count - 30
+                        self.currentSpots.sort(by: {$0.distanceFromUser < $1.distanceFromUser})
+                        self.currentSpots = self.currentSpots.dropLast(difference)
+                    }
                 }
             }
             .store(in: &cancellables)
@@ -126,13 +150,18 @@ class MyWorldViewModel: NSObject, ObservableObject {
             self.annotations.removeAll()
             self.allSpots = spots
             self.currentSpots = self.allSpots.filter({$0.verified == false})
-            let markers = self.currentSpots
-                .map({PointAnnotation(coordinate: .init(latitude: $0.latitude, longitude: $0.longitude))})
-            markers.forEach { point in
-                var annotation = PointAnnotation(coordinate: point.point.coordinates)
-                annotation.image = .init(image: createGridImage(), name: "grid")
-                annotations.append(annotation)
+            if self.currentSpots.count > 30 {
+                let count = self.currentSpots.count
+                let difference = count - 30
+                self.currentSpots.sort(by: {$0.distanceFromUser < $1.distanceFromUser})
+                self.currentSpots = self.currentSpots.dropLast(difference)
             }
+            self.currentSpots.forEach { spot in
+                let annotation = MKPointAnnotation()
+                annotation.coordinate = CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude)
+                self.annotations.append(annotation)
+            }
+            
         }
         
             

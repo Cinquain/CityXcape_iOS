@@ -65,6 +65,9 @@ struct MainMessageView: View {
 
         }
         .colorScheme(.dark)
+        .onAppear {
+            vm.count = 0
+        }
         //End of NavView
     }
 }
@@ -92,10 +95,10 @@ extension MainMessageView {
         Button {
             presentationMode.wrappedValue.dismiss()
         } label: {
-            Image(systemName: "gear")
+            Image(systemName: "arrow.uturn.down.circle.fill")
                 .resizable()
                 .scaledToFit()
-                .frame(height: 40)
+                .frame(height: 30)
         }
     }
     

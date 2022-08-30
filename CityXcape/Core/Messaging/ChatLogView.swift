@@ -25,6 +25,7 @@ struct ChatLogView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             vm.fetchMessages(userId: user.id)
+            vm.deleteRecentMessage(userId: user.id)
         }
         .toolbar {
             ToolbarItem(placement: .principal) {

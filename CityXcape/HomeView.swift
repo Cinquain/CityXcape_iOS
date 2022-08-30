@@ -15,6 +15,8 @@ struct HomeView: View {
     @StateObject var manager = NotificationsManager.instance
     @StateObject var discoverVM: DiscoverViewModel = DiscoverViewModel()
     @StateObject var feedVM: FeedViewModel = FeedViewModel()
+    @StateObject var streetPassVM: StreetPassViewModel = StreetPassViewModel()
+
 
     init() {
         let tabBarAppearance = UITabBarAppearance()
@@ -27,20 +29,7 @@ struct HomeView: View {
        
         TabView(selection: $selectedTab) {
             
-            FeedView(discoverVM: discoverVM, vm: feedVM)
-                .tabItem {
-                    Image(Icon.grid.rawValue)
-                        .renderingMode(.template)
-                    Text(Labels.tab0.rawValue)
-                }
-                .tag(0)
-                .badge(feedVM.newFeeds)
-                .onAppear {
-                    feedVM.newFeeds = 0
-                }
-                .fullScreenCover(item: $manager.stamp, content: { verification in
-                    PublicStampView(verification: verification)
-                })
+      
               
             
             MyWorld(selectedTab: $selectedTab)
@@ -49,20 +38,9 @@ struct HomeView: View {
                     .renderingMode(.template)
                 Text(Labels.tab1.rawValue)
             }
-            .tag(1)
+            .tag(0)
             .badge(discoverVM.newlySaved)
            
-            
-            
-           MapContainer(selectedTab: $selectedTab)
-               .edgesIgnoringSafeArea(.top)
-               .tabItem {
-                   Image(Icon.tabItemII.rawValue)
-                       .renderingMode(.template)
-                   Text(Labels.tab3.rawValue)
-               }
-               .tag(3)
-            
             
             DiscoverView(selectedTab: $selectedTab, vm: discoverVM)
                 .tabItem {
@@ -70,19 +48,47 @@ struct HomeView: View {
                         .renderingMode(.template)
                     Text(Labels.tab2.rawValue)
                 }
-                .tag(2)
+                .tag(1)
                 .badge(discoverVM.newSecretSpots.count)
+            
+          
+            
+            FeedView(discoverVM: discoverVM, vm: feedVM)
+                .tabItem {
+                    Image(Icon.grid.rawValue)
+                        .renderingMode(.template)
+                    Text(Labels.tab0.rawValue)
+                }
+                .tag(2)
+                .badge(feedVM.newFeeds)
+                .onAppear {
+                    feedVM.newFeeds = 0
+                }
+                .fullScreenCover(item: $manager.stamp, content: { verification in
+                    PublicStampView(verification: verification)
+                })
+            
+                        
+            
+            MapContainer(selectedTab: $selectedTab)
+                .edgesIgnoringSafeArea(.top)
+                .tabItem {
+                    Image(Icon.tabItemII.rawValue)
+                        .renderingMode(.template)
+                    Text(Labels.tab3.rawValue)
+                }
+                .tag(3)
                
-        
             
             
-            StreetPass()
+            StreetPass(vm: streetPassVM)
                 .tabItem {
                     Image(Icon.tabItemIII.rawValue)
                         .renderingMode(.template)
                     Text(Labels.tab4.rawValue)
                 }
                 .tag(4)
+                .badge(streetPassVM.count)
                 
         }
         .sheet(item: $manager.user) { user in
@@ -99,9 +105,9 @@ struct HomeView: View {
         .onReceive(router.$link) { deepLink in
             switch deepLink {
             case .home:
-                selectedTab = 1
+                selectedTab = 0
             case .discover:
-                selectedTab = 2
+                selectedTab = 1
             case .streetPass:
                 selectedTab = 4
             case .none:

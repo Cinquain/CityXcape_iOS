@@ -525,7 +525,7 @@ class DataService {
         document.setData(data)
     }
     
-    func fetchRecentMessages(completion: @escaping (Result<[RecentMessage], Error>) -> Void) {
+    func fetchRecentMessages(completion: @escaping (Result<([RecentMessage], Int), Error>) -> Void) {
         guard let uid = userId else {return}
         var messages: [RecentMessage] = []
         REF_RECENTMESSAGE
@@ -539,7 +539,7 @@ class DataService {
                 }
                 
                 guard let snapshot = querySnapshot else {return}
-                
+                let count = snapshot.documentChanges.count
                 snapshot.documentChanges.forEach({ change in
                     if change.type == .added {
                         let data = change.document.data()
@@ -547,9 +547,20 @@ class DataService {
                         messages.insert(message, at: 0)
                     }
                 })
-                completion(.success(messages))
+                completion(.success((messages, count)))
             }
         
+    }
+    
+    func deleteRecentMessages(user: String) {
+        
+        guard let uid = userId else {return}
+        
+        REF_RECENTMESSAGE
+            .document(uid)
+            .collection("messages")
+            .document(user)
+            .delete()
     }
     
     
@@ -1025,7 +1036,7 @@ class DataService {
         var feeds: [Feed] = []
         REF_FEED
             .order(by: FeedField.date, descending: true)
-            .limit(to: 30)
+            .limit(to: 15)
             .addSnapshotListener { querySnapshot, error in
                 
                 if let error = error {
@@ -1393,7 +1404,7 @@ class DataService {
                 completion(.success(true))
             }
         
-        let decrement: Int64 = -1
+        let decrement: Int64 = -3
         let walletData: [String: Any] = [UserField.streetCred: FieldValue.increment(decrement)]
         AuthService.instance.updateUserField(uid: uid, data: walletData)
             

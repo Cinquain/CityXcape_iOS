@@ -16,6 +16,7 @@ struct StreetReportCard: View {
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
     
     @StateObject var vm: AnalyticsViewModel = AnalyticsViewModel()
+    @StateObject var streetPass: StreetPassViewModel
     @State private var showTotalView: Bool = false
     @State private var currentType: AnalyticsType?
     
@@ -202,9 +203,7 @@ struct StreetReportCard: View {
                     StreetFollowersView(vm: vm)
                 }
         
-                
-
-                
+   
                 
             }
             .padding(.top, 20)
@@ -234,6 +233,6 @@ struct StreetReportCard: View {
 
 struct StreetReportCard_Previews: PreviewProvider {
     static var previews: some View {
-        StreetReportCard()
+        StreetReportCard(streetPass: StreetPassViewModel())
     }
 }

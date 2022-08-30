@@ -43,7 +43,6 @@ struct MessagePreview: View {
             }
             .foregroundColor(.white)
         }
-        .padding(.horizontal, 20)
         .background(Color.black)
     }
 }

@@ -7,55 +7,104 @@
 
 import SwiftUI
 import UIKit
-import MapboxMaps
 import MapKit
 
-class HeatMap: UIViewController {
-    
-    internal var mapView: MapView!
-    
-    override public func viewDidLoad() {
-        
-        super.viewDidLoad()
-        let resourceOptions = ResourceOptions(accessToken: "pk.eyJ1IjoiY2lucXVhaW4iLCJhIjoiY2lnZGRhem56MXAydHY5bTJrcTBqNnk2cSJ9.D_6TLzB1kL7KQRLMJtosIg")
-        let style = StyleURI(rawValue: "mapbox://styles/cinquain/cjzvggg2d14uc1coae4u1c3vr")
-        let longitude = LocationService.instance.userlocation?.longitude ?? 0
-        let latitude = LocationService.instance.userlocation?.latitude ?? 0
-        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        let cameraOptions = CameraOptions(center: coordinate, zoom: 13)
-        let initOptions = MapInitOptions(resourceOptions: resourceOptions, cameraOptions: cameraOptions, styleURI: style)
-        mapView = MapView(frame: view.bounds, mapInitOptions: initOptions)
-        mapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        self.view.addSubview(mapView)
-
+struct HeatMap: View {
+    let vm: MyWorldViewModel
+    var body: some View {
+        ZStack {
+            HeatMapView(vm: vm)
+                .colorScheme(.dark)
+                .edgesIgnoringSafeArea(.all)
+        }
     }
     
 }
 
 
-struct HeatMapView: UIViewControllerRepresentable {
+struct HeatMapView: UIViewRepresentable {
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
     
+    
+    let mapView = MKMapView()
     let vm: MyWorldViewModel
+    var center: CLLocationCoordinate2D?
     
-    func makeUIViewController(context: Context) -> HeatMap {
-        return HeatMap()
+    func makeUIView(context: Context) -> MKMapView {
+        mapView.delegate = context.coordinator
+        mapView.showsUserLocation = true
+        mapView.isUserInteractionEnabled = true
+        return mapView
     }
     
-    func updateUIViewController(_ uiViewController: HeatMap, context: Context) {
-       
-        let manager = uiViewController
-                        .mapView.annotations.makePointAnnotationManager()
-        manager.annotations = vm.annotations
+    func updateUIView(_ uiView: MKMapView, context: Context) {
+        
+        if vm.annotations.count > 0 {
+            uiView.removeAnnotations(uiView.annotations)
+            vm.annotations.forEach { annotation in
+                uiView.addAnnotation(annotation)
+            }
+            
+            uiView.showAnnotations(uiView.annotations.filter({$0 is MKPointAnnotation}), animated: true)
+            setupRegion()
+        }
        
     }
+    
+    func setupRegion() {
+        let orderedSpots = vm.currentSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
+        guard let firstSpot = orderedSpots.first else {return}
+        let center = CLLocationCoordinate2D(latitude: firstSpot.latitude, longitude: firstSpot.longitude)
+        let span = MKCoordinateSpan(latitudeDelta: 0.3, longitudeDelta: 0.3)
+        let region = MKCoordinateRegion(center: center, span: span)
+        mapView.setRegion(region, animated: true)
+    }
+    
+    
+    class Coordinator: NSObject, MKMapViewDelegate {
+        var parent: HeatMapView
+        
+        init(_ parent: HeatMapView) {
+            self.parent = parent
+        }
+        
+        func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
+            parent.center = mapView.centerCoordinate
+        }
+        
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            
+            let image = UIImage(named: "grid")!
+            let targetSize = CGSize(width: 50, height: 50)
+            let targetHeight = targetSize.height / image.size.height
+            let targetWidth = targetSize.width / image.size.width
+            let scaleFactor = min(targetWidth, targetHeight)
+            let scaleImageSize = CGSize(width: image.size.width * scaleFactor, height: image.size.height * scaleFactor)
+            let renderer =  UIGraphicsImageRenderer(size: scaleImageSize)
+            let scaledImage = renderer.image { _ in
+                image.draw(in: CGRect(origin: .zero, size: scaleImageSize))
+            }
+            if (annotation is MKPointAnnotation) {
+                let view = MKAnnotationView(annotation: annotation, reuseIdentifier: "hex")
+                view.image = scaledImage
+                return view
+            }
+            return nil
+        }
+        //End of Coordinator
+    }
+    
+    
+    //End of HeatMapView
 }
 
 
 
 struct HeatMapView_Previews: PreviewProvider {
     static var previews: some View {
-        HeatMapView(vm: MyWorldViewModel())
-            .edgesIgnoringSafeArea(.all)
+        HeatMap(vm: MyWorldViewModel())
     }
 }
 

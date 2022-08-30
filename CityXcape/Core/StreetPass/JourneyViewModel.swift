@@ -207,6 +207,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
            guard let self = self else {return}
            if succcess {
                self.alertMessage = "Street Following \(user.displayName)"
+               AnalyticsService.instance.streetFollowingUser()
                self.showAlert = true
            } else {
                self.alertMessage = "Cannot street follow \(user.displayName)"
@@ -233,7 +234,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
 
     func sendFriendRequest(uid: String, token: String) {
         guard let wallet = wallet else {return}
-        if wallet < 1 {
+        if wallet < 3 {
             self.alertMessage = "You need 1 StreetCred to send friend request"
             self.showAlert = true
             return
@@ -243,8 +244,9 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
             switch result {
                 case .success(let success):
                     if success {
-                        self.alertMessage = "Friend request sent"
+                        self.alertMessage = "Friend request sent, -3 STC"
                         self.showAlert = true
+                        AnalyticsService.instance.sentFriendRequest()
                     }
                 case .failure(let error):
                     self.alertMessage = error.localizedDescription
@@ -266,6 +268,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
             switch result {
                 case .success(_):
                     self.alertMessage = "\(user.displayName) has been added as a friend"
+                    AnalyticsService.instance.newFriends()
                     self.showAlert = true
                     self.tappedYes = false
                 case .failure(let error):

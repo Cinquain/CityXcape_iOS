@@ -65,6 +65,7 @@ struct FriendsView: View {
             }
             .onAppear {
                 vm.fetchAllFriends()
+                vm.count = 0
             }
             
         }

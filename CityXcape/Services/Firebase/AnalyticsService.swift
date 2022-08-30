@@ -178,4 +178,20 @@ class AnalyticsService {
         Analytics.logEvent("created_hunt", parameters: nil)
     }
     
+    func sentFriendRequest() {
+        Analytics.logEvent("friend_request", parameters: nil)
+    }
+    
+    func sentMessage() {
+        Analytics.logEvent("sent_message", parameters: nil)
+    }
+    
+    func newFriends() {
+        Analytics.logEvent("new_friends", parameters: nil)
+    }
+    
+    func streetFollowingUser() {
+        Analytics.logEvent("street_following_user", parameters: nil)
+    }
+    
 }

@@ -217,6 +217,7 @@ PODS:
     - AppAuth/ExternalUserAgent (= 1.4.0)
   - AppAuth/Core (1.4.0)
   - AppAuth/ExternalUserAgent (1.4.0)
+  - BadgeHub (1.0.0)
   - BoringSSL-GRPC (0.0.7):
     - BoringSSL-GRPC/Implementation (= 0.0.7)
     - BoringSSL-GRPC/Interface (= 0.0.7)
@@ -386,6 +387,7 @@ PODS:
   - SwiftAlgorithms (1.0.0)
 
 DEPENDENCIES:
+  - BadgeHub
   - Charts
   - Firebase/Analytics
   - Firebase/Auth
@@ -402,6 +404,7 @@ SPEC REPOS:
   trunk:
     - abseil
     - AppAuth
+    - BadgeHub
     - BoringSSL-GRPC
     - Charts
     - Firebase
@@ -435,6 +438,7 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
+  BadgeHub: b227771329f78c37a2dae7502607ec6d00a50bd4
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   Charts: d959d6723c8eedfdd0735dfc28cb0a71762ac4d9
   Firebase: c23a36d9e4cdf7877dfcba8dd0c58add66358999
@@ -465,6 +469,6 @@ SPEC CHECKSUMS:
   Protobuf: e9b99dd5da72f665ec503b19191f245a22188b4d
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
 
-PODFILE CHECKSUM: fca2d37f429de86c63db518a09d45486bca70fcf
+PODFILE CHECKSUM: 5200a2a02b4c8bcfb9ba979ff4f8b2f040a8aa39
 
 COCOAPODS: 1.11.0.beta.2

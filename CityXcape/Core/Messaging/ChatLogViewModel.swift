@@ -51,8 +51,10 @@ class ChatLogViewModel: ObservableObject {
         
     }
     
-    fileprivate func persistRecentMessage() {
-        
+    
+    
+    func deleteRecentMessage(userId: String) {
+        DataService.instance.deleteRecentMessages(user: userId)
     }
     
     

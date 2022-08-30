@@ -17,5 +17,6 @@ pod 'GeoFire', '~> 4.0'
 pod 'GoogleSignIn'
 pod 'GooglePlaces'
 pod 'Charts'
+pod 'BadgeHub'
 
 end

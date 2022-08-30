@@ -16,7 +16,7 @@ struct StreetPass: View {
     @AppStorage(CurrentUserDefaults.social) var social: Int?
 
 
-    @StateObject var vm: StreetPassViewModel = StreetPassViewModel()
+    @StateObject var vm: StreetPassViewModel
     
     @State private var username: String = ""
     @State private var userbio: String = ""
@@ -165,27 +165,32 @@ struct StreetPass: View {
                         
                         Button {
                             //Show Stats
-                            vm.showFriends.toggle()
+                            vm.showMessage.toggle()
                         } label: {
                             HStack {
-                               Image("friend")
+                               Image(systemName: "message.fill")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(height: 25)
+                                    .foregroundColor(vm.count > 0 ? .yellow : .white)
                                  
-                                   Text("Friends")
+                                   Text("Messages")
                                         .font(.title2)
                                         .fontWeight(.thin)
-                                        .foregroundColor(.white)
+                                        .foregroundColor(vm.count > 0 ? .yellow : .white)
+                                
                                 Spacer()
 
+                                }
+                                .badge(vm.count)
+                                .foregroundColor(.white)
+                                .frame(width: 150, height: 30)
+                            
                         }
-                        .frame(width: 150, height: 30)
-
-                        }
-                        .fullScreenCover(isPresented: $vm.showFriends) {
+                        .fullScreenCover(isPresented: $vm.showMessage) {
                             FriendsView(vm: vm)
                         }
+                        
                         
                         Spacer()
                     }
@@ -218,7 +223,7 @@ struct StreetPass: View {
 
                         }
                         .fullScreenCover(isPresented: $vm.showStats) {
-                            StreetReportCard()
+                            StreetReportCard(streetPass: vm)
                         }
                         
                         Spacer()
@@ -322,6 +327,6 @@ struct StreetPass: View {
 struct StreetPass_Previews: PreviewProvider {
     
     static var previews: some View {
-        StreetPass()
+        StreetPass(vm: StreetPassViewModel())
     }
 }

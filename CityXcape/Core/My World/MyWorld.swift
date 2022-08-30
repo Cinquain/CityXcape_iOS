@@ -19,18 +19,15 @@ struct MyWorld: View {
     @Binding var selectedTab: Int
     @State var currentSpot: SecretSpot?
     @State private var showMission: Bool = false
-    @State var searchTerm: String = ""
 
 
     let manager = CoreDataManager.instance
 
     var body: some View {
-        
    
             NavigationView {
-                 
-                    ScrollView {
-                        
+                            
+                ScrollView {
                         
                         if vm.showOnboarding {
                             confusedPin
@@ -39,10 +36,26 @@ struct MyWorld: View {
 
                             Spacer()
                           
-                        } else {
+                        }  else {
                             
+                            if vm.showSearch {
+                                withAnimation(.easeIn(duration: 0.5)) {
+                                    TextField("Search a spot", text: $vm.searchTerm) {
+                                        vm.performSearch()
+                                    }
+                                    .frame(width: UIScreen.screenWidth - 100, height: 45)
+                                    .padding(.horizontal, 10)
+                                    .overlay(
+                                          RoundedRectangle(cornerRadius: 20)
+                                            .stroke(.white, lineWidth: 0.5)
+                                      )
+                                    .animation(.easeIn(duration: 0.5), value: vm.showSearch)
+                                    .offset(y: -15)
+                                }
+                            }
+                                                    
                             LazyVStack(spacing: 5) {
-                                ForEach(vm.currentSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser}), id: \.id) { spot in
+                                ForEach(vm.currentSpots, id: \.id) { spot in
                                     
                                     VStack {
 
@@ -63,33 +76,36 @@ struct MyWorld: View {
                                  //End of VStack
                                     Divider()
                                 }
+                                
+                                
                             }
                         }
                         
                         
                         //End of Scrollview
                     }
-                    .navigationBarItems(trailing: toggleButton)
+                    .navigationBarItems(leading: toggleButton, trailing: searchButton)
                     .toolbar {
                        ToolbarItem(placement: .principal) {
                            tabIcon
                        }
                     }
+                    .colorScheme(.dark)
+                    .tint(.white)
+                    .background(Color.background.edgesIgnoringSafeArea(.all))
+                    .onAppear {
+                        manager.fetchSecretSpots()
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                            vm.fetchSecretSpots()
+                        }
+                    }
+         
+                      
                 
+             
+                //End of Navigation View
             }
-            .colorScheme(.dark)
-            .tint(.white)
-            .background(Color.background.edgesIgnoringSafeArea(.all))
-            .onAppear {
-                manager.fetchSecretSpots()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                    vm.fetchSecretSpots()
-                }
-                
-                let user = User()
-                print("User info is:", user.displayName, user.bio, user.city, user.id)
-              
-            }
+
            
             
         
@@ -145,11 +161,11 @@ extension MyWorld {
         }
     }
     
-    private var heatmap: some View {
+    private var searchButton: some View {
         Button {
-            vm.showOnboarding.toggle()
+            vm.showSearch.toggle()
         } label: {
-            Image("grid")
+            Image(systemName: "magnifyingglass")
                 .resizable()
                 .scaledToFit()
                 .frame(height: 25)
@@ -165,6 +181,7 @@ extension MyWorld {
             Image(systemName: "checkmark.seal")
                 .resizable()
                 .scaledToFit()
+                .font(.title2)
                 .opacity(0.7)
         }
     }
@@ -172,9 +189,9 @@ extension MyWorld {
     
     fileprivate func getMessage() -> String {
         if vm.showVisited {
-            return "\(vm.currentSpots.count) spots visited"
+            return "\(vm.allSpots.filter({$0.verified == true}).count) spots visited"
         } else {
-            return "\(vm.currentSpots.count) spots to visit"
+            return "\(vm.allSpots.filter({$0.verified == false}).count) spots to visit"
         }
     }
     

@@ -44,7 +44,9 @@ class StreetPassViewModel: NSObject, ObservableObject {
     @Published var showLogView: Bool = false
     @Published var createNewMessage: Bool = false
     @Published var recentMessages: [RecentMessage] = []
+    @Published var showMessage: Bool = false 
     
+    @Published var count: Int = 0
     let coreData = CoreDataManager.instance
     let manager = NotificationsManager.instance
     
@@ -231,17 +233,18 @@ class StreetPassViewModel: NSObject, ObservableObject {
     }
     
     func getRecentMessages() {
-        DataService.instance.fetchRecentMessages { result in
+        DataService.instance.fetchRecentMessages { [weak self] result in
+            guard let self = self else {return}
             switch result {
-            case .success(let messages):
-                self.recentMessages = messages
+            case .success(let data):
+                self.recentMessages = data.0
+                self.count = data.1
             case .failure(let error):
                 self.error = error.localizedDescription
             }
         }
     }
-    
- 
+
     
     
     
