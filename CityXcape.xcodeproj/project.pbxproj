@@ -12,6 +12,7 @@
 		14F43354281ED757000F8479 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14F43353281ED757000F8479 /* Router.swift */; };
 		21024D6128B10DCA0092B58A /* MessageBubble.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21024D6028B10DCA0092B58A /* MessageBubble.swift */; };
 		2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */; };
+		2104D2C928C62939004F6657 /* ShareSpotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2104D2C828C62939004F6657 /* ShareSpotView.swift */; };
 		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
 		2106A9CE2848EA05000BCD10 /* PlugLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106A9CD2848EA05000BCD10 /* PlugLight.swift */; };
 		2106A9D02848F585000BCD10 /* Beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2106A9CF2848F585000BCD10 /* Beep.mp3 */; };
@@ -42,8 +43,10 @@
 		21469EC327B68B5600626FEE /* EmailSigninViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21469EC227B68B5600626FEE /* EmailSigninViewModel.swift */; };
 		214A0AA4285A19070008792D /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214A0AA3285A19070008792D /* LocationService.swift */; };
 		214A4A3B278D340300B5950A /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214A4A3A278D340300B5950A /* User.swift */; };
+		214F086228C4D712003FC517 /* FriendsForSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214F086128C4D712003FC517 /* FriendsForSpot.swift */; };
 		214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214FAC6C26E2F16300F37B80 /* ImageManager.swift */; };
 		215B30DD27C860D300D627A4 /* VerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215B30DC27C860D300D627A4 /* VerificationView.swift */; };
+		2165B5C528C230A300EACDFC /* UsersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2165B5C428C230A300EACDFC /* UsersListView.swift */; };
 		2168555B2860B2E400E445EB /* SpotSelectionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2168555A2860B2E400E445EB /* SpotSelectionList.swift */; };
 		216A5CDE27AA0F31006AA7B4 /* SavesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A5CDD27AA0F31006AA7B4 /* SavesView.swift */; };
 		216AA7192875D17F00C719D3 /* EditMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216AA7182875D17F00C719D3 /* EditMap.swift */; };
@@ -165,6 +168,7 @@
 		14F43353281ED757000F8479 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		21024D6028B10DCA0092B58A /* MessageBubble.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBubble.swift; sourceTree = "<group>"; };
 		2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotViewModel.swift; sourceTree = "<group>"; };
+		2104D2C828C62939004F6657 /* ShareSpotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSpotView.swift; sourceTree = "<group>"; };
 		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
 		2106A9CD2848EA05000BCD10 /* PlugLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlugLight.swift; sourceTree = "<group>"; };
 		2106A9CF2848F585000BCD10 /* Beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Beep.mp3; sourceTree = "<group>"; };
@@ -193,8 +197,10 @@
 		21469EC227B68B5600626FEE /* EmailSigninViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSigninViewModel.swift; sourceTree = "<group>"; };
 		214A0AA3285A19070008792D /* LocationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		214A4A3A278D340300B5950A /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		214F086128C4D712003FC517 /* FriendsForSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsForSpot.swift; sourceTree = "<group>"; };
 		214FAC6C26E2F16300F37B80 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		215B30DC27C860D300D627A4 /* VerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationView.swift; sourceTree = "<group>"; };
+		2165B5C428C230A300EACDFC /* UsersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersListView.swift; sourceTree = "<group>"; };
 		2168555A2860B2E400E445EB /* SpotSelectionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotSelectionList.swift; sourceTree = "<group>"; };
 		216A5CDD27AA0F31006AA7B4 /* SavesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavesView.swift; sourceTree = "<group>"; };
 		216AA7182875D17F00C719D3 /* EditMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditMap.swift; sourceTree = "<group>"; };
@@ -539,6 +545,8 @@
 				21E318CD28AD367200F8A9A2 /* UserView.swift */,
 				21024D6028B10DCA0092B58A /* MessageBubble.swift */,
 				210A3C1128B65ED400D2F87B /* MessagePreview.swift */,
+				2165B5C428C230A300EACDFC /* UsersListView.swift */,
+				2104D2C828C62939004F6657 /* ShareSpotView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -555,6 +563,7 @@
 				218B6A98289170420005CF3B /* SecretSpotPage.swift */,
 				21E8F3ED2826ADC000AFFCAE /* ShareView.swift */,
 				2138B6A627C70C6A004C9B3C /* MapViewModel.swift */,
+				214F086128C4D712003FC517 /* FriendsForSpot.swift */,
 			);
 			path = "My World";
 			sourceTree = "<group>";
@@ -892,6 +901,7 @@
 				217E9AA6270B404500F45077 /* Mission.swift in Sources */,
 				214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */,
 				21D0F07A27EC9604003E8748 /* UserReportView.swift in Sources */,
+				2165B5C528C230A300EACDFC /* UsersListView.swift in Sources */,
 				1493C3F3277394BA002010A6 /* ActivityIndicator.swift in Sources */,
 				21BBB06126E596C2000B40B3 /* AnimationController.swift in Sources */,
 				218B6A99289170420005CF3B /* SecretSpotPage.swift in Sources */,
@@ -930,6 +940,7 @@
 				217DA73A26CC95A50039A145 /* Extensions.swift in Sources */,
 				214A0AA4285A19070008792D /* LocationService.swift in Sources */,
 				21EE8A29285CB0A400719D0B /* Trail.swift in Sources */,
+				2104D2C928C62939004F6657 /* ShareSpotView.swift in Sources */,
 				21F039C328074E4E003438D0 /* ImageSlider.swift in Sources */,
 				21DCF82727E63090000BD1B3 /* Follower.swift in Sources */,
 				217C08DA26D1B9FE00751933 /* SignUpView.swift in Sources */,
@@ -971,6 +982,7 @@
 				21C85939271122C9008224E5 /* CardView.swift in Sources */,
 				21EA999A27D1006D00A13C6C /* JourneyViewModel.swift in Sources */,
 				2110D054286F4141003B71DA /* PostCommentView.swift in Sources */,
+				214F086228C4D712003FC517 /* FriendsForSpot.swift in Sources */,
 				217657D327FC642C0077B0A0 /* UserDiscoveryView.swift in Sources */,
 				218115ED2731860700026AAD /* PublicStreetPass.swift in Sources */,
 				21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */,
@@ -1113,7 +1125,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1138,7 +1150,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.6.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

@@ -21,11 +21,18 @@ class FeedViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var newFeeds: Int = 0
     
-    @Published var showView: Bool = false
+    @Published var searchUser: Bool = false 
+    @Published var showHeatmap: Bool = false
+    @Published var showStreetPass: Bool = false
+    @Published var showListView: Bool = false
     
     @Published var secretSpot: SecretSpot?
     @Published var verification: Verification?
     @Published var user: User?
+    @Published var users: [User] = []
+    @Published var showUsers: Bool = false 
+    
+    var searchTerm: String = "Search a user"
     
     init() {
         fetchFeeds()
@@ -39,6 +46,7 @@ class FeedViewModel: ObservableObject {
             switch result {
             case .success(let returnedFeeds):
                 self.feeds = returnedFeeds
+                self.feeds.sort(by: {$0.date > $1.date})
                 self.newFeeds = returnedFeeds.count
             case .failure(let error):
                 self.alertMessage = "Error getting feeds, \(error.localizedDescription)"
@@ -102,14 +110,14 @@ class FeedViewModel: ObservableObject {
                 return Text("\(feed.username) started street following \(Image("Running_feed")) \(feed.content)")
             case .friends:
                 return Text("\(feed.username) is now friends with \(feed.content)")
+            case .share:
+                return Text("\(feed.username) shared a spot \(Image("pin_feed")) with \(feed.content)")
         }
     }
     
     func calculateAction(feed: Feed) {
         
         switch feed.type {
-            case .spot:
-                getSecretSpot(spotId: feed.spotId ?? "")
             case .signup:
                 let user = User(feed: feed)
                 self.user = user
@@ -118,7 +126,7 @@ class FeedViewModel: ObservableObject {
                 self.user = user
             case .stamp:
                 getVerification(feed: feed)
-            case .save:
+            case .save, .share, .spot:
                 getSecretSpot(spotId: feed.spotId ?? "")
             case .message:
                 let user = User(feed: feed)
@@ -126,6 +134,7 @@ class FeedViewModel: ObservableObject {
             case .friends:
                 let user = User(id: feed.userId ?? "", displayName: feed.followingDisplayName ?? "", profileImageUrl: feed.followingImage ?? "")
                 self.user = user
+         
         }
         
     }
@@ -157,10 +166,33 @@ class FeedViewModel: ObservableObject {
                         self.verification = verification
                 }
 
-        }
-                                                     
+        }                                                     
                                                      
     }
     
+    func performSearch() {
+        
+        DataService.instance.searchForUsersWith(name: submissionText) { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+            case .failure(let error):
+                self.alertMessage = error.localizedDescription
+                self.showAlert.toggle()
+                self.submissionText = ""
+            case .success(let returnedUsers):
+                if returnedUsers.isEmpty {
+                    print("No users found")
+                    self.alertMessage = "No users found with this username"
+                    self.showAlert.toggle()
+                    self.submissionText = ""
+                    return
+                }
+                self.users = returnedUsers
+                self.submissionText = ""
+                self.showListView.toggle()
+            }
+        }
+        
+    }
     
 }

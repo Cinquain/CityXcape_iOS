@@ -47,13 +47,13 @@ struct MissionView: View {
                 Button {
                     spotModel.openGoogleMap(spot: spot)
                 } label: {
-                    Text(vm.routeText)
+                    Text(spot.address)
                         .font(.subheadline)
                 }
 
             }
             
-            Text(isRouting ? "Please checkin when you arrive" : vm.missionText)
+            Text(vm.missionText)
                 .fontWeight(.thin)
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 30)
@@ -62,7 +62,7 @@ struct MissionView: View {
                 //
                 vm.checkIfVerifiable(spot: spot)
             } label: {
-                Text("Checkin")
+                Text("Get Stamp")
                     .foregroundColor(.black)
                     .fontWeight(.thin)
                     .font(.title3)

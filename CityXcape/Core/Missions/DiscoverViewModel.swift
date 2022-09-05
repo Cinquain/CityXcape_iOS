@@ -39,6 +39,8 @@ class DiscoverViewModel: ObservableObject {
     @Published var showStreetPass: Bool = false
     @Published var newlySaved: Int = 0
     @Published var isSearching: Bool = false
+    
+    var placeHolder: String = "Search a city"
 
     init() {
         if notificationManager.hasSpotNotification {
@@ -120,6 +122,30 @@ class DiscoverViewModel: ObservableObject {
     }
     
     
+    
+    func searchForSpot() {
+        
+        DataService.instance.searchForSecretSpotby(name: searchTerm) { [weak self] result in
+            guard let self = self else {return}
+            
+            switch result {
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                    self.showAlert.toggle()
+                    self.searchTerm = ""
+                case .success(let returnedSpots):
+                    if returnedSpots.isEmpty {
+                        self.alertMessage = "No Spot Found"
+                        print("No secret spot found")
+                        self.showAlert.toggle()
+                        self.searchTerm = ""
+                    }
+                    self.newSecretSpots = returnedSpots
+                    self.searchTerm = ""
+            }
+            
+        }
+    }
     
     func saveCardToUserWorld(spot: SecretSpot) {
         guard var wallet = wallet else {return}

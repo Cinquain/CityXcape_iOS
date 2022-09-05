@@ -15,12 +15,14 @@ struct Ticker: View {
     
     
     let width: CGFloat
+    let searchTerm: String
+    
     var body: some View {
         
         HStack {
            
           
-            TextField("Search...", text: $searchText, onCommit: handlesearch)
+            TextField(searchTerm, text: $searchText, onCommit: handlesearch)
                 .padding(.vertical, 10)
                 .padding(.horizontal, 20)
                 .frame(width: width / 1.5)
@@ -51,7 +53,7 @@ struct Ticker_Previews: PreviewProvider {
     static let width: CGFloat = 100
 
     static var previews: some View {
-        Ticker(searchText: $search, handlesearch: searchFunction, width: width)
+        Ticker(searchText: $search, handlesearch: searchFunction, width: width, searchTerm: "Search...")
             .preferredColorScheme(.dark)
             .previewLayout(.sizeThatFits)
     }

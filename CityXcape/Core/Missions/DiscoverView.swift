@@ -131,8 +131,8 @@ struct DiscoverView: View {
                    ZStack {
                        
                        Ticker(searchText: $vm.searchTerm, handlesearch: {
-                           vm.performSearch()
-                       }, width: UIScreen.screenWidth  )
+                           vm.searchForSpot()
+                       }, width: UIScreen.screenWidth, searchTerm: vm.placeHolder)
                        .frame(width: UIScreen.screenWidth / 2 )
                        .opacity(vm.isSearching ? 1 : 0)
 
@@ -174,7 +174,7 @@ extension DiscoverView {
                 .resizable()
                 .scaledToFit()
         }
-        .opacity(vm.isSearching ? 0 : 1)
+        
     }
     
     private var refreshButton: some View {
@@ -199,7 +199,7 @@ extension DiscoverView {
                 .resizable()
                 .scaledToFit()
             .frame(height: 25)
-            Text("Save Spots to Visit")
+            Text("Save places to visit")
                 .fontWeight(.thin)
                 .foregroundColor(.white)
                 .font(.caption)

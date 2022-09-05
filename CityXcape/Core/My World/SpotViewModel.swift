@@ -51,6 +51,7 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     @Published var showCheckin: Bool = false
     @Published var disableCheckin: Bool = false
     @Published var refresh: Bool = false
+    @Published var showFriendsList: Bool = false
     
     
     @Published var showPicker: Bool = false
@@ -509,6 +510,35 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
         } else {
             self.alertMessage = "This QR code is not for this spot"
             self.showAlert = true
+        }
+    }
+    
+    
+    func shareSecretSpot(spot: SecretSpot, user: User) {
+        DataService.instance.shareSecretSpot(user: user, spot: spot) { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+            case .success(let message):
+                self.alertMessage = message
+                self.showAlert = true
+            case .failure(let error):
+                self.alertMessage = error.localizedDescription
+                self.showAlert = true
+            }
+        }
+    }
+    
+    func getFriends() {
+        DataService.instance.getFriendsForUser { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+            case .failure(let error):
+                self.alertMessage = error.localizedDescription
+                self.showAlert.toggle()
+            case .success(let friends):
+                self.users = friends
+                self.showFriendsList.toggle()
+            }
         }
     }
     

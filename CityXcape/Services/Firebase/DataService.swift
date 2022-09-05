@@ -44,7 +44,6 @@ class DataService {
     private var REF_MESSAGES = DB_BASE.collection(ServerPath.messages)
     private var REF_RECENTMESSAGE = DB_BASE.collection(ServerPath.recentMessage)
     
-    
     //MARK: CREATE FUNCTIONS
     
     func uploadSecretSpot(spotName: String, description: String, image: UIImage, price: Int, world: String, mapItem: MKMapItem, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
@@ -261,6 +260,57 @@ class DataService {
             
         }
 
+    }
+    
+    
+    func shareSecretSpot(user: User, spot: SecretSpot, completion: @escaping(Result<String, Error>) -> Void) {
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName, let bio = bio
+        else {return}
+        
+        let data: [String: Any] = [
+            "spotId": spot.id,
+            "spot_imageUrl": spot.imageUrls,
+            "spot_title": spot.spotName,
+            "from_userId": uid,
+            "from_userImage": imageUrl,
+            "from_username": displayName,
+            "timestamp": FieldValue.serverTimestamp()
+        ]
+        
+        let feedDocument = REF_FEED.document()
+        let feedId = feedDocument.documentID
+
+        let feedData: [String: Any] = [
+            FeedField.id: feedId,
+            FeedField.uid: uid,
+            FeedField.username: displayName,
+            FeedField.profileUrl: imageUrl,
+            FeedField.bio: bio,
+            FeedField.rank: rank ?? "Tourist",
+            FeedField.date: FieldValue.serverTimestamp(),
+            FeedField.content: user.displayName,
+            FeedField.type: FeedType.share.rawValue,
+            FeedField.spotId: spot.id,
+        ]
+        
+        REF_WORLD
+            .document(ServerPath.shared)
+            .collection(user.id)
+            .document(spot.id)
+            .setData(data) { error in
+                if let error = error {
+                    print("Error sharing spot with user", error.localizedDescription)
+                    completion(.failure(error))
+                    return
+                }
+                
+                if spot.isPublic {
+                    feedDocument.setData(feedData)
+                }
+                let message = "Successfully shared spot with \(user.displayName)"
+                completion(.success(message))
+            }
+        
     }
     
     
@@ -1048,7 +1098,7 @@ class DataService {
                     if change.type == .added {
                         let data = change.document.data()
                         let feed = Feed(data: data)
-                        feeds.append(feed)
+                        feeds.insert(feed, at: 0)
                     }
                 })
                 completion(.success(feeds))
@@ -1587,6 +1637,56 @@ class DataService {
             completion(true)
         }
         
+    }
+    
+    func searchForUsersWith(name: String, completion: @escaping (Result<[User], Error>) -> Void) {
+        var users: [User] = []
+        REF_USERS
+            .whereField(UserField.displayName, isEqualTo: name)
+            .limit(to: 12)
+            .getDocuments { querySnapshot, error in
+                if let error = error {
+                    print("Error performing user searches", error.localizedDescription)
+                    completion(.failure(error))
+                }
+                
+                guard let snapshot = querySnapshot, snapshot.documents.count >= 1
+                    else{
+                    print("snapshot for user search is empty")
+                    return}
+                snapshot.documents.forEach { document in
+                    let data = document.data()
+                    let user = User(data: data)
+                    users.append(user)
+                }
+                completion(.success(users))
+            }
+    }
+    
+    func searchForSecretSpotby(name: String, completion: @escaping (Result<[SecretSpot], Error>) -> ()) {
+        var spots: [SecretSpot] = []
+        
+        REF_POST
+            .whereField(SecretSpotField.city, isEqualTo: name)
+            .limit(to: 35)
+            .getDocuments { querySnapshot, error in
+                if let error = error {
+                    print("Error finding secret spot in search", error.localizedDescription)
+                    completion(.failure(error))
+                }
+                
+                guard let snapshot = querySnapshot, snapshot.count >= 1 else {
+                    print("snapshot is empty")
+                    completion(.success(spots))
+                    return}
+                
+                snapshot.documents.forEach { document in
+                    let data = document.data()
+                    let spot = SecretSpot(data: data)
+                    spots.append(spot)
+                }
+                completion(.success(spots))
+            }
     }
     
     

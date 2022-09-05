@@ -88,9 +88,13 @@ struct PublicStreetPass: View {
                     .frame(height: width / 1.5)
                 
                 threeButtons
-       
-
-            
+                
+                if vm.friends.contains(where: {$0.id == user.id}) {
+                    withAnimation {
+                        messageButton
+                    }
+                }
+                            
                 Spacer()
                 
             }
@@ -98,6 +102,7 @@ struct PublicStreetPass: View {
             .alert(isPresented: $vm.showAlert) {
                 return Alert(title: Text(vm.alertMessage))
             }
+           
         
     }
     //End of body
@@ -171,20 +176,7 @@ extension PublicStreetPass {
     
     private var threeButtons: some View {
         HStack {
-            Button {
-                vm.showChatLog.toggle()
-                AnalyticsService.instance.sentMessage()
-            } label: {
-                Image("message")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 50)
-                    
-            }
-            .sheet(isPresented: $vm.showChatLog) {
-                ChatLogView(user: user)
-            }
-            
+
             Button {
                 manager.checkAuthorizationStatus { fcmToken in
                     if let token = fcmToken {
@@ -198,7 +190,20 @@ extension PublicStreetPass {
                 Image("streetfollow")
                     .resizable()
                     .scaledToFit()
+                    .frame(height: 50)
+            }
+            
+            
+            Button {
+                vm.showSecretSpots()
+            } label: {
+                Image("share_2")
+                    .resizable()
+                    .scaledToFit()
                     .frame(height: 60)
+            }
+            .sheet(isPresented: $vm.showSpotList) {
+                ShareSpotView(user: user, vm: vm)
             }
             
             Button {
@@ -217,6 +222,25 @@ extension PublicStreetPass {
                     .frame(height: 50)
             }
         }
+    }
+    
+    private var messageButton: some View {
+        Button {
+             vm.showChatLog.toggle()
+             AnalyticsService.instance.sentMessage()
+         } label: {
+           
+             Text("messeage")
+                 .fontWeight(.thin)
+                 .foregroundColor(.cx_orange)
+                 .frame(width: 200, height: 45)
+                 .background(.black)
+                 .cornerRadius(25)
+         }
+         .sheet(isPresented: $vm.showChatLog) {
+             ChatLogView(user: user)
+         }
+                 
     }
     
     private var journeyButton: some View {

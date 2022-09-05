@@ -20,8 +20,8 @@ class MapViewModel: NSObject, ObservableObject, CLLocationManagerDelegate {
 
     @Published var currentLocation: CLLocationCoordinate2D?
     @Published var route: MKRoute?
-    @Published var routeText: String = "Press checkin when you arrive"
-    @Published var missionText: String = "Go to the location to get your stamp, \n press route when you're ready to go"
+    @Published var routeText: String = "Go there to get your stamp"
+    @Published var missionText: String = "Go there to get your stamp"
     
     let locationManager = LocationService.instance.manager
     let coreData = CoreDataManager.instance

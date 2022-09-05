@@ -8,6 +8,7 @@
 import SwiftUI
 import SDWebImageSwiftUI
 import CodeScanner
+import Shimmer
 
 struct SpotDetailsView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -135,21 +136,24 @@ struct SpotDetailsView: View {
                                 .animation(.easeOut, value: detailsTapped)
                                 
                         }
+//                        .sheet(isPresented: $vm.showFriendsList) {
+//                            UsersListView(users: vm.users)
+//                        }
                         
                         Button {
-                            vm.isOwner ? vm.showBarCode.toggle()
-                            : vm.presentScanner.toggle()
+                            vm.getFriends()
                         } label: {
-                            Image("Barcode")
+                            Image("share")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 55)
                         }
-                        .sheet(isPresented: $vm.showBarCode) {
-                            Image(uiImage: vm.generateBarCode(spot: spot))
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 150, height: 150)
+                        .sheet(isPresented: $vm.showFriendsList) {
+                            FriendsForSpot(vm: vm, spot: spot)
+//                            Image(uiImage: vm.generateBarCode(spot: spot))
+//                                .resizable()
+//                                .scaledToFit()
+//                                .frame(width: 150, height: 150)
                         }
                         .fullScreenCover(isPresented: $showMission, onDismiss: {
                             //TBD

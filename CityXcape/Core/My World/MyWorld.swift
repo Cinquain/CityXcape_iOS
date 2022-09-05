@@ -37,23 +37,7 @@ struct MyWorld: View {
                             Spacer()
                           
                         }  else {
-                            
-                            if vm.showSearch {
-                                withAnimation(.easeIn(duration: 0.5)) {
-                                    TextField("Search a spot", text: $vm.searchTerm) {
-                                        vm.performSearch()
-                                    }
-                                    .frame(width: UIScreen.screenWidth - 100, height: 45)
-                                    .padding(.horizontal, 10)
-                                    .overlay(
-                                          RoundedRectangle(cornerRadius: 20)
-                                            .stroke(.white, lineWidth: 0.5)
-                                      )
-                                    .animation(.easeIn(duration: 0.5), value: vm.showSearch)
-                                    .offset(y: -15)
-                                }
-                            }
-                                                    
+                                                                                
                             LazyVStack(spacing: 5) {
                                 ForEach(vm.currentSpots, id: \.id) { spot in
                                     
@@ -87,7 +71,18 @@ struct MyWorld: View {
                     .navigationBarItems(leading: toggleButton, trailing: searchButton)
                     .toolbar {
                        ToolbarItem(placement: .principal) {
-                           tabIcon
+                           
+                           ZStack {
+                               Ticker(searchText: $vm.searchTerm, handlesearch: {
+                                   vm.performSearch()
+                               }, width: UIScreen.screenWidth, searchTerm: vm.placeHolder)
+                               .frame(width: UIScreen.screenWidth / 2 )
+                           .opacity(vm.showSearch ? 1 : 0)
+                               
+                               tabIcon
+                                .opacity(vm.showSearch ? 0 : 1)
+                           }
+                           
                        }
                     }
                     .colorScheme(.dark)

@@ -33,7 +33,7 @@ class MyWorldViewModel: NSObject, ObservableObject {
     @Published var annotations: [MKPointAnnotation] = []
     
     
-    
+    var placeHolder = "Search a spot"
     var cancellables = Set<AnyCancellable>()
     
     override init() {
@@ -60,9 +60,9 @@ class MyWorldViewModel: NSObject, ObservableObject {
     func performSearch() {
         if searchTerm.isEmpty {
             currentSpots = allSpots.filter({$0.verified == false}).sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
-            if self.currentSpots.count > 30 {
+            if self.currentSpots.count > 20 {
                 let count = self.currentSpots.count
-                let difference = count - 30
+                let difference = count - 20
                 self.currentSpots.sort(by: {$0.distanceFromUser < $1.distanceFromUser})
                 self.currentSpots = self.currentSpots.dropLast(difference)
             }
@@ -85,9 +85,9 @@ class MyWorldViewModel: NSObject, ObservableObject {
                     self.currentSpots = self.allSpots.filter({$0.verified == true})
                 } else {
                     self.currentSpots = self.allSpots.filter({$0.verified == false})
-                    if self.currentSpots.count > 30 {
+                    if self.currentSpots.count > 20 {
                         let count = self.currentSpots.count
-                        let difference = count - 30
+                        let difference = count - 20
                         self.currentSpots.sort(by: {$0.distanceFromUser < $1.distanceFromUser})
                         self.currentSpots = self.currentSpots.dropLast(difference)
                     }

@@ -18,6 +18,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     @Published var cities: [String: Int] = [:]
     @Published var showCollection: Bool = false
     @Published var showJournal: Bool = false
+    @Published var showMessage: Bool = false
     @Published var alertMessage: String = ""
     @Published var showAlert: Bool = false
     @Published var showShareSheet: Bool = false
@@ -31,10 +32,16 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     @Published var tappedYes: Bool = false
     @Published var tappedNo: Bool = false
     @Published var showChatLog: Bool = false
+    @Published var friends: [User] = []
+    
+    @Published var showSpotList: Bool = false
+    @Published var spots: [SecretSpot] = []
+    let manager = CoreDataManager.instance
     
     override init() {
         super.init()
         getVerificationsForUser()
+        getFriends()
     }
     
     fileprivate func getCities() {
@@ -138,6 +145,11 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     }
 
     
+    func showSecretSpots() {
+        spots = manager.spotEntities.map({SecretSpot(entity: $0)})
+        self.showSpotList.toggle()
+        
+    }
     
     
     func shareInstaStamp(object: Verification) {
@@ -187,6 +199,21 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
         
     }
     
+    func shareSecretSpot(user: User, spot: SecretSpot) {
+        
+        DataService.instance.shareSecretSpot(user: user, spot: spot) { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                    self.showAlert.toggle()
+                case .success(let message):
+                    self.alertMessage = message
+                    self.showAlert.toggle()
+            }
+        }
+    }
+    
     
     func getVerificationForUser(userId: String) {
        AnalyticsService.instance.checkUserJourney()
@@ -230,7 +257,19 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
       
   }
    
+    func getFriends() {
+        DataService.instance.getFriendsForUser { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                case .success(let returnedFriends):
+                    self.friends = returnedFriends
+            }
+        }
+    }
     
+
 
     func sendFriendRequest(uid: String, token: String) {
         guard let wallet = wallet else {return}

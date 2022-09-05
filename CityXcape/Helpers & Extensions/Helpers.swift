@@ -130,6 +130,7 @@ struct ServerPath {
     static let request = "request"
     static let messages = "messages"
     static let recentMessage = "recent_messages"
+    static let shared = "shared"
 }
 
 struct FeedField {
@@ -326,6 +327,7 @@ enum FeedType: String, CaseIterable {
     case streetFollow
     case signup
     case friends
+    case share
 }
 
 
