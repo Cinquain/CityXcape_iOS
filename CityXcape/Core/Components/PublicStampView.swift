@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Shimmer
 import SDWebImageSwiftUI
 
 struct PublicStampView: View {
@@ -13,14 +14,19 @@ struct PublicStampView: View {
 
     let verification: Verification
     let width: CGFloat = UIScreen.screenWidth
-
+    @State private var alertMessage: String = ""
+    @State private var showAlert: Bool = false
+    @State private var showSpot: Bool = false
+    @State private var secretSpot: SecretSpot?
     @State private var comments: [Comment] = []
     @State private var showComments: Bool = false
     @State private var showUser: Bool = false
+    @State private var didLike: Bool = false
+    
     var body: some View {
         VStack {
             imageFrame
-            commentButton
+            header
             stamp
             downArrow
             Spacer()
@@ -37,37 +43,90 @@ struct PublicStampView: View {
         }
     }
     
+    func getSecretSpot(spotId: String) {
+        DataService.instance.getSpecificSpot(postId: spotId) {  result in
+                switch result {
+                    case .failure(let error):
+                        alertMessage = error.localizedDescription
+                        showAlert = true
+                    case .success(let spot):
+                        secretSpot = spot
+                }
+        }
+    }
+    
+    func likePost() {
+        let user = User(verification: verification)
+        DataService.instance.likeVerification(postId: verification.postId, user: user) { result in
+            
+            switch result {
+            case .failure(let error):
+                alertMessage = error.localizedDescription
+                showAlert = true
+            case .success(let message):
+                alertMessage = message
+                showAlert = true
+            }
+            
+        }
+    }
 }
+
 
 
 extension PublicStampView {
     
     private var header: some View {
         HStack {
+            
             Button {
-                showUser.toggle()
+                loadComments()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    showComments.toggle()
+                }
             } label: {
-                VStack(spacing: 0) {
-                    UserDotView(imageUrl: verification.verifierImage, width: 40)
-                    Text(verification.verifierName)
-                        .font(.caption)
+                Image(systemName: "bubble.left.fill")
+                    .foregroundColor(.white)
+                    .opacity(0.8)
+                    .font(.title)
+            }
+            .sheet(isPresented: $showComments) {
+                let user = User(verification: verification)
+                PostCommentView(comments: comments, verifier: user, verification: verification)
+            }
+            
+            Button {
+                likePost()
+            } label: {
+                Image(systemName: "hand.thumbsup.fill")
+                    .foregroundColor(.white)
+                    .opacity(0.8)
+                    .font(.title)
+                    .foregroundColor(didLike ? .blue : .white)
+            }
+            
+            Spacer()
+            
+            
+            Button {
+                getSecretSpot(spotId: verification.postId)
+            } label: {
+                HStack(alignment: .center) {
+                 
+                    Image("pin_blue")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 30)
+                        
+                    Text(verification.name)
                         .fontWeight(.thin)
                         .foregroundColor(.white)
+                        .font(Font.custom("Savoye LET", size: 22))
                 }
             }
-            .sheet(isPresented: $showUser) {
-                let user = User(verification: verification)
-                PublicStreetPass(user: user)
-            }
-            
-            
-            Text("Checked-in \(verification.name)")
-                .fontWeight(.thin)
-                .foregroundColor(.white)
-                .font(Font.custom("Savoye LET", size: 22))
-                .lineLimit(1)
       
         }
+        .padding(.horizontal, 20)
     }
     
     private var imageFrame: some View {
@@ -75,6 +134,9 @@ extension PublicStampView {
            Rectangle()
                 .fill(Color.white)
                 .frame(width: width - 20, height: width - 20)
+                .alert(isPresented: $showAlert) {
+                    return Alert(title: Text(alertMessage))
+                }
             
             WebImage(url: URL(string: verification.imageUrl))
                 .resizable()
@@ -99,7 +161,7 @@ extension PublicStampView {
         }
     }
     
-    private var commentButton: some View {
+    private var socialButtons: some View {
         HStack {
             Button {
                 loadComments()
@@ -117,9 +179,33 @@ extension PublicStampView {
                 PostCommentView(comments: comments, verifier: user, verification: verification)
             }
             
+            Button {
+                //
+            } label: {
+                Image(systemName: "hand.thumbsup.fill")
+                    .foregroundColor(.white)
+                    .opacity(0.8)
+                    .font(.title)
+            }
+
+            
             Spacer()
             
-            header
+            Button {
+                showUser.toggle()
+            } label: {
+                VStack(spacing: 0) {
+                    UserDotView(imageUrl: verification.verifierImage, width: 40)
+                    Text(verification.verifierName)
+                        .font(.caption)
+                        .fontWeight(.thin)
+                        .foregroundColor(.white)
+                }
+            }
+            .sheet(isPresented: $showUser) {
+                let user = User(verification: verification)
+                PublicStreetPass(user: user)
+            }
          
             
         }
@@ -139,7 +225,7 @@ extension PublicStampView {
     }
     
     private var stamp: some View {
-        HStack {
+        HStack(alignment: .bottom) {
             Spacer()
             Image("Stamp")
                 .resizable()
@@ -157,11 +243,15 @@ extension PublicStampView {
                             .font(.caption)
                             .fontWeight(.medium)
                             .foregroundColor(.stamp_red)
+
                         
                     
                     }
                     .rotationEffect(Angle(degrees: -30))
                     )
+            
+      
+            
         }
         .padding()
     }

@@ -210,6 +210,7 @@ struct CheckinField {
     static let commentCount = "comment_count"
     static let checkinCount = "check-in_count"
     static let checkins = "checkins"
+    static let likeCount = "like_count"
 }
 
 struct MessageField {

@@ -515,6 +515,49 @@ class DataService {
 
     }
     
+    func likeVerification(postId: String, user: User, completion: @escaping (Result<String,Error>) -> Void) {
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName else {return}
+        let reference = REF_WORLD.document("verified")
+                            .collection(user.id)
+                            .document(postId)
+        
+        let increment: Int64 = 1
+        let data: [String: Any] = [
+            CheckinField.likeCount: FieldValue.increment(increment)
+        ]
+        let streetCred: Double = 0.1
+        
+        let userData : [String: Any] = [
+            UserField.streetCred : FieldValue.increment(streetCred)
+        ]
+        AuthService.instance.updateUserField(uid: user.id, data: userData)
+
+        reference.updateData(data)
+        
+        let likedData: [String: Any] = [
+            UserField.providerId: uid,
+            UserField.displayName: displayName,
+            UserField.profileImageUrl: imageUrl,
+            UserField.bio: bio ?? "",
+            UserField.rank: rank ?? "Tourist",
+            UserField.dataCreated: FieldValue.serverTimestamp()
+        ]
+        
+        reference.collection("likedby")
+            .document(uid)
+            .setData(likedData) { error in
+                if let error = error {
+                    print("Error liking verification", error.localizedDescription)
+                    completion(.failure(error))
+                }
+                
+                let message = "Successfully liked \(user.displayName)'s stamp"
+                completion(.success(message))
+                
+            }
+        
+    }
+    
     func sendMessage(user: User, content: String, completion: @escaping (Result<Message,UploadError>) -> ()) {
         guard let fromId = userId, let profileUrl = profileUrl, let bio = bio, let displayName = displayName, let rank = rank else {return}
 

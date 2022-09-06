@@ -22,7 +22,7 @@ struct StreetPass: View {
     @State private var userbio: String = ""
     @State private var profileUrl = ""
     @State private var instagram = ""
-    @State private var streetCred : Int = 0
+    @State private var streetCred : Double = 0
    
     
     @State var refresh: Bool = false
@@ -116,7 +116,7 @@ struct StreetPass: View {
                                 .sheet(isPresented: $vm.showRanks) {
                                     Leaderboard(ranks: vm.ranking)
                             }
-                                .padding(.top, 10)
+                            .padding(.top, 10)
                             
                                 
                         }

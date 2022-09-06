@@ -308,14 +308,14 @@ class AuthService {
         }
     }
     
-    func getUserInfo(forUserID userId: String, completion: @escaping (_ name: String?, _ bio: String?,_ streetcred: Int?, _ imageUrl: String?, _ social: String?) -> ()) {
+    func getUserInfo(forUserID userId: String, completion: @escaping (_ name: String?, _ bio: String?,_ streetcred: Double?, _ imageUrl: String?, _ social: String?) -> ()) {
         
         REF_USERS.document(userId).getDocument { (snapshot, error) in
                         
             if let document = snapshot,
                let name = document.get(UserField.displayName) as? String,
                let bio = document.get(UserField.bio) as? String,
-               let streetCred = document.get(UserField.streetCred) as? Int,
+               let streetCred = document.get(UserField.streetCred) as? Double,
                let imageUrl = document.get(UserField.profileImageUrl) as? String {
                 let social = document.get(UserField.ig) as? String ?? nil
                 completion(name, bio, streetCred, imageUrl, social)
