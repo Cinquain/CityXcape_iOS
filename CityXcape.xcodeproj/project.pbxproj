@@ -38,6 +38,7 @@
 		213E8E6A2858C12C00B04E24 /* StorePageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213E8E692858C12C00B04E24 /* StorePageViewModel.swift */; };
 		213E8ECA282D3F39002A1495 /* SwiftPieChart in Frameworks */ = {isa = PBXBuildFile; productRef = 213E8EC9282D3F39002A1495 /* SwiftPieChart */; };
 		213E8ECC282D4F70002A1495 /* WorldCompositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 213E8ECB282D4F70002A1495 /* WorldCompositionView.swift */; };
+		21415B1A28C8CD1800C2A717 /* PulseUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21415B1928C8CD1800C2A717 /* PulseUserView.swift */; };
 		2142EF4627827E6B00EA489D /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2142EF4527827E6B00EA489D /* CoreDataManager.swift */; };
 		2142EF4927827E9700EA489D /* SecretSpotContainer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2142EF4727827E9700EA489D /* SecretSpotContainer.xcdatamodeld */; };
 		21469EC327B68B5600626FEE /* EmailSigninViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21469EC227B68B5600626FEE /* EmailSigninViewModel.swift */; };
@@ -192,6 +193,7 @@
 		2138B6A627C70C6A004C9B3C /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		213E8E692858C12C00B04E24 /* StorePageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorePageViewModel.swift; sourceTree = "<group>"; };
 		213E8ECB282D4F70002A1495 /* WorldCompositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldCompositionView.swift; sourceTree = "<group>"; };
+		21415B1928C8CD1800C2A717 /* PulseUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PulseUserView.swift; sourceTree = "<group>"; };
 		2142EF4527827E6B00EA489D /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 		2142EF4827827E9700EA489D /* SecretSpotContainer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SecretSpotContainer.xcdatamodel; sourceTree = "<group>"; };
 		21469EC227B68B5600626FEE /* EmailSigninViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailSigninViewModel.swift; sourceTree = "<group>"; };
@@ -547,6 +549,7 @@
 				210A3C1128B65ED400D2F87B /* MessagePreview.swift */,
 				2165B5C428C230A300EACDFC /* UsersListView.swift */,
 				2104D2C828C62939004F6657 /* ShareSpotView.swift */,
+				21415B1928C8CD1800C2A717 /* PulseUserView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -859,6 +862,7 @@
 				2106A9CE2848EA05000BCD10 /* PlugLight.swift in Sources */,
 				21B611F627E753F700361508 /* RowView.swift in Sources */,
 				21E0DB722895685D00C34761 /* HeatMap.swift in Sources */,
+				21415B1A28C8CD1800C2A717 /* PulseUserView.swift in Sources */,
 				21A01F36285E131B00FAD74C /* SpotListView.swift in Sources */,
 				217C08E026D1CC4500751933 /* OnboardingViewII.swift in Sources */,
 				21730A8D27C5B0380036549F /* GetStampedButton.swift in Sources */,

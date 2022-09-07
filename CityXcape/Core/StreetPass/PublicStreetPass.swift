@@ -31,7 +31,7 @@ struct PublicStreetPass: View {
                 headerTitle
 
                 Spacer()
-                    .frame(height: width)
+                    .frame(height: width - 50)
                 
                 HStack {
                      Spacer()
@@ -44,9 +44,10 @@ struct PublicStreetPass: View {
                              }
                          } else {
                              withAnimation(.easeOut(duration: 0.4)) {
-                                 UserDotView(imageUrl: user.profileImageUrl, width: 250)
+                                 PulseUserView(imageUrl: user.profileImageUrl, width: 250)
                                      .shadow(radius: 5)
                                      .shadow(color: .orange, radius: 30, x: 0, y: 0)
+                            
                              }
                          
                          }

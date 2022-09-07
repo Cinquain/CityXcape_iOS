@@ -78,9 +78,12 @@ struct StreetPass: View {
                             Button(action: {
                                 isPresented.toggle()
                             }, label: {
-                                UserDotView(imageUrl: profileUrl, width: geo.size.width / 1.7)
+                                
+                                PulseUserView(imageUrl: profileUrl, width: geo.size.width / 2)
                                     .shadow(radius: 5)
                                     .shadow(color: .orange, radius: 30, x: 0, y: 0)
+                                
+                                   
                             })
                           
                             
@@ -94,7 +97,7 @@ struct StreetPass: View {
                                 Button {
                                     vm.handleStreetCredAlert()
                                 } label: {
-                                    Text("\(streetCred) StreetCred")
+                                    Text("\(String(format: "%.2f", streetCred)) StreetCred")
                                         .font(.caption)
                                         .foregroundColor(.gray)
                                 }

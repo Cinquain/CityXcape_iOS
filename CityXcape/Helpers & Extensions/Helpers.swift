@@ -211,6 +211,7 @@ struct CheckinField {
     static let checkinCount = "check-in_count"
     static let checkins = "checkins"
     static let likeCount = "like_count"
+    static let props = "props_count"
 }
 
 struct MessageField {
@@ -329,6 +330,7 @@ enum FeedType: String, CaseIterable {
     case signup
     case friends
     case share
+    case props
 }
 
 

@@ -112,6 +112,8 @@ class FeedViewModel: ObservableObject {
                 return Text("\(feed.username) is now friends with \(feed.content)")
             case .share:
                 return Text("\(feed.username) shared a spot \(Image("pin_feed")) with \(feed.content)")
+            case .props:
+                return Text("\(feed.username) gave \(Image("props_feed")) props to \(feed.content)'s stamps")
         }
     }
     
@@ -134,7 +136,8 @@ class FeedViewModel: ObservableObject {
             case .friends:
                 let user = User(id: feed.userId ?? "", displayName: feed.followingDisplayName ?? "", profileImageUrl: feed.followingImage ?? "")
                 self.user = user
-         
+            case .props:
+                getPropsVerification(feed: feed)
         }
         
     }
@@ -168,6 +171,22 @@ class FeedViewModel: ObservableObject {
 
         }                                                     
                                                      
+    }
+    
+    func getPropsVerification(feed: Feed) {
+        let spotId = feed.spotId ?? ""
+        let uid = feed.id
+        
+        DataService.instance.getSpecificVerification(postId: spotId, uid: uid) { [weak self] result in
+            guard let self = self else {return}
+                switch result {
+                    case .failure(let error):
+                        self.alertMessage = error.localizedDescription
+                        self.showAlert = true
+                    case .success(let verification):
+                        self.verification = verification
+                }
+        }
     }
     
     func performSearch() {

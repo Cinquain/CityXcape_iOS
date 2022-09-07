@@ -558,6 +558,79 @@ class DataService {
         
     }
     
+    
+    func givePropsToUser(user: User, object: Verification, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName else {return}
+        
+        let postId = object.postId
+        let reference = REF_WORLD.document("verified")
+                            .collection(user.id)
+                            .document(postId)
+        
+        //Increment verifier wallet
+        let streetCred: Int64 = 1
+        let walletData: [String: Any] = [
+            UserField.streetCred: FieldValue.increment(streetCred)
+        ]
+        AuthService.instance.updateUserField(uid: user.id, data: walletData)
+        
+     
+        
+        //Decrement User Wallet
+        let decrement: Int64 = -1
+        let userData: [String: Any] = [
+            UserField.streetCred: FieldValue.increment(decrement)
+        ]
+        AuthService.instance.updateUserField(uid: uid, data: userData)
+
+        
+        //Increase the prop count of verification 
+        let increment: Int64 = 1
+        let data: [String: Any] = [
+            CheckinField.props: FieldValue.increment(increment)
+        ]
+        reference.updateData(data)
+        
+        let propsData: [String: Any] = [
+            UserField.providerId: uid,
+            UserField.displayName: displayName,
+            UserField.profileImageUrl: imageUrl,
+            UserField.bio: bio ?? "",
+            UserField.rank: rank ?? "Tourist",
+            UserField.dataCreated: FieldValue.serverTimestamp()
+        ]
+        
+        reference.collection("propsby")
+            .document(uid)
+            .setData(propsData) { error in
+                if let error = error {
+                    print("Error liking verification", error.localizedDescription)
+                    completion(.failure(error))
+                }
+                
+                let message = "Successfully gave props to \(user.displayName)"
+                completion(.success(message))
+                
+            }
+        
+        
+        let feedDocument = REF_FEED.document()
+        
+        let feedData: [String: Any] = [
+            FeedField.id: object.verifierId,
+            FeedField.uid: uid,
+            FeedField.username: displayName,
+            FeedField.profileUrl: imageUrl,
+            FeedField.date: FieldValue.serverTimestamp(),
+            FeedField.content: object.verifierName,
+            FeedField.type: FeedType.props.rawValue,
+            FeedField.spotId: object.postId,
+        ]
+        
+        feedDocument.setData(feedData)
+
+    }
+    
     func sendMessage(user: User, content: String, completion: @escaping (Result<Message,UploadError>) -> ()) {
         guard let fromId = userId, let profileUrl = profileUrl, let bio = bio, let displayName = displayName, let rank = rank else {return}
 
@@ -1279,6 +1352,7 @@ class DataService {
             }
         
     }
+    
     
     func refreshSecretSpots(completion: @escaping (_ spots: [SecretSpot]) -> ()) {
         guard let uid = userId else {return}

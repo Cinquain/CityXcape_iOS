@@ -22,6 +22,7 @@ struct PublicStampView: View {
     @State private var showComments: Bool = false
     @State private var showUser: Bool = false
     @State private var didLike: Bool = false
+    @State private var didProps: Bool = false
     
     var body: some View {
         VStack {
@@ -64,13 +65,32 @@ struct PublicStampView: View {
                 alertMessage = error.localizedDescription
                 showAlert = true
             case .success(let message):
+                didLike.toggle()
                 alertMessage = message
                 showAlert = true
             }
             
         }
     }
-}
+    
+    func giveProps() {
+        let user = User(verification: verification)
+        let id = verification.postId
+        DataService.instance.givePropsToUser(user: user, object: verification) { result in
+            switch result {
+            case .failure(let error):
+                alertMessage = error.localizedDescription
+                showAlert = true
+            case .success(let message):
+                didProps.toggle()
+                alertMessage = message
+                showAlert = true
+            }
+            }
+        }
+    
+    }
+
 
 
 
@@ -85,7 +105,7 @@ extension PublicStampView {
                     showComments.toggle()
                 }
             } label: {
-                Image(systemName: "bubble.left.fill")
+                Image(systemName: "bubble.left")
                     .foregroundColor(.white)
                     .opacity(0.8)
                     .font(.title)
@@ -98,12 +118,28 @@ extension PublicStampView {
             Button {
                 likePost()
             } label: {
-                Image(systemName: "hand.thumbsup.fill")
-                    .foregroundColor(.white)
+                Image(systemName: didLike ? "heart.fill" : "heart")
                     .opacity(0.8)
                     .font(.title)
-                    .foregroundColor(didLike ? .blue : .white)
+                    .foregroundColor(didLike ? .red : .white)
+                    .animation(.easeIn(duration: 0.5))
             }
+            .disabled(didLike)
+
+            Button {
+                giveProps()
+            } label: {
+                Image("props")
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 30)
+                    .foregroundColor(didProps ? .cx_orange : .white)
+                    .animation(.easeIn(duration: 0.5))
+
+            }
+            .disabled(didProps)
+
             
             Spacer()
             
