@@ -52,7 +52,8 @@ struct SecretSpotPage: View {
             Spacer()
             
             arrowButton
-           
+            
+       
             
         }
         .background(LinearGradient(gradient: Gradient(colors: [Color.black,  Color.orange]), startPoint: .center, endPoint: .bottom).edgesIgnoringSafeArea(.all))

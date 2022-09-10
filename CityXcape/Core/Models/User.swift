@@ -23,6 +23,7 @@ struct User: Identifiable, Hashable, Equatable {
     var social: String?
     var rank: String?
     var city: String?
+    var tribe: String?
     
     var verified: Date?
     var membership: Date?
@@ -53,6 +54,7 @@ struct User: Identifiable, Hashable, Equatable {
         self.world = data?[UserField.world] as? [String: Double] ?? [:]
         self.rank = data?[UserField.rank] as? String ?? "Tourist"
         let timestamp = data?[UserField.dataCreated] as? Timestamp
+        self.tribe = data?[UserField.tribe] as? String ?? ""
         self.membership = timestamp?.dateValue()
     }
     

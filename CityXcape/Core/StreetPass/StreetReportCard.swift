@@ -60,7 +60,7 @@ struct StreetReportCard: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 150)
-                        Text("View My World")
+                        Text("Create a World")
                             .fontWeight(.thin)
                     }
                 }
@@ -70,7 +70,7 @@ struct StreetReportCard: View {
             .foregroundColor(.white)
             .padding(.top, 20)
             .sheet(isPresented: $vm.showWorld) {
-                WorldCompositionView(vm: vm)
+                NewWorldForm()
             }
 
 

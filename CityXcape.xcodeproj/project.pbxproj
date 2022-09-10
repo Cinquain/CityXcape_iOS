@@ -30,6 +30,7 @@
 		2120579E27DE1B3500602EE8 /* Stamp.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2120579D27DE1B3500602EE8 /* Stamp.mp3 */; };
 		212057A027DE1C2E00602EE8 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120579F27DE1C2E00602EE8 /* SoundManager.swift */; };
 		2120CE66275FA254006367FE /* LocationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120CE65275FA254006367FE /* LocationCamera.swift */; };
+		21236D5328CD3E650096B9B4 /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21236D5228CD3E650096B9B4 /* World.swift */; };
 		21251A8127EB3F4B0042BDF4 /* TotalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21251A8027EB3F4B0042BDF4 /* TotalView.swift */; };
 		212EE32F27A4640500232992 /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE32E27A4640500232992 /* CommentsView.swift */; };
 		212EE33127A4667500232992 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212EE33027A4667500232992 /* MessageView.swift */; };
@@ -157,6 +158,7 @@
 		21EE8A2D285CB5FC00719D0B /* PostTrailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21EE8A2C285CB5FC00719D0B /* PostTrailViewModel.swift */; };
 		21F039C328074E4E003438D0 /* ImageSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F039C228074E4E003438D0 /* ImageSlider.swift */; };
 		21F039C528075576003438D0 /* DetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F039C428075576003438D0 /* DetailsView.swift */; };
+		21F73AD028CA1E9800539AAC /* NewWorldForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F73ACF28CA1E9800539AAC /* NewWorldForm.swift */; };
 		21F8D9C626E8D7CC0016DF9D /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F8D9C526E8D7CC0016DF9D /* DataService.swift */; };
 		21FAC218278538550035F07F /* PreviewCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FAC217278538550035F07F /* PreviewCard.swift */; };
 		B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */; };
@@ -186,6 +188,7 @@
 		2120579D27DE1B3500602EE8 /* Stamp.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Stamp.mp3; sourceTree = "<group>"; };
 		2120579F27DE1C2E00602EE8 /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		2120CE65275FA254006367FE /* LocationCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationCamera.swift; sourceTree = "<group>"; };
+		21236D5228CD3E650096B9B4 /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
 		21251A8027EB3F4B0042BDF4 /* TotalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TotalView.swift; sourceTree = "<group>"; };
 		212EE32E27A4640500232992 /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 		212EE33027A4667500232992 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
@@ -312,6 +315,7 @@
 		21EE8A2C285CB5FC00719D0B /* PostTrailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTrailViewModel.swift; sourceTree = "<group>"; };
 		21F039C228074E4E003438D0 /* ImageSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSlider.swift; sourceTree = "<group>"; };
 		21F039C428075576003438D0 /* DetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsView.swift; sourceTree = "<group>"; };
+		21F73ACF28CA1E9800539AAC /* NewWorldForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWorldForm.swift; sourceTree = "<group>"; };
 		21F8D9C526E8D7CC0016DF9D /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		21FAC217278538550035F07F /* PreviewCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewCard.swift; sourceTree = "<group>"; };
 		D55E8FAFE7D475B0B8F4DBF2 /* Pods-CityXcape.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CityXcape.debug.xcconfig"; path = "Target Support Files/Pods-CityXcape/Pods-CityXcape.debug.xcconfig"; sourceTree = "<group>"; };
@@ -550,6 +554,7 @@
 				2165B5C428C230A300EACDFC /* UsersListView.swift */,
 				2104D2C828C62939004F6657 /* ShareSpotView.swift */,
 				21415B1928C8CD1800C2A717 /* PulseUserView.swift */,
+				21F73ACF28CA1E9800539AAC /* NewWorldForm.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -614,6 +619,7 @@
 				21EE8A28285CB0A400719D0B /* Trail.swift */,
 				21DA5AC9288453C70051673E /* Feed.swift */,
 				210700F52894715E0014FF6D /* Message.swift */,
+				21236D5228CD3E650096B9B4 /* World.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -902,6 +908,7 @@
 				219842A626CF4E3D0089CE03 /* SecretSpot.swift in Sources */,
 				21EE8A2B285CB45600719D0B /* PostTrailForm.swift in Sources */,
 				21BB328827FB2004005241BE /* StreetPassViewModel.swift in Sources */,
+				21236D5328CD3E650096B9B4 /* World.swift in Sources */,
 				217E9AA6270B404500F45077 /* Mission.swift in Sources */,
 				214FAC6D26E2F16300F37B80 /* ImageManager.swift in Sources */,
 				21D0F07A27EC9604003E8748 /* UserReportView.swift in Sources */,
@@ -912,6 +919,7 @@
 				21B1A4C3280D84B700B0AFE2 /* EditViewModel.swift in Sources */,
 				217DA74126CCAFDD0039A145 /* UserDotView.swift in Sources */,
 				217DA72A26CC8F8B0039A145 /* HomeView.swift in Sources */,
+				21F73AD028CA1E9800539AAC /* NewWorldForm.swift in Sources */,
 				21C91E5F27E8A3D50050D06F /* AnalyticsViewModel.swift in Sources */,
 				21D03594270938400071C643 /* MissionRowView.swift in Sources */,
 				21F039C528075576003438D0 /* DetailsView.swift in Sources */,

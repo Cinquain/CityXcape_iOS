@@ -35,6 +35,7 @@ struct UserField {
     static let community = "top_world"
     static let rank = "rank"
     static let city = "city"
+    static let tribe = "tribe"
 }
 
 struct SecretSpotField {
@@ -66,6 +67,7 @@ struct SecretSpotField {
     static let verifierCount = "verifier_count"
     static let commentCount = "comment_count"
     static let ownerIg = "owner_ig"
+    static let tribe = "tribe"
 }
 
 struct CommentField {
@@ -113,6 +115,7 @@ struct ServerPath {
     static let followers = "followers"
     static let following = "following"
     static let history = "history"
+    static let members = "members"
     static let secret = "private"
     static let verified = "verified"
     static let posts = "posts"
@@ -131,6 +134,7 @@ struct ServerPath {
     static let messages = "messages"
     static let recentMessage = "recent_messages"
     static let shared = "shared"
+    static let worlds = "worlds"
 }
 
 struct FeedField {
@@ -169,6 +173,7 @@ struct CurrentUserDefaults {
     static let city = "city"
     static let rank = "rank"
     static let world = "world"
+    static let tribe = "tribe"
 }
 
 struct TrailField {
@@ -191,6 +196,21 @@ struct TrailField {
     static let startDate = "start_date"
     static let endDate = "end_date"
     static let dateCreated = "date_created"
+}
+
+struct WorldField {
+    static let id = "id"
+    static let name = "name"
+    static let description = "description"
+    static let hashtags = "hashtags"
+    static let initiationFee = "initiation_fee"
+    static let imageUrl = "imageUrl"
+    static let spotCount = "spot_count"
+    static let membersCount = "membership_count"
+    static let monthlyFee = "monthly_fee"
+    static let owner = "owner"
+    static let dateCreated = "date_created"
+    static let dateJoined = "date_joined"
 }
 
 struct CheckinField {

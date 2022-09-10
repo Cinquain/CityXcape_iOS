@@ -41,6 +41,7 @@ struct SecretSpot:  Hashable, Identifiable, Equatable {
     var ownerDisplayName: String
     var ownerImageUrl: String
     var ownerIg: String?
+    var tribe: String?
     var lastVerified: Date?
     
     
@@ -138,6 +139,7 @@ struct SecretSpot:  Hashable, Identifiable, Equatable {
             likedCount = Int(entity.likedCount)
             likedByUser = entity.didLike
             verified = entity.verified
+            tribe = entity.tribe ?? ""
             verifyCount = Int(entity.verifierCount)
             commentCount = Int(entity.commentCount)
         }
@@ -173,6 +175,7 @@ struct SecretSpot:  Hashable, Identifiable, Equatable {
         self.zipcode = data?[SecretSpotField.zipcode] as? Int ?? 0
         self.saveCounts = data?[SecretSpotField.saveCount] as? Int ?? 0
         self.viewCount = data?[SecretSpotField.viewCount] as? Int ?? 0
+        self.tribe = data?[SecretSpotField.tribe] as? String ?? ""
         self.isPublic = data?[SecretSpotField.isPublic] as? Bool ?? false
         self.world = data?[SecretSpotField.world] as? String ?? ""
         self.likedCount = data?[SecretSpotField.likeCount] as? Int ?? 0

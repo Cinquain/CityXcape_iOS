@@ -12,7 +12,6 @@ import CoreLocation
 struct PostSpotForm: View {
     
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.colorScheme) var colorScheme
 
     @Binding var selectedTab: Int
     @StateObject var vm = PostViewModel()
@@ -28,7 +27,7 @@ struct PostSpotForm: View {
                     TextField(vm.detailsPlaceHolder, text: $vm.details)
                         .frame(height: 40)
                     
-                    Section("Community") {
+                    Section("\(Image(systemName: "eye.fill")) Visibility") {
                         Toggle(vm.isPublic ? "Public" : "Private", isOn: $vm.isPublic)
                         
                         if vm.isPublic {

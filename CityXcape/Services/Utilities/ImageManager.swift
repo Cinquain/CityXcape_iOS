@@ -30,6 +30,17 @@ class ImageManager {
         
     }
     
+    func uploadWorldLogo(worldId: String, image: UIImage, completion: @escaping (Result<String?,Error>) -> ()) {
+        let path = getWorldImagePath(worlId: worldId)
+        
+        uploadImage(path: path, image: image) { success, imageUrl in
+            if success {
+                completion(.success(imageUrl))
+            } else {
+                completion(.failure(UploadError.failed))
+            }
+        }
+    }
     
     func uploadSecretSpotImage(image: UIImage, postId: String, completion: @escaping (_ url: String?) -> ()) {
         
@@ -140,6 +151,12 @@ class ImageManager {
         let trailPath = "trails/\(trailId)/\(imageNumb)"
         let storagePath = REF_STORE.reference(withPath: trailPath)
         return storagePath
+    }
+    
+    fileprivate func getWorldImagePath(worlId: String) -> StorageReference {
+        let worldPath = "world/\(worlId)/logo"
+        let storagePAth = REF_STORE.reference(withPath: worldPath)
+        return storagePAth
     }
     
     fileprivate func getHuntImagePath(huntId: String, imageNumb: Int) -> StorageReference {

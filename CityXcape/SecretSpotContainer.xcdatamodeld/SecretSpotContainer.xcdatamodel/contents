@@ -21,6 +21,7 @@
         <attribute name="spotDescription" optional="YES" attributeType="String"/>
         <attribute name="spotId" optional="YES" attributeType="String"/>
         <attribute name="spotName" optional="YES" attributeType="String"/>
+        <attribute name="tribe" optional="YES" attributeType="String"/>
         <attribute name="verified" optional="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="verifierCount" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="viewCount" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
@@ -28,6 +29,6 @@
         <attribute name="zipCode" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <elements>
-        <element name="SecretSpotEntity" positionX="-63" positionY="-18" width="128" height="404"/>
+        <element name="SecretSpotEntity" positionX="-63" positionY="-18" width="128" height="419"/>
     </elements>
 </model>

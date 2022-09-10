@@ -41,6 +41,7 @@ class DataService {
     private var REF_HUNTS = DB_BASE.collection(ServerPath.hunt)
     private var REF_CITY = DB_BASE.collection(ServerPath.cities)
     private var REF_FEED = DB_BASE.collection(ServerPath.feed)
+    private var REF_WORLDS = DB_BASE.collection(ServerPath.worlds)
     private var REF_MESSAGES = DB_BASE.collection(ServerPath.messages)
     private var REF_RECENTMESSAGE = DB_BASE.collection(ServerPath.recentMessage)
     
@@ -371,6 +372,70 @@ class DataService {
             }
         }
     }
+    
+    func createWorld(name: String, details: String, hashtags: String, image: UIImage, price: Int, completion: @escaping (Result<String, Error>) -> ()) {
+        guard let uid = userId, let displayName = displayName, let profileUrl = profileUrl else {return}
+        
+        let reference = REF_WORLDS.document(name)
+        let userRef = REF_USERS.document(uid)
+        let worldId = reference.documentID
+        
+        let userData: [String: Any] = [
+            UserField.tribe: name
+        ]
+        
+        ImageManager.instance.uploadWorldLogo(worldId: worldId, image: image) { result in
+            switch result {
+                case .failure(let error):
+                    print("Error uploading world image")
+                    completion(.failure(error))
+                case .success(let downloadUrl):
+                    let data: [String: Any] = [
+                        WorldField.id: worldId,
+                        WorldField.name: name,
+                        WorldField.owner: uid,
+                        WorldField.description: details,
+                        WorldField.initiationFee: price,
+                        WorldField.membersCount: 1,
+                        WorldField.monthlyFee: 0,
+                        WorldField.hashtags: hashtags,
+                        WorldField.spotCount: 0,
+                        WorldField.imageUrl: downloadUrl ?? "",
+                        WorldField.dateCreated: FieldValue.serverTimestamp()
+                    ]
+                
+                reference.setData(data) { error in
+                    if let error = error {
+                        print("Error creating world in DB", error.localizedDescription)
+                        completion(.failure(error))
+                    }
+                    
+                    let memberData: [String: Any] =  [
+                        UserField.provider: uid,
+                        UserField.displayName: displayName,
+                        UserField.profileImageUrl: profileUrl,
+                        WorldField.dateJoined: FieldValue.serverTimestamp()
+                    ]
+                    
+                    reference.collection(ServerPath.members).document(uid).setData(memberData) { error in
+                        if let error = error {
+                            print("Error saving user to world collection", error.localizedDescription)
+                            completion(.failure(error))
+                        }
+                        let message = "Successfully Created World"
+                        userRef.updateData(userData)
+                        UserDefaults.standard.set(name, forKey: CurrentUserDefaults.tribe)
+                        completion(.success(message))
+                        
+                    }
+                    
+                }
+                
+            }
+        }
+                            
+    }
+    
     
     func createHunt(name: String, details: String, image: UIImage, startDate: Date, endDate: Date, location: MKMapItem, world: String, user: User, price: Int, spots: [SecretSpot]) {
         
