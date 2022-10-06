@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FriendsView: View {
-    @StateObject var vm: StreetPassViewModel
+    @StateObject var vm: ChatLogViewModel
     @Environment(\.presentationMode) var presentationMode
     let height: CGFloat = UIScreen.screenHeight
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
@@ -94,6 +94,6 @@ extension FriendsView {
 
 struct FriendsView_Previews: PreviewProvider {
     static var previews: some View {
-        FriendsView(vm: StreetPassViewModel())
+        FriendsView(vm: ChatLogViewModel())
     }
 }

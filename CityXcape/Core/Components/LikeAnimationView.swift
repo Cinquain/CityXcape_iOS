@@ -26,22 +26,22 @@ struct LikeAnimationView: View {
         
         ZStack {
             Image(systemName: "heart.fill")
-                .foregroundColor(didLike ? .red : color.opacity(0.3))
+                .foregroundColor(didLike ? .green : color.opacity(0.3))
                 .font(.system(size: size))
                 .scaleEffect(animate ? 1.0 : 0.0)
             
             Image(systemName: "heart.fill")
-                .foregroundColor(didLike ? .red : color.opacity(0.3))
+                .foregroundColor(didLike ? .green : color.opacity(0.3))
                 .font(.system(size: size * 0.50))
                 .scaleEffect(animate ? 1.0 : 0.0)
             
             Image(systemName: "heart.fill")
-                .foregroundColor(didLike ? .red : color.opacity(0.3))
+                .foregroundColor(didLike ? .green : color.opacity(0.3))
                 .font(.system(size: size * 0.25 ))
                 .scaleEffect(animate ? 1.0 : 0.0)
             
         }
-        .animation(Animation.linear(duration: 0.5).repeatCount(1))
+        .animation(Animation.linear(duration: 1.0).repeatForever())
        
         
         

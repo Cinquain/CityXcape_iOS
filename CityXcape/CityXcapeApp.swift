@@ -131,6 +131,11 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
                 notification.getSecretSpot(spotId: spotId)
                 return
             }
+        
+            if let worldName = userInfo["worldName"] as? String {
+                notification.getWorld(name: worldName)
+                return
+            }
             
             if let stamp = userInfo["stampName"] as? String {
                 notification.stamp = Verification(userInfo: userInfo)

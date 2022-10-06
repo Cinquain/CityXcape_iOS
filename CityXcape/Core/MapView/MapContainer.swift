@@ -151,32 +151,30 @@ struct MapContainer: View {
         }
         .edgesIgnoringSafeArea(.all)
         .sheet(isPresented: $vm.showForm, onDismiss: {
-            withAnimation {
-                
-            }
+
         }, content: {
             PostSpotForm(selectedTab: $selectedTab, mapItem: mapItem)
-
         })
-        .actionSheet(isPresented: $vm.showActionSheet) {
-            return ActionSheet(title: Text("What type of trail is this?"), message: nil, buttons: [
-                
-            .default(Text("Normal Trail"), action: {
-                vm.showTrailForm.toggle()
-            }),
-            
-            .default(Text("Scavenger Hunt"), action: {
-                isHunt = true
-                vm.alertMessgae = "Start by choosing a starting location"
-                vm.showAlert.toggle()
-            }),
-            
-            .cancel()
-        ])
-        }
         .alert(isPresented: $vm.showAlert) {
             return Alert(title: Text(vm.alertMessgae))
         }
+//        .actionSheet(isPresented: $vm.showActionSheet) {
+//            return ActionSheet(title: Text("What type of trail is this?"), message: nil, buttons: [
+//
+//            .default(Text("Normal Trail"), action: {
+//                vm.showTrailForm.toggle()
+//            }),
+//
+//            .default(Text("Scavenger Hunt"), action: {
+//                isHunt = true
+//                vm.alertMessgae = "Start by choosing a starting location"
+//                vm.showAlert.toggle()
+//            }),
+//
+//            .cancel()
+//        ])
+//        }
+        
         
 
     }
@@ -245,7 +243,6 @@ struct MainMapView: UIViewRepresentable {
             
             return
         }
-        
         
   
         

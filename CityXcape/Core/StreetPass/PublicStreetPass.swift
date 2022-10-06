@@ -194,7 +194,6 @@ extension PublicStreetPass {
                     .frame(height: 50)
             }
             
-            
             Button {
                 vm.showSecretSpots()
             } label: {
@@ -207,21 +206,44 @@ extension PublicStreetPass {
                 ShareSpotView(user: user, vm: vm)
             }
             
-            Button {
-                manager.checkAuthorizationStatus { fcmToken in
-                    if let token = fcmToken {
-                        vm.sendFriendRequest(uid: user.id, token: token)
-                    } else {
-                        vm.alertMessage = "CityXcape needs notification permission to send friend request"
-                        vm.showAlert.toggle()
+            if vm.friends.contains(where: {$0.id == user.id}) {
+                Button {
+                    DataService.instance.sendWorldInvite(user: user) { result in
+                        switch result {
+                        case .success(let message):
+                            vm.alertMessage = message
+                            vm.showAlert.toggle()
+                        case .failure(let error):
+                            vm.alertMessage = error.localizedDescription
+                            vm.showAlert.toggle()
+                        }
                     }
+                } label: {
+                    Image("world_invite")
+                         .resizable()
+                         .scaledToFit()
+                         .frame(height: 50)
                 }
-            } label: {
-                Image("request")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 50)
+
+            } else {
+                Button {
+                    manager.checkAuthorizationStatus { fcmToken in
+                        if let token = fcmToken {
+                            vm.sendFriendRequest(uid: user.id, token: token)
+                        } else {
+                            vm.alertMessage = "CityXcape needs notification permission to send friend request"
+                            vm.showAlert.toggle()
+                        }
+                    }
+                } label: {
+                    Image("request")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 50)
+                }
             }
+            
+        
         }
     }
     

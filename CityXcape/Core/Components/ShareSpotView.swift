@@ -73,6 +73,8 @@ struct ShareSpotView: View {
         )
         .edgesIgnoringSafeArea(.bottom)
     }
+    
+ 
 }
 
 struct ShareSpotView_Previews: PreviewProvider {

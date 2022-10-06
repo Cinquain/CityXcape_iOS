@@ -82,11 +82,11 @@ struct OnboardingView: View {
                         }, label: {
                             
                             VStack {
-                                Image(systemName: "globe")
+                                Image(systemName: "envelope.circle.fill")
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: 60)
-                                    .foregroundColor(.gray)
+                                    .frame(height: 63)
+                                    .foregroundColor(.white)
                             }
                             
                         })

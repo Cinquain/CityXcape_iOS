@@ -19,7 +19,9 @@ class NotificationsManager: ObservableObject {
     @Published var user: User?
     @Published var secretSpot: SecretSpot?
     @Published var stamp: Verification?
-
+    @Published var world: World?
+    
+    
     @Published var hasSpotNotification: Bool = false
     @Published var spotId: String?
     
@@ -83,6 +85,18 @@ class NotificationsManager: ObservableObject {
                         print("Setting secret spot")
                         self.secretSpot = spot
                 }
+        }
+    }
+    
+    func getWorld(name: String) {
+        DataService.instance.getSpecificWorld(name: name) { result in
+            switch result {
+            case .failure(let error):
+                print("Error getting world", error.localizedDescription)
+            case .success(let world):
+                print("Found World!")
+                self.world = world
+            }
         }
     }
 

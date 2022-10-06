@@ -91,10 +91,9 @@ struct PostSpotForm: View {
                         .colorScheme(.dark)
                 })
                 .fullScreenCover(isPresented: $vm.presentCompletion, onDismiss: {
-                    selectedTab = 0
-                    NotificationCenter.default.post(name: spotCompleteNotification, object: nil)
                     if vm.didFinish {
                         self.presentationMode.wrappedValue.dismiss()
+                        NotificationCenter.default.post(name: spotCompleteNotification, object: nil)
                     }
                 }, content: {
                     CongratsView(vm: vm)

@@ -18,7 +18,8 @@ struct DiscoverView: View {
     @State private var alertMessage: String = ""
     @State private var passed: Bool = false
     @State private var saved: Bool = false
-
+    @State private var showMenu: Bool = false
+    let width =  UIScreen.screenWidth
     let manager = CoreDataManager.instance
     
     @StateObject var vm: DiscoverViewModel 
@@ -29,103 +30,121 @@ struct DiscoverView: View {
         NavigationView {
           
     
-            ScrollView {
-                
+            ZStack {
+                ScrollView {
                     
-                if vm.newSecretSpots.isEmpty {
-                         VStack {
-                               emptyStateIcon
-                               refreshButton
-                         }
-                                 
-                 } else {
-                
-                ForEach(vm.newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})) { spot in
-
-                        ZStack {
-                          
-                            CardView(showAlert: $vm.showAlert, alertMessage: $vm.alertMessage, spot: spot)
-                                .animation(Animation.linear(duration: 0.4))
-
-                            
-                            VStack(alignment: .center) {
-                                LikeAnimationView(color: .cx_green, didLike: $vm.passed, size: 200)
-                                   
-                                    .animation(Animation.linear(duration: 0.5))
-                                
-                                Text(" - \(currentSpot?.price ?? 1) StreetCred")
-                                    .font(.title)
-                                    .fontWeight(.thin)
-                                    .foregroundColor(.red)
-                            }
-                            .opacity(currentSpot == spot && vm.saved ? 1 : 0)
-                                
-                            passAnimation
-                                .opacity(currentSpot == spot && vm.passed ? 1 : 0)
-                                .animation(Animation.linear(duration: 0.5))
-                        }
                         
-                        HStack {
-                            Button {
-                                //TBD
-                                currentSpot = spot
-                                vm.passed = true
-                                vm.dismissCard(spot: spot)
-                            } label: {
-                                VStack {
-                                    Image(systemName: "hand.thumbsdown")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .foregroundColor(.stamp_red)
-                                        .frame(height: 30)
-
-                                    Text("pass")
-                                        .font(.caption)
-                                        .foregroundColor(.stamp_red)
-                                }
-
-                            }
-                            
-                            Spacer()
-                            
-                            Button {
-                                //TBD
-                                currentSpot = spot
-                                vm.saved = true
-                                vm.saveCardToUserWorld(spot: spot)
-                            } label: {
-                                VStack {
-                                    Image(systemName: "heart")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .foregroundColor(.cx_green)
-                                        .frame(height: 30)
-                                    
-                                    Text("save")
-                                        .font(.caption)
-                                        .foregroundColor(.cx_green)
-                                }
-                            }
-
-
-                        }
-                        .padding(.horizontal, 20)
-                        
-              
-                        
-                        Divider()
-                            .frame(height: 0.5)
-                            .background(Color.white)
-                            .padding(.bottom, 10)
-
-                    }
-                    
+                    if vm.newSecretSpots.isEmpty {
+                             VStack {
+                                   emptyStateIcon
+                                   refreshButton
                              }
+                                     
+                     } else {
+                    
+                    ForEach(vm.newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})) { spot in
 
+                            ZStack {
+                              
+                                CardView(showAlert: $vm.showAlert, alertMessage: $vm.alertMessage, spot: spot)
+                                    .animation(Animation.linear(duration: 0.4))
+
+                                
+                                VStack(alignment: .center) {
+                                    LikeAnimationView(color: .cx_green, didLike: $vm.passed, size: 200)
+                                       
+                                        .animation(Animation.linear(duration: 0.5))
+                                    
+                                    Text(" - \(currentSpot?.price ?? 1) StreetCred")
+                                        .font(.title)
+                                        .fontWeight(.thin)
+                                        .foregroundColor(.red)
+                                }
+                                .opacity(currentSpot == spot && vm.saved ? 1 : 0)
+                                    
+                                passAnimation
+                                    .opacity(currentSpot == spot && vm.passed ? 1 : 0)
+                                    .animation(Animation.linear(duration: 0.5))
+                            }
+                            
+                            HStack {
+                                Button {
+                                    //TBD
+                                    currentSpot = spot
+                                    vm.passed = true
+                                    vm.dismissCard(spot: spot)
+                                } label: {
+                                    VStack {
+                                        Image(systemName: "hand.thumbsdown")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .foregroundColor(.stamp_red)
+                                            .frame(height: 30)
+
+                                        Text("pass")
+                                            .font(.caption)
+                                            .foregroundColor(.stamp_red)
+                                    }
+
+                                }
+                                
+                                Spacer()
+                                
+                                Button {
+                                    //TBD
+                                    currentSpot = spot
+                                    vm.saved = true
+                                    vm.saveCardToUserWorld(spot: spot)
+                                } label: {
+                                    VStack {
+                                        Image(systemName: "heart")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .foregroundColor(.cx_green)
+                                            .frame(height: 30)
+                                        
+                                        Text("save")
+                                            .font(.caption)
+                                            .foregroundColor(.cx_green)
+                                    }
+                                }
+
+
+                            }
+                            .padding(.horizontal, 20)
+                            
+                  
+                            
+                            Divider()
+                                .frame(height: 0.5)
+                                .background(Color.white)
+                                .padding(.bottom, 10)
+
+                        }
+                        
+                                 }
+
+                    
+                   //End of Scrollview
+                }
                 
-               
+                GeometryReader { _ in
+                    HStack {
+                        SideMenu(selectedTab: $selectedTab, showMenu: $showMenu)
+                            .offset(x: showMenu ? 0 : -width - 50)
+                            .animation(.easeOut(duration: 0.3), value: showMenu)
+                        
+                        Spacer()
+                    }
+                }
+                .background(Color.black.opacity(showMenu ? 0.5 : 0))
+                .onTapGesture {
+                    showMenu.toggle()
+                }
+                
+                //End of ZStack
             }
-            .navigationBarItems(trailing: searchButton)
+            .navigationBarItems(leading: sandwichMenu, trailing: searchButton)
             .toolbar {
                ToolbarItem(placement: .principal) {
                    ZStack {
@@ -142,6 +161,7 @@ struct DiscoverView: View {
                    
                }
             }
+       
 
             
         }
@@ -175,6 +195,18 @@ extension DiscoverView {
                 .scaledToFit()
         }
         
+    }
+    
+    
+    private var sandwichMenu: some View {
+        Button {
+            showMenu.toggle()
+        } label: {
+            Image(systemName: showMenu ? "xmark" :  "text.justify")
+                .font(.title3)
+                .foregroundColor(.white)
+                .animation(.easeOut(duration: 0.3), value: showMenu)
+        }
     }
     
     private var refreshButton: some View {

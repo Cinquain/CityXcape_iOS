@@ -16,7 +16,7 @@ struct StreetReportCard: View {
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
     
     @StateObject var vm: AnalyticsViewModel = AnalyticsViewModel()
-    @StateObject var streetPass: StreetPassViewModel
+
     @State private var showTotalView: Bool = false
     @State private var currentType: AnalyticsType?
     
@@ -40,39 +40,40 @@ struct StreetReportCard: View {
                 }
 
                 Text("Your top community is: \(vm.topWorld)")
-                    .font(.title3)
-                    .fontWeight(.thin)
-                
+                       .font(.title3)
+                       .fontWeight(.thin)
+                               
                 Spacer()
             }
             .foregroundColor(.white)
             .padding(.top, 20)
             .padding(.horizontal, 20)
             
-            HStack {
-                
-                Button {
-                    //TBD
-                    vm.showWorld.toggle()
-                } label: {
-                    VStack {
-                        Image("world")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 150)
-                        Text("Create a World")
-                            .fontWeight(.thin)
-                    }
-                }
+           
+            
+                  HStack {
+                      
+                      Button {
+                          //TBD
+                          vm.showWorld.toggle()
+                      } label: {
+                          VStack {
+                              Image("world")
+                                  .resizable()
+                                  .scaledToFit()
+                                  .frame(width: 150)
+                              Text("Create World")
+                                  .fontWeight(.thin)
+                          }
+                      }
 
-             
-            }
-            .foregroundColor(.white)
-            .padding(.top, 20)
-            .sheet(isPresented: $vm.showWorld) {
-                NewWorldForm()
-            }
-
+                   
+                  }
+                  .foregroundColor(.white)
+                  .padding(.top, 20)
+                  .sheet(isPresented: $vm.showWorld) {
+                      NewWorldForm()
+                  }
 
             
             HStack {
@@ -233,6 +234,6 @@ struct StreetReportCard: View {
 
 struct StreetReportCard_Previews: PreviewProvider {
     static var previews: some View {
-        StreetReportCard(streetPass: StreetPassViewModel())
+        StreetReportCard()
     }
 }

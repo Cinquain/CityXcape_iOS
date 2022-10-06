@@ -16,11 +16,11 @@ struct BarView: View {
         HStack {
             ZStack(alignment: .leading) {
                 Capsule()
-                    .frame(width: 200, height: 30)
+                    .frame(width: 150, height: 25)
                     .foregroundColor(.dark_grey)
                 
                 Capsule()
-                    .frame(width: value, height: 30)
+                    .frame(width: value, height: 25)
                     .foregroundColor(.cx_orange.opacity(0.8))
                     .animation(Animation.linear(duration: 0.5))
                 

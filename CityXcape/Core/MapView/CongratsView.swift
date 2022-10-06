@@ -101,12 +101,11 @@ struct CongratsView: View {
                         .frame(maxHeight: 50)
                     
                     Button(action: {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             vm.checkforNotifications()
                             vm.analytics.postSecretSpot()
                             vm.didFinish = true
                             presentationMode.wrappedValue.dismiss()
-                        }
+                        
                     }, label: {
                         HStack {
                             Image(Icon.check.rawValue)

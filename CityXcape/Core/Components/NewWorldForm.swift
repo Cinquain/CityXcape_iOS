@@ -12,13 +12,15 @@ struct NewWorldForm: View {
 
     @State private var worldName: String = ""
     @State private var worldDescription: String = ""
+    @State private var email: String = ""
     @State private var hashtags: String = ""
-    @State private var showPicker: Bool = false
-    @State private var image: UIImage?
     @State private var alertMessage: String = ""
+    @State private var requirements: String = ""
     @State private var showAlert: Bool = false
-    @State private var sourceType: UIImagePickerController.SourceType = .photoLibrary
+
     @State private var price: Int = 0
+    @State private var spots: Int = 0
+    @State private var stamps: Int = 0
     @State private var isLoading: Bool = false
     
     var body: some View {
@@ -29,7 +31,10 @@ struct NewWorldForm: View {
                     TextField("World Name", text: $worldName)
                         .frame(height: 40)
                     
-                    TextField("Describe the spots this world looks for", text: $worldDescription)
+                    TextField("Describe what this community is about", text: $worldDescription)
+                        .frame(height: 40)
+                    
+                    TextField("What are the requirements to join this community", text: $requirements)
                         .frame(height: 40)
                 }
                 
@@ -40,49 +45,20 @@ struct NewWorldForm: View {
                         .frame(height: 40)
                 }
                 
-                Section("Upload Logo (Transparent Background Only)") {
-                    Button {
-                        showPicker.toggle()
-                    } label: {
-                        ZStack {
-                            
-                            if let logo = image {
-                                VStack {
-                                    Image(uiImage: logo)
-                                        .renderingMode(.template)
-                                        .resizable()
-                                        .foregroundColor(.gray)
-                                        .aspectRatio(contentMode: .fit)
-                                        .frame(maxWidth: UIScreen.screenWidth)
-                                }
-                            } else {
-                                Image("world_logo")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: .infinity)
-                                    .cornerRadius(12)
-                            }
-                            
-                            ProgressView()
-                                .opacity(isLoading ? 1 : 0)
-                                .scaleEffect(3)
-                           
-                        }
-                        
-                        //Label
-                    }
-                    .listRowInsets(EdgeInsets())
+                Section("Your Info") {
+                    TextField("Your Email", text: $email)
+                        .frame(height: 40)
                 }
-                .sheet(isPresented: $showPicker) {
-                    ImagePicker(imageSelected: $image, sourceType: $sourceType)
-                        .colorScheme(.dark)
-                }
+            
                 
                 
-                Section(header: Text("\(price) Streetcred to join")) {
+                Section(header: Text("\(price) STC, \(spots) spots, \(stamps) stamps")) {
                     
-                    Stepper("Initiation Fee", value: $price, in: 0...100)
-             
+                    Stepper("Streetcred", value: $price, in: 0...100)
+                    Stepper("# of Spots", value: $spots, in: 0...50)
+                    Stepper("# of Stamps", value: $stamps, in: 0...50)
+
+
                 }
                 
                 Section("Finish") {
@@ -108,17 +84,15 @@ struct NewWorldForm: View {
 
         }
         .colorScheme(.dark)
+        .alert(isPresented: $showAlert) {
+            return Alert(title: Text(alertMessage))
+        }
     }
     
     fileprivate func submitWorld() {
         isLoading = true
-        guard let image = image else {
-            alertMessage = "Please add a logo for your world"
-            showAlert.toggle()
-            isLoading = false
-            return
-        }
-        DataService.instance.createWorld(name: worldName, details: worldDescription, hashtags: hashtags, image: image, price: price) { result in
+        
+        DataService.instance.createWorld(name: worldName, details: worldDescription, email: email, req: requirements, reqSpots: spots, reqStamps: stamps, hashtags: hashtags, price: price) { result in
             
             switch result {
                 case .failure(let error):
@@ -134,6 +108,40 @@ struct NewWorldForm: View {
                     }
             }
         }
+    }
+    
+    fileprivate func validateForm()  {
+        if !(worldName.count >= 3) {
+            alertMessage = "World name needs to be 3 characters or greater"
+            showAlert = true
+            return
+        }
+        
+        if !(requirements.count >= 5) {
+            alertMessage = "Requirement description is too short"
+            showAlert = true
+            return
+        }
+        
+        if !(worldDescription.count >= 5) {
+            alertMessage = "World description needs to be longer"
+            showAlert = true
+            return
+        }
+        
+        if !email.isValidEmail() {
+            alertMessage = "Please enter a valid email"
+            showAlert = true
+            return
+        }
+        
+        if !(hashtags.count >= 3) {
+            alertMessage = "Add more hashtags"
+            showAlert = true
+            return
+        }
+        
+        submitWorld()
     }
     
     func converToHashTag() {

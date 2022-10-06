@@ -33,7 +33,7 @@ class MyWorldViewModel: NSObject, ObservableObject {
     @Published var annotations: [MKPointAnnotation] = []
     
     
-    var placeHolder = "Search a spot"
+    var placeHolder = "Search a spot, city, or hashtag"
     var cancellables = Set<AnyCancellable>()
     
     override init() {

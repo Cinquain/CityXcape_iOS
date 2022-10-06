@@ -36,6 +36,11 @@ struct UserField {
     static let rank = "rank"
     static let city = "city"
     static let tribe = "tribe"
+    static let tribeImageUrl = "tribeImageUrl"
+    static let tribeJoinDate = "tribeJoinDate"
+    static let latitude = "latitude"
+    static let longitude = "longitude"
+    static let geohash = "geohash"
 }
 
 struct SecretSpotField {
@@ -135,6 +140,8 @@ struct ServerPath {
     static let recentMessage = "recent_messages"
     static let shared = "shared"
     static let worlds = "worlds"
+    static let maps = "maps"
+    static let invite = "invite"
 }
 
 struct FeedField {
@@ -174,6 +181,7 @@ struct CurrentUserDefaults {
     static let rank = "rank"
     static let world = "world"
     static let tribe = "tribe"
+    static let tribeImageUrl = "tribeImageUrl"
 }
 
 struct TrailField {
@@ -200,17 +208,27 @@ struct TrailField {
 
 struct WorldField {
     static let id = "id"
-    static let name = "name"
+    static let name = "worldName"
     static let description = "description"
     static let hashtags = "hashtags"
     static let initiationFee = "initiation_fee"
     static let imageUrl = "imageUrl"
+    static let coverImageUrl = "cover_imageUrl"
+    static let ownerImageUrl = "world_owner_imageUrl"
     static let spotCount = "spot_count"
     static let membersCount = "membership_count"
     static let monthlyFee = "monthly_fee"
-    static let owner = "owner"
+    static let ownerId = "owner_id"
     static let dateCreated = "date_created"
     static let dateJoined = "date_joined"
+    static let isPublic = "public"
+    static let ownerEmail = "owner_email"
+    static let ownerName = "owner_name"
+    static let isApproved = "is_approved"
+    static let reqString = "requirements"
+    static let reqSpots = "req_spots"
+    static let reqStamps = "req_stamps"
+    static let ranks = "rankings"
 }
 
 struct CheckinField {

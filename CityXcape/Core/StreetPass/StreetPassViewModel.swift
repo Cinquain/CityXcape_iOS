@@ -24,9 +24,9 @@ class StreetPassViewModel: NSObject, ObservableObject {
     @Published var worldCompo: [String: Double] = [:]
     @Published var users: [User] = []
     @Published var alertMessage: String = ""
-    @Published var error: String = ""
     @Published var showAlert: Bool = false
-    
+    @Published var error: String = ""
+
     @Published var showRanks: Bool = false 
     @Published var rank: String = ""
     @Published var ranking: [Rank] = []
@@ -55,8 +55,6 @@ class StreetPassViewModel: NSObject, ObservableObject {
         calculateWorld()
         calculateRank()
         getScoutLeaders()
-        fetchAllFriends()
-        getRecentMessages()
     }
     
     func generateColors() -> [Color] {
@@ -65,6 +63,13 @@ class StreetPassViewModel: NSObject, ObservableObject {
             colors.append(Color.random)
         }
         return colors
+    }
+    
+    
+     func getScoutLeaders() {
+        DataService.instance.getUserRankings { ranks in
+            self.ranking = ranks
+        }
     }
 
     
@@ -185,14 +190,6 @@ class StreetPassViewModel: NSObject, ObservableObject {
        
         UserDefaults.standard.set(rank, forKey: CurrentUserDefaults.rank)
         DataService.instance.saveUserRanking(rank: ranking)
-    }
-    
-    
-    fileprivate func getScoutLeaders() {
-        
-        DataService.instance.getUserRankings { ranks in
-            self.ranking = ranks
-        }
     }
     
     

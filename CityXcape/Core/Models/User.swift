@@ -19,12 +19,13 @@ struct User: Identifiable, Hashable, Equatable {
     
     var bio: String?
     var fcmToken: String?
-    var streetCred: Int?
+    var streetCred: Double?
     var social: String?
     var rank: String?
     var city: String?
     var tribe: String?
-    
+    var tribeImageUrl: String?
+
     var verified: Date?
     var membership: Date?
     var world: [String: Double]?
@@ -46,7 +47,7 @@ struct User: Identifiable, Hashable, Equatable {
     init(data: [String: Any]?) {
         self.id = data?[UserField.providerId] as? String ?? ""
         self.displayName = data?[UserField.displayName] as? String ?? ""
-        self.streetCred = data?[UserField.streetCred] as? Int ?? 0
+        self.streetCred = data?[UserField.streetCred] as? Double ?? 0
         self.bio = data?[UserField.bio] as? String ?? ""
         self.fcmToken = data?[ UserField.fcmToken] as? String ?? ""
         self.profileImageUrl = data?[UserField.profileImageUrl] as? String ?? ""
@@ -55,6 +56,7 @@ struct User: Identifiable, Hashable, Equatable {
         self.rank = data?[UserField.rank] as? String ?? "Tourist"
         let timestamp = data?[UserField.dataCreated] as? Timestamp
         self.tribe = data?[UserField.tribe] as? String ?? ""
+        self.tribeImageUrl = data?[UserField.tribeImageUrl] as? String ?? ""
         self.membership = timestamp?.dateValue()
     }
     
@@ -83,7 +85,7 @@ struct User: Identifiable, Hashable, Equatable {
         self.profileImageUrl = userInfo["profileUrl"] as? String ?? ""
         self.displayName = userInfo["userDisplayName"] as? String ?? ""
         let streetcred = userInfo["streetCred"] as? String ?? "0"
-        self.streetCred = Int(streetcred)
+        self.streetCred = Double(streetcred)
         self.bio = userInfo["biography"] as? String ?? ""
         self.social = userInfo["instagram"] as? String ?? nil
         self.rank = userInfo["rank"] as? String ?? ""
@@ -121,7 +123,7 @@ struct User: Identifiable, Hashable, Equatable {
         self.id = UserDefaults.standard.value(forKey: CurrentUserDefaults.userId) as? String ?? ""
         self.displayName = UserDefaults.standard.value(forKey: CurrentUserDefaults.displayName) as? String ?? ""
         self.profileImageUrl = UserDefaults.standard.value(forKey: CurrentUserDefaults.profileUrl) as? String ?? ""
-        self.streetCred = UserDefaults.standard.value(forKey: CurrentUserDefaults.wallet) as? Int ?? 0
+        self.streetCred = UserDefaults.standard.value(forKey: CurrentUserDefaults.wallet) as? Double ?? 0
         self.bio = UserDefaults.standard.value(forKey: CurrentUserDefaults.bio) as? String ?? ""
         self.social = UserDefaults.standard.value(forKey: CurrentUserDefaults.social) as? String ?? ""
         self.fcmToken = Messaging.messaging().fcmToken

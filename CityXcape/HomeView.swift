@@ -12,6 +12,7 @@ struct HomeView: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     let router = Router.shared
     @State var selectedTab: Int = 0
+    @State var showSideMenu: Bool = false
     @StateObject var manager = NotificationsManager.instance
     @StateObject var discoverVM: DiscoverViewModel = DiscoverViewModel()
     @StateObject var feedVM: FeedViewModel = FeedViewModel()
@@ -29,8 +30,6 @@ struct HomeView: View {
        
         TabView(selection: $selectedTab) {
             
-      
-              
             
             MyWorld(selectedTab: $selectedTab)
             .tabItem {
@@ -53,7 +52,7 @@ struct HomeView: View {
             
           
             
-            FeedView(discoverVM: discoverVM, vm: feedVM)
+            FeedView(selectedTab: $selectedTab, discoverVM: discoverVM, vm: feedVM)
                 .tabItem {
                     Image(Icon.grid.rawValue)
                         .renderingMode(.template)
@@ -78,7 +77,9 @@ struct HomeView: View {
                     Text(Labels.tab3.rawValue)
                 }
                 .tag(3)
-               
+                .fullScreenCover(item: $manager.world) { world in
+                    WorldInviteView(world: world)
+                }
             
             
             StreetPass(vm: streetPassVM)
@@ -118,15 +119,17 @@ struct HomeView: View {
     
     func getAdditionalProfileInfo() {
         guard let uid = userId else {return}
-        AuthService.instance.getUserInfo(forUserID: uid) { username, bio, streetcred, profileUrl, social in
-            
-            if let streetCred = streetcred {
-                UserDefaults.standard.set(streetCred, forKey: CurrentUserDefaults.wallet)
-
+        
+        AuthService.instance.getUserInfo(forUserID: uid) { result in
+            switch result {
+            case .failure(let error):
+                print("Error retrieving user info", error)
+            case .success(let user):
+                let streetcred = user.streetCred ?? 12
+                UserDefaults.standard.set(streetcred, forKey: CurrentUserDefaults.wallet)
             }
-            
-            
         }
+      
     }
     
     

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import UIKit
+import SDWebImageSwiftUI
 
 struct StreetPass: View {
     
@@ -14,6 +15,7 @@ struct StreetPass: View {
     @AppStorage(CurrentUserDefaults.bio) var bio: String?
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     @AppStorage(CurrentUserDefaults.social) var social: Int?
+    @AppStorage(CurrentUserDefaults.tribeImageUrl) var tribeImageUrl: String?
 
 
     @StateObject var vm: StreetPassViewModel
@@ -23,7 +25,7 @@ struct StreetPass: View {
     @State private var profileUrl = ""
     @State private var instagram = ""
     @State private var streetCred : Double = 0
-   
+    @State private var user: User?
     
     @State var refresh: Bool = false
     @State var userImage: UIImage?
@@ -85,9 +87,7 @@ struct StreetPass: View {
                                 
                                    
                             })
-                          
                             
-                      
                                 Text(username)
                                     .fontWeight(.thin)
                                     .foregroundColor(.accent)
@@ -102,33 +102,31 @@ struct StreetPass: View {
                                         .foregroundColor(.gray)
                                 }
                             
-                            Button {
+                                Spacer()
+                                .frame(height: 20)
+                            
+                                Button {
                                     vm.showRanks.toggle()
                                 } label: {
-                                    VStack {
-                                        Text("Current Rank: \(vm.rank)")
-                                            .foregroundColor(.white)
-                                        BarView(progress: vm.progressValue)
-                                        Text(vm.progressString)
-                                            .font(.caption)
-                                            .fontWeight(.thin)
-
-                                    }
-
+                                    WebImage(url: URL(string: tribeImageUrl ?? ""))
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 200, height: 50)
+                                        .opacity(0.8)
                                 }
+                                .padding(.top, 10)
+                                .animation(.easeIn)
                                 .sheet(isPresented: $vm.showRanks) {
                                     Leaderboard(ranks: vm.ranking)
-                            }
-                            .padding(.top, 10)
+                                }
+                                .opacity(user?.tribe != "" ? 1 : 0)
+                              
                             
+                                                        
                                 
                         }
                         Spacer()
                     }
-                    
-                    
-       
-                 
                     
                     HStack{
                         Spacer()
@@ -162,47 +160,9 @@ struct StreetPass: View {
                     .padding(.top, 20)
                     
                     
-                    HStack {
-                        
-                        Spacer()
-                        
-                        Button {
-                            //Show Stats
-                            vm.showMessage.toggle()
-                        } label: {
-                            HStack {
-                               Image(systemName: "message.fill")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(height: 25)
-                                    .foregroundColor(vm.count > 0 ? .yellow : .white)
-                                 
-                                   Text("Messages")
-                                        .font(.title2)
-                                        .fontWeight(.thin)
-                                        .foregroundColor(vm.count > 0 ? .yellow : .white)
-                                
-                                Spacer()
-
-                                }
-                                .badge(vm.count)
-                                .foregroundColor(.white)
-                                .frame(width: 150, height: 30)
-                            
-                        }
-                        .fullScreenCover(isPresented: $vm.showMessage) {
-                            FriendsView(vm: vm)
-                        }
-                        
-                        
-                        Spacer()
-                    }
-                    .padding(.top, 5)
-                    
-                    
                     
                     HStack {
-                        
+                                            
                         Spacer()
                         
                         Button {
@@ -226,14 +186,13 @@ struct StreetPass: View {
 
                         }
                         .fullScreenCover(isPresented: $vm.showStats) {
-                            StreetReportCard(streetPass: vm)
+                            StreetReportCard()
                         }
                         
                         Spacer()
                     }
                     .padding(.top, 5)
-                    
-           
+
                     
                     
                     
@@ -292,36 +251,24 @@ struct StreetPass: View {
     
     func getAdditionalProfileInfo() {
         guard let uid = userId else {return}
-        AuthService.instance.getUserInfo(forUserID: uid) { username, bio, streetcred, profileUrl, social in
-            
-            if let name = username {
-                self.username = name
-                UserDefaults.standard.set(name, forKey: CurrentUserDefaults.displayName)
-            }
-            
-            if let bio = bio {
-                self.userbio = bio
-                UserDefaults.standard.set(bio, forKey: CurrentUserDefaults.bio)
-            }
-            
-            if let url = profileUrl {
-                self.profileUrl = url
-                UserDefaults.standard.set(url, forKey: CurrentUserDefaults.profileUrl)
+        AuthService.instance.getUserInfo(forUserID: uid) { result in
+            switch result {
+            case .failure(let error):
+                print("Error updating user",error.localizedDescription)
+            case .success(let user ):
+                self.user = user
+                self.username = user.displayName
+                self.userbio = user.bio ?? ""
+                self.profileUrl = user.profileImageUrl
+                self.streetCred = user.streetCred ?? 12.0
+                if user.tribeImageUrl ?? "" != "" {
+                    let url = user.tribeImageUrl ?? ""
+                    UserDefaults.standard.set(url, forKey: CurrentUserDefaults.tribeImageUrl)
+                }
 
             }
-            
-            if let streetCred = streetcred {
-                self.streetCred = streetCred
-                UserDefaults.standard.set(streetcred, forKey: CurrentUserDefaults.wallet)
-
-            }
-        
-            if let ig = social {
-                self.instagram = ig
-            }
-            
-            
         }
+  
     }
     
     

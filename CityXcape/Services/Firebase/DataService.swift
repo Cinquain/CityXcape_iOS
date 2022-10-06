@@ -22,6 +22,8 @@ class DataService {
     @AppStorage(CurrentUserDefaults.bio) var bio: String?
     @AppStorage(CurrentUserDefaults.social) var social: String?
     @AppStorage(CurrentUserDefaults.rank) var rank: String?
+    @AppStorage(CurrentUserDefaults.tribe) var tribe: String?
+    @AppStorage(CurrentUserDefaults.tribeImageUrl) var tribeImageUrl: String?
 
 
     
@@ -373,66 +375,94 @@ class DataService {
         }
     }
     
-    func createWorld(name: String, details: String, hashtags: String, image: UIImage, price: Int, completion: @escaping (Result<String, Error>) -> ()) {
+    func createWorld(name: String, details: String, email: String, req: String, reqSpots: Int, reqStamps: Int, hashtags: String, price: Int, completion: @escaping (Result<String, Error>) -> ()) {
         guard let uid = userId, let displayName = displayName, let profileUrl = profileUrl else {return}
         
         let reference = REF_WORLDS.document(name)
         let userRef = REF_USERS.document(uid)
         let worldId = reference.documentID
+        let fcmToken = Messaging.messaging().fcmToken ?? ""
+
+        let bio = bio ?? ""
+        let longitude = LocationService.instance.userlocation?.longitude ?? 0
+        let latitude = LocationService.instance.userlocation?.latitude ?? 0
+        let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        let geohash = GFUtils.geoHash(forLocation: location)
         
-        let userData: [String: Any] = [
-            UserField.tribe: name
+        let dotData: [String: Any] = [
+            UserField.displayName: displayName,
+            UserField.providerId: uid,
+            UserField.profileImageUrl: profileUrl,
+            UserField.tribe: name,
+            UserField.bio: bio,
+            UserField.rank: rank ?? "Tourist",
+            UserField.longitude: longitude,
+            UserField.latitude: latitude,
+            UserField.geohash: geohash,
+            UserField.fcmToken: fcmToken
         ]
         
-        ImageManager.instance.uploadWorldLogo(worldId: worldId, image: image) { result in
-            switch result {
-                case .failure(let error):
-                    print("Error uploading world image")
+        let userData: [String: Any] = [
+            UserField.tribe: name,
+            UserField.tribeJoinDate: FieldValue.serverTimestamp()
+        ]
+        
+           
+            let data: [String: Any] = [
+                WorldField.id: worldId,
+                WorldField.ownerEmail: email,
+                WorldField.ownerId: uid,
+                WorldField.ownerName: displayName,
+                WorldField.ownerImageUrl: profileUrl,
+                WorldField.name: name,
+                WorldField.description: details,
+                WorldField.initiationFee: price,
+                WorldField.reqSpots: reqSpots,
+                WorldField.reqStamps: reqStamps,
+                WorldField.membersCount: 1,
+                WorldField.reqString: req,
+                WorldField.monthlyFee: 0,
+                WorldField.hashtags: hashtags,
+                WorldField.spotCount: 0,
+                WorldField.dateCreated: FieldValue.serverTimestamp(),
+                WorldField.isPublic: true,
+                WorldField.isApproved: false
+            ]
+            
+            reference.setData(data) { error in
+                if let error = error {
+                    print("Error creating world in DB", error.localizedDescription)
                     completion(.failure(error))
-                case .success(let downloadUrl):
-                    let data: [String: Any] = [
-                        WorldField.id: worldId,
-                        WorldField.name: name,
-                        WorldField.owner: uid,
-                        WorldField.description: details,
-                        WorldField.initiationFee: price,
-                        WorldField.membersCount: 1,
-                        WorldField.monthlyFee: 0,
-                        WorldField.hashtags: hashtags,
-                        WorldField.spotCount: 0,
-                        WorldField.imageUrl: downloadUrl ?? "",
-                        WorldField.dateCreated: FieldValue.serverTimestamp()
-                    ]
+                }
                 
-                reference.setData(data) { error in
+                let memberData: [String: Any] =  [
+                    UserField.providerId: uid,
+                    UserField.displayName: displayName,
+                    UserField.profileImageUrl: profileUrl,
+                    UserField.bio: bio,
+                    UserField.fcmToken: fcmToken,
+                    WorldField.dateJoined: FieldValue.serverTimestamp()
+                ]
+                
+                
+                reference.collection(ServerPath.members).document(uid).setData(memberData) { error in
                     if let error = error {
-                        print("Error creating world in DB", error.localizedDescription)
+                        print("Error saving user to world collection", error.localizedDescription)
                         completion(.failure(error))
                     }
-                    
-                    let memberData: [String: Any] =  [
-                        UserField.provider: uid,
-                        UserField.displayName: displayName,
-                        UserField.profileImageUrl: profileUrl,
-                        WorldField.dateJoined: FieldValue.serverTimestamp()
-                    ]
-                    
-                    reference.collection(ServerPath.members).document(uid).setData(memberData) { error in
-                        if let error = error {
-                            print("Error saving user to world collection", error.localizedDescription)
-                            completion(.failure(error))
-                        }
-                        let message = "Successfully Created World"
-                        userRef.updateData(userData)
-                        UserDefaults.standard.set(name, forKey: CurrentUserDefaults.tribe)
-                        completion(.success(message))
-                        
-                    }
+                    let message = "Successfully Created World, \n an admin will email you soon."
+                    userRef.updateData(userData)
+                    reference.collection(ServerPath.maps).document(uid).setData(dotData)
+                    UserDefaults.standard.set(name, forKey: CurrentUserDefaults.tribe)
+                    completion(.success(message))
                     
                 }
                 
             }
-        }
+            
+        
+        
+    
                             
     }
     
@@ -1228,6 +1258,64 @@ class DataService {
 //        }
 //    }
     
+    func fetchFriendRequest(completion: @escaping (Result<[User],Error>) -> () ) {
+        
+        guard let uid = userId else {return}
+        var friends: [User] = []
+        REF_USERS
+            .document(uid)
+            .collection(ServerPath.request)
+            .getDocuments { snapshot, error in
+                
+                if let error = error {
+                    print("Error fetching friend request", error.localizedDescription)
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let snapshot = snapshot else {return}
+                if snapshot.isEmpty {
+                    completion(.success(friends))
+                    return
+                }
+                
+                snapshot.documents.forEach { document in
+                    let data = document.data()
+                    let user = User(data: data)
+                    friends.append(user)
+                }
+                completion(.success(friends))
+                
+            }
+        
+    }
+    
+    func fetchWorldRequest(completion: @escaping (Result<[World],Error>) -> () ) {
+        guard let uid = userId else {return}
+        
+        var worlds:[World] = []
+        REF_USERS
+            .document(uid)
+            .collection(ServerPath.invite)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Error fetching world invitations", error.localizedDescription)
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let snapshot = snapshot else {return}
+                snapshot.documents.forEach { document in
+                    let data = document.data()
+                    let world = World(data: data)
+                    worlds.append(world)
+                }
+                
+                completion(.success(worlds))
+            
+            }
+    }
+    
     func checkIfUserHasSpots(uid: String, completion: @escaping (_ true: Bool) -> ()) {
         
         REF_WORLD.document("private").collection(uid).getDocuments { querysnapshot, error in
@@ -1262,6 +1350,140 @@ class DataService {
         }
     }
     
+    func getPublicWorlds(completion: @escaping (Result<[World],Error>) -> ()) {
+        
+        var worlds: [World] = []
+        REF_WORLDS
+            .whereField(WorldField.isPublic, isEqualTo: true)
+            .whereField(WorldField.isApproved, isEqualTo: true)
+            .getDocuments { snapshot, error in
+            if let error = error {
+                print("Error pulling worlds from database", error.localizedDescription)
+                completion(.failure(error))
+            }
+            
+            guard let snapshot = snapshot, snapshot.documents.count >= 1 else {return}
+            
+            snapshot.documents.forEach { document in
+                let data = document.data()
+                let world = World(data: data)
+                worlds.append(world)
+            }
+            completion(.success(worlds))
+        }
+    }
+    
+    func getSpecificWorld(name: String, completion: @escaping (Result<World, Error>) -> ()) {
+        REF_WORLDS
+            .whereField(WorldField.name, isEqualTo: name)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Error finding specific world", error.localizedDescription)
+                    completion(.failure(error))
+                }
+                
+                guard let data = snapshot?.documents.first?.data() else {return}
+                let world = World(data: data)
+                completion(.success(world))
+            }
+    }
+    
+    func sendWorldInvite(user: User, competion: @escaping (Result<String, Error>) -> ()) {
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName, let bio = bio, let tribe = tribe
+        else {return}
+        
+        let inviteData: [String: Any] = [
+            UserField.displayName: displayName,
+            UserField.providerId: uid,
+            UserField.profileImageUrl: imageUrl,
+            UserField.tribeImageUrl: tribeImageUrl ?? "",
+            UserField.tribe: tribe,
+            UserField.dataCreated: FieldValue.serverTimestamp()
+        ]
+        
+        REF_USERS
+            .document(user.id)
+            .collection(ServerPath.invite)
+            .document(tribe)
+            .setData(inviteData) { error in
+                
+                if let error = error {
+                    print("Error finding user in collection", error.localizedDescription)
+                    competion(.failure(error))
+                }
+                
+                let message = "Successfully sent invitation"
+                competion(.success(message))
+            }
+    }
+    
+    
+    
+    func joinWorld(world: World, completion: @escaping (Result<String, Error>) -> ()) {
+        
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName else {return}
+        
+        let fcmToken = Messaging.messaging().fcmToken ?? ""
+        
+        let data: [String: Any] = [
+            UserField.tribe: world.name,
+            UserField.tribeImageUrl: world.imageUrl,
+            UserField.providerId: uid,
+            UserField.displayName: displayName,
+            UserField.bio: bio ?? "",
+            UserField.profileImageUrl: imageUrl,
+            UserField.fcmToken: fcmToken,
+            WorldField.dateJoined: FieldValue.serverTimestamp()
+        ]
+        
+        
+        
+        let userData: [String: Any] = [
+            UserField.tribe: world.name,
+            UserField.tribeImageUrl: world.imageUrl,
+            UserField.tribeJoinDate: FieldValue.serverTimestamp()
+        ]
+        
+        AuthService.instance.updateUserField(uid: uid, data: userData)
+        
+        let longitude = LocationService.instance.userlocation?.longitude ?? 0
+        let latitude = LocationService.instance.userlocation?.latitude ?? 0
+        let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        let geohash = GFUtils.geoHash(forLocation: location)
+        
+        let dotData: [String: Any] = [
+            UserField.displayName: displayName,
+            UserField.providerId: uid,
+            UserField.profileImageUrl: imageUrl,
+            UserField.tribe: world.name,
+            UserField.tribeImageUrl: world.imageUrl,
+            UserField.bio: bio ?? "",
+            UserField.rank: rank ?? "Tourist",
+            UserField.longitude: longitude,
+            UserField.latitude: latitude,
+            UserField.geohash: geohash,
+            UserField.fcmToken: fcmToken
+        ]
+        
+        REF_WORLDS.document(world.name).collection(ServerPath.maps).document(uid).setData(dotData)
+
+        REF_WORLDS
+            .document(world.name)
+            .collection(ServerPath.members)
+            .document(uid)
+            .setData(data) { error in
+                if let error = error {
+                    print("error adding user as new world member", error.localizedDescription)
+                    return
+                }
+                
+                let message = "Successfully joined the \(world.name) community"
+                UserDefaults.standard.set(world.name, forKey: CurrentUserDefaults.tribe)
+                UserDefaults.standard.set(world.imageUrl, forKey: CurrentUserDefaults.tribeImageUrl)
+                completion(.success(message))
+            }
+    
+    }
     
     func getCityFeed(completion: @escaping (Result<[Feed],Error>) -> Void) {
         var feeds: [Feed] = []
@@ -1543,42 +1765,58 @@ class DataService {
             .document(ServerPath.friends)
             .collection(uid)
             .document(user.id)
-            .setData(requesterData) { error in
+            .setData(requesterData) { [weak self] error in
                 if let error = error {
                     print("Error saving user to DB", error.localizedDescription)
                     completion(.failure(.failed))
                     return
                 }
+                
+                //Delete user in request branch
+                self?.REF_USERS
+                    .document(uid)
+                    .collection(ServerPath.request)
+                    .document(user.id)
+                    .delete()
+                
                 completion(.success(true))
             }
     }
     
-    func removeFriendFromList(user: User, completion: @escaping (Result<Bool, Error>) -> Void) {
+ 
+    func getFriendRequests(completion: @escaping (Result<[User], NetworkError>) -> Void) {
         guard let uid = userId else {return}
+        var users: [User] = []
         
-        REF_WORLD
-            .document(ServerPath.friends)
-            .collection(uid)
-            .document(user.id)
-            .delete()
-        
-        REF_WORLD
-            .document(ServerPath.friends)
-            .collection(user.id)
+        REF_USERS
             .document(uid)
-            .delete { error in
+            .collection(ServerPath.request)
+            .getDocuments { querySnapshot, error in
                 
                 if let error = error {
-                    completion(.failure(error))
-                    return
+                    print("Error finding friends for user", error.localizedDescription)
+                    completion(.failure(.failed))
                 }
                 
-                completion(.success(true))
+                guard let snapshot = querySnapshot, snapshot.count > 0 else {return}
+                
+                for document in snapshot.documents {
+                    let data = document.data()
+                    let id = document.documentID
+                    let bio = data[UserField.bio] as? String ?? ""
+                    let displayName = data[UserField.displayName] as? String ?? ""
+                    let profileUrl = data["profileUrl"] as? String ?? ""
+                    let fcmToken = data[UserField.fcmToken] as? String ?? ""
+                    var user = User(id: id, displayName: displayName, profileImageUrl: profileUrl)
+                    user.bio = bio
+                    user.fcmToken = fcmToken
+                    user.newFriend = true
+                    users.append(user)
+                }
+                completion(.success(users))
                 
             }
-        
     }
-    
     
     func getFriendsForUser(completion: @escaping (Result<[User], NetworkError>) -> Void) {
         guard let uid = userId else {return}
@@ -1645,8 +1883,10 @@ class DataService {
     
     
     func saveUserRanking(rank: Rank) {
+        guard let tribe = tribe, let uid = userId else {return}
         
-        let document = REF_Rankings.document(rank.id)
+        let document = REF_WORLDS.document(tribe).collection(WorldField.ranks).document(uid)
+        
         let data: [String: Any] = [
             RankingField.id: rank.id,
             RankingField.profileUrl: rank.profileImageUrl,
@@ -1850,6 +2090,7 @@ class DataService {
         
         REF_POST
             .whereField(SecretSpotField.city, isEqualTo: name)
+            .whereField(SecretSpotField.isPublic, isEqualTo: true)
             .limit(to: 35)
             .getDocuments { querySnapshot, error in
                 if let error = error {
@@ -1873,9 +2114,10 @@ class DataService {
     
     
     func getUserRankings(completion: @escaping (_ ranks: [Rank]) -> ()) {
+        guard let tribe = tribe else {return}
+        let ref = REF_WORLDS.document(tribe).collection(WorldField.ranks)
         var rankings: [Rank] = []
-        REF_Rankings
-            .order(by: RankingField.totalSpots, descending: true)
+        ref.order(by: RankingField.totalSpots, descending: true)
             .limit(to: 10)
             .getDocuments { snapshot, error in
                 
@@ -2252,6 +2494,54 @@ class DataService {
             
             
         }
+    }
+    
+    
+    func deleteFriendRequest(user: User, completion: @escaping (Result<String, Error>) -> Void) {
+        guard let uid = userId else {return}
+        
+        REF_USERS
+            .document(uid)
+            .collection(ServerPath.request)
+            .document(user.id)
+            .delete { errror in
+                if let error = errror {
+                    print("Error deleting request in database", errror?.localizedDescription)
+                    completion(.failure(error))
+                    return
+                }
+                
+                let message = "Successfully deleted request"
+                completion(.success(message))
+                
+            }
+    }
+    
+    
+    func removeFriendFromList(user: User, completion: @escaping (Result<Bool, Error>) -> Void) {
+        guard let uid = userId else {return}
+        
+        REF_WORLD
+            .document(ServerPath.friends)
+            .collection(uid)
+            .document(user.id)
+            .delete()
+        
+        REF_WORLD
+            .document(ServerPath.friends)
+            .collection(user.id)
+            .document(uid)
+            .delete { error in
+                
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                completion(.success(true))
+                
+            }
+        
     }
     
     

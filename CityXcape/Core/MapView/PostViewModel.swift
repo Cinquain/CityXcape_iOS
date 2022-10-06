@@ -72,13 +72,14 @@ class PostViewModel: NSObject, ObservableObject {
             world = "Private"
         }
         
-        if spotName.count > 4
+        if spotName.count >= 4
             && selectedImage != nil
             && details.count > 10
             && world.count >= 2
               {
             
-            self.postSecretSpot(mapItem: mapItem)
+            print("Secret Spot is about to posted")
+            postSecretSpot(mapItem: mapItem)
             
         } else {
             
@@ -115,8 +116,8 @@ class PostViewModel: NSObject, ObservableObject {
         isLoading = true
         buttonDisabled = true
         guard let image = selectedImage else {return}
-        
-        
+        print("Secret Spot is being posted")
+
         DataService.instance.uploadSecretSpot(spotName: spotName, description: details, image: image, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { [weak self] (success) in
             guard let self = self else {return}
             if success {

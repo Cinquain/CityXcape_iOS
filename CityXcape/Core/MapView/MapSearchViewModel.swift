@@ -80,9 +80,9 @@ class MapSearchViewModel: NSObject, ObservableObject, CLLocationManagerDelegate 
         
         
         NotificationCenter.default.addObserver(forName: Notification.Name(rawValue: "completeSpot"), object: nil, queue: .main) { [weak self] _ in
-            
             self?.searchQuery = ""
             self?.spotComplete = true
+            self?.showForm = false 
         }
     }
         

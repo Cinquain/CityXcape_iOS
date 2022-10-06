@@ -14,7 +14,7 @@ struct MainMessageView: View {
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
     @Environment(\.presentationMode) var presentationMode
-    @StateObject var vm: StreetPassViewModel
+    @StateObject var vm: ChatLogViewModel
    
 
     var body: some View {
@@ -124,6 +124,6 @@ extension MainMessageView {
 
 struct MainMessageView_Previews: PreviewProvider {
     static var previews: some View {
-        MainMessageView(vm: StreetPassViewModel())
+        MainMessageView(vm: ChatLogViewModel())
     }
 }

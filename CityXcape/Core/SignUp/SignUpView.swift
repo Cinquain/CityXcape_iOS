@@ -25,16 +25,13 @@ struct SignUpView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: geo.size.width - 50)
                         .padding()
-                    Text("Save Places to Visit")
-                        .font(.title3)
-                        .fontWeight(.thin)
-                        .foregroundColor(.accent)
+               
                     
                
                     Button(action: {
                         showSignUp.toggle()
                     }, label: {
-                        Text("Start Exploring")
+                        Text("Start Saving Places")
                             .fontWeight(.light)
                             .font(.subheadline)
                             .frame(width: 210, height: 50)

@@ -64,12 +64,15 @@ extension ChatLogView {
     private var chatBottomBar: some View {
         HStack {
             Button {
+                
             } label: {
-                Image(systemName: "photo.on.rectangle")
-                    .font(.system(size: 24))
-                    .foregroundColor(.cx_orange)
+                Image("share_2")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 40)
             }
-            TextField("Description", text: $vm.message)
+          
+            TextField("xMessage", text: $vm.message)
                 .foregroundColor(.cx_orange)
             Button {
                 vm.sendMessage(user: user)

@@ -16,85 +16,104 @@ struct MyWorld: View {
 
     @StateObject var vm = MyWorldViewModel()
     @State private var isPresented: Bool = false
+    @State private var showMenu: Bool = false
     @Binding var selectedTab: Int
     @State var currentSpot: SecretSpot?
     @State private var showMission: Bool = false
 
 
     let manager = CoreDataManager.instance
-
+    let width = UIScreen.screenWidth
     var body: some View {
    
             NavigationView {
                             
-                ScrollView {
-                        
-                        if vm.showOnboarding {
-                            confusedPin
-                           
-                            discoverButton
+                ZStack {
+                    ScrollView {
+                            
+                            if vm.showOnboarding {
+                                confusedPin
+                               
+                                discoverButton
 
-                            Spacer()
-                          
-                        }  else {
-                                                                                
-                            LazyVStack(spacing: 5) {
-                                ForEach(vm.currentSpots, id: \.id) { spot in
-                                    
-                                    VStack {
+                                Spacer()
+                              
+                            }  else {
+                                                                                    
+                                LazyVStack(spacing: 5) {
+                                    ForEach(vm.currentSpots, id: \.id) { spot in
+                                        
+                                        VStack {
 
-                                        PreviewCard(spot: spot)
-                                            .onTapGesture(perform: {
-                                                
-                                                self.currentSpot = spot
-                                                AnalyticsService.instance.viewedSecretSpot()
-                                            })
-                                            .sheet(item: $currentSpot) {
-                                                //Dismiss Code
-                                            } content: { spot in
-                                                SpotDetailsView(spot: spot)
-                                            }
+                                            PreviewCard(spot: spot)
+                                                .onTapGesture(perform: {
+                                                    
+                                                    self.currentSpot = spot
+                                                    AnalyticsService.instance.viewedSecretSpot()
+                                                })
+                                                .sheet(item: $currentSpot) {
+                                                    //Dismiss Code
+                                                } content: { spot in
+                                                    SpotDetailsView(spot: spot)
+                                                }
 
+                                        }
+                                        
+                                     //End of VStack
+                                        Divider()
                                     }
                                     
-                                 //End of VStack
-                                    Divider()
+                                    
                                 }
-                                
-                                
                             }
+                            
+                            
+                            //End of Scrollview
                         }
-                        
-                        
-                        //End of Scrollview
-                    }
-                    .navigationBarItems(leading: toggleButton, trailing: searchButton)
-                    .toolbar {
-                       ToolbarItem(placement: .principal) {
-                           
-                           ZStack {
-                               Ticker(searchText: $vm.searchTerm, handlesearch: {
-                                   vm.performSearch()
-                               }, width: UIScreen.screenWidth, searchTerm: vm.placeHolder)
-                               .frame(width: UIScreen.screenWidth / 2 )
-                           .opacity(vm.showSearch ? 1 : 0)
+                     
+                    GeometryReader { _ in
+                        HStack {
+                            SideMenu(selectedTab: $selectedTab, showMenu: $showMenu)
+                                .offset(x: showMenu ? 0 : -width - 50)
+                                .animation(.easeOut(duration: 0.3), value: showMenu)
+                            
+                            Spacer()
                                
-                               tabIcon
-                                .opacity(vm.showSearch ? 0 : 1)
-                           }
-                           
-                       }
-                    }
-                    .colorScheme(.dark)
-                    .tint(.white)
-                    .background(Color.background.edgesIgnoringSafeArea(.all))
-                    .onAppear {
-                        manager.fetchSecretSpots()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                            vm.fetchSecretSpots()
                         }
                     }
-         
+                    .background(Color.black.opacity(showMenu ? 0.5 : 0))
+                    .onTapGesture {
+                        showMenu.toggle()
+                    }
+                    
+                    //End of ZStack
+                }
+                .navigationBarItems(leading: sandwichMenu, trailing: searchButton)
+                .toolbar {
+                   ToolbarItem(placement: .principal) {
+                       
+                       ZStack {
+                           Ticker(searchText: $vm.searchTerm, handlesearch: {
+                               vm.performSearch()
+                           }, width: UIScreen.screenWidth, searchTerm: vm.placeHolder)
+                           .frame(width: UIScreen.screenWidth / 2 )
+                       .opacity(vm.showSearch ? 1 : 0)
+                           
+                           tabIcon
+                            .opacity(vm.showSearch ? 0 : 1)
+                       }
+                       
+                   }
+                }
+                .colorScheme(.dark)
+                .tint(.white)
+                .background(Color.background.edgesIgnoringSafeArea(.all))
+                .onAppear {
+                    manager.fetchSecretSpots()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        vm.fetchSecretSpots()
+                    }
+            }
                       
                 
              
@@ -121,7 +140,7 @@ extension MyWorld {
                 .aspectRatio(contentMode: .fit)
                 .frame(height: 250)
             
-            Text("Start building your world by saving \n spots you want to visit ")
+            Text("Start saving spots to visit ")
                 .foregroundColor(.white)
                 .font(.title3)
                 .fontWeight(.thin)
@@ -133,14 +152,25 @@ extension MyWorld {
         Button {
             selectedTab = 1
         } label: {
-            Text("Find Spots")
-                .padding()
-                .foregroundColor(.black)
-                .background(Color.white)
-                .cornerRadius(5)
+            Text("Discover Spots")
+                .frame(width: 160, height: 45)
+                .foregroundColor(.white)
+                .background(Color.cx_blue)
+                .cornerRadius(25)
         }
-        .padding(.top, 40)
+        .padding(.top, 20)
 
+    }
+    
+    private var sandwichMenu: some View {
+        Button {
+            showMenu.toggle()
+        } label: {
+            Image(systemName: showMenu ? "xmark" : "text.justify")
+                .font(.title3)
+                .foregroundColor(.white)
+                .animation(.easeOut(duration: 0.3), value: showMenu)
+        }
     }
     
     private var tabIcon: some View {

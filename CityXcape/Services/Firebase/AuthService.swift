@@ -68,29 +68,28 @@ class AuthService {
         
         AuthService.instance.updateUserField(uid: userId, data: data)
         
-        getUserInfo(forUserID: userId) { (name, bio, streetcred, profileUrl, social) in
-            if let name = name,
-               let bio = bio,
-               let streetcred = streetcred,
-               let profileurl = profileUrl {
-                print("Success getting user info while logging in")
-                completion(true)
-                let instagram = social ?? ""
+        getUserInfo(forUserID: userId) { result in
+            
+            switch result {
+            case .failure(let error):
+                print("Error getting user info", error.localizedDescription)
+            case .success(let user):
+                let streetcred = user.streetCred ?? 12
+                let bio = user.bio ?? ""
+                let tribe = user.tribe ?? ""
+                let social = user.social ?? ""
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    
                     UserDefaults.standard.set(userId, forKey: CurrentUserDefaults.userId)
-                    UserDefaults.standard.set(name, forKey: CurrentUserDefaults.displayName)
+                    UserDefaults.standard.set(user.displayName, forKey: CurrentUserDefaults.displayName)
                     UserDefaults.standard.set(bio, forKey: CurrentUserDefaults.bio)
                     UserDefaults.standard.set(streetcred, forKey: CurrentUserDefaults.wallet)
-                    UserDefaults.standard.set(profileurl, forKey: CurrentUserDefaults.profileUrl)
-                    UserDefaults.standard.set(instagram, forKey: CurrentUserDefaults.social)
+                    UserDefaults.standard.set(user.profileImageUrl, forKey: CurrentUserDefaults.profileUrl)
+                    UserDefaults.standard.set(social, forKey: CurrentUserDefaults.social)
+                    UserDefaults.standard.set(tribe, forKey: CurrentUserDefaults.tribe)
+
                 }
-                
-            } else {
-                print("Error getting user info while logging in")
-                completion(false)
             }
-            
+                        
         }
     }
     
@@ -308,24 +307,16 @@ class AuthService {
         }
     }
     
-    func getUserInfo(forUserID userId: String, completion: @escaping (_ name: String?, _ bio: String?,_ streetcred: Double?, _ imageUrl: String?, _ social: String?) -> ()) {
+    func getUserInfo(forUserID userId: String, completion: @escaping (Result<User,Error>) -> ()) {
         
         REF_USERS.document(userId).getDocument { (snapshot, error) in
-                        
-            if let document = snapshot,
-               let name = document.get(UserField.displayName) as? String,
-               let bio = document.get(UserField.bio) as? String,
-               let streetCred = document.get(UserField.streetCred) as? Double,
-               let imageUrl = document.get(UserField.profileImageUrl) as? String {
-                let social = document.get(UserField.ig) as? String ?? nil
-                completion(name, bio, streetCred, imageUrl, social)
-                return
-            } else {
-                print("Error getting user info", error?.localizedDescription)
-                completion(nil, nil,nil, nil, nil)
-                return
+            if let error = error {
+                completion(.failure(error))
             }
-               
+            guard let snapshot = snapshot else {return}
+            let data = snapshot.data()
+            let user = User(data: data)
+            completion(.success(user))
         }
     }
     

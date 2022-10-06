@@ -14,6 +14,7 @@ struct OnboardingViewII: View {
 
     @State private var displayName = ""
     @State private var showPicker: Bool = false
+    @State private var showActionSheet: Bool = false
     @State var userImage: UIImage?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     
@@ -77,6 +78,21 @@ struct OnboardingViewII: View {
             .alert(isPresented: $showError, content: {
                 return Alert(title: Text(message))
             })
+            .actionSheet(isPresented: $showActionSheet) {
+                return ActionSheet(title: Text("Source Options"), message: nil, buttons: [
+                    .default(Text("Camera"), action: {
+                        sourceType = .camera
+                        showPicker.toggle()
+                    }),
+                    .default(Text("Photo Library"), action: {
+                        sourceType = .photoLibrary
+                        showPicker.toggle()
+                    }),
+                    .cancel({
+                        showActionSheet.toggle()
+                    })
+                ])
+            }
             
         
     }
@@ -125,7 +141,6 @@ struct OnboardingViewII: View {
                 }
                 
                 
-                
                 //Error Creatign User in Database
             } else {
                 print("Error creating user in database")
@@ -147,7 +162,7 @@ extension OnboardingViewII {
     
     private var profileImageButton: some View {
         Button(action: {
-            showPicker.toggle()
+            showActionSheet.toggle()
         }, label: {
             VStack(spacing: 25){
                 Image(Icon.dot.rawValue)
@@ -178,14 +193,13 @@ extension OnboardingViewII {
     
     private var addImageButton: some View {
         Button(action: {
-            showPicker.toggle()
+            showActionSheet.toggle()
         }, label: {
             HStack(spacing: 8) {
                 Image(systemName: "person.crop.circle")
                 Text("Add Profile Picture")
                     
             }
-   
         })
     }
     

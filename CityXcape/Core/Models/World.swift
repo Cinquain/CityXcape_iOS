@@ -16,14 +16,20 @@ struct World: Identifiable, Hashable, Equatable {
     let description: String
     let hashtags: String
     let imageUrl: String
+    let coverImageUrl: String
     let memberCount: Int
     let spotCount: Int
     let initationFee: Int
     let monthlyFee: Int
     let est: Date
-    let owner: String
-    
-    
+    let ownerId: String
+    let isPublic: Bool
+    let ownerDisplayName: String
+    let ownerImageUrl: String
+    let ownerEmail: String
+    let reqString: String
+    let reqSpots: Int
+    let reqStamps: Int
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -45,7 +51,18 @@ struct World: Identifiable, Hashable, Equatable {
         self.monthlyFee = data[WorldField.monthlyFee] as? Int ?? 0
         let date = data[WorldField.dateCreated] as? Timestamp
         self.est = date?.dateValue() ?? Date()
-        self.owner = data[WorldField.owner] as? String ?? ""
+        self.coverImageUrl = data[WorldField.coverImageUrl] as? String ?? ""
+        self.ownerId = data[WorldField.ownerId] as? String ?? ""
+        self.isPublic = data[WorldField.isPublic] as? Bool ?? true
+        self.ownerDisplayName = data[WorldField.ownerName] as? String ?? ""
+        self.ownerImageUrl = data[WorldField.ownerImageUrl] as? String ?? ""
+        self.ownerEmail = data[WorldField.ownerEmail] as? String ?? ""
+        self.reqString = data[WorldField.reqString] as? String ?? ""
+        self.reqSpots = data[WorldField.reqSpots] as? Int ?? 0
+        self.reqStamps = data[WorldField.reqStamps] as? Int ?? 0
     }
+    
+    
+    
     
 }

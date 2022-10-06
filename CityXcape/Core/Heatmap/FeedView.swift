@@ -11,9 +11,11 @@ import Shimmer
 struct FeedView: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
-
+    @Binding var selectedTab: Int
     @StateObject var discoverVM: DiscoverViewModel
     @StateObject var vm: FeedViewModel
+    @State private var showMenu: Bool = false
+    let width: CGFloat = UIScreen.screenWidth
     
     var body: some View {
 
@@ -32,6 +34,20 @@ struct FeedView: View {
                     
                     }
                   
+                
+                GeometryReader { _ in
+                    HStack {
+                        SideMenu(selectedTab: $selectedTab, showMenu: $showMenu)
+                            .offset(x: showMenu ? 0 : -width - 50)
+                            .animation(.easeOut(duration: 0.3), value: showMenu)
+                        
+                        Spacer()
+                    }
+                }
+                .background(Color.black.opacity(showMenu ? 0.5 : 0))
+                .onTapGesture {
+                    showMenu.toggle()
+                }
                 
                 
             }
@@ -66,7 +82,7 @@ struct FeedView: View {
                    
                }
             }
-            .navigationBarItems(leading: heatMap, trailing: searchButton)
+            .navigationBarItems(leading: sandwichMenu, trailing: searchButton)
             .colorScheme(.dark)
             //End of Navigation view
         }
@@ -106,6 +122,17 @@ extension FeedView {
             .clipped()
             .opacity(0.7)
           
+    }
+    
+    private var sandwichMenu: some View {
+        Button {
+            showMenu.toggle()
+        } label: {
+            Image(systemName: showMenu ? "xmark" : "text.justify")
+                .font(.title3)
+                .foregroundColor(.white)
+                .animation(.easeOut(duration: 0.3), value: showMenu)
+        }
     }
     
     private var tabIcon: some View {
@@ -176,8 +203,9 @@ extension FeedView {
 }
 
 struct Feed_Previews: PreviewProvider {
+    @State static var number: Int = 1
     static var previews: some View {
-        FeedView(discoverVM: DiscoverViewModel(), vm: FeedViewModel())
+        FeedView(selectedTab: $number, discoverVM: DiscoverViewModel(), vm: FeedViewModel())
             .colorScheme(.dark)
     }
 }

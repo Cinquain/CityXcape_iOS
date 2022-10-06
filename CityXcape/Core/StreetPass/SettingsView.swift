@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     
+    
     @Environment(\.presentationMode) var presentationMode
     @State private var showSignoutError = false
   
