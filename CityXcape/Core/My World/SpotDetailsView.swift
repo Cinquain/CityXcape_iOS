@@ -19,7 +19,6 @@ struct SpotDetailsView: View {
     let height = UIScreen.screenHeight
     
     @State var detailsTapped: Bool = false
-    @State private var showUsers: Bool = false
     @State private var showMission: Bool = false
 
     @State var sourceType: UIImagePickerController.SourceType = .camera
@@ -38,7 +37,7 @@ struct SpotDetailsView: View {
                         ImageSlider(images: spot.imageUrls)
                            
                         
-                        DetailsView(spot: spot, showActionSheet: $vm.showActionSheet, type: .SpotDetails)
+                        DetailsView(spot: spot, type: .SpotDetails)
                             .opacity(detailsTapped ? 1 : 0)
                             .animation(.easeOut(duration: 0.5), value: detailsTapped)
                         
@@ -83,95 +82,48 @@ struct SpotDetailsView: View {
                     .fullScreenCover(isPresented: $vm.showCheckin) {
                         CheckinView(spot: spot, vm: vm)
                     }
-                
+                    
+                    buttonRing
+                    
+                    Button {
+                        vm.checkIfVerifiable(spot: spot)
+                    } label: {
+                        Text("Get Stamp")
+                            .foregroundColor(.black)
+                            .fontWeight(.thin)
+                            .font(.title3)
+                            .frame(width: 180, height: 45)
+                            .background(
+                                Capsule().fill(Color.cx_orange)
+                                    .overlay(
+                                        HStack {
+                                            Image("Stamp")
+                                                .renderingMode(.template)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 20)
+                                                .foregroundColor(.black)
+                                            
+                                            Spacer()
+                                            
+                                            Image("Stamp")
+                                                .renderingMode(.template)
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(height: 20)
+                                                .foregroundColor(.black)
+                                        }
+                                        .padding(.horizontal, 15)
+                                    )
+                            )
+                            .cornerRadius(25)
+                            .animation(.easeOut)
+                           
+                    }
+                    .padding(.bottom, 4)
                  
                     
-                    HStack(spacing: 10) {
-
-     
-                        Button {
-                            showUsers.toggle()
-                            vm.getSavedbyUsers(postId: spot.id)
-                            vm.analytics.checkSavedUsers()
-                        } label: {
-                            VStack {
-                               Image("save")
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(width: 55)
-                                
-                            }
-
-                        }
-                        .sheet(isPresented: $showUsers) {
-                            SavesView(spot: spot, vm: vm)
-                        }
-
-                        
-                        Button {
-                            vm.analytics.viewedMission()
-                            showMission.toggle()
-                        
-                        } label: {
-                            Image("route")
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 55)
-                                .shadow(color: .cx_green, radius: 20, x: 0, y: 5)
-                        }
-                        .sheet(isPresented: $vm.showComments) {
-                            CommentsView(spot: spot, vm: vm)
-                        }
-                        
-                        Button {
-                            //TBD
-                            vm.analytics.viewedDetails()
-                            detailsTapped.toggle()
-                        } label: {
-                            Image("info")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 55)
-                                .padding(.leading, 4)
-                                .animation(.easeOut, value: detailsTapped)
-                                
-                        }
-//                        .sheet(isPresented: $vm.showFriendsList) {
-//                            UsersListView(users: vm.users)
-//                        }
-                        
-                        Button {
-                            vm.getFriends()
-                        } label: {
-                            Image("share")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 55)
-                        }
-                        .sheet(isPresented: $vm.showFriendsList) {
-                            FriendsForSpot(vm: vm, spot: spot)
-//                            Image(uiImage: vm.generateBarCode(spot: spot))
-//                                .resizable()
-//                                .scaledToFit()
-//                                .frame(width: 150, height: 150)
-                        }
-                        .fullScreenCover(isPresented: $showMission, onDismiss: {
-                            //TBD
-                        }, content: {
-                            MissionView(spot: spot, vm: mapViewModel, spotModel: vm)
-                        })
-                        
-
-                     
-                    
-                       
-                    }
-                    .padding(.top, 10)
-                    .padding(.bottom, 15)
-                    .fullScreenCover(isPresented: $vm.showCheckin) {
-                        CheckinView(spot: spot, vm: vm)
-                    }
-                
+                  
                     
                     
           
@@ -305,7 +257,66 @@ extension SpotDetailsView {
 
     }
     
+    private var buttonRing: some View {
+        HStack(spacing: 10) {
+
+
+            
+            Button {
+                vm.getFriends()
+            } label: {
+                Image("share")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 55)
+            }
+            .sheet(isPresented: $vm.showFriendsList) {
+                FriendsForSpot(vm: vm, spot: spot)
+            }
+            
+            
+            Button {
+                vm.analytics.viewedDetails()
+                detailsTapped.toggle()
+            } label: {
+                Image("info")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 55)
+                    .padding(.leading, 4)
+                    .animation(.easeOut, value: detailsTapped)
+                    
+            }
+       
+            
+            
+            
+            
+            Button {
+                vm.showActionSheet.toggle()
+            } label: {
+                VStack {
+                   Image("remove")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 55)
+                    
+                }
+
+            }
+        
+
+       
+
+         
+        
+           
+        }
+        .padding(.top, 10)
+        .padding(.bottom, 15)
+      
     
+    }
 }
 
 

@@ -10,7 +10,8 @@ import SwiftUI
 struct DetailsView: View {
     var spot: SecretSpot
     @State private var showStreetPass: Bool = false
-    @Binding var showActionSheet: Bool
+    @State var showUsers: Bool = false
+    @State var users: [User] = []
     var type: DetailsMode
 
     
@@ -109,12 +110,8 @@ struct DetailsView: View {
                 Button {
                     showStreetPass.toggle()
                 } label: {
-                    VStack(spacing: 2) {
                         UserDotView(imageUrl: spot.ownerImageUrl, width: 60)
-                        Text(spot.ownerDisplayName)
-                            .font(.caption)
-                            .fontWeight(.thin)
-                    }
+                    
                 }
                 .sheet(isPresented: $showStreetPass) {
                     let user = User(spot: spot)
@@ -123,20 +120,22 @@ struct DetailsView: View {
 
                 Spacer()
                 
-                Button(action: {
-                    showActionSheet.toggle()
-                 }, label: {
-                     
-                     VStack {
-                         Image(systemName: "ellipsis")
-                             .font(.title)
-                             .foregroundColor(.white)
-                         .rotationEffect(.init(degrees: 90))
-                         
-                     }
-                 })
-            }
-            .padding(.horizontal, 20)
+                Button {
+                    getSavedbyUsers(postId: spot.id)
+                  } label: {
+                      VStack {
+                         Image("save")
+                              .resizable()
+                              .aspectRatio(contentMode: .fit)
+                              .frame(width: 55)
+                          
+                      }
+
+                  }
+                  .sheet(isPresented: $showUsers) {
+                      SavesView(spot: spot, users: $users)
+                  }
+            
             
             
         }
@@ -144,7 +143,7 @@ struct DetailsView: View {
         .foregroundColor(.white)
     }
     
-    
+    }
     
     fileprivate func getDistanceMessage(spot: SecretSpot) -> String {
         
@@ -164,6 +163,19 @@ struct DetailsView: View {
             return "\(spot.viewCount) view"
         }
     }
+    
+    func getSavedbyUsers(postId: String) {
+        
+        DataService.instance.getUsersForSpot(postId: postId, path: "savedBy") {  savedUsers in
+            if savedUsers.isEmpty {
+                print("No users saved this secret spot")
+                showUsers.toggle()
+            } else {
+                self.users = savedUsers
+                showUsers = true
+            }
+        }
+    }
 }
 
 struct DetailsView_Previews: PreviewProvider {
@@ -171,7 +183,7 @@ struct DetailsView_Previews: PreviewProvider {
     @State static var boolean: Bool = false
 
     static var previews: some View {
-        DetailsView(spot: SecretSpot.spot, showActionSheet: $boolean, type: .CardView)
+        DetailsView(spot: SecretSpot.spot, type: .SpotDetails)
             .previewLayout(.sizeThatFits)
     }
 }

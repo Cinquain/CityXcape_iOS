@@ -153,7 +153,7 @@ struct MapContainer: View {
         .sheet(isPresented: $vm.showForm, onDismiss: {
 
         }, content: {
-            PostSpotForm(selectedTab: $selectedTab, mapItem: mapItem)
+            PostSpotForm(selectedTab: $selectedTab, vm: PostViewModel(), mapItem: mapItem)
         })
         .alert(isPresented: $vm.showAlert) {
             return Alert(title: Text(vm.alertMessgae))

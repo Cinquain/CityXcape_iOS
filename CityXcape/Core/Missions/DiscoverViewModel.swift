@@ -22,6 +22,7 @@ class DiscoverViewModel: ObservableObject {
     let router = Router.shared
     var cancellable = Set<AnyCancellable>()
     
+    
     @Published var allspots: [SecretSpot] = []
     @Published var newSecretSpots: [SecretSpot] = []
     @Published var lastSecretSpot: String = ""
@@ -40,6 +41,11 @@ class DiscoverViewModel: ObservableObject {
     @Published var newlySaved: Int = 0
     @Published var isSearching: Bool = false
     
+    @Published var cardViews: [CardView] = []
+    @Published var lastCardIndex: Int = 1
+    @Published var lastMoveIndex: Int = 0
+    @Published var showSignUp: Bool = false
+    
     var placeHolder: String = "Search a city"
 
     init() {
@@ -55,15 +61,56 @@ class DiscoverViewModel: ObservableObject {
     func getNewSecretSpots() {
         
         DataService.instance.getNewSecretSpots() { [weak self] secretspots in
-            self?.allspots = secretspots
-            self?.newSecretSpots = secretspots
-            self?.finished = true
+            guard let self = self else {return}
             
-            if self?.newSecretSpots.count ?? 0 > 0 {
-                self?.hasNewSpots = true
+            self.allspots = secretspots
+            self.newSecretSpots = secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
+            var views: [CardView] = []
+            
+            for index in 0..<2 {
+                let spot = self.newSecretSpots[index]
+                views.append(CardView(spot: spot))
+            }
+            
+            self.cardViews = views
+            self.finished = true
+            
+            if self.newSecretSpots.count > 0 {
+                self.hasNewSpots = true
             }
             
         }
+    }
+    
+    func moveCards(_ threshold: CGFloat) {
+        if userId == nil && threshold > 65 {
+            alertMessage = "You need an account to save \(cardViews.first?.spot.spotName ?? "location")"
+            showAlert = true
+            return
+        }
+        cardViews.removeFirst()
+        lastCardIndex += 1
+        lastMoveIndex += 1
+        let secretSpots = newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
+        let spot = secretSpots[lastCardIndex]
+        let cardView = CardView(spot: spot)
+        cardViews.append(cardView)
+    }
+    
+    func undoMoveCard() {
+        if lastMoveIndex == 0 {return}
+        lastMoveIndex -= 1
+        let secretSpots = newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
+        if secretSpots.indices.contains(lastMoveIndex) {
+            let spot = secretSpots[lastMoveIndex]
+            let cardView = CardView(spot: spot)
+            cardViews.insert(cardView, at: 0)
+        }
+    }
+    
+    func isTopCard(cardView: CardView) -> Bool {
+        guard let index = cardViews.firstIndex(where: {$0.id == cardView.id}) else {return false}
+        return index == 0
     }
     
     func findSpecificSpot(spotId: String) {
@@ -148,6 +195,7 @@ class DiscoverViewModel: ObservableObject {
     }
     
     func saveCardToUserWorld(spot: SecretSpot) {
+      
         guard var wallet = wallet else {return}
         
         if wallet >= spot.price {
@@ -218,7 +266,6 @@ class DiscoverViewModel: ObservableObject {
         }
         
     }
-    
     
     
     func streetFollow(rank: Rank, fcm: String) {

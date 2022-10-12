@@ -121,55 +121,57 @@ class DataService {
                 self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: spotCity, didLike: false, likedCount: 0, verifierCount: 0, commentCount: 0, social: instagram)
                 
                 document.setData(spotData) { (error) in
-                    if let err = error {
-                        print("Error uploading secret spot to database", err.localizedDescription)
-                        completion(false)
-                        return
-                    } else {
-                        
-                    print("Successfully saved secret spots to public world")
-                    //Save to Feed
-                    let feedData: [String: Any] = [
-                        FeedField.id: feedId,
-                        FeedField.uid: uid,
-                        FeedField.username: ownerDisplayName,
-                        FeedField.profileUrl: ownerImageUrl,
-                        FeedField.bio: bio,
-                        FeedField.rank: rank,
-                        FeedField.date: FieldValue.serverTimestamp(),
-                        FeedField.content: spotName,
-                        FeedField.type: FeedType.spot.rawValue,
-                        FeedField.longitude: userLong,
-                        FeedField.spotId: spotId,
-                        FeedField.latitude: userLat,
-                        FeedField.geohash: userHash,
-                        FeedField.stampImageUrl: downloadUrl
-                    ]
-                        
-                    feedDocument.setData(feedData)
-                        
-                    //Save to user's world
-                    let userWorldRef = self.REF_WORLD.document(ServerPath.secret).collection(uid).document(spotId)
-                    let savedData: [String: Any] =
-                        ["savedOn": FieldValue.serverTimestamp()]
-                    userWorldRef.setData(savedData)
-                        
-                    //Increment User StreetCred & world dictionary
-                    let increment: Int64 = 1
-                    let userData : [String: Any] = [
-                        UserField.world : [world: FieldValue.increment(increment)],
-                        UserField.streetCred : FieldValue.increment(increment)
-                    ]
-                    let rankData: [String: Any] = [
-                        RankingField.totalSpots : FieldValue.increment(increment)
-                    ]
-                    AuthService.instance.updateUserField(uid: uid, data: userData)
-                    self.REF_Rankings.document(uid).updateData(rankData)
-                        
-                    completion(true)
+                        if let err = error {
+                            print("Error uploading secret spot to database", err.localizedDescription)
+                            completion(false)
+                            return
+                        } else {
+                            
+                        print("Successfully saved secret spots to public world")
+                        //Save to Feed
+                        let feedData: [String: Any] = [
+                            FeedField.id: feedId,
+                            FeedField.uid: uid,
+                            FeedField.username: ownerDisplayName,
+                            FeedField.profileUrl: ownerImageUrl,
+                            FeedField.bio: bio,
+                            FeedField.rank: rank,
+                            FeedField.date: FieldValue.serverTimestamp(),
+                            FeedField.content: spotName,
+                            FeedField.type: FeedType.spot.rawValue,
+                            FeedField.longitude: userLong,
+                            FeedField.spotId: spotId,
+                            FeedField.latitude: userLat,
+                            FeedField.geohash: userHash,
+                            FeedField.stampImageUrl: downloadUrl
+                        ]
+                            
+                        feedDocument.setData(feedData)
+                            
+                        //Save to user's world
+                        let userWorldRef = self.REF_WORLD.document(ServerPath.secret).collection(uid).document(spotId)
+                        let savedData: [String: Any] =
+                            ["savedOn": FieldValue.serverTimestamp()]
+                        userWorldRef.setData(savedData)
+                            
+                        //Increment User StreetCred & world dictionary
+                        let increment: Int64 = 1
+                        let userData : [String: Any] = [
+                            UserField.world : [world: FieldValue.increment(increment)],
+                            UserField.streetCred : FieldValue.increment(increment)
+                        ]
+                        let rankData: [String: Any] = [
+                            RankingField.totalSpots : FieldValue.increment(increment)
+                        ]
+                        AuthService.instance.updateUserField(uid: uid, data: userData)
+                        self.REF_Rankings.document(uid).updateData(rankData)
+                            
+                        DispatchQueue.main.async {
+                            completion(true)
+                            return
+                        }
 
-                    return
-                }
+                    }
                 
                 }
         }
@@ -1490,19 +1492,17 @@ class DataService {
         REF_FEED
             .order(by: FeedField.date, descending: true)
             .limit(to: 15)
-            .addSnapshotListener { querySnapshot, error in
+            .getDocuments { querySnapshot, error in
                 
                 if let error = error {
                     print("Error fetching feed from database", error.localizedDescription)
                     completion(.failure(error))
                 }
                 
-                querySnapshot?.documentChanges.forEach({ change in
-                    if change.type == .added {
-                        let data = change.document.data()
+                querySnapshot?.documents.forEach({ document in
+                        let data = document.data()
                         let feed = Feed(data: data)
                         feeds.insert(feed, at: 0)
-                    }
                 })
                 completion(.success(feeds))
 
@@ -1573,9 +1573,19 @@ class DataService {
     
     
     func getNewSecretSpots(completion: @escaping (_ spots: [SecretSpot]) -> ()) {
-        guard let uid = userId else {return}
         var history : [String] = []
-        
+
+        guard let uid = userId else
+            {
+            REF_POST
+                .order(by: SecretSpotField.dateCreated, descending: true)
+                .limit(to: 30)
+                .getDocuments { snapshot, error in
+                    let results = self.getSecretSpotsFromSnapshot(querysnapshot: snapshot)
+                    completion(results)
+            }
+            return
+        }
         
         getUserHistory { [weak self] returnedHistory in
             
@@ -1587,9 +1597,8 @@ class DataService {
                 .limit(to: 30)
                 .getDocuments { querysnapshot, error in
                     let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
-                    let filteredResults = results.filter({$0.isPublic == true
-                                                            && $0.ownerId != uid
-                                                            && !history.contains($0.id)})
+                    let filteredResults = results.filter({  $0.ownerId != uid &&
+                                                            !history.contains($0.id)})
                     completion(filteredResults)
                 }
             
@@ -2221,7 +2230,10 @@ class DataService {
         var history: [String] = []
         guard let uid = userId else { return }
            
-        REF_WORLD.document("history").collection(uid).getDocuments { querysnapshot, error in
+        REF_WORLD
+            .document("history")
+            .collection(uid)
+            .getDocuments { querysnapshot, error in
             
             if let error = error {
                 print("Erorr fetching user spots", error.localizedDescription)

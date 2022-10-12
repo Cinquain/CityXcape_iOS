@@ -34,6 +34,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     @Published var showChatLog: Bool = false
     @Published var friends: [User] = []
     
+    @Published var showSignup: Bool = false 
     @Published var showSpotList: Bool = false
     @Published var spots: [SecretSpot] = []
     let manager = CoreDataManager.instance

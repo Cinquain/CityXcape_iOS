@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SignUpView: View {
     
-    @State private var showOnboarding: Bool = false
     @State private var showSignUp: Bool = false
     
     var body: some View {
@@ -44,42 +43,20 @@ struct SignUpView: View {
                     .padding(.top, 50)
                 
                     Spacer()
-                }.onAppear(perform: {
-                    checkOnboarding()
-                })
-               
+                }
                 
                 
             }
        
-            Image(Icon.compass.rawValue)
-                .resizable()
-                .renderingMode(.template)
-                .scaledToFit()
-                .foregroundColor(.white)
-                .frame(width: 200, height: 200)
-                .opacity(0.07)
+     
         }
         .fullScreenCover(isPresented: $showSignUp, content: {
             OnboardingView()
         })
-        .fullScreenCover(isPresented: $showOnboarding, content: {
-            OnboardScreen()
-        })
-        
+       
     }
     
-    fileprivate func checkOnboarding() {
-        if !UserDefaults.standard.bool(forKey: "didLaunchBefore") {
-            UserDefaults.standard.setValue(true, forKey: "didLaunchBefore")
-            print("did not launch app before")
-            DispatchQueue.main.async {
-                self.showOnboarding.toggle()
-            }
-        } else {
-            print("Did launch app before")
-        }
-    }
+   
 }
 
 struct SignUpView_Previews: PreviewProvider {

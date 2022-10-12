@@ -60,12 +60,11 @@ struct PublicStreetPass: View {
                                          .fontWeight(.thin)
                                          .foregroundColor(.accent)
                                          .tracking(2)
+                                         .fullScreenCover(isPresented: $vm.showSignup) {
+                                             OnboardingView()
+                                         }
                                      
                                      ranksButton
-                                 }
-                                 
-                                 if user.social != nil {
-                                    instaButton
                                  }
 
                              }
@@ -101,7 +100,9 @@ struct PublicStreetPass: View {
             }
             .background(LinearGradient(gradient: Gradient(colors: [Color.black, Color.orange,]), startPoint: .center, endPoint: .bottom).edgesIgnoringSafeArea(.all))
             .alert(isPresented: $vm.showAlert) {
-                return Alert(title: Text(vm.alertMessage))
+                return Alert(title: Text(vm.alertMessage), dismissButton: .default(Text("Ok"), action: {
+                    vm.showSignup = true
+                }))
             }
            
         

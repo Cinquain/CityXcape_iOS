@@ -10,7 +10,7 @@ import SwiftUI
 struct SavesView: View {
     
     var spot: SecretSpot
-    @StateObject var vm: SpotViewModel
+    @Binding var users: [User]
     @State private var currentUser: User?
     @State private var showAlert: Bool = false
     
@@ -33,7 +33,7 @@ struct SavesView: View {
             
             ScrollView {
                 
-                ForEach(vm.users) { user in
+                ForEach(users) { user in
                     
                     HStack {
                         Button {
@@ -90,20 +90,20 @@ struct SavesView: View {
     }
     
     fileprivate func getMessage() -> String {
-        if vm.users.count <= 1 {
-            return "\(vm.users.count) Person wants to visit \(spot.spotName)"
+        if users.count <= 1 {
+            return "\(users.count) Person wants to visit \(spot.spotName)"
         } else {
-            return "\(vm.users.count) People want to visit \(spot.spotName)"
+            return "\(users.count) People want to visit \(spot.spotName)"
         }
     }
 
 }
 
 struct SaveDetailsView_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        let vm: SpotViewModel = SpotViewModel()
 
-        SavesView(spot: SecretSpot.spot, vm: vm)
+    @State static var users: [User] = []
+    static var previews: some View {
+
+        SavesView(spot: SecretSpot.spot, users: $users)
     }
 }

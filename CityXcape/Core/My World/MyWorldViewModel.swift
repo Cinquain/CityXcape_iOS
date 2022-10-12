@@ -142,7 +142,11 @@ class MyWorldViewModel: NSObject, ObservableObject {
         let spots = manager.spotEntities.map({SecretSpot(entity: $0)})
         if spots.isEmpty {
             print("Core Data is Empty")
-            guard let userId = self.userId else {return}
+            guard let userId = self.userId else
+            {
+                showOnboarding = true
+                return
+            }
             self.getSavedSpotsForUser(uid: userId)
         } else {
             print("Core Data Entities Found!")

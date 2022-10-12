@@ -30,6 +30,15 @@ struct HomeView: View {
        
         TabView(selection: $selectedTab) {
             
+                   
+            DiscoverView(selectedTab: $selectedTab, vm: discoverVM)
+                .tabItem {
+                    Image(Icon.tabItem0.rawValue)
+                        .renderingMode(.template)
+                    Text(Labels.tab2.rawValue)
+                }
+                .tag(0)
+                .badge(discoverVM.newSecretSpots.count)
             
             MyWorld(selectedTab: $selectedTab)
             .tabItem {
@@ -37,20 +46,9 @@ struct HomeView: View {
                     .renderingMode(.template)
                 Text(Labels.tab1.rawValue)
             }
-            .tag(0)
+            .tag(1)
             .badge(discoverVM.newlySaved)
-           
             
-            DiscoverView(selectedTab: $selectedTab, vm: discoverVM)
-                .tabItem {
-                    Image(Icon.tabItem0.rawValue)
-                        .renderingMode(.template)
-                    Text(Labels.tab2.rawValue)
-                }
-                .tag(1)
-                .badge(discoverVM.newSecretSpots.count)
-            
-          
             
             FeedView(selectedTab: $selectedTab, discoverVM: discoverVM, vm: feedVM)
                 .tabItem {
@@ -68,7 +66,6 @@ struct HomeView: View {
                 })
             
                         
-            
             MapContainer(selectedTab: $selectedTab)
                 .edgesIgnoringSafeArea(.top)
                 .tabItem {

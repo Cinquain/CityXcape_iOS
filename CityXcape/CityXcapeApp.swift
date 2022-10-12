@@ -15,7 +15,6 @@ import FirebaseMessaging
 struct CityXcapeApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @AppStorage(CurrentUserDefaults.userId) var currentUserID: String?
     @StateObject private var store = Store()
     @State private var showLaunchView: Bool = true
     
@@ -24,13 +23,9 @@ struct CityXcapeApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if currentUserID == nil {
-                SignUpView()
-            } else
-            {
+         
                 ZStack {
                     HomeView()
-                        .attachPartialSheetToRoot()
                         .environmentObject(store)
                         .onOpenURL { url in
                             router.handleUrl(url: url)
@@ -45,7 +40,7 @@ struct CityXcapeApp: App {
                     .zIndex(2)
                 
                 }
-            }
+            
         }
     }
 }

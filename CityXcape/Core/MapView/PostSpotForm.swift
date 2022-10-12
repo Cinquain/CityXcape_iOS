@@ -11,10 +11,10 @@ import CoreLocation
 
 struct PostSpotForm: View {
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
 
     @Binding var selectedTab: Int
-    @StateObject var vm = PostViewModel()
+    @StateObject var vm: PostViewModel
     var mapItem: MKMapItem
     
     
@@ -24,6 +24,11 @@ struct PostSpotForm: View {
                 Form {
                     TextField("Secret Spot Name", text: $vm.spotName)
                         .frame(height: 40)
+                        .fullScreenCover(isPresented: $vm.showSignUp) {
+                            OnboardingView()
+                        }
+                    
+                    
                     TextField(vm.detailsPlaceHolder, text: $vm.details)
                         .frame(height: 40)
                     
@@ -58,6 +63,8 @@ struct PostSpotForm: View {
                                     Image("spot_image")
                                         .resizable()
                                         .scaledToFit()
+                                       
+                                        
                                         
                                 }
                                 
@@ -77,6 +84,9 @@ struct PostSpotForm: View {
                     }
                             
                     locationView
+                        .popover(isPresented: $vm.presentPopover, content: {
+                            Text(vm.worldDefinition)
+                        })
                          
                     Section(header: Text("Finish")) {
                             finishButton
@@ -90,21 +100,7 @@ struct PostSpotForm: View {
                     ImagePicker(imageSelected: $vm.selectedImage, sourceType: $vm.sourceType)
                         .colorScheme(.dark)
                 })
-                .fullScreenCover(isPresented: $vm.presentCompletion, onDismiss: {
-                    if vm.didFinish {
-                        self.presentationMode.wrappedValue.dismiss()
-                        NotificationCenter.default.post(name: spotCompleteNotification, object: nil)
-                    }
-                }, content: {
-                    CongratsView(vm: vm)
-                    
-                })
-                .alert(isPresented: $vm.showAlert, content: {
-                    Alert(title: Text(vm.alertMessage))
-                })
-                .popover(isPresented: $vm.presentPopover, content: {
-                    Text(vm.worldDefinition)
-                })
+              
               
                         
             }
@@ -121,6 +117,11 @@ struct PostSpotForm: View {
                     })
                 ])
                 
+            }
+            .alert(isPresented: $vm.showAlert) {
+                return Alert(title: Text(vm.alertMessage), dismissButton: .default(Text("Ok"), action: {
+                    dismiss()
+                }))
             }
 
 
@@ -177,7 +178,7 @@ extension PostSpotForm {
     
     private var closeButton: some View {
         Button(action: {
-            presentationMode.wrappedValue.dismiss()
+            dismiss()
         }, label: {
             Image(systemName: "xmark.seal")
                 .resizable()
@@ -194,7 +195,7 @@ struct CreateSpotFormView_Previews: PreviewProvider {
      @State static var coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 39.75879282513146, longitude: -86.1373309437772)
     @State static var tabIndex: Int = 1
     static var previews: some View {
-        PostSpotForm(selectedTab: $tabIndex, mapItem: MKMapItem())
+        PostSpotForm(selectedTab: $tabIndex, vm: PostViewModel(), mapItem: MKMapItem())
     }
     
 }

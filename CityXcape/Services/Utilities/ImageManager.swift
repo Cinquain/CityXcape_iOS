@@ -48,7 +48,9 @@ class ImageManager {
         
         uploadImage(path: path, image: image) { (success, downloadUrl) in
             if success {
-                completion(downloadUrl)
+                DispatchQueue.main.async {
+                    completion(downloadUrl)
+                }
             }
         }
     }

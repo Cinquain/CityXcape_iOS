@@ -66,8 +66,8 @@ struct CongratsView: View {
                     HStack {
                         
                         Button {
+                            vm.getScoutLeaders()
                             vm.analytics.viewedLeaderBoard()
-                            vm.showLeaderboard.toggle()
                         } label: {
                             
                             HStack(alignment: .center) {

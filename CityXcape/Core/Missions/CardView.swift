@@ -8,7 +8,7 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
-struct CardView: View {
+struct CardView: View, Identifiable {
     
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
 
@@ -19,49 +19,106 @@ struct CardView: View {
     @State private var detailsTapped: Bool = false
     
     var width = UIScreen.screenWidth - 15
-    @Binding var showAlert: Bool
-    @Binding var alertMessage: String
-    
+    @State var showAlert: Bool = false
+    @State var alertMessage: String = ""
+    var id: String {
+        spot.id
+    }
     var spot: SecretSpot
     var vm: SpotViewModel = SpotViewModel()
     
     
     var body: some View {
         
-        VStack(spacing: 0) {
-            ZStack {
-                
-                ImageSlider(images: spot.imageUrls)
-                    .frame(width: width)
-                
-                DetailsView(spot: spot, showActionSheet: $showActionsheet, type: .CardView)
-                    .opacity(detailsTapped ? 1 : 0)
-                    .animation(.easeOut(duration: 0.5), value: detailsTapped)
-                
-            }
-            
-            bottomTab
+            ImageSlider(images: spot.imageUrls)
+            .frame(height: UIScreen.screenHeight / 1.5)
+                .cornerRadius(24)
+                .overlay(
+                    ZStack(alignment: .bottom) {
+                        VStack(alignment: .center, spacing: 12) {
+                                Text(spot.spotName)
+                                    .font(.title)
+                                    .fontWeight(.light)
+                                    .shadow(radius: 1)
+                                    .padding(.horizontal, 18)
+                                    .padding(.vertical, 4)
+                                    .overlay (
+                                        Rectangle()
+                                            .fill(Color.white)
+                                            .frame(height: 1)
+                                        ,alignment: .bottom
+                                )
+                                .opacity(detailsTapped ? 0 : 1)
+                                .animation(.easeOut(duration: 0.3), value: detailsTapped)
 
-            
-        }
-        .alert(isPresented: $showAlert) {
-            return Alert(title: Text(alertMessage), message: nil)
-        }
-        .frame(width: width)
-        .background(Color.black)
-        .cornerRadius(10)
-        .foregroundColor(.white)
-        .sheet(isPresented: $showStreetPass) {
-            //TBD
-            
-        } content: {
-            //TBD
-            let user = User(spot: spot)
-            PublicStreetPass(user: user)
-        }
-        .actionSheet(isPresented: $showActionsheet) {
-            loadActionSheet()
-        }
+                            
+                            Text(vm.getDistanceMessage(spot: spot))
+                                .font(.footnote)
+                                .foregroundColor(.black)
+                                .fontWeight(.thin)
+                                .frame(minWidth: 85)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(
+                                    Capsule().fill(Color.white)
+                                        .overlay(
+                                            HStack {
+                                                Image("pin_blue")
+                                                    .renderingMode(.template)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(height: 12)
+                                                    .foregroundColor(.black)
+                                                
+                                                Spacer()
+                                                
+                                                Image("pin_blue")
+                                                    .renderingMode(.template)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(height: 12)
+                                                    .foregroundColor(.black)
+                                            }
+                                            .padding(.horizontal, 5)
+                                        )
+                                )
+                                .opacity(detailsTapped ? 0 : 1)
+                                .animation(.easeOut(duration: 0.3), value: detailsTapped)
+
+
+
+                        }
+                        .foregroundColor(.white)
+                        .frame(minWidth: 280)
+                        .padding(.bottom, 50)
+                        
+                    DetailsView(spot: spot, type: .CardView)
+                         .opacity(detailsTapped ? 1 : 0)
+                         .animation(.easeOut(duration: 0.5), value: detailsTapped)
+                         .cornerRadius(24)
+                         .padding(.bottom, 20)
+                         .clipped()
+                        
+                    }
+                
+                    
+                    
+                    
+                    ,
+                    alignment: .bottom
+            )
+            .onTapGesture {
+                if detailsTapped == false {
+                    DataService.instance.updatePostViewCount(postId: spot.id)
+                    AnalyticsService.instance.viewedDetails()
+                }
+                detailsTapped.toggle()
+            }
+        
+         
+
+            //End of ZStack
+        
 
         
       
@@ -128,18 +185,7 @@ extension CardView {
     
     private var bottomTab: some View {
         HStack {
-            Image("pin_blue")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 30)
-                .opacity(detailsTapped ? 0 : 1)
-
-            Text(spot.spotName)
-                .font(.title)
-                .fontWeight(.thin)
-                .lineLimit(1)
-                .opacity(detailsTapped ? 0 : 1)
-
+          
             Spacer()
             
             VStack {
@@ -183,6 +229,6 @@ struct CardView_Previews: PreviewProvider {
     @State static var message: String = ""
     
     static var previews: some View {
-        CardView(showAlert: $alert, alertMessage: $message, spot: SecretSpot.spot)
+        CardView(spot: SecretSpot.spot)
     }
 }

@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 import SDWebImageSwiftUI
+import CryptoKit
 
 struct StreetPass: View {
     
@@ -174,6 +175,9 @@ struct StreetPass: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(height: 25)
+                                    .fullScreenCover(isPresented: $vm.showSignup) {
+                                        OnboardingView()
+                                    }
                                  
                                    Text("Analytics")
                                         .font(.title2)
@@ -219,7 +223,9 @@ struct StreetPass: View {
                 getAdditionalProfileInfo()
             })
             .alert(isPresented: $vm.showAlert) {
-                return Alert(title: Text(vm.message))
+                return Alert(title: Text(vm.alertMessage), dismissButton: .default(Text("Ok"), action: {
+                    vm.showSignup = true
+                }))
             }
             .background(LinearGradient(gradient: Gradient(colors: [Color.black, Color.orange,]), startPoint: .center, endPoint: .bottom)
                 .cornerRadius(25).edgesIgnoringSafeArea(.all))
@@ -244,6 +250,9 @@ struct StreetPass: View {
                 //Update image url at every user's secret spot post
                 DataService.instance.updatePostProfileImageUrl(profileUrl: url)
             }
+        } else {
+            vm.alertMessage = "You need an account to create a StreetPass"
+            vm.showAlert = true
         }
         
     }

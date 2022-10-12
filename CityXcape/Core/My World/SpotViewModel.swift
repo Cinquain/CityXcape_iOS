@@ -68,7 +68,8 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     @Published var rank: String = ""
     @Published var progressString: String = ""
     @Published var progressValue: CGFloat = 0
-    
+    @Published var showUsers: Bool = false
+
     
     
     let analytics = AnalyticsService.instance
@@ -541,6 +542,34 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
             }
         }
     }
+    
+    
+    
+    func checkIfVerifiable(spot: SecretSpot) {
+        AnalyticsService.instance.touchedVerification()
+        let manager = LocationService.instance.manager
+        
+        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
+            let manager = LocationService.instance.manager
+            let spotLocation = CLLocation(latitude: spot.latitude, longitude: spot.longitude)
+            let userLocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
+            let distance = userLocation.distance(from: spotLocation)
+            let distanceInFeet = distance * 3.28084
+            let distanceInMiles = distance * 0.000621371
+            let formattedDistance = String(format: "%.1f", distanceInMiles)
+            print("\(distance) feet")
+            if distanceInFeet < 200 {
+                showCheckin = true
+            } else {
+                //Distance is greater than 200 feet
+                showAlert = true
+                alertMessage = "You need to be there to checkin. \n You are \(formattedDistance) mile away"
+            }
+                
+    } else {
+        manager.requestWhenInUseAuthorization()
+    }
+}
     
  
   

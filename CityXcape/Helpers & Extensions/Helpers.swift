@@ -385,6 +385,39 @@ enum Ranking: String {
 }
 
 
+enum DragState {
+    case inactive
+    case pressing
+    case dragging(translation: CGSize)
+    
+    var translation: CGSize {
+        switch self {
+        case .inactive, .pressing:
+            return .zero
+        case .dragging(let translation):
+            return translation
+        }
+    }
+    
+    var isDragging: Bool {
+        switch self {
+        case .pressing, .inactive:
+            return false
+        case .dragging:
+            return true
+        }
+    }
+    
+    var isPressing: Bool {
+        switch self {
+        case .inactive:
+            return false
+        case .pressing, .dragging:
+            return true
+        }
+    }
+}
+
 
 
 struct StandardButton: ViewModifier {
@@ -403,6 +436,15 @@ struct StandardButton: ViewModifier {
             .shadow(radius: 10)
             .padding()
             .padding(.horizontal, 40)
+    }
+}
+
+struct swipeModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .foregroundColor(.white)
+            .font(.system(size: 128))
+            .shadow(color: Color(UIColor(red: 0, green: 0, blue: 0, alpha: 0.2)), radius: 12, x: 0, y: 0)
     }
 }
 

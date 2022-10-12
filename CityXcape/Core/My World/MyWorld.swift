@@ -150,7 +150,7 @@ extension MyWorld {
     
     private var discoverButton: some View {
         Button {
-            selectedTab = 1
+            selectedTab = 0
         } label: {
             Text("Discover Spots")
                 .frame(width: 160, height: 45)

@@ -9,123 +9,139 @@ import SwiftUI
 
 struct DiscoverView: View {
     
-    @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
+
     @State private var isPresented: Bool = false
     @State private var currentSpot: SecretSpot?
     @Binding var selectedTab: Int
 
-    @State private var showAlert: Bool = false
-    @State private var alertMessage: String = ""
-    @State private var passed: Bool = false
-    @State private var saved: Bool = false
+
+    @GestureState private var dragState: DragState = .inactive
     @State private var showMenu: Bool = false
-    let width =  UIScreen.screenWidth
-    let manager = CoreDataManager.instance
     
+    let width =  UIScreen.screenWidth
+    var dragThreshold: CGFloat = 65.0
     @StateObject var vm: DiscoverViewModel 
-   
     
     var body: some View {
  
         NavigationView {
-          
     
-            ZStack {
-                ScrollView {
+            ZStack(alignment: .top) {
                     
-                        
                     if vm.newSecretSpots.isEmpty {
                              VStack {
                                    emptyStateIcon
+                                 
                                    refreshButton
+                                     
                              }
                                      
                      } else {
                     
-                    ForEach(vm.newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})) { spot in
-
-                            ZStack {
-                              
-                                CardView(showAlert: $vm.showAlert, alertMessage: $vm.alertMessage, spot: spot)
-                                    .animation(Animation.linear(duration: 0.4))
-
-                                
-                                VStack(alignment: .center) {
-                                    LikeAnimationView(color: .cx_green, didLike: $vm.passed, size: 200)
-                                       
-                                        .animation(Animation.linear(duration: 0.5))
-                                    
-                                    Text(" - \(currentSpot?.price ?? 1) StreetCred")
-                                        .font(.title)
-                                        .fontWeight(.thin)
-                                        .foregroundColor(.red)
-                                }
-                                .opacity(currentSpot == spot && vm.saved ? 1 : 0)
-                                    
-                                passAnimation
-                                    .opacity(currentSpot == spot && vm.passed ? 1 : 0)
-                                    .animation(Animation.linear(duration: 0.5))
-                            }
-                            
-                            HStack {
-                                Button {
-                                    //TBD
-                                    currentSpot = spot
-                                    vm.passed = true
-                                    vm.dismissCard(spot: spot)
-                                } label: {
-                                    VStack {
-                                        Image(systemName: "hand.thumbsdown")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .foregroundColor(.stamp_red)
-                                            .frame(height: 30)
-
-                                        Text("pass")
-                                            .font(.caption)
-                                            .foregroundColor(.stamp_red)
-                                    }
-
-                                }
-                                
-                                Spacer()
-                                
-                                Button {
-                                    //TBD
-                                    currentSpot = spot
-                                    vm.saved = true
-                                    vm.saveCardToUserWorld(spot: spot)
-                                } label: {
-                                    VStack {
-                                        Image(systemName: "heart")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .foregroundColor(.cx_green)
-                                            .frame(height: 30)
+                         ZStack {
+                             ForEach(vm.cardViews) { cardview in
+                               cardview
+                                .zIndex(vm.isTopCard(cardView: cardview) ? 1 : 0)
+                                .overlay(
+                                    ZStack {
+                                        VStack {
+                                            Image(systemName: "x.circle")
+                                                .modifier(swipeModifier())
+                                           
+                                            Text("dismiss!")
+                                                .foregroundColor(.white)
+                                                .font(.title2)
+                                                .fontWeight(.medium)
+                                                .fullScreenCover(isPresented: $vm.showSignUp) {
+                                                    OnboardingView()
+                                                }
+                                        }
+                                        .opacity(dragState.translation.width <  -dragThreshold && vm.isTopCard(cardView: cardview) ? 1 :0.0)
                                         
-                                        Text("save")
-                                            .font(.caption)
-                                            .foregroundColor(.cx_green)
+                                        VStack {
+                                            Image(systemName: "heart.circle")
+                                                .modifier(swipeModifier())
+                                           
+                                            Text("saved!")
+                                                .foregroundColor(.white)
+                                                .font(.title2)
+                                                .fontWeight(.medium)
+                                        }
+                                        .opacity(dragState.translation.width >  dragThreshold && vm.isTopCard(cardView: cardview) ? 1 :0.0)
                                     }
-                                }
+                                
+                                )
+                                .offset(x: vm.isTopCard(cardView: cardview) ? self.dragState.translation.width : 0, y: vm.isTopCard(cardView: cardview) ? self.dragState.translation.height : 0)
+                                .scaleEffect(self.dragState.isDragging && vm.isTopCard(cardView: cardview) ? 0.85 : 1)
+                                .rotationEffect(Angle(degrees: vm.isTopCard(cardView: cardview) ? Double(self.dragState.translation.width / 12) : 0))
+                                .animation(.interpolatingSpring(stiffness: 120, damping: 120))
+                                .gesture(LongPressGesture(minimumDuration: 0.01)
+                                    .sequenced(before: DragGesture())
+                                    .updating(self.$dragState, body: { value, state, transaction in
+                                        
+                                        switch value {
+                                            case .first(true):
+                                                state = .pressing
+                                            case .second(true, let drag):
+                                                state = .dragging(translation: drag?.translation ?? .zero)
+                                            default:
+                                                break
+                                        }
+                                    })
+                                    .onEnded({ value in
+                                        guard case .second(true, let drag?)  = value else {return}
+                                        
+                                        if drag.translation.width < -self.dragThreshold - 20  {
+                                            vm.moveCards(drag.translation.width)
+                                            vm.dismissCard(spot: cardview.spot)
+                                        } else if drag.translation.width > self.dragThreshold + 20 {
+                                            vm.moveCards(drag.translation.width)
+                                            vm.saveCardToUserWorld(spot: cardview.spot)
+                                        }
+                                    })
+                                 )
+                             }
+                         }
+                         .padding(.bottom, 30)
+                        
+                    }
 
-
-                            }
-                            .padding(.horizontal, 20)
-                            
-                  
-                            
-                            Divider()
-                                .frame(height: 0.5)
-                                .background(Color.white)
-                                .padding(.bottom, 10)
-
+                   //End of Scrollview
+                
+                VStack {
+                    Spacer()
+                    HStack(alignment: .center, spacing: 10) {
+                        Button {
+                            vm.moveCards(-65)
+                        } label: {
+                            Image("x")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50)
                         }
                         
-                                 }
-
-                    
-                   //End of Scrollview
+                        Button {
+                            vm.undoMoveCard()
+                        } label: {
+                            Image("back")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50)
+                        }
+                        
+                        
+                        Button {
+                            vm.moveCards(70)
+                        } label: {
+                            Image("heart")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 50)
+                        }
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 10)
                 }
                 
                 GeometryReader { _ in
@@ -168,7 +184,11 @@ struct DiscoverView: View {
         .colorScheme(.dark)
         .foregroundColor(.white)
         .alert(isPresented: $vm.showAlert) {
-            return Alert(title: Text(vm.alertMessage))
+            return Alert(title: Text(vm.alertMessage), dismissButton: .default(Text("Ok"), action: {
+                if userId == nil {
+                    vm.showSignUp = true
+                }
+            }))
         }
         
     }
@@ -231,7 +251,7 @@ extension DiscoverView {
                 .resizable()
                 .scaledToFit()
             .frame(height: 25)
-            Text("Save places to visit")
+            Text("save places to visit")
                 .fontWeight(.thin)
                 .foregroundColor(.white)
                 .font(.caption)
@@ -244,7 +264,7 @@ extension DiscoverView {
                 .resizable()
                 .scaledToFit()
             .frame(height: 200)
-            Text("No Secret Spot Found")
+            Text("No Secret Spots Found")
                 .font(.title2)
                 .fontWeight(.thin)
         }

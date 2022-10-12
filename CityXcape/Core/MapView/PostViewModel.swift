@@ -27,6 +27,7 @@ class PostViewModel: NSObject, ObservableObject {
     var pricePlaceHolder = "1"
     let manager = CoreDataManager.instance
     let analytics = AnalyticsService.instance
+    @State var dataService = DataService.instance
     
     @Published var spotName: String = ""
     @Published var details: String = ""
@@ -37,6 +38,7 @@ class PostViewModel: NSObject, ObservableObject {
     @Published var isLoading: Bool = false
     @Published var price: Int = 1
 
+    @Published var showSignUp: Bool = false 
     @Published var didFinish: Bool = false
     @Published var showPicker: Bool = false
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
@@ -66,7 +68,14 @@ class PostViewModel: NSObject, ObservableObject {
     
     
     func isReady(mapItem: MKMapItem)  {
+        if userId == nil {
+            alertMessage = "You need an account to post a spot"
+            showAlert = true
+            showSignUp = true
+        }
+        
         price = Int(priceString) ?? 1
+
         
         if isPublic == false {
             world = "Private"
@@ -115,22 +124,25 @@ class PostViewModel: NSObject, ObservableObject {
     func postSecretSpot(mapItem: MKMapItem) {
         isLoading = true
         buttonDisabled = true
-        guard let image = selectedImage else {return}
+        
+        var image = selectedImage ?? UIImage()
         print("Secret Spot is being posted")
+      
 
-        DataService.instance.uploadSecretSpot(spotName: spotName, description: details, image: image, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { [weak self] (success) in
-            guard let self = self else {return}
+        dataService.uploadSecretSpot(spotName: spotName, description: details, image: image, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { [weak self] (success) in
+
             if success {
-                self.isLoading = false
-                self.buttonDisabled = false
-                self.getScoutLeaders()
-                self.calculateRank()
-                self.presentCompletion.toggle()
+                self?.isLoading = false
+                self?.buttonDisabled = false
+                self?.alertMessage = "Successfully posted location"
+                self?.showAlert = true
+                return
             } else {
-                self.isLoading = false
-                self.buttonDisabled = false
-                self.showAlert.toggle()
-                self.alertMessage = "Error posting Secret Spot 😤"
+                self?.isLoading = false
+                self?.buttonDisabled = false
+                self?.alertMessage = "Error posting Secret Spot 😤"
+                self?.showAlert = true
+                return
             }
         }
     }
@@ -173,11 +185,13 @@ class PostViewModel: NSObject, ObservableObject {
     func getScoutLeaders() {
        DataService.instance.getUserRankings { ranks in
            self.rankings = ranks
+           self.showLeaderboard.toggle()
        }
    }
    
    func calculateRank() {
-       
+       guard let uid = userId else {return}
+
        let allspots = manager.spotEntities.map({SecretSpot(entity: $0)})
        let verifiedSpots = allspots.filter({$0.verified == true})
        let totalStamps = verifiedSpots.count
@@ -199,8 +213,6 @@ class PostViewModel: NSObject, ObservableObject {
        (self.rank,
         self.progressString,
         self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpotsPosted, totalSaves: totalSaves, totalStamps: totalStamps)
-
-       guard let uid = userId else {return}
        guard let imageUrl = profileUrl else {return}
        guard let username = displayName else {return}
        guard let bio = bio else {return}

@@ -18,7 +18,8 @@ class StreetPassViewModel: NSObject, ObservableObject {
     
     @Published var showJourney: Bool = false
     @Published var showStats: Bool = false
-    @Published var showStore: Bool = false 
+    @Published var showStore: Bool = false
+    @Published var showSignup: Bool = false
     
     @Published var showStreetPass: Bool = false
     @Published var worldCompo: [String: Double] = [:]
@@ -36,7 +37,6 @@ class StreetPassViewModel: NSObject, ObservableObject {
     @Published var totalStamps: Int = 0
     
     @Published var plugMode: Bool = false
-    @Published var message: String = ""
     @Published var friends: [User] = []
     @Published var friend: User?
     @Published var showFriends: Bool = false 
@@ -89,7 +89,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
     
     
     func handleStreetCredAlert() {
-        message = "StreetCred is a currency that lets you save Secret Spots."
+        alertMessage = "StreetCred is a currency that lets you save Secret Spots."
         AnalyticsService.instance.viewStreetpass()
         showAlert.toggle()
     }
@@ -158,7 +158,8 @@ class StreetPassViewModel: NSObject, ObservableObject {
     
     
     func calculateRank() {
-        
+        guard let uid = userId else {return}
+
         let allspots = coreData.spotEntities.map({SecretSpot(entity: $0)})
         let verifiedSpots = allspots.filter({$0.verified == true})
         totalStamps = verifiedSpots.count
@@ -181,7 +182,6 @@ class StreetPassViewModel: NSObject, ObservableObject {
          self.progressString,
          self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpotsPosted, totalSaves: totalSaves, totalStamps: totalStamps)
         
-        guard let uid = userId else {return}
         guard let imageUrl = profileUrl else {return}
         guard let username = displayName else {return}
         guard let bio = bio else {return}

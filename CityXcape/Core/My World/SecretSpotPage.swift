@@ -34,7 +34,7 @@ struct SecretSpotPage: View {
                 ImageSlider(images: spot.imageUrls)
                     .frame(height: width)
                 
-                DetailsView(spot: spot, showActionSheet: $showActionsheet, type: .CardView)
+                DetailsView(spot: spot, type: .CardView)
                     .opacity(detailsTapped ? 1 : 0)
                     .animation(.easeOut(duration: 0.5), value: detailsTapped)
                 
