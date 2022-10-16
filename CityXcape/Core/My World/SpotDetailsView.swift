@@ -144,8 +144,13 @@ struct SpotDetailsView: View {
             .onAppear(perform: {
                 vm.checkedOwner(spot: spot)
                 vm.analytics.viewedSecretSpot()
-                DataService.instance.updatePostViewCount(postId: spot.id)
-                vm.updateSecretSpot(postId: spot.id)
+                vm.updateSecretSpot(postId: spot.id) { success in
+                    if !success {
+                        vm.alertMessage = "Spot was deleted"
+                        vm.showAlert.toggle()
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
                 vm.checkIfPresent(spot: spot)
             })
             .fullScreenCover(isPresented: $vm.showPicker, content: {

@@ -13,7 +13,8 @@ import MapKit
 
 class NotificationsManager: ObservableObject {
     
-    
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
+
     static let instance = NotificationsManager()
         
     @Published var user: User?
@@ -103,6 +104,8 @@ class NotificationsManager: ObservableObject {
     
     
     fileprivate func setupLocationlNotifications() {
+        if userId == nil {return}
+        
         let allspots = dataManager
                         .spotEntities.map({SecretSpot(entity: $0)})
       

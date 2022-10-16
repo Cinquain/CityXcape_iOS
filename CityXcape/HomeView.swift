@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeView: View {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
-    let router = Router.shared
+    let router =  Router.shared
     @State var selectedTab: Int = 0
     @State var showSideMenu: Bool = false
     @StateObject var manager = NotificationsManager.instance
@@ -38,7 +38,7 @@ struct HomeView: View {
                     Text(Labels.tab2.rawValue)
                 }
                 .tag(0)
-                .badge(discoverVM.newSecretSpots.count)
+                .badge(discoverVM.newSpotCount)
             
             MyWorld(selectedTab: $selectedTab)
             .tabItem {
@@ -113,21 +113,7 @@ struct HomeView: View {
             }
         }
     }
-    
-    func getAdditionalProfileInfo() {
-        guard let uid = userId else {return}
-        
-        AuthService.instance.getUserInfo(forUserID: uid) { result in
-            switch result {
-            case .failure(let error):
-                print("Error retrieving user info", error)
-            case .success(let user):
-                let streetcred = user.streetCred ?? 12
-                UserDefaults.standard.set(streetcred, forKey: CurrentUserDefaults.wallet)
-            }
-        }
-      
-    }
+
     
     
 }

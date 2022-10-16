@@ -9,9 +9,9 @@ import SwiftUI
 import FirebaseMessaging
 
 struct PublicStreetPass: View {
-    
-    @State var user: User
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
 
+    @State var user: User
    
     @State private var instagram: String = ""
     @State private var showRanks: Bool = false
@@ -101,7 +101,7 @@ struct PublicStreetPass: View {
             .background(LinearGradient(gradient: Gradient(colors: [Color.black, Color.orange,]), startPoint: .center, endPoint: .bottom).edgesIgnoringSafeArea(.all))
             .alert(isPresented: $vm.showAlert) {
                 return Alert(title: Text(vm.alertMessage), dismissButton: .default(Text("Ok"), action: {
-                    vm.showSignup = true
+                    
                 }))
             }
            
@@ -180,6 +180,7 @@ extension PublicStreetPass {
         HStack {
 
             Button {
+                guard userId != nil else { vm.showSignup = true; return}
                 manager.checkAuthorizationStatus { fcmToken in
                     if let token = fcmToken {
                         vm.streetFollowerUser(fcm: token, user: user)
@@ -196,6 +197,7 @@ extension PublicStreetPass {
             }
             
             Button {
+                guard userId != nil else { vm.showSignup = true; return}
                 vm.showSecretSpots()
             } label: {
                 Image("share_2")
@@ -228,6 +230,7 @@ extension PublicStreetPass {
 
             } else {
                 Button {
+                    guard userId != nil else { vm.showSignup = true; return}
                     manager.checkAuthorizationStatus { fcmToken in
                         if let token = fcmToken {
                             vm.sendFriendRequest(uid: user.id, token: token)

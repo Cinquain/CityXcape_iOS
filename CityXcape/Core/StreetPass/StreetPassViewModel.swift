@@ -66,7 +66,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
     }
     
     
-     func getScoutLeaders() {
+     func  getScoutLeaders() {
         DataService.instance.getUserRankings { ranks in
             self.ranking = ranks
         }
@@ -101,6 +101,8 @@ class StreetPassViewModel: NSObject, ObservableObject {
 
     
     func calculateWorld()  {
+        guard let uid = userId else {return}
+
         coreData.fetchSecretSpots()
         var worlds: [String] = []
         var worldDictionary: [String: Double] = [:]
@@ -151,7 +153,6 @@ class StreetPassViewModel: NSObject, ObservableObject {
             UserField.community: topworld,
             UserField.world : worldCompo
         ]
-        guard let uid = userId else {return}
         AuthService.instance.updateUserField(uid: uid, data: userData)
 
     }

@@ -40,6 +40,7 @@ struct CardView: View, Identifiable {
                                     .font(.title)
                                     .fontWeight(.light)
                                     .shadow(radius: 1)
+                                    .multilineTextAlignment(.center)
                                     .padding(.horizontal, 18)
                                     .padding(.vertical, 4)
                                     .overlay (
@@ -57,6 +58,7 @@ struct CardView: View, Identifiable {
                                 .foregroundColor(.black)
                                 .fontWeight(.thin)
                                 .frame(minWidth: 85)
+                                .frame(maxWidth: 120)
                                 .padding(.horizontal, 10)
                                 .padding(.vertical, 5)
                                 .background(

@@ -121,9 +121,9 @@ struct OnboardingViewII: View {
         
         AuthService.instance.createNewUserInDatabase(name: displayName, email: email, providerId: providerId, provider: provider, profileImage: image) { (uid) in
             buttonMessage = "Creating Account"
-            if let userId = uid {
+            if let uid = uid {
                 
-                AuthService.instance.loginUserToApp(userId: userId) { (success) in
+                AuthService.instance.loginUserToApp(userId: uid) { (success) in
                     if success {
                         print("User logged in")
                         buttonMessage = "Account Created!"

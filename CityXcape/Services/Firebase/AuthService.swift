@@ -76,8 +76,9 @@ class AuthService {
             case .success(let user):
                 let streetcred = user.streetCred ?? 12
                 let bio = user.bio ?? ""
-                let tribe = user.tribe ?? ""
                 let social = user.social ?? ""
+                let rank = user.rank ?? ""
+                let tribeImageUrl = user.tribeImageUrl ?? ""
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     UserDefaults.standard.set(userId, forKey: CurrentUserDefaults.userId)
                     UserDefaults.standard.set(user.displayName, forKey: CurrentUserDefaults.displayName)
@@ -85,8 +86,9 @@ class AuthService {
                     UserDefaults.standard.set(streetcred, forKey: CurrentUserDefaults.wallet)
                     UserDefaults.standard.set(user.profileImageUrl, forKey: CurrentUserDefaults.profileUrl)
                     UserDefaults.standard.set(social, forKey: CurrentUserDefaults.social)
-                    UserDefaults.standard.set(tribe, forKey: CurrentUserDefaults.tribe)
-
+                    UserDefaults.standard.set(tribeImageUrl, forKey: CurrentUserDefaults.tribeImageUrl)
+                    UserDefaults.standard.set(rank, forKey: CurrentUserDefaults.rank)
+                    completion(true)
                 }
             }
                         
@@ -104,7 +106,6 @@ class AuthService {
             return
         }
         
-        completion(true)
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             let dictionary = UserDefaults.standard.dictionaryRepresentation()
@@ -112,6 +113,7 @@ class AuthService {
             dictionary.keys.forEach { (key) in
                 UserDefaults.standard.removeObject(forKey: key)
             }
+            completion(true)
         }
         
     }

@@ -156,9 +156,9 @@ struct OnboardingView: View {
                     
                 } else {
                     //False means Existing User
-                    if let userId = returnedUserId {
+                    if let uid = returnedUserId {
                         
-                        AuthService.instance.loginUserToApp(userId: userId) { (success) in
+                        AuthService.instance.loginUserToApp(userId: uid) { (success) in
                             if success {
                                 print("Successfully logged in existing user")
                                 self.presentationMode.wrappedValue.dismiss()

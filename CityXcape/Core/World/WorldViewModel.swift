@@ -91,7 +91,8 @@ class WorldViewModel: NSObject, ObservableObject {
     }
     
     func calculateRank() {
-        
+        guard let uid = userId else {return}
+
         let allspots = manager.spotEntities.map({SecretSpot(entity: $0)})
         let verifiedSpots = allspots.filter({$0.verified == true})
         totalStamps = verifiedSpots.count
@@ -113,7 +114,6 @@ class WorldViewModel: NSObject, ObservableObject {
          self.progressString,
          self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpots, totalSaves: totalSaves, totalStamps: totalStamps)
         
-        guard let uid = userId else {return}
         guard let imageUrl = profileUrl else {return}
         guard let username = displayName else {return}
         guard let bio = bio else {return}

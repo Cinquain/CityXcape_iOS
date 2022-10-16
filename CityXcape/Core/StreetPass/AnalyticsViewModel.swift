@@ -195,6 +195,8 @@ class AnalyticsViewModel: NSObject, ObservableObject {
     
     
     func calculateWorld()  {
+        guard let uid = userId else {return}
+
         coreData.fetchSecretSpots()
         var worlds: [String] = []
         var worldDictionary: [String: Double] = [:]
@@ -245,7 +247,6 @@ class AnalyticsViewModel: NSObject, ObservableObject {
             UserField.world : worldCompo
         ]
         
-        guard let uid = userId else {return}
         AuthService.instance.updateUserField(uid: uid, data: userData)
         UserDefaults.standard.set(worldCompo, forKey: CurrentUserDefaults.world)
     }

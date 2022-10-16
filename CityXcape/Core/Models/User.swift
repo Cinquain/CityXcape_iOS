@@ -126,7 +126,7 @@ struct User: Identifiable, Hashable, Equatable {
         self.streetCred = UserDefaults.standard.value(forKey: CurrentUserDefaults.wallet) as? Double ?? 0
         self.bio = UserDefaults.standard.value(forKey: CurrentUserDefaults.bio) as? String ?? ""
         self.social = UserDefaults.standard.value(forKey: CurrentUserDefaults.social) as? String ?? ""
-        self.fcmToken = Messaging.messaging().fcmToken
+        self.fcmToken = Messaging.messaging().fcmToken 
         self.rank = UserDefaults.standard.value(forKey: CurrentUserDefaults.rank) as? String ?? ""
         self.world = UserDefaults.standard.value(forKey: CurrentUserDefaults.world) as? [String: Double] ?? nil
         self.city = UserDefaults.standard.value(forKey: CurrentUserDefaults.city) as? String ?? ""

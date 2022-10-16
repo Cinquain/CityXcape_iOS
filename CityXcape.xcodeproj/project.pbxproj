@@ -209,6 +209,7 @@
 		212EE32E27A4640500232992 /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 		212EE33027A4667500232992 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		212EE33227A4689F00232992 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		2135343028FB29F6006E8288 /* SecretSpotContainer 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SecretSpotContainer 2.xcdatamodel"; sourceTree = "<group>"; };
 		2138B6A627C70C6A004C9B3C /* MapViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewModel.swift; sourceTree = "<group>"; };
 		213E8E692858C12C00B04E24 /* StorePageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorePageViewModel.swift; sourceTree = "<group>"; };
 		213E8ECB282D4F70002A1495 /* WorldCompositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldCompositionView.swift; sourceTree = "<group>"; };
@@ -1353,9 +1354,10 @@
 		2142EF4727827E9700EA489D /* SecretSpotContainer.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				2135343028FB29F6006E8288 /* SecretSpotContainer 2.xcdatamodel */,
 				2142EF4827827E9700EA489D /* SecretSpotContainer.xcdatamodel */,
 			);
-			currentVersion = 2142EF4827827E9700EA489D /* SecretSpotContainer.xcdatamodel */;
+			currentVersion = 2135343028FB29F6006E8288 /* SecretSpotContainer 2.xcdatamodel */;
 			path = SecretSpotContainer.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

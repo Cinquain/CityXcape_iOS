@@ -15,7 +15,8 @@ class CoreDataManager {
     
     static let instance = CoreDataManager()
     @Published var spotEntities: [SecretSpotEntity] = []
-    
+    @Published var verifications: [VerificationEntity] = []
+    @Published var users: [UserEntity] = []
     
     let container: NSPersistentContainer
     let context: NSManagedObjectContext
@@ -44,6 +45,24 @@ class CoreDataManager {
         }
     }
     
+    func fetchVerifications() {
+        let request = NSFetchRequest<VerificationEntity>(entityName:"VerificationEntity")
+        do {
+            verifications = try context.fetch(request)
+        } catch let error {
+            print("Error fetching verification entities", error.localizedDescription)
+        }
+    }
+
+    func fetchUsers() {
+        let request = NSFetchRequest<UserEntity>(entityName: "UserEntity")
+        do {
+            users = try context.fetch(request)
+        } catch let error {
+            print("Error fetching user entities", error.localizedDescription)
+        }
+    }
+
     
     func save() {
         do {
@@ -71,6 +90,12 @@ class CoreDataManager {
     func updateSocial(spotId: String, instagram: String) {
         let entity = spotEntities.first(where: {$0.spotId == spotId})
         entity?.ownerIg = instagram
+        save()
+    }
+    
+    func updateVerification(spotId: String) {
+        let entity = spotEntities.first(where: {$0.spotId == spotId})
+        entity?.verified = true
         save()
     }
     
@@ -164,7 +189,7 @@ class CoreDataManager {
         save()
     }
     
-    func addEntity(spotId: String, spotName: String, description: String, longitude: Double, latitude: Double, imageUrls: [String], address: String, uid: String, ownerImageUrl: String, ownerDisplayName: String, price: Double, viewCount: Double, saveCount: Double, zipCode: Double, world: String, isPublic: Bool, dateCreated: Date, city: String, didLike: Bool, likedCount: Int, verifierCount: Int, commentCount: Int, social: String) {
+    func addSpotEntity(spotId: String, spotName: String, description: String, longitude: Double, latitude: Double, imageUrls: [String], address: String, uid: String, ownerImageUrl: String, ownerDisplayName: String, price: Double, viewCount: Double, saveCount: Double, zipCode: Double, world: String, isPublic: Bool, dateCreated: Date, city: String, didLike: Bool, likedCount: Int, verifierCount: Int, commentCount: Int, social: String) {
         
         let secretSpotEntity = SecretSpotEntity(context: context)
         secretSpotEntity.spotId = spotId
@@ -195,6 +220,24 @@ class CoreDataManager {
         
     }
     
+    func addStampEntity(verification: Verification) {
+        let verificationEntity = VerificationEntity(context: context)
+
+        verificationEntity.id = verification.id
+        verificationEntity.imageUrl = verification.imageUrl
+        verificationEntity.comment = verification.comment
+        verificationEntity.timestamp = verification.time
+        verificationEntity.name = verification.name
+        verificationEntity.verifierId = verification.verifierId
+        verificationEntity.postId = verification.postId
+        verificationEntity.latitude = verification.latitude
+        verificationEntity.longitude = verification.longitude
+        verificationEntity.spotOwnerId = verification.spotOwnerId
+        verificationEntity.country = verification.country
+        verificationEntity.verifierName = verification.verifierName
+        verificationEntity.verifierImage = verification.verifierImage
+    }
+
     func addEntityFromSpot(spot: SecretSpot) {
         let secretSpotEntity = SecretSpotEntity(context: context)
         secretSpotEntity.spotId = spot.id
@@ -278,5 +321,8 @@ class CoreDataManager {
         save()
         fetchSecretSpots()
     }
+    
+    
+    //Verification Objects
     
 }

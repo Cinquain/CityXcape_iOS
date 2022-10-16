@@ -10,6 +10,7 @@ import SwiftUI
 struct DiscoverView: View {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    
 
     @State private var isPresented: Bool = false
     @State private var currentSpot: SecretSpot?
@@ -21,7 +22,7 @@ struct DiscoverView: View {
     
     let width =  UIScreen.screenWidth
     var dragThreshold: CGFloat = 65.0
-    @StateObject var vm: DiscoverViewModel 
+    @StateObject var vm: DiscoverViewModel
     
     var body: some View {
  
@@ -94,10 +95,8 @@ struct DiscoverView: View {
                                         
                                         if drag.translation.width < -self.dragThreshold - 20  {
                                             vm.moveCards(drag.translation.width)
-                                            vm.dismissCard(spot: cardview.spot)
                                         } else if drag.translation.width > self.dragThreshold + 20 {
                                             vm.moveCards(drag.translation.width)
-                                            vm.saveCardToUserWorld(spot: cardview.spot)
                                         }
                                     })
                                  )
@@ -113,7 +112,7 @@ struct DiscoverView: View {
                     Spacer()
                     HStack(alignment: .center, spacing: 10) {
                         Button {
-                            vm.moveCards(-65)
+                            vm.moveCards(-75)
                         } label: {
                             Image("x")
                                 .resizable()

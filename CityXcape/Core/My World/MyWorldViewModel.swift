@@ -31,6 +31,7 @@ class MyWorldViewModel: NSObject, ObservableObject {
     @Published var searchTerm: String = ""
     
     @Published var annotations: [MKPointAnnotation] = []
+    @Published var verifications: [Verification] = []
     
     
     var placeHolder = "Search a spot, city, or hashtag"
@@ -38,12 +39,14 @@ class MyWorldViewModel: NSObject, ObservableObject {
     
     override init() {
         super.init()
+        fetchVerifications()
         setupToggleObserver()
     }
     
         
     
     func getSavedSpotsForUser(uid: String) {
+        
         DataService.instance.getSpotsFromWorld(userId: uid) { [weak self] returnedSpots in
             guard let self = self else {return}
             if returnedSpots.isEmpty {
@@ -51,11 +54,33 @@ class MyWorldViewModel: NSObject, ObservableObject {
                 self.showOnboarding = true
             } else {
                 self.allSpots = returnedSpots
-                self.currentSpots = self.allSpots.filter({$0.verified == false})
+                self.currentSpots = self.allSpots
+                                        .filter({$0.verified == false})
+                                        .sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
                 self.showOnboarding = false
             }
         }
     }
+    
+    func fetchVerifications() {
+        manager.fetchVerifications()
+        let entities = manager.verifications
+        if !entities.isEmpty {
+            self.verifications = entities.map({Verification(entity: $0)})
+            verifications.forEach { verification in
+                if currentSpots.contains(where: {$0.id == verification.id && $0.verified == false}) {
+                    manager.updateVerification(spotId: verification.id)
+                }
+            }
+            return
+        } else {
+            guard let uid = userId else {return}
+            DataService.instance.getVerifications(uid: uid) { verifications in
+                self.verifications = verifications
+            }
+        }
+    }
+    
     
     func performSearch() {
         if searchTerm.isEmpty {
@@ -138,15 +163,14 @@ class MyWorldViewModel: NSObject, ObservableObject {
     }
     
     func fetchSecretSpots() {
-        
+        guard let userId = self.userId else
+        {
+            showOnboarding = true
+            return
+        }
         let spots = manager.spotEntities.map({SecretSpot(entity: $0)})
         if spots.isEmpty {
             print("Core Data is Empty")
-            guard let userId = self.userId else
-            {
-                showOnboarding = true
-                return
-            }
             self.getSavedSpotsForUser(uid: userId)
         } else {
             print("Core Data Entities Found!")

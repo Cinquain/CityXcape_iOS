@@ -27,7 +27,6 @@ class PostViewModel: NSObject, ObservableObject {
     var pricePlaceHolder = "1"
     let manager = CoreDataManager.instance
     let analytics = AnalyticsService.instance
-    @State var dataService = DataService.instance
     
     @Published var spotName: String = ""
     @Published var details: String = ""
@@ -129,7 +128,7 @@ class PostViewModel: NSObject, ObservableObject {
         print("Secret Spot is being posted")
       
 
-        dataService.uploadSecretSpot(spotName: spotName, description: details, image: image, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { [weak self] (success) in
+        DataService.instance.uploadSecretSpot(spotName: spotName, description: details, image: image, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { [weak self] (success) in
 
             if success {
                 self?.isLoading = false

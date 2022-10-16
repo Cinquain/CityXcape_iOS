@@ -118,7 +118,7 @@ class DataService {
                     SecretSpotField.ownerIg: instagram
                 ]
                 
-                self.manager.addEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: spotCity, didLike: false, likedCount: 0, verifierCount: 0, commentCount: 0, social: instagram)
+                self.manager.addSpotEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: spotCity, didLike: false, likedCount: 0, verifierCount: 0, commentCount: 0, social: instagram)
                 
                 document.setData(spotData) { (error) in
                         if let err = error {
@@ -1149,7 +1149,8 @@ class DataService {
     
     func getVerifications(uid: String, completion: @escaping (_ verifications: [Verification]) ->()) {
         
-        REF_WORLD.document("verified").collection(uid).getDocuments { querySnapshot, error in
+        REF_WORLD.document("verified").collection(uid).getDocuments { [weak self] querySnapshot, error in
+            guard let self = self else {return}
             
             var verifications: [Verification] = []
             if let error = error {
@@ -1161,6 +1162,7 @@ class DataService {
                 snapshot.documents.forEach { document in
                     let data = document.data()
                     let verification = Verification(data: data)
+                    self.manager.addStampEntity(verification: verification)
                     verifications.append(verification)
                 }
                 completion(verifications)
@@ -1296,6 +1298,7 @@ class DataService {
         guard let uid = userId else {return}
         
         var worlds:[World] = []
+        
         REF_USERS
             .document(uid)
             .collection(ServerPath.invite)
@@ -1357,7 +1360,6 @@ class DataService {
         var worlds: [World] = []
         REF_WORLDS
             .whereField(WorldField.isPublic, isEqualTo: true)
-            .whereField(WorldField.isApproved, isEqualTo: true)
             .getDocuments { snapshot, error in
             if let error = error {
                 print("Error pulling worlds from database", error.localizedDescription)
@@ -1365,7 +1367,7 @@ class DataService {
             }
             
             guard let snapshot = snapshot, snapshot.documents.count >= 1 else {return}
-            
+
             snapshot.documents.forEach { document in
                 let data = document.data()
                 let world = World(data: data)
@@ -1538,7 +1540,7 @@ class DataService {
     
     
     func getSpotsFromWorld(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
-        REF_WORLD.document("private").collection(userId).addSnapshotListener { snapshot, error in
+        REF_WORLD.document("private").collection(userId).getDocuments { snapshot, error in
             var secretSpots = [SecretSpot]()
             
             if let error = error {
@@ -1555,7 +1557,12 @@ class DataService {
                     self.REF_POST.document(spotId).getDocument { document, error in
                         let data = document?.data()
                         let spot = SecretSpot(data: data)
-                        secretSpots.append(spot)
+                        if let spot = spot {
+                            secretSpots.append(spot)
+                            CoreDataManager.instance.addEntityFromSpot(spot: spot)
+                        }
+                        
+                        //Save to core data here!
                         
                         DispatchQueue.main.async {
                             completion(secretSpots)
@@ -1579,7 +1586,7 @@ class DataService {
             {
             REF_POST
                 .order(by: SecretSpotField.dateCreated, descending: true)
-                .limit(to: 30)
+                .limit(to: 100)
                 .getDocuments { snapshot, error in
                     let results = self.getSecretSpotsFromSnapshot(querysnapshot: snapshot)
                     completion(results)
@@ -1594,10 +1601,9 @@ class DataService {
 
             self.REF_POST
                 .order(by: SecretSpotField.dateCreated, descending: true)
-                .limit(to: 30)
                 .getDocuments { querysnapshot, error in
                     let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
-                    let filteredResults = results.filter({  $0.ownerId != uid &&
+                    let filteredResults = results.filter({  $0.ownerId != uid && $0.isPublic == true &&
                                                             !history.contains($0.id)})
                     completion(filteredResults)
                 }
@@ -1620,8 +1626,9 @@ class DataService {
                 snap.documents.forEach { document in
                     let data = document.data()
                     let spot = SecretSpot(data: data)
-                    print(spot)
-                    completion(.success(spot))
+                    if let spot = spot {
+                        completion(.success(spot))
+                    }
                 }
             }
     }
@@ -1895,7 +1902,7 @@ class DataService {
         guard let tribe = tribe, let uid = userId else {return}
         
         let document = REF_WORLDS.document(tribe).collection(WorldField.ranks).document(uid)
-        
+
         let data: [String: Any] = [
             RankingField.id: rank.id,
             RankingField.profileUrl: rank.profileImageUrl,
@@ -1912,16 +1919,16 @@ class DataService {
             RankingField.totalVerifications: rank.totalUserVerifications,
             RankingField.progress: rank.progress,
         ]
-        
+
         document.setData(data, merge: true) { error in
             if let error = error {
                 print("Failed to write ranks to Firebase", error.localizedDescription)
                 return
             }
-            
+
             print("Ranking uploaded to DB")
         }
-        
+//
     }
     
     func streetFollowUser(user: User, fcmToken: String, completion: @escaping (_ succcess: Bool) -> ()) {
@@ -2115,7 +2122,9 @@ class DataService {
                 snapshot.documents.forEach { document in
                     let data = document.data()
                     let spot = SecretSpot(data: data)
-                    spots.append(spot)
+                    if let spot = spot {
+                        spots.append(spot)
+                    }
                 }
                 completion(.success(spots))
             }
@@ -2149,7 +2158,7 @@ class DataService {
     
     
     
-    func updateSecretSpot(spotId: String, completion: @escaping (_ spot: SecretSpot) -> ()) {
+    func updateSecretSpot(spotId: String, completion: @escaping (_ success: Bool) -> ()) {
         REF_POST.document(spotId).getDocument { snaphot, error in
             
             if let error = error {
@@ -2158,10 +2167,19 @@ class DataService {
             }
             
             guard let document = snaphot else {return}
+            if !document.exists {
+                CoreDataManager.instance.delete(spotId: spotId)
+                completion(false)
+            }
+            self.updatePostViewCount(postId: spotId)
             let data = document.data()
             let secretSpot = SecretSpot(data: data)
-            self.manager.updatewithSpot(spot: secretSpot)
-            completion(secretSpot)
+            if let spot = secretSpot {
+                print("Secret Spot Updated")
+                self.manager.updatewithSpot(spot: spot)
+                completion(true)
+            }
+        
             
     }
 }
@@ -2176,7 +2194,9 @@ class DataService {
                 
                 let data = document.data()
                 let spot = SecretSpot(data: data)
-                secretSpots.append(spot)
+                if let spot = spot {
+                    secretSpots.append(spot)
+                }
             }
             return secretSpots
         } else {
@@ -2388,10 +2408,7 @@ class DataService {
             for spot in filteredSpots {
                 self.updatePostDisplayName(postID: spot.id, displayName: displayName)
             }
-
-
         }
-
 
     }
     
@@ -2412,6 +2429,7 @@ class DataService {
         ]
         
         REF_POST.document(postId).updateData(data)
+        
     }
     
      func updatePostProfileImageUrl(profileUrl: String) {
@@ -2487,14 +2505,16 @@ class DataService {
         //Delete user from save collection
         REF_POST.document(spotId).collection("savedBy").document(uid).delete()
         
-        //Delete spot it is owned by user
+//        Delete spot it is owned by user
         if spot.ownerId == uid {
-            REF_POST.document(spotId).delete()
+                self.REF_POST.document(spotId).delete()
+                completion(true)
+                return
         }
-        
-        //Delete spot from user's private world
+                
+//        Delete spot from user's private world
         REF_WORLD.document("private").collection(uid).document(spotId).delete { error in
-            
+
             if let error = error {
                 print("Error deleting secret spot", error.localizedDescription)
                 return
@@ -2503,9 +2523,8 @@ class DataService {
                 completion(true)
                 return
             }
-            
-            
         }
+        
     }
     
     

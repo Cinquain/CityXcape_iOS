@@ -31,6 +31,7 @@ class DiscoverViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
     @Published var searchTerm: String = ""
+    @Published var newSpotCount: Int = 0
 
     @Published var finished: Bool = false
     @Published var saved: Bool = false
@@ -46,6 +47,7 @@ class DiscoverViewModel: ObservableObject {
     @Published var lastMoveIndex: Int = 0
     @Published var showSignUp: Bool = false
     
+    var savedspots: [SecretSpot] = []
     var placeHolder: String = "Search a city"
 
     init() {
@@ -56,6 +58,7 @@ class DiscoverViewModel: ObservableObject {
         }
         getScoutLeaders()
         getNewSecretSpots()
+        savedspots = manager.spotEntities.map({SecretSpot(entity: $0)})
     }
     
     func getNewSecretSpots() {
@@ -65,11 +68,17 @@ class DiscoverViewModel: ObservableObject {
             
             self.allspots = secretspots
             self.newSecretSpots = secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
+            self.newSpotCount = self.newSecretSpots.count
             var views: [CardView] = []
             
             for index in 0..<2 {
-                let spot = self.newSecretSpots[index]
-                views.append(CardView(spot: spot))
+                if self.newSecretSpots.isEmpty {self.hasNewSpots = false; return}
+                
+                if self.newSecretSpots.indices.contains(index) {
+                    let spot = self.newSecretSpots[index]
+                    views.append(CardView(spot: spot))
+                }
+                
             }
             
             self.cardViews = views
@@ -77,6 +86,8 @@ class DiscoverViewModel: ObservableObject {
             
             if self.newSecretSpots.count > 0 {
                 self.hasNewSpots = true
+            } else {
+                self.hasNewSpots = false
             }
             
         }
@@ -88,18 +99,39 @@ class DiscoverViewModel: ObservableObject {
             showAlert = true
             return
         }
+        
+        if threshold > 65 && userId != nil {
+            guard let spot = cardViews.first?.spot else {return}
+            print("saving to user's world")
+            saveCardToUserWorld(spot: spot)
+        } else if threshold < -65 && userId != nil {
+            guard let spot = cardViews.first?.spot else {return}
+            print("adding dismissal to card history")
+            dismissCard(spot: spot)
+        }
+        
         cardViews.removeFirst()
         lastCardIndex += 1
         lastMoveIndex += 1
+        newSpotCount -= 1
         let secretSpots = newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
-        let spot = secretSpots[lastCardIndex]
-        let cardView = CardView(spot: spot)
-        cardViews.append(cardView)
+        if lastCardIndex <= secretSpots.count - 1 {
+            let spot = secretSpots[lastCardIndex]
+            let cardView = CardView(spot: spot)
+            cardViews.append(cardView)
+        } else if secretSpots.count == 1 {
+            alertMessage = "This is the last card on the deck"
+            showAlert.toggle()
+        } else if secretSpots.isEmpty {
+            hasNewSpots = false
+        }
+       
     }
     
     func undoMoveCard() {
         if lastMoveIndex == 0 {return}
         lastMoveIndex -= 1
+        newSpotCount += 1
         let secretSpots = newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
         if secretSpots.indices.contains(lastMoveIndex) {
             let spot = secretSpots[lastMoveIndex]
@@ -200,10 +232,13 @@ class DiscoverViewModel: ObservableObject {
         
         if wallet >= spot.price {
             //Decremement wallet locally
+        
+            
             wallet -= spot.price
             UserDefaults.standard.set(wallet, forKey: CurrentUserDefaults.wallet)
             print("Saving to user's world")
             //Save to DB
+         
             DataService.instance.saveToUserWorld(spot: spot) { [weak self] success in
                 
                 if !success {
@@ -243,26 +278,13 @@ class DiscoverViewModel: ObservableObject {
     
     func dismissCard(spot: SecretSpot) {
         print("Removing from user's world")
-        
-        DataService.instance.dismissCard(spot: spot) { [weak self] success in
+        DataService.instance.dismissCard(spot: spot) { success in
             if !success {
                 print("Error dismissing card")
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    self?.passed = false 
-                }
                 return
             }
-            
             print("successfully dismissed card to DB")
             AnalyticsService.instance.passedSecretSpot()
-            self?.passed = false
-
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                if let index = self?.newSecretSpots.firstIndex(of: spot) {
-                    self?.newSecretSpots.remove(at: index)
-                }
-            }
         }
         
     }

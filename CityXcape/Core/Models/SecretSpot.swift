@@ -145,23 +145,29 @@ struct SecretSpot:  Hashable, Identifiable, Equatable {
         }
     
     
-    init(data: [String: Any]?) {
+    init?(data: [String: Any]?) {
         
+        var spotImageUrls: [String] = []
+
         let dateCreated = data?[SecretSpotField.dateCreated] as? Timestamp ?? Timestamp()
-        let imageUrl = data?[SecretSpotField.spotImageUrl] as? String ?? ""
-        let additionalImages = data?[SecretSpotField.spotImageUrls] as? [String] ?? []
-        
-        let date = dateCreated.dateValue()
-        var spotImageUrls = [imageUrl]
-        if !additionalImages.isEmpty {
-            additionalImages.forEach { url in
-                spotImageUrls.append(url)
+        if let imageUrl = data?[SecretSpotField.spotImageUrl] as? String {
+            spotImageUrls.append(imageUrl)
+            let additionalImages = data?[SecretSpotField.spotImageUrls] as? [String] ?? []
+            if !additionalImages.isEmpty {
+                additionalImages.forEach { url in
+                    spotImageUrls.append(url)
+                }
+
             }
+        } else {
+            return nil
         }
         
+        let date = dateCreated.dateValue()
+     
+        self.imageUrls = spotImageUrls
         self.id = data?[SecretSpotField.spotId] as? String  ?? ""
         self.spotName = data?[SecretSpotField.spotName] as? String ?? ""
-        self.imageUrls = spotImageUrls
         self.longitude = data?[SecretSpotField.longitude] as? Double ?? 0
         self.latitude = data?[SecretSpotField.latitude] as? Double ?? 0
         self.price = data?[SecretSpotField.price] as? Int ?? 0

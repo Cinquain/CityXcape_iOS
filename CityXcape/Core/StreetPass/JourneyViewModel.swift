@@ -60,9 +60,16 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     
     fileprivate func getVerificationsForUser() {
         guard let uid = userId else {return}
-        DataService.instance.getVerifications(uid: uid) { [weak self] verifications in
-            self?.verifications = verifications
-            self?.getCities()
+        manager.fetchVerifications()
+        let entities = manager.verifications
+        if !entities.isEmpty {
+            self.verifications = entities.map({Verification(entity: $0)})
+            return
+        } else {
+            DataService.instance.getVerifications(uid: uid) { [weak self] verifications in
+                self?.verifications = verifications
+                self?.getCities()
+            }
         }
     }
     

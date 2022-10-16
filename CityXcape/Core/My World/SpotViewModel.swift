@@ -423,12 +423,13 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     }
     
     
-    func updateSecretSpot(postId: String) {
+    func updateSecretSpot(postId: String, completion: @escaping (_ success: Bool) -> ()) {
         
-        DataService.instance.updateSecretSpot(spotId: postId) { spot in
-            
+        DataService.instance.updateSecretSpot(spotId: postId) { success in
+            completion(success)
         }
         
+
     }
     
     func pressLike(postId: String) {

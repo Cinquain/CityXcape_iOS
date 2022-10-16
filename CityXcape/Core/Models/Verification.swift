@@ -24,7 +24,6 @@ struct Verification: Identifiable, Hashable {
     let city: String
     let country: String
     
-    let commentCount: Int?
     let verifierName: String
     let verifierImage: String
 
@@ -44,7 +43,23 @@ struct Verification: Identifiable, Hashable {
         self.name = data[CheckinField.spotName] as? String ?? ""
         self.verifierName = data[CheckinField.veriferName] as? String ?? ""
         self.verifierImage = data[CheckinField.verifierImage] as? String ?? ""
-        self.commentCount = data[CheckinField.commentCount] as? Int? ?? 0
+    }
+    
+    
+    init(entity: VerificationEntity) {
+        self.postId = entity.postId ?? ""
+        self.imageUrl = entity.imageUrl ?? ""
+        self.country = entity.country ?? ""
+        self.comment = entity.comment ?? ""
+        self.time = entity.timestamp ?? Date()
+        self.name = entity.name ?? ""
+        self.verifierId = entity.verifierId ?? ""
+        self.verifierName = entity.verifierName ?? ""
+        self.verifierImage = entity.verifierImage ?? ""
+        self.latitude = entity.latitude
+        self.longitude = entity.longitude
+        self.spotOwnerId = entity.spotOwnerId ?? ""
+        self.city = entity.city ?? ""
     }
     
     init(userInfo: [AnyHashable: Any]) {
@@ -64,7 +79,6 @@ struct Verification: Identifiable, Hashable {
         self.city =  userInfo["city"] as? String ?? ""
         self.country =  userInfo["country"] as? String ?? ""
         self.spotOwnerId =  userInfo["ownerId"] as? String ?? ""
-        self.commentCount =  Int(count) ?? 0
         self.verifierId =  userInfo["verifierId"] as? String ?? ""
         self.verifierName =  userInfo["verifierName"] as? String ?? ""
         self.verifierImage =  userInfo["verifierImage"] as? String ?? ""
