@@ -21,19 +21,18 @@ struct FeedView: View {
 
         NavigationView {
             ZStack {
-                
-                ScrollView {
-                 
-                    ForEach(vm.feeds) { feed in
-                        FeedBubbleView(feed: feed, vm: vm)
-                            .padding(.top, 10)
-                            .sheet(item: $vm.secretSpot) { spot in
-                                SecretSpotPage(spot: spot, vm: discoverVM)
+            
+                    ScrollView {
+                     
+                        ForEach(vm.feeds) { feed in
+                            FeedBubbleView(feed: feed, vm: vm)
+                                .padding(.top, 10)
+                                .sheet(item: $vm.secretSpot) { spot in
+                                    SecretSpotPage(spot: spot, vm: discoverVM)
+                                }
                             }
+                        
                         }
-                    
-                    }
-                  
                 
                 GeometryReader { _ in
                     HStack {

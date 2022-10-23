@@ -98,27 +98,33 @@ struct WorldInviteView: View {
             
             HStack(alignment: .center, spacing: 80) {
                 
-                VStack(spacing: 0) {
+                
                     
                     Button {
-                        presentationMode.wrappedValue.dismiss()
+                    DataService.instance.denyInvitation(name: world.name) { result in
+                            switch result {
+                            case .success(_), .failure(_):
+                                alertMessage = "Invitation Denied"
+                                showAlert.toggle()
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                        }
                     } label: {
-                        Image("pass_dot")
-                            .resizable()
-                            .scaledToFit()
+                        VStack(spacing: 2) {
+                            Image("pass_dot")
+                                .resizable()
+                                .scaledToFit()
                             .frame(height: 55)
+                            
+                            Text("Nah...")
+                                .font(.callout)
+                                .fontWeight(.thin)
+                                .foregroundColor(.white)
+                        }
+                       
                     }
                     
-                    Text("Nah...")
-                        .font(.callout)
-                        .fontWeight(.thin)
-                        .foregroundColor(.white)
-                }
-                
-                
-                
-                VStack(spacing: 0) {
-                
+                    
                     Button {
                         DataService.instance.joinWorld(world: world) { result in
                             switch result {
@@ -134,16 +140,22 @@ struct WorldInviteView: View {
                             }
                         }
                     } label: {
-                        Image("save_dot")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 55)
+                        VStack(spacing: 2) {
+                            Image("save_dot")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 55)
+                            
+                            Text("Yes!")
+                                .font(.callout)
+                                .fontWeight(.thin)
+                                .foregroundColor(.white)
+                        }
+                        
+                        
                     }
-                    Text("Yes!")
-                        .font(.callout)
-                        .fontWeight(.thin)
-                        .foregroundColor(.white)
-                }
+                   
+                
 
 
             }

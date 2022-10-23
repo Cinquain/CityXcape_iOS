@@ -10,26 +10,55 @@ import UIKit
 import MapKit
 
 struct HeatMap: View {
-    let vm: MyWorldViewModel
+    @Environment(\.presentationMode) var presentationMode
+
+    var vm: WorldViewModel
+    @State var currentUser: User?
     var body: some View {
         ZStack {
-            HeatMapView(vm: vm)
+            
+            HeatMapView(user: $currentUser, vm: vm)
                 .colorScheme(.dark)
-                .edgesIgnoringSafeArea(.all)
+                .sheet(item: $currentUser) { user in
+                    PublicStreetPass(user: user)
+                }
+            
+            VStack {
+                InfoBanner()
+                    .padding(.top, 40)
+                
+                Spacer()
+                
+                Button {
+                    self.presentationMode.wrappedValue.dismiss()
+                } label: {
+                    Image("arrow")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 20)
+                        .opacity(0.5)
+                }
+                .padding()
+            }
+            
         }
+        .edgesIgnoringSafeArea(.all)
+
     }
     
 }
 
 
 struct HeatMapView: UIViewRepresentable {
+    @Binding var user: User?
+    
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
     
     
     let mapView = MKMapView()
-    let vm: MyWorldViewModel
+    @StateObject var vm: WorldViewModel
     var center: CLLocationCoordinate2D?
     
     func makeUIView(context: Context) -> MKMapView {
@@ -41,23 +70,21 @@ struct HeatMapView: UIViewRepresentable {
     
     func updateUIView(_ uiView: MKMapView, context: Context) {
         
-        if vm.annotations.count > 0 {
+        if vm.users.count > 0 {
             uiView.removeAnnotations(uiView.annotations)
             vm.annotations.forEach { annotation in
                 uiView.addAnnotation(annotation)
             }
             
             uiView.showAnnotations(uiView.annotations.filter({$0 is MKPointAnnotation}), animated: true)
-            setupRegion()
         }
-       
     }
     
     func setupRegion() {
-        let orderedSpots = vm.currentSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
+        let orderedSpots = vm.users.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
         guard let firstSpot = orderedSpots.first else {return}
-        let center = CLLocationCoordinate2D(latitude: firstSpot.latitude, longitude: firstSpot.longitude)
-        let span = MKCoordinateSpan(latitudeDelta: 0.3, longitudeDelta: 0.3)
+        let center = CLLocationCoordinate2D(latitude: firstSpot.latitude ?? 0, longitude: firstSpot.longitude ?? 0)
+        let span = MKCoordinateSpan(latitudeDelta: 1, longitudeDelta: 1)
         let region = MKCoordinateRegion(center: center, span: span)
         mapView.setRegion(region, animated: true)
     }
@@ -76,22 +103,23 @@ struct HeatMapView: UIViewRepresentable {
         
         func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
             
-            let image = UIImage(named: "grid")!
-            let targetSize = CGSize(width: 50, height: 50)
-            let targetHeight = targetSize.height / image.size.height
-            let targetWidth = targetSize.width / image.size.width
-            let scaleFactor = min(targetWidth, targetHeight)
-            let scaleImageSize = CGSize(width: image.size.width * scaleFactor, height: image.size.height * scaleFactor)
-            let renderer =  UIGraphicsImageRenderer(size: scaleImageSize)
-            let scaledImage = renderer.image { _ in
-                image.draw(in: CGRect(origin: .zero, size: scaleImageSize))
-            }
             if (annotation is MKPointAnnotation) {
-                let view = MKAnnotationView(annotation: annotation, reuseIdentifier: "hex")
-                view.image = scaledImage
-                return view
+                let annotationView = MKAnnotationView(annotation: annotation, reuseIdentifier: "id")
+                annotationView.canShowCallout = true
+                let image = UIImage(named: "world_dot")
+                annotationView.image = image
+                return annotationView
             }
             return nil
+        }
+        
+        
+        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+            let title = view.annotation?.title ?? ""
+            let selectedUser = parent.vm.users.first(where: {$0.displayName == title})
+            if let user = selectedUser {
+                parent.user = user
+            }
         }
         //End of Coordinator
     }
@@ -104,7 +132,7 @@ struct HeatMapView: UIViewRepresentable {
 
 struct HeatMapView_Previews: PreviewProvider {
     static var previews: some View {
-        HeatMap(vm: MyWorldViewModel())
+        HeatMap(vm: WorldViewModel())
     }
 }
 

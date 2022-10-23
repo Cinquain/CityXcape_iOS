@@ -30,7 +30,6 @@ class MyWorldViewModel: NSObject, ObservableObject {
     @Published var alertMessage: String = ""
     @Published var searchTerm: String = ""
     
-    @Published var annotations: [MKPointAnnotation] = []
     @Published var verifications: [Verification] = []
     
     
@@ -39,7 +38,6 @@ class MyWorldViewModel: NSObject, ObservableObject {
     
     override init() {
         super.init()
-        fetchVerifications()
         setupToggleObserver()
     }
     
@@ -57,28 +55,25 @@ class MyWorldViewModel: NSObject, ObservableObject {
                 self.currentSpots = self.allSpots
                                         .filter({$0.verified == false})
                                         .sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
+                self.fetchVerifications()
                 self.showOnboarding = false
             }
         }
     }
     
     func fetchVerifications() {
-        manager.fetchVerifications()
-        let entities = manager.verifications
-        if !entities.isEmpty {
-            self.verifications = entities.map({Verification(entity: $0)})
+   
+        guard let uid = userId else {return}
+        DataService.instance.getVerifications(uid: uid) { [weak self] verifications in
+            guard let self = self else {return}
+            self.verifications = verifications
             verifications.forEach { verification in
-                if currentSpots.contains(where: {$0.id == verification.id && $0.verified == false}) {
-                    manager.updateVerification(spotId: verification.id)
+                if self.allSpots.contains(where: {$0.id == verification.id && $0.verified == false}) {
+                    self.manager.updateVerification(spotId: verification.id)
                 }
             }
-            return
-        } else {
-            guard let uid = userId else {return}
-            DataService.instance.getVerifications(uid: uid) { verifications in
-                self.verifications = verifications
-            }
         }
+        
     }
     
     
@@ -169,13 +164,13 @@ class MyWorldViewModel: NSObject, ObservableObject {
             return
         }
         let spots = manager.spotEntities.map({SecretSpot(entity: $0)})
+        fetchVerifications()
         if spots.isEmpty {
             print("Core Data is Empty")
             self.getSavedSpotsForUser(uid: userId)
         } else {
             print("Core Data Entities Found!")
             self.allSpots.removeAll()
-            self.annotations.removeAll()
             self.allSpots = spots
             self.currentSpots = self.allSpots.filter({$0.verified == false})
             if self.currentSpots.count > 30 {
@@ -184,11 +179,7 @@ class MyWorldViewModel: NSObject, ObservableObject {
                 self.currentSpots.sort(by: {$0.distanceFromUser < $1.distanceFromUser})
                 self.currentSpots = self.currentSpots.dropLast(difference)
             }
-            self.currentSpots.forEach { spot in
-                let annotation = MKPointAnnotation()
-                annotation.coordinate = CLLocationCoordinate2D(latitude: spot.latitude, longitude: spot.longitude)
-                self.annotations.append(annotation)
-            }
+        
             
         }
         

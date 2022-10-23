@@ -21,13 +21,13 @@ struct FriendsView: View {
             List {
                 ForEach(vm.friends) { user in
                     VStack {
-                     
+                        
                         NavigationLink {
                             ChatLogView(user: user)
                         } label: {
                             UserChatView(user: user)
                         }
-                        
+
                         Divider()
                     }
                     .swipeActions {
@@ -37,6 +37,9 @@ struct FriendsView: View {
                            .tint(.red)
                        }
                     .listRowInsets(EdgeInsets())
+                    .alert(isPresented: $vm.showAlert) {
+                        return Alert(title: Text(vm.alertMessage))
+                    }
 
                     
                 }

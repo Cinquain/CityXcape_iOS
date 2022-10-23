@@ -41,6 +41,8 @@ struct UserField {
     static let latitude = "latitude"
     static let longitude = "longitude"
     static let geohash = "geohash"
+    static let nearbyToken = "nearbyToken"
+
 }
 
 struct SecretSpotField {
@@ -123,6 +125,7 @@ struct ServerPath {
     static let members = "members"
     static let secret = "private"
     static let verified = "verified"
+    static let nearby = "nearby"
     static let posts = "posts"
     static let rankings = "rankings"
     static let users = "users"
@@ -357,6 +360,7 @@ enum UploadError: Error {
 enum NetworkError: Error {
     case failed
     case badURL
+    case empty
 }
 
 enum FeedType: String, CaseIterable {

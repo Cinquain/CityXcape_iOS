@@ -7,6 +7,7 @@
 
 import Foundation
 import Firebase
+import CoreLocation
 import FirebaseMessaging
 
 
@@ -25,11 +26,30 @@ struct User: Identifiable, Hashable, Equatable {
     var city: String?
     var tribe: String?
     var tribeImageUrl: String?
+    
+    var longitude: Double?
+    var latitude: Double?
 
     var verified: Date?
     var membership: Date?
     var world: [String: Double]?
     var newFriend: Bool?
+    
+    
+    var distanceFromUser: Double {
+        let manager = LocationService.instance.manager
+        
+        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
+            let destination = CLLocation(latitude: latitude ?? 0, longitude: longitude ?? 0)
+            let userlocation = CLLocation(latitude: (manager.location?.coordinate.latitude) ?? 0, longitude: (manager.location?.coordinate.longitude) ?? 0)
+            let calculatedDistance = userlocation.distance(from: destination) * 0.000621
+            return calculatedDistance
+        } else {
+            manager.requestWhenInUseAuthorization()
+            return 0
+        }
+
+    }
     
     
     static func == (lhs: User, rhs: User) -> Bool {
@@ -45,7 +65,14 @@ struct User: Identifiable, Hashable, Equatable {
     }
     
     init(data: [String: Any]?) {
-        self.id = data?[UserField.providerId] as? String ?? ""
+        let uid = data?[UserField.provider] as? String ?? ""
+        
+        if uid == "" {
+            self.id = data?[UserField.providerId] as? String ?? ""
+        } else {
+            self.id = uid
+        }
+        
         self.displayName = data?[UserField.displayName] as? String ?? ""
         self.streetCred = data?[UserField.streetCred] as? Double ?? 0
         self.bio = data?[UserField.bio] as? String ?? ""
@@ -56,6 +83,8 @@ struct User: Identifiable, Hashable, Equatable {
         self.rank = data?[UserField.rank] as? String ?? "Tourist"
         let timestamp = data?[UserField.dataCreated] as? Timestamp
         self.tribe = data?[UserField.tribe] as? String ?? ""
+        self.longitude = data?[UserField.longitude] as? Double ?? 0
+        self.latitude = data?[UserField.latitude] as? Double ?? 0
         self.tribeImageUrl = data?[UserField.tribeImageUrl] as? String ?? ""
         self.membership = timestamp?.dateValue()
     }

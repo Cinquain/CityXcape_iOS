@@ -16,6 +16,9 @@ class FeedViewModel: ObservableObject {
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     
     @Published var feeds: [Feed] = []
+    @Published var users: [User] = []
+
+
     @Published var submissionText: String = ""
     @Published var alertMessage: String = ""
     @Published var showAlert: Bool = false
@@ -29,8 +32,7 @@ class FeedViewModel: ObservableObject {
     @Published var secretSpot: SecretSpot?
     @Published var verification: Verification?
     @Published var user: User?
-    @Published var users: [User] = []
-    @Published var showUsers: Bool = false 
+    @Published var showUsers: Bool = false
     
     var searchTerm: String = "Search a user"
     
@@ -56,6 +58,7 @@ class FeedViewModel: ObservableObject {
         }
         
     }
+
     
     func postMessage() {
         

@@ -5,11 +5,10 @@
 //  Created by James Allan on 9/2/21.
 //
 
-import Foundation
+import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseMessaging
-import UIKit
 import GeoFire
 
 let DB_BASE = Firestore.firestore()
@@ -17,14 +16,17 @@ let DB_BASE = Firestore.firestore()
 
 class AuthService {
     
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @AppStorage(CurrentUserDefaults.tribe) var tribe: String?
     
     static let instance = AuthService()
     let locationManager = LocationService.instance
     private init() {}
     
-    private var REF_USERS = DB_BASE.collection("users")
+    private var REF_USERS = DB_BASE.collection(ServerPath.users)
     private var REF_Rankings = DB_BASE.collection("rankings")
     private var REF_FEED = DB_BASE.collection(ServerPath.feed)
+    private var REF_WORLDS = DB_BASE.collection(ServerPath.worlds)
 
     
     func loginUserToFirebase(credential: AuthCredential, completion: @escaping (_ providerId: String?, _ error: Bool, _ isNewUser: Bool?, _ userId: String?) -> ()) {
@@ -344,6 +346,22 @@ class AuthService {
     
     func updateUserField(uid: String, data: [String: Any]) {
         REF_USERS.document(uid).setData(data, merge: true)
+        
+        if tribe != nil && tribe != "" {
+            guard let worldName = tribe else {return}
+            
+            REF_WORLDS
+                .document(worldName)
+                .collection(ServerPath.maps)
+                .document(uid)
+                .updateData(data)
+            
+            REF_WORLDS
+                .document(worldName)
+                .collection(ServerPath.members)
+                .document(uid)
+                .updateData(data)
+        }
     }
     
     func updateUserBio(userId: String, bio: String, completion: @escaping (_ success: Bool) -> ()) {

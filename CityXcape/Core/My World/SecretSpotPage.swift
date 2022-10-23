@@ -56,7 +56,7 @@ struct SecretSpotPage: View {
        
             
         }
-        .background(LinearGradient(gradient: Gradient(colors: [Color.black,  Color.orange]), startPoint: .center, endPoint: .bottom).edgesIgnoringSafeArea(.all))
+        .background(LinearGradient(gradient: Gradient(colors: [Color.black,  Color.cx_blue]), startPoint: .center, endPoint: .bottom).edgesIgnoringSafeArea(.all))
     }
 }
 
@@ -165,7 +165,6 @@ extension SecretSpotPage {
                 .resizable()
                 .scaledToFit()
                 .frame(height: 20)
-                .opacity(0.5)
         }
     }
     

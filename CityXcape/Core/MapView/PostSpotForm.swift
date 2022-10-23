@@ -35,16 +35,17 @@ struct PostSpotForm: View {
                     Section("\(Image(systemName: "eye.fill")) Visibility") {
                         Toggle(vm.isPublic ? "Public" : "Private", isOn: $vm.isPublic)
                         
-                        if vm.isPublic {
+                        
                             TextField(vm.worldPlaceHolder, text: $vm.world, onCommit:  {
                                 vm.converToHashTag()
                             })
+                            .opacity(!vm.isPublic ? 0 : 1)
                            
-                        } else {
-                            Text(vm.privatePlaceHolder)
-                                .foregroundColor(.white)
-                               
-                        }
+//                         else {
+//                            Text(vm.privatePlaceHolder)
+//                                .foregroundColor(.white)
+//
+//                        }
                               
                     }
     
@@ -114,7 +115,8 @@ struct PostSpotForm: View {
                     .default(Text("Photo Library"), action: {
                         vm.sourceType = .photoLibrary
                         vm.showPicker.toggle()
-                    })
+                    }),
+                    .cancel()
                 ])
                 
             }

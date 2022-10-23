@@ -169,7 +169,7 @@ class PostViewModel: NSObject, ObservableObject {
          
         }
         world = ""
-//        newWords.forEach({ world += " \($0)"})
+        
         var count = 1
         for word in newWords {
             if count == 4 {

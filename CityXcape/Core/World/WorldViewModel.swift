@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Combine
+import MapKit
 
 class WorldViewModel: NSObject, ObservableObject {
     
@@ -21,6 +22,7 @@ class WorldViewModel: NSObject, ObservableObject {
     @Published var world: World?
     @Published var ranking: [Rank] = []
     @Published var worlds: [World] = []
+    @Published var worldInvite: World?
     @Published var rank: String = ""
     @Published var progressString: String = ""
     @Published var progressValue: CGFloat = 0
@@ -33,12 +35,17 @@ class WorldViewModel: NSObject, ObservableObject {
     @Published var showAlert: Bool = false
     @Published var showLeaders: Bool = false
     @Published var showSpots: Bool = false
+    @Published var showHeatmap: Bool = false
 
     
     @Published var friendRequest: [User] = []
     @Published var showFriendRequest: Bool = false
     @Published var showWorldForm: Bool = false
-    
+    @Published var showInvite: Bool = false
+
+    @Published var annotations: [MKPointAnnotation] = []
+    @Published var users: [User] = []
+
     let manager = CoreDataManager.instance
 
     override init() {
@@ -86,6 +93,60 @@ class WorldViewModel: NSObject, ObservableObject {
                 case .success(let returnedWorlds):
                     print("Found worlds")
                     self.worlds = returnedWorlds
+            }
+        }
+    }
+    
+    func fetchWorldInvitations() {
+        DataService.instance.getWorldInvites { [weak self] result in
+            guard let self = self else {return}
+            
+            switch result {
+                case .failure(let error):
+                    self.alertMessage = "You have no world invitation"
+                    self.showAlert.toggle()
+                case .success(let world):
+                    self.worldInvite = world
+                    self.showInvite.toggle()
+                }
+        }
+    }
+    
+    
+    func fetchUsersFromWorld() {
+        if tribe == nil || tribe == "" {
+            alertMessage = "You need to be part of a community to see a heatmap"
+            showAlert.toggle()
+            return
+        }
+        guard let tribe = tribe else {return}
+        DataService.instance.getUsersFromWorldMap(world: tribe) { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                    self.showAlert.toggle()
+                case .success(let users):
+                    self.users = users
+                self.users.forEach { user in
+                    let annotation = MKPointAnnotation()
+                    annotation.title = user.displayName
+                    annotation.coordinate = .init(latitude: user.latitude ?? 0, longitude: user.longitude ?? 0)
+                    annotation.subtitle  = "\(String(format: "%.1f", user.distanceFromUser)) mile away"
+                    self.annotations.append(annotation)
+                }
+                self.showHeatmap.toggle()
+                self.sendPushtoNearbyUsers()
+            }
+        }
+    }
+    
+    func sendPushtoNearbyUsers() {
+        let threshold: Double = 1
+        users.forEach { user in
+            let distance = user.distanceFromUser
+            if distance < threshold {
+                DataService.instance.notifyNearbyMember(user: user)
             }
         }
     }

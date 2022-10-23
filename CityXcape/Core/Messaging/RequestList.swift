@@ -24,6 +24,9 @@ struct RequestList: View {
                 Text("\(friends.count) Pending Friend Request")
                     .font(.title2)
                     .fontWeight(.thin)
+                    .alert(isPresented: $showAlert) {
+                        return Alert(title: Text(alertMessage))
+                    }
                 Spacer()
             }
             .padding(.horizontal, 20)
@@ -90,6 +93,9 @@ struct RequestList: View {
                 case .success(_):
                     self.alertMessage = "Friend request has been added deleted"
                     self.showAlert = true
+                if let index = friends.firstIndex(of: user) {
+                    friends.remove(at: index)
+                }
                 case .failure(let error):
                     self.alertMessage = error.localizedDescription
                     self.showAlert = true
@@ -105,6 +111,9 @@ struct RequestList: View {
                     self.alertMessage = "\(user.displayName) has been added as a friend"
                     AnalyticsService.instance.newFriends()
                     self.showAlert = true
+                    if let index = friends.firstIndex(of: user) {
+                        friends.remove(at: index)
+                    }
                 case .failure(let error):
                     self.alertMessage = error.localizedDescription
                     self.showAlert = true

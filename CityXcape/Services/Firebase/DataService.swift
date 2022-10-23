@@ -377,6 +377,7 @@ class DataService {
         }
     }
     
+    
     func createWorld(name: String, details: String, email: String, req: String, reqSpots: Int, reqStamps: Int, hashtags: String, price: Int, completion: @escaping (Result<String, Error>) -> ()) {
         guard let uid = userId, let displayName = displayName, let profileUrl = profileUrl else {return}
         
@@ -1392,8 +1393,58 @@ class DataService {
             }
     }
     
+    func getWorldInvites(completion: @escaping (Result<World, Error>) -> ()) {
+        guard let uid = userId else {return}
+        REF_USERS
+            .document(uid)
+            .collection(ServerPath.invite)
+            .getDocuments { [weak self] querySnapshot, error in
+                guard let self = self else {return}
+                if let error = error {
+                    print("Error fetching invitations for user", error.localizedDescription)
+                    return
+                }
+                
+                guard let snapshot = querySnapshot else {
+                    print("No invitation found")
+                    return}
+                
+                if snapshot.isEmpty {
+                    let error = NetworkError.empty
+                    completion(.failure(error))
+                }
+                
+                snapshot.documents.forEach { document in
+                    let data = document.data()
+                    let name = data[UserField.tribe] as? String  ?? ""
+                    print("World name is", name)
+                    self.getSpecificWorld(name: name) { result in
+                        switch result {
+                        case .failure(let error):
+                            print("Error fetching world", error.localizedDescription)
+                            completion(.failure(error))
+                        case .success(let world):
+                            completion(.success(world))
+                        }
+                    }
+                    
+                }
+            }
+        
+    }
+    
+    func denyInvitation(name: String,completion: @escaping (Result<Bool, Error>) -> ()) {
+        guard let uid = userId else {return}
+        REF_USERS
+            .document(uid)
+            .collection(ServerPath.invite)
+            .document(name)
+            .delete()
+        completion(.success(true))
+    }
+    
     func sendWorldInvite(user: User, competion: @escaping (Result<String, Error>) -> ()) {
-        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName, let bio = bio, let tribe = tribe
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName, let tribe = tribe
         else {return}
         
         let inviteData: [String: Any] = [
@@ -1441,7 +1492,6 @@ class DataService {
         ]
         
         
-        
         let userData: [String: Any] = [
             UserField.tribe: world.name,
             UserField.tribeImageUrl: world.imageUrl,
@@ -1475,15 +1525,28 @@ class DataService {
             .document(world.name)
             .collection(ServerPath.members)
             .document(uid)
-            .setData(data) { error in
+            .setData(data) { [weak self] error in
+                
+                guard let self = self else {return}
+                
                 if let error = error {
                     print("error adding user as new world member", error.localizedDescription)
                     return
                 }
                 
                 let message = "Successfully joined the \(world.name) community"
+                
                 UserDefaults.standard.set(world.name, forKey: CurrentUserDefaults.tribe)
                 UserDefaults.standard.set(world.imageUrl, forKey: CurrentUserDefaults.tribeImageUrl)
+                
+                let increment: Int64 = 1
+                let incremementData: [String: Any] = [
+                    WorldField.membersCount: FieldValue.increment(increment)
+                ]
+                
+                self.REF_WORLDS.document(world.name).updateData(incremementData)
+                self.REF_USERS.document(uid).collection(ServerPath.invite).document(world.name).delete()
+                
                 completion(.success(message))
             }
     
@@ -1577,6 +1640,62 @@ class DataService {
     }
         
 }
+    
+    func getUsersFromWorldMap(world: String, completion: @escaping (Result<[User], Error>) -> ()) {
+        var users: [User] = []
+        
+        REF_WORLDS
+            .document(world)
+            .collection(ServerPath.maps)
+            .getDocuments { querySnapshot, error in
+                if let error = error {
+                    print("Error fetching users from world", error.localizedDescription)
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let snapshot = querySnapshot else {return}
+                
+                if snapshot.isEmpty {
+                    print("World map is empty")
+                    completion(.success(users))
+                    return
+                }
+                
+                snapshot.documents.forEach { document in
+                    let data = document.data()
+                    let user = User(data: data)
+                    users.append(user)
+                }
+                completion(.success(users))
+            }
+    }
+    
+    func notifyNearbyMember(user: User) {
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName, let tribe = tribe else {return}
+        let fcmToken = Messaging.messaging().fcmToken ?? ""
+        let rank = rank ?? ""
+        let bio = bio ?? ""
+    
+        
+        let data: [String:Any] = [
+            UserField.providerId: uid,
+            UserField.profileImageUrl: imageUrl,
+            UserField.displayName: displayName,
+            UserField.fcmToken: fcmToken,
+            UserField.bio: bio,
+            UserField.rank: rank,
+            UserField.nearbyToken: user.fcmToken ?? "",
+            UserField.tribe: tribe
+        ]
+        
+        REF_USERS
+            .document(user.id)
+            .collection(ServerPath.nearby)
+            .document(uid)
+            .setData(data)
+        
+    }
     
     
     func getNewSecretSpots(completion: @escaping (_ spots: [SecretSpot]) -> ()) {
@@ -1803,7 +1922,7 @@ class DataService {
     func getFriendRequests(completion: @escaping (Result<[User], NetworkError>) -> Void) {
         guard let uid = userId else {return}
         var users: [User] = []
-        
+
         REF_USERS
             .document(uid)
             .collection(ServerPath.request)
@@ -1814,7 +1933,8 @@ class DataService {
                     completion(.failure(.failed))
                 }
                 
-                guard let snapshot = querySnapshot, snapshot.count > 0 else {return}
+
+                guard let snapshot = querySnapshot else {return}
                 
                 for document in snapshot.documents {
                     let data = document.data()
@@ -1860,7 +1980,7 @@ class DataService {
     }
     
     
-    func sendFriendRequest(uId: String, token: String, completion: @escaping (Result<Bool, NetworkError>) -> Void) {
+    func sendFriendRequest(friendId: String, token: String, completion: @escaping (Result<Bool, NetworkError>) -> Void) {
         guard let uid = userId,
             let imageUrl = profileUrl,
             let username = displayName,
@@ -1877,7 +1997,7 @@ class DataService {
         ]
         
         REF_USERS
-            .document(uId)
+            .document(friendId)
             .collection(ServerPath.request)
             .document(uid)
             .setData(data) { error in
@@ -1887,12 +2007,11 @@ class DataService {
                     return
                 }
                 print("Successfully made friend request")
+                let decrement: Int64 = -3
+                let walletData: [String: Any] = [UserField.streetCred: FieldValue.increment(decrement)]
+                AuthService.instance.updateUserField(uid: uid, data: walletData)
                 completion(.success(true))
             }
-        
-        let decrement: Int64 = -3
-        let walletData: [String: Any] = [UserField.streetCred: FieldValue.increment(decrement)]
-        AuthService.instance.updateUserField(uid: uid, data: walletData)
             
     }
     
@@ -2056,6 +2175,7 @@ class DataService {
             }
         }
     }
+    
     
     func unfollowerUser(followingId: String, completion: @escaping (_ success: Bool) -> ()) {
         guard let uid = userId else {return}
@@ -2372,13 +2492,68 @@ class DataService {
     
     
     func updateProfileImage(userId: String, profileImageUrl: String) {
+        let data: [String: Any] = [
+            UserField.profileImageUrl: profileImageUrl
+        ]
         
-        REF_USERS.document(userId).setData([UserField.profileImageUrl : profileImageUrl], merge: true)
-        REF_Rankings.document(userId).updateData([RankingField.profileUrl : profileImageUrl])
+        let rankData: [String: Any] =  [RankingField.profileUrl: profileImageUrl]
+        REF_USERS.document(userId).setData(data, merge: true)
+        
+        if tribe != nil && tribe != "" {
+            guard let worldName = tribe else {return}
+            REF_WORLDS
+                .document(worldName)
+                .collection(ServerPath.members)
+                .document(userId)
+                .updateData(data)
+            
+            REF_WORLDS
+                .document(worldName)
+                .collection(ServerPath.maps)
+                .document(userId)
+                .updateData(data)
+            
+            REF_WORLDS
+                .document(worldName)
+                .collection(ServerPath.rankings)
+                .document(userId)
+                .updateData(rankData)
+        }
+        
+        let spots = manager.spotEntities.map({SecretSpot(entity: $0)}).filter({$0.ownerId == userId})
+        let spotData: [String: Any] = [SecretSpotField.ownerImageUrl: profileImageUrl]
+        spots.forEach { spot in
+            REF_POST
+                .document(spot.id)
+                .updateData(spotData)
+        }
     }
     
     func updateUserBio(userId: String, bio: String) {
-        REF_USERS.document(userId).setData([UserField.bio : bio], merge: true)
+        let data: [String: Any] = [UserField.bio: bio]
+
+        REF_USERS.document(userId).updateData(data)
+        
+        if tribe != nil && tribe != "" {
+            guard let worldName = tribe else {return}
+            REF_WORLDS
+                .document(worldName)
+                .collection(ServerPath.members)
+                .document(userId)
+                .updateData(data)
+            
+            REF_WORLDS
+                .document(worldName)
+                .collection(ServerPath.maps)
+                .document(userId)
+                .updateData(data)
+            
+            REF_WORLDS
+                .document(worldName)
+                .collection(ServerPath.rankings)
+                .document(userId)
+                .updateData(data)
+        }
     }
     
     func updateSpotField(postId: String, data: [String: Any], completion: @escaping (_ success: Bool) -> ()) {
@@ -2396,9 +2571,33 @@ class DataService {
     }
     
     func updateUserDisplayName(userId: String, displayName: String) {
+        let data: [String: Any] = [UserField.displayName: displayName]
         
-        REF_USERS.document(userId).setData([UserField.displayName : displayName], merge: true)
+        REF_USERS.document(userId).updateData(data)
+        
+        if tribe != nil && tribe != "" {
+            guard let worldName = tribe else {return}
+            REF_WORLDS
+                .document(worldName)
+                .collection(ServerPath.members)
+                .document(userId)
+                .updateData(data)
+            
+            REF_WORLDS
+                .document(worldName)
+                .collection(ServerPath.maps)
+                .document(userId)
+                .updateData(data)
+            
+            REF_WORLDS
+                .document(worldName)
+                .collection(ServerPath.rankings)
+                .document(userId)
+                .updateData(data)
+        }
+        
     }
+
 //
     func updateDisplayNameOnPosts(userId: String, displayName: String) {
 

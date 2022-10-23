@@ -106,9 +106,13 @@ class ChatLogViewModel: ObservableObject {
                 case .success(_):
                     self.alertMessage = "\(user.displayName) has been deleted as friend"
                     self.showAlert = true
+                if let index = self.friends.firstIndex(of: user) {
+                    self.friends.remove(at: index)
+                }
                 case .failure(let error):
                     self.alertMessage = error.localizedDescription
                     self.showAlert = true
+                
             }
         }
     }

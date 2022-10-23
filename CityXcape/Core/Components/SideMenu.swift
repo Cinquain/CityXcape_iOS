@@ -27,167 +27,206 @@ struct SideMenu: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             
-           
-            Button {
-                    showMenu.toggle()
-                    selectedTab = 3
-            } label: {
-                HStack(spacing: 5) {
-                    Image("pin_blue")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 25)
-                    Text("Post Spot")
-                        .font(.title3)
-                    .fontWeight(.light)
+            Group {
+                Button {
+                        showMenu.toggle()
+                        selectedTab = 3
+                } label: {
+                    HStack(spacing: 5) {
+                        Image("pin_blue")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 25)
+                        Text("Post Spot")
+                            .font(.title3)
+                        .fontWeight(.light)
+                    }
                 }
+                .padding()
+                .alert(isPresented: $worldVM.showAlert) {
+                    return Alert(title: Text(worldVM.alertMessage))
+                }
+                
+                Button {
+                    worldVM.fetchUsersFromWorld()
+                } label: {
+                    HStack(spacing: 5) {
+                        Image("grid")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 25)
+                        Text("Heatmap")
+                            .font(.title3)
+                        .fontWeight(.light)
+                    }
+                }
+                .padding()
+                .fullScreenCover(isPresented: $worldVM.showHeatmap) {
+                    HeatMap(vm: worldVM)
+                        .colorScheme(.dark)
+                }
+                
+                Button {
+                    showFriends.toggle()
+                } label: {
+                    HStack(spacing: 5) {
+                        Image("dot")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 28)
+                        Text("Message")
+                            .font(.title3)
+                        .fontWeight(.light)
+                    }
+                }
+                .padding()
+                .fullScreenCover(isPresented: $showFriends) {
+                    FriendsView(vm: chatVM)
+                }
+                
+              
+                Button {
+                    worldVM.loadUserSecretSpots()
+                } label: {
+                    HStack(spacing: 5) {
+                        Image(systemName: "pencil.circle")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 25)
+                        Text("Edit Spots")
+                            .font(.title3)
+                        .fontWeight(.light)
+                    }
+                }
+                .padding()
+                .fullScreenCover(isPresented: $worldVM.showSpots) {
+                    TotalView(type: .views, spots: worldVM.secretspots)
+                }
+                
+                Button {
+                    showJourney.toggle()
+                } label: {
+                    HStack(spacing: 5) {
+                        Image("walking")
+                             .resizable()
+                             .scaledToFit()
+                             .frame(height: 23)
+                                                 
+                        Text("My Journey")
+                             .font(.title3)
+                             .fontWeight(.light)
+                    }
+                }
+                .padding()
+                .fullScreenCover(isPresented: $showJourney) {
+                    JourneyView()
+                }
+                
+                
+           
+                
             }
-            .padding()
-            .alert(isPresented: $worldVM.showAlert) {
-                return Alert(title: Text(worldVM.alertMessage))
+            
+            
+
+            Group {
+                
+                Button {
+                    showAnalytics.toggle()
+                } label: {
+                    HStack(spacing: 5) {
+                        Image("graph")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 18)
+                        Text("Analytics")
+                            .font(.title3)
+                        .fontWeight(.light)
+                    }
+                }
+                .padding()
+                .fullScreenCover(isPresented: $showAnalytics) {
+                    StreetReportCard()
+                }
+                
+           
+                
+                Button {
+                    worldVM.getFriendRequest()
+                } label: {
+                    HStack(spacing: 5) {
+                       Image(systemName:"person.fill.badge.plus")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 22)
+                            .foregroundColor(chatVM.count > 0 ? .yellow : .white)
+                         
+                           Text("Request")
+                                .font(.title2)
+                                .fontWeight(.thin)
+                                .foregroundColor(chatVM.count > 0 ? .yellow : .white)
+                        
+                        }
+                }
+                .padding()
+                .fullScreenCover(isPresented: $worldVM.showFriendRequest) {
+                    RequestList(friends: worldVM.friendRequest)
+                }
+                
+                
+                
+                
+                Button {
+                    worldVM.fetchWorldInvitations()
+                } label: {
+                    HStack(spacing: 5) {
+                       Image(systemName:"envelope")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 22)
+                         
+                           Text("Invitations")
+                                .font(.title2)
+                                .fontWeight(.thin)
+                    }
+                    .padding()
+                }
+                .sheet(isPresented: $worldVM.showInvite) {
+                    WorldInvitationView(vm: worldVM)
+                }
+                
+                Button {
+                    showWorlds.toggle()
+                } label: {
+                    HStack(spacing: 5) {
+                       Image(systemName:"globe")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 22)
+                            .foregroundColor(chatVM.count > 0 ? .yellow : .white)
+                         
+                           Text("Communities")
+                                .font(.title2)
+                                .fontWeight(.thin)
+                                .foregroundColor(chatVM.count > 0 ? .yellow : .white)
+                        
+                        }
+                }
+                .padding()
+                .fullScreenCover(isPresented: $showWorlds) {
+                    DiscoverWorlds(vm: worldVM)
+                }
+                
+                
             }
           
-            Button {
-                worldVM.loadUserSecretSpots()
-            } label: {
-                HStack(spacing: 5) {
-                    Image(systemName: "pencil.circle")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 25)
-                    Text("Edit Spots")
-                        .font(.title3)
-                    .fontWeight(.light)
-                }
-            }
-            .padding()
-            .fullScreenCover(isPresented: $worldVM.showSpots) {
-                TotalView(type: .views, spots: worldVM.secretspots)
-            }
-            
-            Button {
-                showJourney.toggle()
-            } label: {
-                HStack(spacing: 5) {
-                    Image("walking")
-                         .resizable()
-                         .scaledToFit()
-                         .frame(height: 23)
-                                             
-                    Text("My Journey")
-                         .font(.title3)
-                         .fontWeight(.light)
-                }
-            }
-            .padding()
-            .fullScreenCover(isPresented: $showJourney) {
-                JourneyView()
-            }
             
             
-            Button {
-                showAnalytics.toggle()
-            } label: {
-                HStack(spacing: 5) {
-                    Image("graph")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 18)
-                    Text("Analytics")
-                        .font(.title3)
-                    .fontWeight(.light)
-                }
-            }
-            .padding()
-            .fullScreenCover(isPresented: $showAnalytics) {
-                StreetReportCard()
-            }
+          
+    
             
-            Button {
-                showFriends.toggle()
-            } label: {
-                HStack(spacing: 5) {
-                    Image("dot")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 23)
-                    Text("Friends")
-                        .font(.title3)
-                    .fontWeight(.light)
-                }
-            }
-            .padding()
-            .fullScreenCover(isPresented: $showFriends) {
-                FriendsView(vm: chatVM)
-            }
+   
             
-            
-            Button {
-                worldVM.getFriendRequest()
-            } label: {
-                HStack(spacing: 5) {
-                   Image(systemName:"person.fill.badge.plus")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 22)
-                        .foregroundColor(chatVM.count > 0 ? .yellow : .white)
-                     
-                       Text("Request")
-                            .font(.title2)
-                            .fontWeight(.thin)
-                            .foregroundColor(chatVM.count > 0 ? .yellow : .white)
-                    
-                    }
-            }
-            .padding()
-            .fullScreenCover(isPresented: $worldVM.showFriendRequest) {
-                RequestList(friends: worldVM.friendRequest)
-            }
-            
-            Button {
-                showMessages.toggle()
-            } label: {
-                HStack(spacing: 5) {
-                   Image(systemName: "message.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 22)
-                        .foregroundColor(chatVM.count > 0 ? .yellow : .white)
-                     
-                       Text("Messages")
-                            .font(.title2)
-                            .fontWeight(.thin)
-                            .foregroundColor(chatVM.count > 0 ? .yellow : .white)
-                    
-                    }
-            }
-            .padding()
-            .fullScreenCover(isPresented: $showMessages) {
-                MainMessageView(vm: chatVM)
-            }
-            
-            
-            Button {
-                showWorlds.toggle()
-            } label: {
-                HStack(spacing: 5) {
-                   Image(systemName:"globe")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 22)
-                        .foregroundColor(chatVM.count > 0 ? .yellow : .white)
-                     
-                       Text("Communities")
-                            .font(.title2)
-                            .fontWeight(.thin)
-                            .foregroundColor(chatVM.count > 0 ? .yellow : .white)
-                    
-                    }
-            }
-            .padding()
-            .fullScreenCover(isPresented: $showWorlds) {
-                DiscoverWorlds(vm: worldVM)
-            }
             
      
             

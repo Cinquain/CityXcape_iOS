@@ -14,6 +14,7 @@
 		2102FC58274C0F4A00EC4362 /* SpotViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */; };
 		2104D2C928C62939004F6657 /* ShareSpotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2104D2C828C62939004F6657 /* ShareSpotView.swift */; };
 		2106253726EDA07C000210E2 /* MyWorldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106253626EDA07C000210E2 /* MyWorldViewModel.swift */; };
+		2106345928FEF46500A48061 /* WorldInvitationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106345828FEF46500A48061 /* WorldInvitationView.swift */; };
 		2106A9CE2848EA05000BCD10 /* PlugLight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2106A9CD2848EA05000BCD10 /* PlugLight.swift */; };
 		2106A9D02848F585000BCD10 /* Beep.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2106A9CF2848F585000BCD10 /* Beep.mp3 */; };
 		210700F428946D710014FF6D /* UserChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210700F328946D710014FF6D /* UserChatView.swift */; };
@@ -27,6 +28,7 @@
 		2110D052286F2151003B71DA /* PublicStampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D051286F2151003B71DA /* PublicStampView.swift */; };
 		2110D054286F4141003B71DA /* PostCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D053286F4141003B71DA /* PostCommentView.swift */; };
 		2117A7E5282573A20001C76C /* StampImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2117A7E4282573A20001C76C /* StampImage.swift */; };
+		2118FED9290468CF009DB882 /* InfoBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2118FED8290468CF009DB882 /* InfoBanner.swift */; };
 		211EC5DF27C65EB800F0B0A8 /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211EC5DE27C65EB800F0B0A8 /* MissionView.swift */; };
 		211F664427D247800035DB83 /* StampCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211F664327D247800035DB83 /* StampCollectionView.swift */; };
 		211F6AB128577EFF00441790 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211F6AB028577EFF00441790 /* Product.swift */; };
@@ -185,6 +187,7 @@
 		2102FC57274C0F4A00EC4362 /* SpotViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotViewModel.swift; sourceTree = "<group>"; };
 		2104D2C828C62939004F6657 /* ShareSpotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSpotView.swift; sourceTree = "<group>"; };
 		2106253626EDA07C000210E2 /* MyWorldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyWorldViewModel.swift; sourceTree = "<group>"; };
+		2106345828FEF46500A48061 /* WorldInvitationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorldInvitationView.swift; sourceTree = "<group>"; };
 		2106A9CD2848EA05000BCD10 /* PlugLight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlugLight.swift; sourceTree = "<group>"; };
 		2106A9CF2848F585000BCD10 /* Beep.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = Beep.mp3; sourceTree = "<group>"; };
 		210700F328946D710014FF6D /* UserChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserChatView.swift; sourceTree = "<group>"; };
@@ -198,6 +201,7 @@
 		2110D051286F2151003B71DA /* PublicStampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStampView.swift; sourceTree = "<group>"; };
 		2110D053286F4141003B71DA /* PostCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentView.swift; sourceTree = "<group>"; };
 		2117A7E4282573A20001C76C /* StampImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampImage.swift; sourceTree = "<group>"; };
+		2118FED8290468CF009DB882 /* InfoBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoBanner.swift; sourceTree = "<group>"; };
 		211EC5DE27C65EB800F0B0A8 /* MissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
 		211F664327D247800035DB83 /* StampCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampCollectionView.swift; sourceTree = "<group>"; };
 		211F6AB028577EFF00441790 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
@@ -383,6 +387,7 @@
 				21721AA528CF58C700A731B9 /* WorldThumb.swift */,
 				21F63ED928DC92EA00E6444C /* WorldInviteView.swift */,
 				2143191B28E47F9600547E1F /* WorldViewModel.swift */,
+				2106345828FEF46500A48061 /* WorldInvitationView.swift */,
 			);
 			path = World;
 			sourceTree = "<group>";
@@ -601,6 +606,7 @@
 				21F73ACF28CA1E9800539AAC /* NewWorldForm.swift */,
 				21E6B2B628D605390015B306 /* ProgressCircle.swift */,
 				2107D94A28E5CD2100EB09DF /* SideMenu.swift */,
+				2118FED8290468CF009DB882 /* InfoBanner.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -1041,9 +1047,11 @@
 				21C7D44527CFB1D200A37DFC /* JourneyView.swift in Sources */,
 				216A5CDE27AA0F31006AA7B4 /* SavesView.swift in Sources */,
 				217DA72826CC8F8B0039A145 /* CityXcapeApp.swift in Sources */,
+				2118FED9290468CF009DB882 /* InfoBanner.swift in Sources */,
 				21DCF82327E60906000BD1B3 /* Rank.swift in Sources */,
 				21785D9226D5295B0049CE2D /* MapSearchViewModel.swift in Sources */,
 				21E908D5285630110039F703 /* StoreRow.swift in Sources */,
+				2106345928FEF46500A48061 /* WorldInvitationView.swift in Sources */,
 				21CBDEC227B3DD9E000F0D85 /* SignInWithEmailView.swift in Sources */,
 				211F6AB128577EFF00441790 /* Product.swift in Sources */,
 				21A4697927C12417009F337D /* StampView.swift in Sources */,
@@ -1194,7 +1202,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.6;
+				MARKETING_VERSION = 1.6.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1219,7 +1227,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.6.6;
+				MARKETING_VERSION = 1.6.7;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
