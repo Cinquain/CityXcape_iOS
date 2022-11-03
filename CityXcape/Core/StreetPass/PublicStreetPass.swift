@@ -151,6 +151,8 @@ extension PublicStreetPass {
                 Button {
                     vm.acceptFriendRequest(user: user) {
                         user.newFriend = false
+                        vm.alertMessage = "You and \(user.displayName) are now friends"
+                        vm.showAlert.toggle()
                     }
                 } label: {
                     VStack(spacing: 0) {
@@ -195,6 +197,8 @@ extension PublicStreetPass {
                     .scaledToFit()
                     .frame(height: 50)
             }
+            .disabled(vm.disableFollowing)
+
             
             Button {
                 guard userId != nil else { vm.showSignup = true; return}
@@ -227,6 +231,7 @@ extension PublicStreetPass {
                          .scaledToFit()
                          .frame(height: 50)
                 }
+            
 
             } else {
                 Button {
@@ -245,6 +250,7 @@ extension PublicStreetPass {
                         .scaledToFit()
                         .frame(height: 50)
                 }
+                .disabled(vm.disableRequest)
             }
             
         
@@ -257,7 +263,7 @@ extension PublicStreetPass {
              AnalyticsService.instance.sentMessage()
          } label: {
            
-             Text("messeage")
+             Text("message")
                  .fontWeight(.thin)
                  .foregroundColor(.cx_orange)
                  .frame(width: 200, height: 45)

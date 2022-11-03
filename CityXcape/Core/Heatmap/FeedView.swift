@@ -33,6 +33,9 @@ struct FeedView: View {
                             }
                         
                         }
+                    .alert(isPresented: $vm.showAlert) {
+                        return Alert(title: Text(vm.alertMessage))
+                    }
                 
                 GeometryReader { _ in
                     HStack {
@@ -71,11 +74,11 @@ struct FeedView: View {
                            vm.performSearch()
                        }, width: UIScreen.screenWidth, searchTerm: vm.searchTerm)
                        .frame(width: UIScreen.screenWidth / 2 )
-                       .opacity(vm.searchUser ? 1 : 0)
+                       .opacity(vm.isSearching ? 1 : 0)
                        
                        
                        tabIcon
-                        .opacity(vm.searchUser ? 0 : 1)
+                        .opacity(vm.isSearching ? 0 : 1)
 
                    }
                    
@@ -150,7 +153,7 @@ extension FeedView {
     
     private var searchButton: some View {
         Button {
-            vm.searchUser.toggle()
+            vm.isSearching.toggle()
         } label: {
             Image(systemName: "magnifyingglass")
                 .resizable()

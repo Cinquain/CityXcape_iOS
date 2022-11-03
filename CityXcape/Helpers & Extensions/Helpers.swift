@@ -185,6 +185,7 @@ struct CurrentUserDefaults {
     static let world = "world"
     static let tribe = "tribe"
     static let tribeImageUrl = "tribeImageUrl"
+    static let incognito = "incognito"
 }
 
 struct TrailField {
@@ -232,6 +233,11 @@ struct WorldField {
     static let reqSpots = "req_spots"
     static let reqStamps = "req_stamps"
     static let ranks = "rankings"
+    static let longitude = "longitude"
+    static let latitude = "latitude"
+    static let timestamp = "timestamp"
+    static let geohash = "geohash"
+    static let profileUrl = "profileImageUrl"
 }
 
 struct CheckinField {

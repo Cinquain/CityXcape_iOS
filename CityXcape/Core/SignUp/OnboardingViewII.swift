@@ -24,6 +24,7 @@ struct OnboardingViewII: View {
 
     @State var showError: Bool = false
     @State var message: String = ""
+    @State var videoUrl: URL?
     
     @Binding var email: String
     @Binding var name: String
@@ -71,7 +72,7 @@ struct OnboardingViewII: View {
                 self.opacity = 1
                 hideKeyboard()
             }, content: {
-                ImagePicker(imageSelected: self.$userImage, sourceType: self.$sourceType)
+                ImagePicker(imageSelected: self.$userImage, videoURL: self.$videoUrl, sourceType: self.$sourceType)
                     .colorScheme(.dark)
                     
             })

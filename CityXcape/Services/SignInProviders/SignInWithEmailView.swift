@@ -69,7 +69,7 @@ struct SignInWithEmailView: View {
             vm.addedPic = true
             hideKeyboard()
         } content: {
-            ImagePicker(imageSelected: $vm.userImage, sourceType: $vm.sourceType)
+            ImagePicker(imageSelected: $vm.userImage, videoURL: $vm.videoUrl, sourceType: $vm.sourceType)
                 .colorScheme(.dark)
         }
 

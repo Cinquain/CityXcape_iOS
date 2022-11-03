@@ -105,7 +105,6 @@ struct CongratsView: View {
                             vm.analytics.postSecretSpot()
                             vm.didFinish = true
                             presentationMode.wrappedValue.dismiss()
-                        
                     }, label: {
                         HStack {
                             Image(Icon.check.rawValue)

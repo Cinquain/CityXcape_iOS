@@ -18,7 +18,7 @@ class PostTrailViewModel: NSObject, ObservableObject {
     @Published var trailDetails: String = ""
     @Published var world: String = ""
     @Published var priceString: String = ""
-    
+    @Published var videoURL: URL?
     
     @Published var selectedImage: UIImage?
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary

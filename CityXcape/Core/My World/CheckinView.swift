@@ -156,7 +156,7 @@ extension CheckinView {
                     //TBD
                     vm.addedImage = true
                 } content: {
-                    ImagePicker(imageSelected: $vm.journeyImage, sourceType: $vm.sourceType)
+                    ImagePicker(imageSelected: $vm.journeyImage, videoURL: $vm.videoUrl, sourceType: $vm.sourceType)
                 }
 
         }

@@ -120,7 +120,7 @@ extension PostTrailForm {
             }
         }
         .sheet(isPresented: $vm.showPicker, content: {
-            ImagePicker(imageSelected: $vm.selectedImage, sourceType: $vm.sourceType)
+            ImagePicker(imageSelected: $vm.selectedImage, videoURL: $vm.videoURL, sourceType: $vm.sourceType)
                 .colorScheme(.dark)
         })
         

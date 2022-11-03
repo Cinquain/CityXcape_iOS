@@ -13,6 +13,9 @@ import SwiftUI
 class LocationService: NSObject, CLLocationManagerDelegate {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @AppStorage(CurrentUserDefaults.tribe) var tribe: String?
+    @AppStorage(CurrentUserDefaults.incognito) var incognito: Bool?
+
     static let instance = LocationService()
     
     let manager = CLLocationManager()
@@ -54,6 +57,9 @@ class LocationService: NSObject, CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         if let location = locations.first {
             userlocation = location.coordinate
+            if incognito == nil || incognito == false {
+                DataService.instance.updateTribeMap(location.coordinate)
+            }
             userlocation?.fetchCityAndCountry(completion: { [weak self] city, country, error in
                 guard let self = self else {return}
                 if let error = error {
@@ -84,7 +90,8 @@ class LocationService: NSObject, CLLocationManagerDelegate {
             UserDefaults.standard.set(city, forKey: CurrentUserDefaults.city)
         }
     }
-
+    
+   
     
 }
 

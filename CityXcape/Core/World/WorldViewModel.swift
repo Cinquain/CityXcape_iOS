@@ -17,7 +17,8 @@ class WorldViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.displayName) var displayName: String?
     @AppStorage(CurrentUserDefaults.bio) var bio: String?
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
-    
+    @AppStorage(CurrentUserDefaults.incognito) var incognito: Bool?
+
 
     @Published var world: World?
     @Published var ranking: [Rank] = []
@@ -50,8 +51,6 @@ class WorldViewModel: NSObject, ObservableObject {
 
     override init() {
         super.init()
-        self.fetchWorlds()
-        self.calculateRank()
     }
     
     
@@ -92,6 +91,7 @@ class WorldViewModel: NSObject, ObservableObject {
                     self.showAlert.toggle()
                 case .success(let returnedWorlds):
                     print("Found worlds")
+                    self.calculateRank()
                     self.worlds = returnedWorlds
             }
         }
@@ -119,6 +119,13 @@ class WorldViewModel: NSObject, ObservableObject {
             showAlert.toggle()
             return
         }
+        
+        if incognito != nil && incognito == true {
+            alertMessage = "You need to turn off incognito to see heatmap"
+            showAlert.toggle()
+            return
+        }
+        
         guard let tribe = tribe else {return}
         DataService.instance.getUsersFromWorldMap(world: tribe) { [weak self] result in
             guard let self = self else {return}

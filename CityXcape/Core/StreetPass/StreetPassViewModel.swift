@@ -53,8 +53,8 @@ class StreetPassViewModel: NSObject, ObservableObject {
     override init() {
         super.init()
         calculateWorld()
-        calculateRank()
         getScoutLeaders()
+        calculateRank()
     }
     
     func generateColors() -> [Color] {
@@ -66,7 +66,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
     }
     
     
-     func  getScoutLeaders() {
+     func getScoutLeaders() {
         DataService.instance.getUserRankings { ranks in
             self.ranking = ranks
         }

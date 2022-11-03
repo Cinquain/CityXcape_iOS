@@ -8,6 +8,7 @@
 import SwiftUI
 import MapKit
 import FirebaseMessaging
+import AVKit
 
 
 class PostViewModel: NSObject, ObservableObject {
@@ -37,12 +38,22 @@ class PostViewModel: NSObject, ObservableObject {
     @Published var isLoading: Bool = false
     @Published var price: Int = 1
 
+    
+    @Published var avPlayer: AVPlayer?
+
+    @Published var showCongrats: Bool = false 
     @Published var showSignUp: Bool = false 
     @Published var didFinish: Bool = false
+    @Published var didUploadVideo: Bool = false
+    @Published var didUploadImage: Bool = false 
     @Published var showPicker: Bool = false
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @Published var selectedImage: UIImage?
-
+    @Published var videoUrl: URL? {
+        didSet {
+            loadFromUrl()
+        }
+    }
     
     @Published var presentPopover: Bool = false
     @Published var showActionSheet: Bool = false
@@ -67,6 +78,7 @@ class PostViewModel: NSObject, ObservableObject {
     
     
     func isReady(mapItem: MKMapItem)  {
+        print("Button is tappeed")
         if userId == nil {
             alertMessage = "You need an account to post a spot"
             showAlert = true
@@ -81,7 +93,7 @@ class PostViewModel: NSObject, ObservableObject {
         }
         
         if spotName.count >= 4
-            && selectedImage != nil
+            && selectedImage != nil || videoUrl != nil
             && details.count > 10
             && world.count >= 2
               {
@@ -120,27 +132,34 @@ class PostViewModel: NSObject, ObservableObject {
         }
     }
     
+    func loadFromUrl() {
+        if let videoUrl = videoUrl {
+            avPlayer = AVPlayer(url: videoUrl)
+            didUploadVideo = true 
+        }
+    }
+    
     func postSecretSpot(mapItem: MKMapItem) {
         isLoading = true
         buttonDisabled = true
         
-        var image = selectedImage ?? UIImage()
+        let image = selectedImage ?? UIImage()
         print("Secret Spot is being posted")
       
 
         DataService.instance.uploadSecretSpot(spotName: spotName, description: details, image: image, price: price, world: world, mapItem: mapItem, isPublic: isPublic) { [weak self] (success) in
-
+            guard let self = self else {return}
             if success {
-                self?.isLoading = false
-                self?.buttonDisabled = false
-                self?.alertMessage = "Successfully posted location"
-                self?.showAlert = true
+                self.calculateRank()
+                self.isLoading = false
+                self.buttonDisabled = false
+                self.showCongrats.toggle()
                 return
             } else {
-                self?.isLoading = false
-                self?.buttonDisabled = false
-                self?.alertMessage = "Error posting Secret Spot 😤"
-                self?.showAlert = true
+                self.isLoading = false
+                self.buttonDisabled = false
+                self.alertMessage = "Error posting Secret Spot 😤"
+                self.showAlert = true
                 return
             }
         }
@@ -271,6 +290,9 @@ class PostViewModel: NSObject, ObservableObject {
             
         }
     }
+    
+    
+  
     
     
 }

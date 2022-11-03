@@ -11,14 +11,18 @@ struct SettingsView: View {
     
     
     @Environment(\.presentationMode) var presentationMode
-    @State private var showSignoutError = false
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @AppStorage(CurrentUserDefaults.incognito) var incognito: Bool?
+
   
     @Binding var displayName: String
     @Binding var userBio: String
     @Binding var profileUrl: String
     @State var showActionsheet: Bool = false
+    @State var showOptions: Bool = false
     @State private var showAlert: Bool = false
     @State private var message: String = ""
+    @State private var showSignUp: Bool = false
     
     var body: some View {
         
@@ -79,23 +83,43 @@ struct SettingsView: View {
                         })
                     
                     Button(action: {
+                        signIn()
+                    }, label: {
+                        SettingsRowView(text: "Login", leftIcon: "network", color: .cx_blue)
+                    })
+                    .sheet(isPresented: $showSignUp) {
+                        OnboardingView()
+                    }
+                    
+                    Button(action: {
+                        showOptions.toggle()
+                    }, label: {
+                        SettingsRowView(text: "Incognito", leftIcon: "eye.slash", color: .black)
+                    })
+                    .actionSheet(isPresented: $showOptions) {
+                        return ActionSheet(title: Text(incognito ?? false ? "Turn off Incognito?": "Do you want to go Ingonito?"), message: nil, buttons: [
+                            .default(Text("Yes"), action: {
+                                goIncognito()
+                            }),
+                            
+                            .cancel()
+                        ])
+                    }
+                  
+                    
+                    Button(action: {
                         signOut()
                     }, label: {
-                        SettingsRowView(text: "Sign out", leftIcon: "figure.walk", color: .cx_blue)
+                        SettingsRowView(text: "Sign out", leftIcon: "figure.walk", color: .cx_orange)
                     })
-                    .alert(isPresented: $showSignoutError, content: {
-                        return Alert(title: Text("Error signing out 🥵"))
-                    })
-                    
+                   
                     
                     Button(action: {
                         showActionsheet.toggle()
                     }, label: {
                         SettingsRowView(text: "Delete Acccount", leftIcon: "trash", color: .red)
                     })
-                    .alert(isPresented: $showSignoutError, content: {
-                        return Alert(title: Text("Error signing out 🥵"))
-                    })
+                  
 
                 })
                 .background(Color.white)
@@ -185,15 +209,35 @@ struct SettingsView: View {
         
     }
     
+    func goIncognito() {
+        if incognito == nil || incognito == false {
+            UserDefaults.standard.set(true, forKey: CurrentUserDefaults.incognito)
+        } else {
+            UserDefaults.standard.set(false, forKey: CurrentUserDefaults.incognito)
+        }
+    }
+    
+    func signIn() {
+        if userId != nil {
+            message = "You are already loggedin"
+            showAlert.toggle()
+        } else {
+            showSignUp.toggle()
+        }
+    }
+    
     func signOut() {
         AuthService.instance.logOutUser { (success) in
             if success {
                 print("Successfully signed out user")
+                message = "Successfully signed out"
+                showAlert.toggle()
                 self.presentationMode.wrappedValue.dismiss()
 
             } else {
                 print("Error signout user")
-                self.showSignoutError.toggle()
+                message = "Error signing out"
+                showAlert.toggle()
             }
         }
     }
@@ -207,7 +251,7 @@ struct SettingsView: View {
                 signOut()
 
             } else {
-                message = "Account Deleted!"
+                message = "Error deleting account"
                 showAlert.toggle()
                 signOut()
             }

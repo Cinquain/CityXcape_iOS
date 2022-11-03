@@ -43,7 +43,7 @@ class ImageManager {
     }
     
     func uploadSecretSpotImage(image: UIImage, postId: String, completion: @escaping (_ url: String?) -> ()) {
-        
+                
         let path = getSpotImagePath(spotId: postId, imageNumb: 1)
         
         uploadImage(path: path, image: image) { (success, downloadUrl) in
@@ -52,6 +52,39 @@ class ImageManager {
                     completion(downloadUrl)
                 }
             }
+        }
+        
+    }
+    
+    func uploadSecretSpotVideo(fileUrl: URL, postId: String, completion: @escaping (Result<String, Error>) -> ()) {
+        
+        let fileExtension = fileUrl.pathExtension
+        let fileName = "mainVideo.\(fileExtension)"
+        
+        let path = getSpotVideoPath(spotId: postId, fileName: fileName)
+        
+        let metadata = StorageMetadata()
+        metadata.contentType = "image/jpeg"
+        
+        path.putFile(from: fileUrl, metadata: nil) { meta, error in
+            
+            if let error = error {
+                print("Error uploading video to storage", error.localizedDescription)
+                completion(.failure(error))
+                return
+            }
+            
+            do {
+                try FileManager.default.removeItem(atPath: fileUrl.path)
+            } catch let error {
+                print("Error deleting from filemanager", error.localizedDescription)
+            }
+            
+            path.downloadURL { url, error in
+                guard let downloadUrl = url else {return}
+                completion(.success(downloadUrl.absoluteString))
+            }
+            
         }
     }
     
@@ -146,6 +179,12 @@ class ImageManager {
     fileprivate func getSpotImagePath(spotId: String, imageNumb: Int) -> StorageReference {
         let postPath = "posts/\(spotId)/\(imageNumb)"
         let storagePath = REF_STORE.reference(withPath: postPath)
+        return storagePath
+    }
+    
+    fileprivate func getSpotVideoPath(spotId: String, fileName: String) -> StorageReference {
+        let videoPath = "posts/\(spotId)/\(fileName)"
+        let storagePath = REF_STORE.reference(withPath: videoPath)
         return storagePath
     }
     

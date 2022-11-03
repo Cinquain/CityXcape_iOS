@@ -110,7 +110,14 @@ struct DetailsView: View {
                 Button {
                     showStreetPass.toggle()
                 } label: {
+                    VStack(spacing: 0) {
                         UserDotView(imageUrl: spot.ownerImageUrl, width: 60)
+                        Text("posted by")
+                            .font(.caption)
+                            .fontWeight(.thin)
+                    }
+                    .padding(.horizontal, 10)
+                    .foregroundColor(.white)
                     
                 }
                 .sheet(isPresented: $showStreetPass) {
@@ -123,14 +130,17 @@ struct DetailsView: View {
                 Button {
                     getSavedbyUsers(postId: spot.id)
                   } label: {
-                      VStack {
+                      VStack(spacing: 0) {
                          Image("save")
                               .resizable()
                               .aspectRatio(contentMode: .fit)
                               .frame(width: 55)
-                          
+                          Text("saved by")
+                              .font(.caption)
+                              .fontWeight(.thin)
                       }
-
+                      .padding(.horizontal, 10)
+                      .foregroundColor(.white)
                   }
                   .sheet(isPresented: $showUsers) {
                       SavesView(spot: spot, users: $users)

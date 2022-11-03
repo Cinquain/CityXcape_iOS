@@ -15,7 +15,7 @@ class EmailSigninViewModel: ObservableObject {
     var width = UIScreen.screenWidth * 0.85
     var height = UIScreen.screenHeight * 0.42
     
-    
+    @Published var videoUrl: URL?
     @Published var showPicker: Bool = false
     @Published var userImage: UIImage?
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary

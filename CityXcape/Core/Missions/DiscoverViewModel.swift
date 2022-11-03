@@ -48,7 +48,7 @@ class DiscoverViewModel: ObservableObject {
     @Published var showSignUp: Bool = false
     
     var savedspots: [SecretSpot] = []
-    var placeHolder: String = "Search a city"
+    var placeHolder: String = "Search a city (case sensitive)"
 
     init() {
         if notificationManager.hasSpotNotification {
@@ -204,6 +204,33 @@ class DiscoverViewModel: ObservableObject {
     
     func searchForSpot() {
         
+        if searchTerm.isEmpty {
+            newSecretSpots = allspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
+            isSearching.toggle()
+            self.newSpotCount = self.newSecretSpots.count
+            var views: [CardView] = []
+            
+            for index in 0..<2 {
+                if self.newSecretSpots.isEmpty {self.hasNewSpots = false; return}
+                
+                if self.newSecretSpots.indices.contains(index) {
+                    let spot = self.newSecretSpots[index]
+                    views.append(CardView(spot: spot))
+                }
+                
+            }
+            
+            self.cardViews = views
+            self.finished = true
+            
+            if self.newSecretSpots.count > 0 {
+                self.hasNewSpots = true
+            } else {
+                self.hasNewSpots = false
+            }
+            return
+        }
+        
         DataService.instance.searchForSecretSpotby(name: searchTerm) { [weak self] result in
             guard let self = self else {return}
             
@@ -212,15 +239,34 @@ class DiscoverViewModel: ObservableObject {
                     self.alertMessage = error.localizedDescription
                     self.showAlert.toggle()
                     self.searchTerm = ""
+                    self.isSearching.toggle()
                 case .success(let returnedSpots):
                     if returnedSpots.isEmpty {
                         self.alertMessage = "No Spot Found"
                         print("No secret spot found")
                         self.showAlert.toggle()
                         self.searchTerm = ""
+                        self.isSearching.toggle()
+                        return
                     }
+                
                     self.newSecretSpots = returnedSpots
                     self.searchTerm = ""
+                    self.isSearching.toggle()
+
+                
+                var views: [CardView] = []
+                
+                for index in 0..<2 {
+                    if self.newSecretSpots.indices.contains(index) {
+                        let spot = self.newSecretSpots[index]
+                        views.append(CardView(spot: spot))
+                    }
+                }
+                
+                self.cardViews = views
+                self.finished = true
+                self.newSpotCount = self.newSecretSpots.count
             }
             
         }

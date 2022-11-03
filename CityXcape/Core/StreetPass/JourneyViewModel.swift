@@ -25,6 +25,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     @Published var passportImage: UIImage?
     @Published var allowshare: Bool = false
     @Published var url: String?
+    @Published var videoUrl: URL?
     @Published var showJourney: Bool = false
     @Published var updateStampId: String = ""
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
@@ -37,6 +38,9 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     @Published var showSignup: Bool = false 
     @Published var showSpotList: Bool = false
     @Published var spots: [SecretSpot] = []
+    
+    @Published var disableFollowing: Bool = false
+    @Published var disableRequest: Bool = false 
     let manager = CoreDataManager.instance
     
     override init() {
@@ -224,7 +228,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
            guard let self = self else {return}
            if verifications.count == 0 {
                self.alertMessage = "This user has been nowhere"
-               self.showAlert = true
+               self.showAlert.toggle()
            } else {
                self.verifications = verifications
                self.showJourney = true
@@ -239,6 +243,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
                self.alertMessage = "Street Following \(user.displayName)"
                AnalyticsService.instance.streetFollowingUser()
                self.showAlert = true
+               self.disableFollowing = true
            } else {
                self.alertMessage = "Cannot street follow \(user.displayName)"
                self.showAlert = true
@@ -289,6 +294,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
                         self.alertMessage = "Friend request sent, -3 STC"
                         self.showAlert = true
                         AnalyticsService.instance.sentFriendRequest()
+                        self.disableRequest = true
                     }
                 case .failure(let error):
                     self.alertMessage = error.localizedDescription

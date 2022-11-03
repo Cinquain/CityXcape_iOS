@@ -25,7 +25,7 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     @Published var isLoading: Bool = false 
     @Published var showActionSheet: Bool = false
     @Published var actionSheetType: SpotActionSheetType = .general
-    
+    @Published var videoUrl: URL?
     
     @Published var comment: String = ""
     @Published var commentString: String = ""
@@ -34,9 +34,9 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     @Published var showStamp: Bool = false
     @Published var showVerifiers: Bool = false
     @Published var showComments: Bool = false
+    @Published var showMission: Bool = false 
     
     @Published var showShareSheet: Bool = false
-    @Published var alertmessage: String = ""
     @Published var genericAlert: Bool = false
     @Published var didLike: Bool = false
     
@@ -53,7 +53,15 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     @Published var refresh: Bool = false
     @Published var showFriendsList: Bool = false
     
+    @Published var image: UIImage?
+    @Published var index: Int = 0
+    @Published var isVideo: Bool = false
     
+    @State var imageOneString: String = ""
+    @State var imageTwoString: String = ""
+    @State var imageThreeString: String = ""
+    
+    @Published var editMode: Bool = false 
     @Published var showPicker: Bool = false
     @Published var addedImage: Bool = false
     @Published var sourceType: UIImagePickerController.SourceType = .photoLibrary
@@ -129,10 +137,10 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
           DataService.instance.uploadReports(reason: reason, postId: spot.id) { success in
               
               if success {
-                  self.alertmessage = "Thank you for reporting this spot. We will review it shortly!"
+                  self.alertMessage = "Thank you for reporting this spot. We will review it shortly!"
                   self.genericAlert.toggle()
               } else {
-                  self.alertmessage = "There was an error reporting this secret spot. Please restart the app and try again."
+                  self.alertMessage = "There was an error reporting this secret spot. Please restart the app and try again."
                   self.genericAlert.toggle()
               }
           }
@@ -148,13 +156,13 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
             guard let self = self else {return}
             
            if success {
-               self.alertmessage = "This secret spot has been removed from your world"
+               self.alertMessage = "This secret spot has been removed from your world"
                self.genericAlert.toggle()
                AnalyticsService.instance.deletePost()
                self.manager.fetchSecretSpots()
                completion(success)
            } else {
-               self.alertmessage = "There was an error in deleting this spot. Restart the app and try again"
+               self.alertMessage = "There was an error in deleting this spot. Restart the app and try again"
                self.genericAlert.toggle()
                completion(success)
            }
@@ -363,7 +371,7 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
            let minimumTime: TimeInterval = 60 * 60 * 24
            let timeInterval = lastDate.timeIntervalSince(now)
             if timeInterval < minimumTime {
-                self.alertmessage = "You can only check-in once per day"
+                self.alertMessage = "You can only check-in once per day"
                 self.showAlert = true
                 isLoading = false
                 completion(false)
@@ -378,7 +386,7 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
                 completion(complete)
             case .failure(let error):
                 print("Error updating stamp", error.localizedDescription)
-                self.alertmessage = "Error updating stamp"
+                self.alertMessage = "Error updating stamp"
                 self.showAlert = true
             }
         }
@@ -547,30 +555,180 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     
     
     func checkIfVerifiable(spot: SecretSpot) {
-        AnalyticsService.instance.touchedVerification()
-        let manager = LocationService.instance.manager
-        
-        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
+            AnalyticsService.instance.touchedVerification()
             let manager = LocationService.instance.manager
-            let spotLocation = CLLocation(latitude: spot.latitude, longitude: spot.longitude)
-            let userLocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
-            let distance = userLocation.distance(from: spotLocation)
-            let distanceInFeet = distance * 3.28084
-            let distanceInMiles = distance * 0.000621371
-            let formattedDistance = String(format: "%.1f", distanceInMiles)
-            print("\(distance) feet")
-            if distanceInFeet < 200 {
-                showCheckin = true
-            } else {
-                //Distance is greater than 200 feet
-                showAlert = true
-                alertMessage = "You need to be there to checkin. \n You are \(formattedDistance) mile away"
-            }
-                
-    } else {
-        manager.requestWhenInUseAuthorization()
+            
+            if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
+                let manager = LocationService.instance.manager
+                let spotLocation = CLLocation(latitude: spot.latitude, longitude: spot.longitude)
+                let userLocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
+                let distance = userLocation.distance(from: spotLocation)
+                let distanceInFeet = distance * 3.28084
+                let distanceInMiles = distance * 0.000621371
+                let formattedDistance = String(format: "%.1f", distanceInMiles)
+                print("\(distance) feet")
+                if distanceInFeet < 200 {
+                    showCheckin = true
+                } else {
+                    //Distance is greater than 200 feet
+                    showAlert = true
+                    alertMessage = "You need to be there to checkin. \n You are \(formattedDistance) mile away"
+                }
+                    
+        } else {
+            manager.requestWhenInUseAuthorization()
+        }
     }
-}
+    
+    func findIndexof(url: String, spot: SecretSpot) {
+        guard let index = spot.imageUrls.firstIndex(of: url) else {return}
+        self.index = index
+    }
+
+        
+    func updateMainSpotImage(postId: String, completion: @escaping (_ url: String?) -> ()) {
+        if let newImage = image {
+            //Delete file in bucket (index starts at 1)
+            isLoading = true
+            print("Found Image")
+            print("Deleting main image in bucket")
+            ImageManager.instance.deleteSecretSpotImage(postId: postId, imageNumb: 1)
+            
+            ImageManager.instance.uploadSecretSpotImage(image: newImage, postId: postId) {[weak self ] downloadUrl in
+                guard let self = self else {return}
+                guard let url = downloadUrl else {return}
+                self.imageOneString = url
+                
+                //Deletes old url at core data and replace it with new one (index starts at 0)
+                print("Updating image in core data")
+                self.manager.updateImage(spotId: postId, index: 0, imageUrl: url)
+                
+                let data: [String: Any] = [
+                    SecretSpotField.spotImageUrl : url
+                ]
+                
+                print("update image to database")
+                DataService.instance.updateSpotField(postId: postId, data: data) { success in
+                    if success {
+                        self.isLoading = false
+                        self.alertMessage = "Successfully updated image"
+                        self.showAlert = true
+                        completion(url)
+                        return
+                    } else {
+                        self.isLoading = false
+                        self.alertMessage = "Failed to upload image"
+                        self.showAlert = true
+                        completion(nil)
+                        return
+                    }
+                }
+                
+            }
+        } else {
+            self.alertMessage = "No image found"
+            self.showAlert = true
+            completion(nil)
+            return
+        }
+    }
+    
+    
+    func updateExtraImage(postId: String, oldUrl: String, completion: @escaping (_ url: String?) -> ()) {
+        
+        guard let newImage = image else {return}
+        isLoading = true
+        ImageManager.instance.deleteSecretSpotImage(postId: postId, imageNumb: index + 1)
+
+        ImageManager.instance.updateSecretSpotImage(image: newImage, postId: postId, number: index + 1) { [weak self] url in
+            guard let self = self else {return}
+            guard let downloadUrl = url else {return}
+            self.imageTwoString = downloadUrl
+            
+            self.manager.updateImage(spotId: postId, index: self.index, imageUrl: downloadUrl)
+
+            let deleteData: [String: Any] = [
+                SecretSpotField.spotImageUrls : FieldValue.arrayRemove([oldUrl]),
+            ]
+            
+            DataService.instance.updateSpotField(postId: postId, data: deleteData) { success in
+                if success {
+                    
+                        let data: [String: Any] = [
+                            SecretSpotField.spotImageUrls : FieldValue.arrayUnion([downloadUrl])
+                        ]
+                    
+                    
+                    DataService.instance.updateSpotField(postId: postId, data: data) { success in
+                        
+                        if success {
+                            self.isLoading = false
+                            self.alertMessage = "Successfully added image"
+                            self.showAlert = true
+                            completion(downloadUrl)
+                            return
+                        } else {
+                            self.isLoading = false
+                            self.alertMessage = "Failed to add new image"
+                            self.showAlert = true
+                            completion(nil)
+                            return
+                        }
+                        
+                    }
+                } else {
+                    self.isLoading = false
+                    self.alertMessage = "Could not find old image to replace"
+                    self.showAlert = true
+                    return
+                }
+                
+                
+            }
+            
+        }
+        
+    }
+    
+    
+    func addImage(postId: String, completion: @escaping (_ url: String?) -> ()) {
+        
+        guard let newImage = image else {return}
+        isLoading = true
+        ImageManager.instance.updateSecretSpotImage(image: newImage, postId: postId, number: self.index + 1) { [weak self] url in
+            guard let self = self else {return}
+            guard let downloadUrl = url else {return}
+            
+            self.manager.addImage(spotId: postId, imageUrl: downloadUrl)
+        
+                let data: [String: Any] = [
+                    SecretSpotField.spotImageUrls : FieldValue.arrayUnion([downloadUrl])
+                ]
+            
+            
+            DataService.instance.updateSpotField(postId: postId, data: data) { success in
+                
+                if success {
+                    self.isLoading = false
+                    self.alertMessage = "Successfully added image"
+                    self.showAlert = true
+                    completion(downloadUrl)
+                    return
+                } else {
+                    self.isLoading = false
+                    self.alertMessage = "Failed to add new image"
+                    self.showAlert = true
+                    completion(nil)
+                    return
+                }
+                
+            }
+            
+        }
+    }
+    
+    
+    
     
  
   

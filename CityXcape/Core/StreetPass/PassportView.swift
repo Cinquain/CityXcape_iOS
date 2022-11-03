@@ -73,7 +73,7 @@ extension PassportView {
                     vm.url = url
                 }
             }, content: {
-                ImagePicker(imageSelected: $vm.passportImage, sourceType: $vm.sourceType)
+                ImagePicker(imageSelected: $vm.passportImage, videoURL: $vm.videoUrl, sourceType: $vm.sourceType)
             })
            
 

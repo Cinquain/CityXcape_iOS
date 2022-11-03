@@ -8,6 +8,7 @@
 import SwiftUI
 import MapKit
 import CoreLocation
+import AVKit
 
 struct PostSpotForm: View {
     
@@ -41,6 +42,7 @@ struct PostSpotForm: View {
                             })
                             .opacity(!vm.isPublic ? 0 : 1)
                            
+                           
 //                         else {
 //                            Text(vm.privatePlaceHolder)
 //                                .foregroundColor(.white)
@@ -51,24 +53,32 @@ struct PostSpotForm: View {
     
                     Section("Upload Image") {
                         Button(action: {
+                            vm.selectedImage = nil
                             vm.showActionSheet.toggle()
                         }, label: {
                             ZStack {
+                         
                                 if let image = vm.selectedImage {
                                     Image(uiImage: image)
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                         .frame(maxWidth: .infinity)
                                         .cornerRadius(12)
+                                } else if let videoUrl = vm.videoUrl {
+                                    if let avPlayer = vm.avPlayer {
+                                        VideoPlayer(player: avPlayer)
+                                            .frame(height: 400)
+                                        }
                                 } else {
                                     Image("spot_image")
                                         .resizable()
                                         .scaledToFit()
-                                       
                                         
+
+                                    
                                         
                                 }
-                                
+                                                                        
                                 ProgressView()
                                     .opacity(vm.isLoading ? 1 : 0)
                                     .scaleEffect(3)
@@ -97,10 +107,18 @@ struct PostSpotForm: View {
                 }
                 .navigationBarTitle("Post Spot", displayMode: .inline)
                 .navigationBarItems(trailing: closeButton)
-                .sheet(isPresented: $vm.showPicker, content: {
-                    ImagePicker(imageSelected: $vm.selectedImage, sourceType: $vm.sourceType)
+                .sheet(isPresented: $vm.showPicker, onDismiss: {
+                    if vm.selectedImage == nil {
+                        vm.didUploadImage = true
+                    }
+                    if vm.videoUrl != nil {
+                        vm.didUploadVideo = true 
+                    }
+                }, content: {
+                    ImagePicker(imageSelected: $vm.selectedImage, videoURL: $vm.videoUrl, sourceType: $vm.sourceType)
                         .colorScheme(.dark)
                 })
+               
               
               
                         
@@ -125,6 +143,12 @@ struct PostSpotForm: View {
                     dismiss()
                 }))
             }
+            .fullScreenCover(isPresented: $vm.showCongrats) {
+                dismiss()
+            } content: {
+                CongratsView(vm: vm)
+            }
+            
 
 
     //End of Body

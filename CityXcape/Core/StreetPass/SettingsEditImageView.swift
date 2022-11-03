@@ -18,9 +18,9 @@ struct SettingsEditImageView: View {
     @State var description: String
     @State var selectedImage: UIImage? = UIImage(named: "silhouette")!
     @State var showImagePicker: Bool = false
+    @State var videoUrl: URL?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
     @State private var showSuccessAlert: Bool = false
-    
     
     var body: some View {
         
@@ -54,7 +54,7 @@ struct SettingsEditImageView: View {
             })
             .accentColor(Color.purple)
             .sheet(isPresented: $showImagePicker, content: {
-                ImagePicker(imageSelected: $selectedImage, sourceType: $sourceType)
+                ImagePicker(imageSelected: $selectedImage, videoURL: $videoUrl, sourceType: $sourceType)
                     .colorScheme(.dark)
             })
             

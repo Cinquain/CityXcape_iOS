@@ -22,7 +22,8 @@ class EditViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var selectedMapItem: MKMapItem = MKMapItem()
     @Published var showCoordinates: Bool = false
-
+    @Published var videoUrl: URL?
+    @Published var isVideo: Bool = false
     
     @Published var editDescription: Bool = false
     @Published var showAlert: Bool = false
@@ -192,8 +193,7 @@ class EditViewModel: ObservableObject {
         self.index = index
     }
 
-    
-    
+        
     func updateMainSpotImage(postId: String, completion: @escaping (_ url: String?) -> ()) {
         if let newImage = image {
             //Delete file in bucket (index starts at 1)

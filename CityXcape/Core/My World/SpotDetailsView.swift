@@ -12,8 +12,9 @@ import Shimmer
 
 struct SpotDetailsView: View {
     @Environment(\.presentationMode) var presentationMode
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
 
-    @State var spot: SecretSpot
+    @State var spot: SecretSpot 
     @StateObject var vm: SpotViewModel = SpotViewModel()
     @StateObject var mapViewModel: MapViewModel = MapViewModel()
     let height = UIScreen.screenHeight
@@ -21,8 +22,8 @@ struct SpotDetailsView: View {
     @State var detailsTapped: Bool = false
     @State private var showMission: Bool = false
 
-    @State var sourceType: UIImagePickerController.SourceType = .camera
-    @State var image: UIImage?
+    @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
+
     
     init(spot: SecretSpot) {
         _spot = State(initialValue: spot)
@@ -33,8 +34,12 @@ struct SpotDetailsView: View {
                 VStack {
                     
                     ZStack {
-                        
-                        ImageSlider(images: spot.imageUrls)
+                        if vm.editMode {
+                            editImages
+                                .frame(height: 400)
+                        } else {
+                            ImageSlider(images: spot.imageUrls)
+                        }
                            
                         
                         DetailsView(spot: spot, type: .SpotDetails)
@@ -73,8 +78,15 @@ struct SpotDetailsView: View {
                             .lineLimit(1)
                         Spacer()
                      
-                        Text(vm.getDistanceMessage(spot: spot))
-                      
+                        Button {
+                            vm.showMission.toggle()
+                        } label: {
+                            Text(vm.getDistanceMessage(spot: spot))
+                        }
+                        .fullScreenCover(isPresented: $vm.showMission) {
+                            MissionView(spot: spot, vm: mapViewModel, spotModel: vm)
+                        }
+
                     }
                     .padding(.horizontal, 10)
                     .padding(.bottom, 5)
@@ -122,15 +134,7 @@ struct SpotDetailsView: View {
                     }
                     .padding(.bottom, 4)
                  
-                    
-                  
-                    
-                    
-          
-               
-
-                    
-                
+     
                 
             }
             .navigationBarTitle("\(spot.spotName)", displayMode: .inline)
@@ -146,15 +150,17 @@ struct SpotDetailsView: View {
                 vm.analytics.viewedSecretSpot()
                 vm.updateSecretSpot(postId: spot.id) { success in
                     if !success {
-                        vm.alertMessage = "Spot was deleted"
+                        vm.alertMessage = "Spot no longer exist!"
                         vm.showAlert.toggle()
                         presentationMode.wrappedValue.dismiss()
                     }
                 }
                 vm.checkIfPresent(spot: spot)
             })
-            .fullScreenCover(isPresented: $vm.showPicker, content: {
-                ImagePicker(imageSelected: $image, sourceType: $sourceType)
+            .sheet(isPresented: $vm.showPicker, onDismiss: {
+                updateImage()
+            }, content: {
+                ImagePicker(imageSelected: $vm.image, videoURL: $vm.videoUrl, sourceType: $sourceType)
             })
             .actionSheet(isPresented: $vm.showActionSheet, content: {
                 getActionSheet()
@@ -181,12 +187,43 @@ struct SpotDetailsView: View {
         
     }
     
+    fileprivate func updateImage() {
+        
+        if vm.index == 0 {
+            vm.updateMainSpotImage(postId: spot.id) { url in
+                spot.imageUrls[0] = url ?? ""
+            }
+        }
+        
+        if vm.index > spot.imageUrls.count {
+            vm.addImage(postId: spot.id) { url in
+                spot.imageUrls.append(url ?? "")
+            }
+        }
+        
+        if spot.imageUrls.indices.contains(vm.index) {
+            let oldUrl = spot.imageUrls[vm.index]
+            vm.updateExtraImage(postId: spot.id, oldUrl: oldUrl) { url in
+                spot.imageUrls[vm.index] = url ?? ""
+            }
+        }
+        
+    }
     
     func getActionSheet() -> ActionSheet {
                 
         switch vm.actionSheetType {
             case .general:
                 return ActionSheet(title: Text("What would you like to do"), message: nil, buttons: [
+                
+                    .default(Text(vm.editMode ?"Done" : "Edit"), action: {
+                        if spot.ownerId == userId ?? "" {
+                            vm.editMode.toggle()
+                        } else {
+                            vm.alertMessage = "You do not have edit permissions"
+                            vm.showAlert.toggle()
+                        }
+                    }),
                     
                 .default(Text("Report"), action: {
                     vm.actionSheetType = .report
@@ -292,16 +329,12 @@ extension SpotDetailsView {
                     .animation(.easeOut, value: detailsTapped)
                     
             }
-       
-            
-            
-            
-            
+     
             Button {
                 vm.showActionSheet.toggle()
             } label: {
                 VStack {
-                   Image("remove")
+                   Image("edit")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 55)
@@ -309,12 +342,6 @@ extension SpotDetailsView {
                 }
 
             }
-        
-
-       
-
-         
-        
            
         }
         .padding(.top, 10)
@@ -322,6 +349,50 @@ extension SpotDetailsView {
       
     
     }
+    
+    
+    private var editImages: some View {
+        TabView {
+            
+            ZStack {
+                VStack {
+                    LocationCamera(height: 150, color: .white)
+                        .onTapGesture {
+                            vm.index = spot.imageUrls.count + 1
+                            vm.showPicker.toggle()
+                    }
+                    Text("Add extra image or video")
+                }
+                
+                ProgressView()
+                    .scaleEffect(3)
+                    .opacity(vm.isLoading ? 1 : 0)
+            }
+
+            ForEach(spot.imageUrls, id: \.self) { url in
+                
+                
+                    WebImage(url: URL(string: url))
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: .infinity)
+                        .overlay(
+                            ZStack {
+                                LinearGradient(colors: [Color.clear, Color.black], startPoint: .center, endPoint: .bottom)
+                        
+                            })
+                        .onTapGesture {
+                            vm.findIndexof(url: url, spot: spot)
+                            vm.showPicker.toggle()
+                    }
+                }
+            
+      
+        }
+        .tabViewStyle(PageTabViewStyle())
+        .frame(height: 400)
+    }
+    
 }
 
 

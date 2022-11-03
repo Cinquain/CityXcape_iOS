@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SideMenu: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @AppStorage(CurrentUserDefaults.incognito) var incognito: Bool?
 
     @State private var showAnalytics: Bool = false
     @State private var showJourney: Bool = false
@@ -196,6 +197,7 @@ struct SideMenu: View {
                 }
                 
                 Button {
+                    worldVM.fetchWorlds()
                     showWorlds.toggle()
                 } label: {
                     HStack(spacing: 5) {
@@ -205,7 +207,7 @@ struct SideMenu: View {
                             .frame(height: 22)
                             .foregroundColor(chatVM.count > 0 ? .yellow : .white)
                          
-                           Text("Communities")
+                           Text("Worlds")
                                 .font(.title2)
                                 .fontWeight(.thin)
                                 .foregroundColor(chatVM.count > 0 ? .yellow : .white)

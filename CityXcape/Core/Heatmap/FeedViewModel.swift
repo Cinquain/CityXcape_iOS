@@ -24,7 +24,7 @@ class FeedViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var newFeeds: Int = 0
     
-    @Published var searchUser: Bool = false 
+    @Published var isSearching: Bool = false 
     @Published var showHeatmap: Bool = false
     @Published var showStreetPass: Bool = false
     @Published var showListView: Bool = false
@@ -34,7 +34,7 @@ class FeedViewModel: ObservableObject {
     @Published var user: User?
     @Published var showUsers: Bool = false
     
-    var searchTerm: String = "Search a user"
+    var searchTerm: String = "Search a user (case sensitive)"
     
     init() {
         fetchFeeds()
@@ -201,15 +201,18 @@ class FeedViewModel: ObservableObject {
                 self.alertMessage = error.localizedDescription
                 self.showAlert.toggle()
                 self.submissionText = ""
+                self.isSearching.toggle()
             case .success(let returnedUsers):
                 if returnedUsers.isEmpty {
                     print("No users found")
-                    self.alertMessage = "No users found with this username"
+                    self.alertMessage = "No user found under that streetname"
                     self.showAlert.toggle()
                     self.submissionText = ""
+                    self.isSearching.toggle()
                     return
                 }
                 self.users = returnedUsers
+                self.isSearching.toggle()
                 self.submissionText = ""
                 self.showListView.toggle()
             }

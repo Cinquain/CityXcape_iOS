@@ -51,6 +51,7 @@ class DataService {
     
     func uploadSecretSpot(spotName: String, description: String, image: UIImage, price: Int, world: String, mapItem: MKMapItem, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
         
+        print("Inside data service")
         let document = REF_POST.document()
         let feedDocument = REF_FEED.document()
 
@@ -90,6 +91,13 @@ class DataService {
         
         ImageManager.instance.uploadSecretSpotImage(image: image, postId: spotId) { [weak self] (urlString) in
             guard let self = self else {return}
+        
+            print("inside image upload")
+            if urlString == "" {
+                print("Error uploading video to spot")
+                completion(false)
+                return
+            }
             
             if let downloadUrl = urlString {
                 
@@ -145,8 +153,10 @@ class DataService {
                             FeedField.geohash: userHash,
                             FeedField.stampImageUrl: downloadUrl
                         ]
-                            
-                        feedDocument.setData(feedData)
+                        
+                        if isPublic {
+                            feedDocument.setData(feedData)
+                        }
                             
                         //Save to user's world
                         let userWorldRef = self.REF_WORLD.document(ServerPath.secret).collection(uid).document(spotId)
@@ -2019,7 +2029,7 @@ class DataService {
     
     func saveUserRanking(rank: Rank) {
         guard let tribe = tribe, let uid = userId else {return}
-        
+        if tribe == "" {return}
         let document = REF_WORLDS.document(tribe).collection(WorldField.ranks).document(uid)
 
         let data: [String: Any] = [
@@ -2211,6 +2221,7 @@ class DataService {
                 guard let snapshot = querySnapshot, snapshot.documents.count >= 1
                     else{
                     print("snapshot for user search is empty")
+                    completion(.success(users))
                     return}
                 snapshot.documents.forEach { document in
                     let data = document.data()
@@ -2253,6 +2264,7 @@ class DataService {
     
     func getUserRankings(completion: @escaping (_ ranks: [Rank]) -> ()) {
         guard let tribe = tribe else {return}
+        if tribe == "" {return}
         let ref = REF_WORLDS.document(tribe).collection(WorldField.ranks)
         var rankings: [Rank] = []
         ref.order(by: RankingField.totalSpots, descending: true)
@@ -2596,6 +2608,30 @@ class DataService {
                 .updateData(data)
         }
         
+    }
+    
+    func updateTribeMap(_ location: CLLocationCoordinate2D) {
+        guard let tribe = tribe, let uid = userId, let profileUrl = profileUrl else {return}
+        if tribe == "" {return}
+        
+        let longitude = location.longitude
+        let latitude = location.latitude
+        let geohash = GFUtils.geoHash(forLocation: .init(latitude: latitude, longitude: longitude))
+
+        
+        let data: [String: Any] = [
+            WorldField.longitude: longitude,
+            WorldField.latitude: latitude,
+            WorldField.timestamp: FieldValue.serverTimestamp(),
+            WorldField.geohash: geohash,
+            WorldField.profileUrl: profileUrl
+        ]
+        
+        REF_WORLDS
+            .document(tribe)
+            .collection(ServerPath.maps)
+            .document(uid)
+            .setData(data, merge: true)
     }
 
 //

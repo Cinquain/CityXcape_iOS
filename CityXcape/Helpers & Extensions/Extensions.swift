@@ -296,6 +296,15 @@ extension String {
         self = self.capitalizingFirstLetter()
     }
     
+    func isImageUrl() -> Bool {
+        let imageFormats = ["jpg", "png", "gif", "jpeg"]
+        if let url = URL(string: self)  {
+            let fileExtention = url.pathExtension
+            if fileExtention == "" {return true}
+            return imageFormats.contains(fileExtention)
+        }
+        return false
+    }
     
     func isValidEmail() -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
@@ -305,6 +314,7 @@ extension String {
     }
     
 }
+
 
 
 

@@ -27,7 +27,7 @@ struct StreetPass: View {
     @State private var instagram = ""
     @State private var streetCred : Double = 0
     @State private var user: User?
-    
+    @State var videoUrl: URL?
     @State var refresh: Bool = false
     @State var userImage: UIImage?
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
@@ -210,7 +210,7 @@ struct StreetPass: View {
                 .sheet(isPresented: $isPresented, onDismiss: {
                     updateProfielImage()
                 }, content: {
-                    ImagePicker(imageSelected: $userImage, sourceType: $sourceType)
+                    ImagePicker(imageSelected: $userImage, videoURL: $videoUrl, sourceType: $sourceType)
                         .colorScheme(.dark)
                 })
                 .fullScreenCover(isPresented: $presentSettings, content: {

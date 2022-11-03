@@ -34,7 +34,7 @@ struct EditSpotView: View {
         .sheet(isPresented: $vm.showPicker) {
             updateImage()
         } content: {
-            ImagePicker(imageSelected: $vm.image, sourceType: $vm.sourceType)
+            ImagePicker(imageSelected: $vm.image, videoURL: $vm.videoUrl, sourceType: $vm.sourceType)
         }
 
 
