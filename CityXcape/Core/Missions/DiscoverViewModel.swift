@@ -63,32 +63,39 @@ class DiscoverViewModel: ObservableObject {
     
     func getNewSecretSpots() {
         
-        DataService.instance.getNewSecretSpots() { [weak self] secretspots in
+        DataService.instance.getNewSecretSpots() { [weak self] result in
             guard let self = self else {return}
             
-            self.allspots = secretspots
-            self.newSecretSpots = secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
-            self.newSpotCount = self.newSecretSpots.count
-            var views: [CardView] = []
-            
-            for index in 0..<2 {
-                if self.newSecretSpots.isEmpty {self.hasNewSpots = false; return}
-                
-                if self.newSecretSpots.indices.contains(index) {
-                    let spot = self.newSecretSpots[index]
-                    views.append(CardView(spot: spot))
-                }
-                
+            switch result {
+                case .success(let secretspots):
+                    self.allspots = secretspots
+                    self.newSecretSpots = secretspots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
+                    self.newSpotCount = self.newSecretSpots.count
+                    var views: [CardView] = []
+                    
+                    for index in 0..<2 {
+                        if self.newSecretSpots.isEmpty {self.hasNewSpots = false; return}
+                        
+                        if self.newSecretSpots.indices.contains(index) {
+                            let spot = self.newSecretSpots[index]
+                            views.append(CardView(spot: spot))
+                        }
+                        
+                    }
+                    
+                    self.cardViews = views
+                    self.finished = true
+                    
+                    if self.newSecretSpots.count > 0 {
+                        self.hasNewSpots = true
+                    } else {
+                        self.hasNewSpots = false
+                    }
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                    self.showAlert.toggle()
             }
             
-            self.cardViews = views
-            self.finished = true
-            
-            if self.newSecretSpots.count > 0 {
-                self.hasNewSpots = true
-            } else {
-                self.hasNewSpots = false
-            }
             
         }
     }

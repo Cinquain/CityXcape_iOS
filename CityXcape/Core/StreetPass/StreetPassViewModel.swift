@@ -52,7 +52,6 @@ class StreetPassViewModel: NSObject, ObservableObject {
     
     override init() {
         super.init()
-        calculateWorld()
         getScoutLeaders()
         calculateRank()
     }
@@ -102,8 +101,8 @@ class StreetPassViewModel: NSObject, ObservableObject {
     
     func calculateWorld()  {
         guard let uid = userId else {return}
-
         coreData.fetchSecretSpots()
+
         var worlds: [String] = []
         var worldDictionary: [String: Double] = [:]
         
@@ -159,6 +158,7 @@ class StreetPassViewModel: NSObject, ObservableObject {
     
     
     func calculateRank() {
+        coreData.fetchSecretSpots()
         guard let uid = userId else {return}
 
         let allspots = coreData.spotEntities.map({SecretSpot(entity: $0)})

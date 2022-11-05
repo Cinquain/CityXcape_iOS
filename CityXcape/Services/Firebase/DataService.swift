@@ -51,12 +51,8 @@ class DataService {
     
     func uploadSecretSpot(spotName: String, description: String, image: UIImage, price: Int, world: String, mapItem: MKMapItem, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
         
-        print("Inside data service")
-        let document = REF_POST.document()
-        let feedDocument = REF_FEED.document()
+        let spotId = UUID().uuidString
 
-        let feedId = feedDocument.documentID
-        let spotId = document.documentID
         let address = mapItem.getAddress()
         let longitude = mapItem.placemark.coordinate.longitude
         let latitude = mapItem.placemark.coordinate.latitude
@@ -128,62 +124,76 @@ class DataService {
                 
                 self.manager.addSpotEntity(spotId: spotId, spotName: spotName, description: description, longitude: longitude, latitude: latitude, imageUrls: [downloadUrl], address: address, uid: uid, ownerImageUrl: ownerImageUrl, ownerDisplayName: ownerDisplayName, price: 1, viewCount: 1, saveCount: 1, zipCode: Double(zipCode), world: world, isPublic: isPublic, dateCreated: Date(), city: spotCity, didLike: false, likedCount: 0, verifierCount: 0, commentCount: 0, social: instagram)
                 
-                document.setData(spotData) { (error) in
-                        if let err = error {
-                            print("Error uploading secret spot to database", err.localizedDescription)
-                            completion(false)
-                            return
-                        } else {
-                            
-                        print("Successfully saved secret spots to public world")
-                        //Save to Feed
-                        let feedData: [String: Any] = [
-                            FeedField.id: feedId,
-                            FeedField.uid: uid,
-                            FeedField.username: ownerDisplayName,
-                            FeedField.profileUrl: ownerImageUrl,
-                            FeedField.bio: bio,
-                            FeedField.rank: rank,
-                            FeedField.date: FieldValue.serverTimestamp(),
-                            FeedField.content: spotName,
-                            FeedField.type: FeedType.spot.rawValue,
-                            FeedField.longitude: userLong,
-                            FeedField.spotId: spotId,
-                            FeedField.latitude: userLat,
-                            FeedField.geohash: userHash,
-                            FeedField.stampImageUrl: downloadUrl
-                        ]
+                if isPublic {
+                    let document = self.REF_POST.document(spotId)
+                    document.setData(spotData) { (error) in
+                            if let err = error {
+                                print("Error uploading secret spot to database", err.localizedDescription)
+                                completion(false)
+                                return
+                            }
+                            print("Successfully saved secret spots to public world")
+                            //Save to Feed
+                            let feedDocument = self.REF_FEED.document()
+                            let feedId = feedDocument.documentID
+                            let feedData: [String: Any] = [
+                                FeedField.id: feedId,
+                                FeedField.uid: uid,
+                                FeedField.username: ownerDisplayName,
+                                FeedField.profileUrl: ownerImageUrl,
+                                FeedField.bio: bio,
+                                FeedField.rank: rank,
+                                FeedField.date: FieldValue.serverTimestamp(),
+                                FeedField.content: spotName,
+                                FeedField.type: FeedType.spot.rawValue,
+                                FeedField.longitude: userLong,
+                                FeedField.spotId: spotId,
+                                FeedField.latitude: userLat,
+                                FeedField.geohash: userHash,
+                                FeedField.stampImageUrl: downloadUrl
+                            ]
                         
-                        if isPublic {
                             feedDocument.setData(feedData)
-                        }
-                            
-                        //Save to user's world
-                        let userWorldRef = self.REF_WORLD.document(ServerPath.secret).collection(uid).document(spotId)
-                        let savedData: [String: Any] =
-                            ["savedOn": FieldValue.serverTimestamp()]
-                        userWorldRef.setData(savedData)
-                            
-                        //Increment User StreetCred & world dictionary
-                        let increment: Int64 = 1
-                        let userData : [String: Any] = [
-                            UserField.world : [world: FieldValue.increment(increment)],
-                            UserField.streetCred : FieldValue.increment(increment)
-                        ]
-                        let rankData: [String: Any] = [
-                            RankingField.totalSpots : FieldValue.increment(increment)
-                        ]
-                        AuthService.instance.updateUserField(uid: uid, data: userData)
-                        self.REF_Rankings.document(uid).updateData(rankData)
-                            
-                        DispatchQueue.main.async {
-                            completion(true)
-                            return
-                        }
-
                     }
-                
                 }
+                
+                if !isPublic {
+                    guard let tribe = self.tribe else {return}
+                    if tribe == "" {return}
+                    let document = self.REF_WORLDS
+                                        .document(tribe)
+                                        .collection(ServerPath.posts)
+                                        .document(spotId)
+                    document.setData(spotData)
+                }
+                        
+                //Save to user's world
+                let userWorldRef = self.REF_WORLD.document(ServerPath.secret).collection(uid).document(spotId)
+                let savedData: [String: Any] =
+                    ["savedOn": FieldValue.serverTimestamp()]
+                userWorldRef.setData(savedData)
+                    
+                //Increment User StreetCred
+                let increment: Int64 = 1
+                let userData : [String: Any] = [
+                    UserField.streetCred : FieldValue.increment(increment)
+                ]
+                AuthService.instance.updateUserField(uid: uid, data: userData)
+
+                //Increment user's rankings
+                let rankData: [String: Any] = [
+                    RankingField.totalSpots : FieldValue.increment(increment)
+                ]
+                self.REF_Rankings.document(uid).updateData(rankData)
+                    
+                    
+                DispatchQueue.main.async {
+                    completion(true)
+                    return
+                }
+                
+  
+            //end of Image Manager
         }
     }
         
@@ -1489,6 +1499,10 @@ class DataService {
         guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName else {return}
         
         let fcmToken = Messaging.messaging().fcmToken ?? ""
+        //Set User defaults
+        UserDefaults.standard.set(world.name, forKey: CurrentUserDefaults.tribe)
+        UserDefaults.standard.set(world.imageUrl, forKey: CurrentUserDefaults.tribeImageUrl)
+        
         
         let data: [String: Any] = [
             UserField.tribe: world.name,
@@ -1545,10 +1559,7 @@ class DataService {
                 }
                 
                 let message = "Successfully joined the \(world.name) community"
-                
-                UserDefaults.standard.set(world.name, forKey: CurrentUserDefaults.tribe)
-                UserDefaults.standard.set(world.imageUrl, forKey: CurrentUserDefaults.tribeImageUrl)
-                
+                                
                 let increment: Int64 = 1
                 let incremementData: [String: Any] = [
                     WorldField.membersCount: FieldValue.increment(increment)
@@ -1708,7 +1719,7 @@ class DataService {
     }
     
     
-    func getNewSecretSpots(completion: @escaping (_ spots: [SecretSpot]) -> ()) {
+    func getNewSecretSpots(completion: @escaping (Result<[SecretSpot], Error>) -> ()) {
         var history : [String] = []
 
         guard let uid = userId else
@@ -1717,8 +1728,13 @@ class DataService {
                 .order(by: SecretSpotField.dateCreated, descending: true)
                 .limit(to: 100)
                 .getDocuments { snapshot, error in
+                    if let error = error {
+                        print("error fetching spots for public world", error.localizedDescription)
+                        completion(.failure(error))
+                        return
+                    }
                     let results = self.getSecretSpotsFromSnapshot(querysnapshot: snapshot)
-                    completion(results)
+                    completion(.success(results))
             }
             return
         }
@@ -1731,14 +1747,34 @@ class DataService {
             self.REF_POST
                 .order(by: SecretSpotField.dateCreated, descending: true)
                 .getDocuments { querysnapshot, error in
+                    if let error = error {
+                        print("Error fetching secret spots", error.localizedDescription)
+                        completion(.failure(error))
+                        return
+                    }
                     let results = self.getSecretSpotsFromSnapshot(querysnapshot: querysnapshot)
-                    let filteredResults = results.filter({  $0.ownerId != uid && $0.isPublic == true &&
+                    var filteredResults = results.filter({  $0.ownerId != uid &&
                                                             !history.contains($0.id)})
-                    completion(filteredResults)
+                    
+                    guard let tribe = self.tribe else {completion(.success(filteredResults)); return}
+                    if tribe == "" {completion(.success(filteredResults)); return}
+                    self.REF_WORLDS
+                        .document(tribe)
+                        .collection(ServerPath.posts)
+                        .getDocuments { querySnapshot, error in
+                            guard let snapshot = querySnapshot else {completion(.success(filteredResults)); return}
+                            if snapshot.isEmpty {completion(.success(filteredResults)); print("World spots is empty"); return}
+                            let worldSpots = self.getSecretSpotsFromSnapshot(querysnapshot: querySnapshot)
+                            let filteredWorld = worldSpots.filter({  $0.ownerId != uid &&
+                                                                    !history.contains($0.id)})
+                            filteredResults.insert(contentsOf: filteredWorld, at: 0)
+                            completion(.success(results))
+                        }
+                
                 }
             
         }
-    
+     
     }
     
     func getSpecificSpot(postId: String, completion: @escaping (Result<SecretSpot, NetworkError>) -> Void) {

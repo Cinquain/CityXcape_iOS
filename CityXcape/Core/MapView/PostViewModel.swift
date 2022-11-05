@@ -21,7 +21,7 @@ class PostViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     
     
-    var worldPlaceHolder = "What community? i.e: #Artists #Urbex"
+    var worldPlaceHolder = "Related Hashtags i.e: #Artists #Urbex"
     var privatePlaceHolder = "Secret Spot is Private"
     var worldDefinition = "Different World Different Spots"
     var detailsPlaceHolder = "Describe why this spot is special"
@@ -37,7 +37,7 @@ class PostViewModel: NSObject, ObservableObject {
     @Published var priceString: String = ""
     @Published var isLoading: Bool = false
     @Published var price: Int = 1
-
+    @Published var selectedWorld: Int = 0
     
     @Published var avPlayer: AVPlayer?
 

@@ -13,6 +13,7 @@ import AVKit
 struct PostSpotForm: View {
     
     @Environment(\.dismiss) private var dismiss
+    @AppStorage(CurrentUserDefaults.tribe) var tribe: String?
 
     @Binding var selectedTab: Int
     @StateObject var vm: PostViewModel
@@ -33,14 +34,17 @@ struct PostSpotForm: View {
                     TextField(vm.detailsPlaceHolder, text: $vm.details)
                         .frame(height: 40)
                     
-                    Section("\(Image(systemName: "eye.fill")) Visibility") {
-                        Toggle(vm.isPublic ? "Public" : "Private", isOn: $vm.isPublic)
+                    Section("\(Image(systemName: vm.isPublic ?  "eye.fill" : "eye.slash")) Visibility") {
                         
-                        
-                            TextField(vm.worldPlaceHolder, text: $vm.world, onCommit:  {
-                                vm.converToHashTag()
-                            })
-                            .opacity(!vm.isPublic ? 0 : 1)
+                        if let tribe = tribe {
+                            Toggle(vm.isPublic ? "Public" : "\(tribe)s Only" , isOn: $vm.isPublic)
+
+                        }
+              
+                    
+                        TextField(vm.worldPlaceHolder, text: $vm.world, onCommit:  {
+                            vm.converToHashTag()
+                        })
                            
                            
 //                         else {

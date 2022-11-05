@@ -160,6 +160,9 @@ extension PublicStampView {
                         .font(Font.custom("Savoye LET", size: 22))
                 }
             }
+            .sheet(item: $secretSpot) { spot in
+                SpotDetailsView(spot: spot)
+            }
       
         }
         .padding(.horizontal, 20)
@@ -181,19 +184,24 @@ extension PublicStampView {
     }
     
     private var titleView: some View {
-        HStack {
-            Image("pin_blue")
-                .resizable()
-                .scaledToFit()
-                .frame(height: 40)
-                .padding(.bottom, 12)
-            
-            Text(verification.name)
-                .font(Font.custom("Savoye LET", size: 42))
-                .fontWeight(.thin)
-                .foregroundColor(.white)
-                .lineLimit(1)
-                .multilineTextAlignment(.center)
+        
+        Button {
+            getSecretSpot(spotId: verification.id)
+        } label: {
+            HStack {
+                Image("pin_blue")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 40)
+                    .padding(.bottom, 12)
+                
+                Text(verification.name)
+                    .font(Font.custom("Savoye LET", size: 42))
+                    .fontWeight(.thin)
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+                    .multilineTextAlignment(.center)
+            }
         }
     }
     
