@@ -148,7 +148,7 @@ struct SpotDetailsView: View {
             .onAppear(perform: {
                 vm.checkedOwner(spot: spot)
                 vm.analytics.viewedSecretSpot()
-                vm.updateSecretSpot(postId: spot.id) { success in
+                vm.updateSecretSpot(postId: spot.id, isPublic: spot.isPublic) { success in
                     if !success {
                         vm.alertMessage = "Spot no longer exist!"
                         vm.showAlert.toggle()

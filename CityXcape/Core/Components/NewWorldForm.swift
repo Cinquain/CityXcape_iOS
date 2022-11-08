@@ -52,7 +52,7 @@ struct NewWorldForm: View {
             
                 
                 
-                Section(header: Text("\(price) STC, \(spots) spots, \(stamps) stamps")) {
+                Section(header: Text("\(price) STC, \(spots) spots, \(stamps) stamps Required")) {
                     
                     Stepper("Streetcred", value: $price, in: 0...100)
                     Stepper("# of Spots", value: $spots, in: 0...50)
@@ -63,7 +63,7 @@ struct NewWorldForm: View {
                 
                 Section("Finish") {
                     Button {
-                        submitWorld()
+                        validateForm()
                     } label: {
                         HStack{
                             Spacer()

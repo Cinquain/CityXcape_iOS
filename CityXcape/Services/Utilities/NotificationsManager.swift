@@ -89,6 +89,19 @@ class NotificationsManager: ObservableObject {
         }
     }
     
+    func getPrivateSecretSpot(spotId: String) {
+        DataService.instance.getSpecificWorldSpot(postId: spotId) { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+                case .failure(let error):
+                print("Error getting secret spot", error.localizedDescription)
+                case .success(let spot):
+                    print("Setting secret spot")
+                    self.secretSpot = spot
+            }
+        }
+    }
+    
     func getWorld(name: String) {
         DataService.instance.getSpecificWorld(name: name) { result in
             switch result {

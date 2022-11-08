@@ -51,6 +51,7 @@ class WorldViewModel: NSObject, ObservableObject {
 
     override init() {
         super.init()
+        calculateRank()
     }
     
     
@@ -103,7 +104,7 @@ class WorldViewModel: NSObject, ObservableObject {
             
             switch result {
                 case .failure(let error):
-                    self.alertMessage = "You have no world invitation"
+                    self.alertMessage = error.localizedDescription
                     self.showAlert.toggle()
                 case .success(let world):
                     self.worldInvite = world
@@ -115,13 +116,13 @@ class WorldViewModel: NSObject, ObservableObject {
     
     func fetchUsersFromWorld() {
         if tribe == nil || tribe == "" {
-            alertMessage = "You need to be part of a community to see a heatmap"
+            alertMessage = "You need to be part of a community to see a heatmap. \n Go to Worlds under sandwich menu to join a community."
             showAlert.toggle()
             return
         }
         
         if incognito != nil && incognito == true {
-            alertMessage = "You need to turn off incognito to see heatmap"
+            alertMessage = "Please disable Ghost Mode to see heatmap"
             showAlert.toggle()
             return
         }
@@ -177,7 +178,6 @@ class WorldViewModel: NSObject, ObservableObject {
                 totalCities += 1
             }
         }
-        
         (self.rank,
          self.progressString,
          self.progressValue) = Rank.calculateRank(totalSpotsPosted: totalSpots, totalSaves: totalSaves, totalStamps: totalStamps)

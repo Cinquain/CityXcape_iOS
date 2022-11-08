@@ -123,8 +123,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, MessagingDelegate, UNUserNot
             
             if let spotId = userInfo["spotId"] as? String {
                 notification.spotId = spotId
-                notification.getSecretSpot(spotId: spotId)
-                return
+                if userInfo["isPrivate"] != nil {
+                    notification.getPrivateSecretSpot(spotId: spotId)
+                } else {
+                    notification.getSecretSpot(spotId: spotId)
+                    return
+                }
             }
         
             if let worldName = userInfo["worldName"] as? String {

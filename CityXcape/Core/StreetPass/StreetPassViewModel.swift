@@ -158,9 +158,8 @@ class StreetPassViewModel: NSObject, ObservableObject {
     
     
     func calculateRank() {
-        coreData.fetchSecretSpots()
         guard let uid = userId else {return}
-
+        coreData.fetchSecretSpots()
         let allspots = coreData.spotEntities.map({SecretSpot(entity: $0)})
         let verifiedSpots = allspots.filter({$0.verified == true})
         totalStamps = verifiedSpots.count

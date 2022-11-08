@@ -1768,7 +1768,7 @@ class DataService {
                             let filteredWorld = worldSpots.filter({  $0.ownerId != uid &&
                                                                     !history.contains($0.id)})
                             filteredResults.insert(contentsOf: filteredWorld, at: 0)
-                            completion(.success(results))
+                            completion(.success(filteredResults))
                         }
                 
                 }
@@ -1777,25 +1777,47 @@ class DataService {
      
     }
     
-    func getSpecificSpot(postId: String, completion: @escaping (Result<SecretSpot, NetworkError>) -> Void) {
+    func getSpecificSpot(postId: String, completion: @escaping (Result<SecretSpot, Error>) -> Void) {
         
         REF_POST
-            .whereField(SecretSpotField.spotId, isEqualTo: postId)
-            .getDocuments { snapshot, error in
+            .document(postId)
+            .getDocument { querySnapshot, error in
                 if let error = error {
-                    completion(.failure(.failed))
-                    print("Error loading spot", error.localizedDescription)
+                    print("Error finding specific spot in world", error.localizedDescription)
+                    completion(.failure(error))
+                    return
                 }
-                print("Found specific spot")
-                guard let snap = snapshot else {return}
-                snap.documents.forEach { document in
-                    let data = document.data()
-                    let spot = SecretSpot(data: data)
-                    if let spot = spot {
-                        completion(.success(spot))
-                    }
+                guard let snapshot = querySnapshot else {return}
+                let data = snapshot.data()
+                let secretSpot = SecretSpot(data: data)
+                if let spot = secretSpot {
+                    completion(.success(spot))
                 }
             }
+    }
+    
+    func getSpecificWorldSpot(postId: String, completion: @escaping (Result<SecretSpot, Error>) -> Void) {
+        guard let tribe = tribe else {return}
+        if tribe == "" {return}
+        
+        REF_WORLDS
+            .document(tribe)
+            .collection(ServerPath.posts)
+            .document(postId)
+            .getDocument { querySnapshot, error in
+                if let error = error {
+                    print("Error finding specific spot in world", error.localizedDescription)
+                    completion(.failure(error))
+                    return
+                }
+                guard let snapshot = querySnapshot else {return}
+                let data = snapshot.data()
+                let secretSpot = SecretSpot(data: data)
+                if let spot = secretSpot {
+                    completion(.success(spot))
+                }
+            }
+        
     }
     
     func getSpecificVerification(postId: String, uid: String, completion: @escaping (Result<Verification, NetworkError>) -> Void) {
@@ -2326,31 +2348,59 @@ class DataService {
     
     
     
-    func updateSecretSpot(spotId: String, completion: @escaping (_ success: Bool) -> ()) {
-        REF_POST.document(spotId).getDocument { snaphot, error in
-            
-            if let error = error {
-                print("Error finding secret spot", error.localizedDescription)
-                return
-            }
-            
-            guard let document = snaphot else {return}
-            if !document.exists {
-                CoreDataManager.instance.delete(spotId: spotId)
-                completion(false)
-            }
-            self.updatePostViewCount(postId: spotId)
-            let data = document.data()
-            let secretSpot = SecretSpot(data: data)
-            if let spot = secretSpot {
-                print("Secret Spot Updated")
-                self.manager.updatewithSpot(spot: spot)
-                completion(true)
-            }
+    func updateSecretSpot(spotId: String, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
         
-            
+        if isPublic {
+            REF_POST.document(spotId).getDocument { snapshot, error in
+                
+                if let error = error {
+                    print("Error finding secret spot", error.localizedDescription)
+                    return
+                }
+                
+                guard let document = snapshot else {return}
+                if !document.exists {
+                    CoreDataManager.instance.delete(spotId: spotId)
+                    completion(false)
+                }
+                self.updatePostViewCount(postId: spotId)
+                let data = document.data()
+                let secretSpot = SecretSpot(data: data)
+                if let spot = secretSpot {
+                    print("Secret Spot Updated")
+                    self.manager.updatewithSpot(spot: spot)
+                    completion(true)
+                }
+            }
+        } else {
+            guard let tribe = tribe else {return}
+            if tribe == "" {return}
+            REF_WORLDS
+                .document(tribe)
+                .collection(ServerPath.posts)
+                .document(spotId)
+                .getDocument { snapshot, error in
+                    if let error = error {
+                        print("Error finding secret spot", error.localizedDescription)
+                        return
+                    }
+                    
+                    guard let document = snapshot else {return}
+                    if !document.exists {
+                        CoreDataManager.instance.delete(spotId: spotId)
+                        completion(false)
+                    }
+                    self.updatePostViewCount(postId: spotId)
+                    let data = document.data()
+                    let secretSpot = SecretSpot(data: data)
+                    if let spot = secretSpot {
+                        print("Secret Spot Updated")
+                        self.manager.updatewithSpot(spot: spot)
+                        completion(true)
+                    }
+                }
+        }
     }
-}
 
     
     
@@ -2775,12 +2825,16 @@ class DataService {
         
         //Delete user from save collection
         REF_POST.document(spotId).collection("savedBy").document(uid).delete()
-        
+    
 //        Delete spot it is owned by user
         if spot.ownerId == uid {
+            if spot.isPublic {
                 self.REF_POST.document(spotId).delete()
-                completion(true)
-                return
+            } else {
+                guard let tribe = tribe else {return}
+                if tribe == "" {return}
+                REF_WORLDS.document(tribe).collection(ServerPath.posts).document(spotId).delete()
+            }
         }
                 
 //        Delete spot from user's private world

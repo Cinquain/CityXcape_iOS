@@ -431,9 +431,9 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     }
     
     
-    func updateSecretSpot(postId: String, completion: @escaping (_ success: Bool) -> ()) {
+    func updateSecretSpot(postId: String, isPublic: Bool, completion: @escaping (_ success: Bool) -> ()) {
         
-        DataService.instance.updateSecretSpot(spotId: postId) { success in
+        DataService.instance.updateSecretSpot(spotId: postId, isPublic: isPublic) { success in
             completion(success)
         }
         
@@ -564,15 +564,14 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
                 let userLocation = CLLocation(latitude: (manager.location?.coordinate.latitude)!, longitude: (manager.location?.coordinate.longitude)!)
                 let distance = userLocation.distance(from: spotLocation)
                 let distanceInFeet = distance * 3.28084
-                let distanceInMiles = distance * 0.000621371
-                let formattedDistance = String(format: "%.1f", distanceInMiles)
+                let formattedDistance = String(format: "%.1f", distanceInFeet)
                 print("\(distance) feet")
                 if distanceInFeet < 200 {
                     showCheckin = true
                 } else {
                     //Distance is greater than 200 feet
                     showAlert = true
-                    alertMessage = "You need to be there to checkin. \n You are \(formattedDistance) mile away"
+                    alertMessage = "You need to be there to checkin. \n You are \(formattedDistance) feet away"
                 }
                     
         } else {

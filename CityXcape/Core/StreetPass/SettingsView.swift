@@ -94,10 +94,10 @@ struct SettingsView: View {
                     Button(action: {
                         showOptions.toggle()
                     }, label: {
-                        SettingsRowView(text: "Incognito", leftIcon: "eye.slash", color: .black)
+                        SettingsRowView(text: "Ghost Mode", leftIcon: incognito ?? false ?  "eye.slash" : "eye", color: .black)
                     })
                     .actionSheet(isPresented: $showOptions) {
-                        return ActionSheet(title: Text(incognito ?? false ? "Turn off Incognito?": "Do you want to go Ingonito?"), message: nil, buttons: [
+                        return ActionSheet(title: Text(incognito ?? false ? "Turn off Ghost Mode?": "Do you want to turn on Ghost Mode?"), message: nil, buttons: [
                             .default(Text("Yes"), action: {
                                 goIncognito()
                             }),
@@ -212,8 +212,12 @@ struct SettingsView: View {
     func goIncognito() {
         if incognito == nil || incognito == false {
             UserDefaults.standard.set(true, forKey: CurrentUserDefaults.incognito)
+            message = "Ghost Mode turned on"
+            showAlert.toggle()
         } else {
             UserDefaults.standard.set(false, forKey: CurrentUserDefaults.incognito)
+            message = "Ghost Mode turned off"
+            showAlert.toggle()
         }
     }
     
