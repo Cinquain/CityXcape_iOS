@@ -165,6 +165,9 @@ class DataService {
                                         .collection(ServerPath.posts)
                                         .document(spotId)
                     document.setData(spotData)
+                    let increment: Int64 = 1
+                    let worldData: [String: Any] = [WorldField.spotCount: FieldValue.increment(increment)]
+                    self.REF_WORLDS.document(tribe).updateData(worldData)
                 }
                         
                 //Save to user's world

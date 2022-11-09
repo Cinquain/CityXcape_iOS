@@ -13,8 +13,7 @@ struct DiscoverWorlds: View {
 
     @StateObject var vm: WorldViewModel
     @State var currentWorld: World?
-    @State var showAlert: Bool = false
-    @State var alertMessage: String = ""
+  
     var body: some View {
         
         VStack {
@@ -39,9 +38,6 @@ struct DiscoverWorlds: View {
                     Button {
                         if vm.isValid(world: world) {
                             currentWorld = world
-                        } else {
-                            alertMessage = world.reqString
-                            showAlert.toggle()
                         }
                     } label: {
                         WorldThumb(world: world)
@@ -83,8 +79,8 @@ struct DiscoverWorlds: View {
                     .frame(height: 20)
                     .opacity(0.5)
             }
-            .alert(isPresented: $showAlert) {
-                return Alert(title: Text(alertMessage))
+            .alert(isPresented: $vm.showAlert) {
+                return Alert(title: Text(vm.alertMessage))
             }
 
             

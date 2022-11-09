@@ -78,7 +78,11 @@ class WorldViewModel: NSObject, ObservableObject {
             return true
         }
         else {
-            return false
+            let remainingSpots = world.reqSpots - totalSpots
+            let remainingStamps = world.reqStamps - totalStamps
+            alertMessage = remainingStamps <= 0 ? "Post \(remainingSpots) more spots to join this world" : "Post \(remainingSpots) spots and get \(remainingStamps) stamp to join this world."
+            showAlert.toggle()
+            return false 
         }
     }
     
