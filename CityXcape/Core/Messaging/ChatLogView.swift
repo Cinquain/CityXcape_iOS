@@ -10,7 +10,7 @@ import SwiftUI
 struct ChatLogView: View {
     
     @State var user: User
-    @StateObject var vm: ChatLogViewModel = ChatLogViewModel()
+    @StateObject var vm: ChatLogViewModel 
  
     
     var body: some View {
@@ -34,6 +34,9 @@ struct ChatLogView: View {
                     Text(user.displayName)
                 }.foregroundColor(.white)
             }
+        }
+        .onDisappear {
+            vm.removeListener()
         }
         
     }
@@ -92,6 +95,6 @@ extension ChatLogView {
 
 struct ChatLogView_Previews: PreviewProvider {
     static var previews: some View {
-        ChatLogView(user: User())
+        ChatLogView(user: User(), vm: ChatLogViewModel())
     }
 }

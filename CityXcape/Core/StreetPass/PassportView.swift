@@ -22,9 +22,7 @@ struct PassportView: View {
         ScrollView {
             
             memoryView
-
-            buttonRow
-
+                
             Spacer()
 
             stamp
@@ -33,7 +31,10 @@ struct PassportView: View {
             
             
         }
-        .background(Color.cx_cream.edgesIgnoringSafeArea(.all))
+        .background(LinearGradient(gradient: Gradient(stops: [
+            Gradient.Stop(color: .black, location: 0.40),
+            Gradient.Stop(color: .cx_orange, location: 3.0),
+        ]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all))
         .onDisappear(perform: {
             vm.url = nil
         })
@@ -75,41 +76,39 @@ extension PassportView {
             }, content: {
                 ImagePicker(imageSelected: $vm.passportImage, videoURL: $vm.videoUrl, sourceType: $vm.sourceType)
             })
-           
-
-
-           
+            
           
             VStack(spacing: 0) {
                 HStack {
-                    Spacer()
-                    Image("pin_blue")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 40)
-                        .padding(.bottom, 12)
-                     
-                    Text(verification.name)
-                        .font(Font.custom("Savoye LET", size: 42))
-                        .fontWeight(.thin)
-                        .foregroundColor(.black)
-                        .lineLimit(1)
-                        .multilineTextAlignment(.center)
-             
-                    Spacer()
-                }
+                        Spacer()
+                    
+                        Image("pin_blue")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 40)
+                            .padding(.bottom, 12)
+                           
+                        Text(verification.name)
+                            .font(Font.custom("Savoye LET", size: 42))
+                            .fontWeight(.thin)
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                            .multilineTextAlignment(.center)
+                    
+                        Spacer()
+                    }
                 
-                HStack {
-                    Text(verification.comment)
-                        .font(Font.custom("Savoye LET", size: 25))
-                        .foregroundColor(.black)
+                Text(verification.comment)
+                       .font(Font.custom("Savoye LET", size: 25))
+                       .foregroundColor(.white)
+                     
+                                          
                     
                 }
-                .padding(.horizontal, 20)
-            }
-            .alert(isPresented: $vm.showAlert) {
-                return Alert(title: Text(vm.alertMessage))
-            }
+                .alert(isPresented: $vm.showAlert) {
+                    return Alert(title: Text(vm.alertMessage))
+                }
+            
             
             
         }
@@ -140,55 +139,40 @@ extension PassportView {
                     }
                     .rotationEffect(Angle(degrees: -30))
                     )
+            
+            
         }
         .padding()
-    }
-    
-    private var buttonRow: some View {
-        HStack(spacing: 0) {
-        
-                Button {
-                    vm.showShareSheet.toggle()
-               } label: {
-                    
-                    HStack {
-                        
-                        Image("text_share")
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 35)
-                            .foregroundColor(.black)
-                        
-                    }
-                    .padding(.horizontal, 20)
-                    .sheet(isPresented: $vm.showShareSheet) {
-                        ShareSheetView(photo: vm.passportImage ?? UIImage(), title: verification.name)
-                    }
-                    
-                }
-            
+        .contextMenu(menuItems: {
             
             Button {
                 vm.shareInstaStamp(object: verification)
             } label: {
-                Image("ig_share")
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 35)
-                    .foregroundColor(.black)
-
+                HStack {
+                    Text("Share")
+                    Image("ig_share")
+                        .renderingMode(.template)
+                        .foregroundColor(.black)
+                }
+               
             }
-
+          
+           
+            Button {
+                vm.loadCommentsFor(id: verification.id)
+            } label: {
+               Label("Comments", systemImage: "bubble.left.fill")
+            }
+            .sheet(isPresented: $vm.showComments) {
+                StampCommentView(stamp: verification, comments: vm.comments)
+            }
+          
             
-            Spacer()
-        }
-        .padding(.horizontal, 10)
-        .opacity(vm.allowshare ? 1 : 0)
-        .animation(.easeIn, value: vm.allowshare)
+
+        })
     }
     
+
     
     private var downArrow: some View {
         HStack {

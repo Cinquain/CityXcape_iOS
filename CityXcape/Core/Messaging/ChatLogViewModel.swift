@@ -63,6 +63,10 @@ class ChatLogViewModel: ObservableObject {
         
     }
     
+    func removeListener() {
+        DataService.instance.removeChatListener()
+    }
+    
     
     
     func deleteRecentMessage(userId: String) {

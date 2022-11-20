@@ -35,7 +35,7 @@ struct MainMessageView: View {
                     ForEach(vm.recentMessages) { message in
                         
                         NavigationLink {
-                            ChatLogView(user: User(message: message))
+                            ChatLogView(user: User(message: message), vm: vm)
                         } label: {
                             MessagePreview(message: message)
                         }
@@ -51,7 +51,7 @@ struct MainMessageView: View {
                 //End of VStack
                 
                 NavigationLink("", isActive: $vm.showLogView) {
-                    ChatLogView(user: vm.friend ?? User())
+                    ChatLogView(user: vm.friend ?? User(), vm: vm)
                 }
                 
                 

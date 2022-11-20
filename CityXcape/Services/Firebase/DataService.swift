@@ -30,6 +30,8 @@ class DataService {
     static let instance = DataService()
     let manager = CoreDataManager.instance
     let locationManager = LocationService.instance
+    private var feedListener: ListenerRegistration?
+    private var chatListener: ListenerRegistration?
     
     private init() {}
     
@@ -603,7 +605,15 @@ class DataService {
     }
     
     func postStampComment(spotId: String, content: String, verifierId: String, user: User, completion: @escaping (Result<String?, UploadError>) -> Void) {
-        let reference = REF_WORLD.document("verified").collection(verifierId).document(spotId).collection("comments").document()
+        
+        let reference = REF_WORLD
+                            .document(ServerPath.verified)
+                            .collection(verifierId)
+                            .document(spotId)
+                            .collection(ServerPath.comments)
+                            .document()
+                            
+        
         let commentId = reference.documentID
         
         let data: [String: Any] = [
@@ -851,13 +861,23 @@ class DataService {
     }
     
     
-    func downloadStampComments(verificationId: String, uid: String, completion: @escaping (_ comments: [Comment]) -> ()) {
+    func downloadStampComments(forId: String, verificationId: String, completion: @escaping (Result<[Comment], Error>) -> ()) {
         
-        REF_WORLD.document("verified").collection(uid).document(verificationId).collection("comments").order(by: CommentField.dateCreated, descending: false).getDocuments { querysnapshot, error in
-            guard let snapshot = querysnapshot else {return}
-            DispatchQueue.main.async {
-                completion(self.getCommentsFromSnapshot(snapshot: snapshot))
-            }
+        REF_WORLD
+            .document(ServerPath.verified)
+            .collection(forId)
+            .document(verificationId)
+            .collection(ServerPath.comments)
+            .getDocuments { querysnapshot, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                    
+                guard let snapshot = querysnapshot else {return}
+                DispatchQueue.main.async {
+                    completion(.success(self.getCommentsFromSnapshot(snapshot: snapshot)))
+                }
         }
         
     }
@@ -1578,30 +1598,44 @@ class DataService {
     
     func getCityFeed(completion: @escaping (Result<[Feed],Error>) -> Void) {
         var feeds: [Feed] = []
-        REF_FEED
+        
+        feedListener = REF_FEED
             .order(by: FeedField.date, descending: true)
             .limit(to: 15)
-            .getDocuments { querySnapshot, error in
+            .addSnapshotListener { querySnapshot, error in
                 
                 if let error = error {
                     print("Error fetching feed from database", error.localizedDescription)
                     completion(.failure(error))
                 }
                 
-                querySnapshot?.documents.forEach({ document in
-                        let data = document.data()
+                querySnapshot?.documentChanges.forEach({ change in
+                    if change.type == .added {
+                        let data = change.document.data()
                         let feed = Feed(data: data)
                         feeds.insert(feed, at: 0)
+                    }
+                    completion(.success(feeds))
                 })
-                completion(.success(feeds))
 
             }
     }
     
+    func removeFeedListener() {
+        feedListener?.remove()
+        print("Removed Feed Listener")
+    }
+    
+    func removeChatListener() {
+        chatListener?.remove()
+        print("Removed Chat Listener")
+    }
+    
+    
     func getMessagesForUser(userID: String, completion: @escaping (Result<[Message], NetworkError>) -> ()) {
         guard let uid = userId else {return}
         var messages: [Message] = []
-        REF_MESSAGES
+        chatListener = REF_MESSAGES
             .document(uid)
             .collection(userID)
             .addSnapshotListener { querySnapshot, error in

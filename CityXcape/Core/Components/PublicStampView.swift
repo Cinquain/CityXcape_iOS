@@ -39,8 +39,22 @@ struct PublicStampView: View {
     }
     
     fileprivate func loadComments() {
-        DataService.instance.downloadStampComments(verificationId: verification.id, uid: verification.verifierId) {  comments in
-            self.comments = comments
+        DataService.instance.downloadStampComments(forId: verification.verifierId, verificationId: verification.id) {  result in
+            switch result {
+            case .success(let comments):
+                if comments.isEmpty {
+                    self.alertMessage = "No comments on this stamp"
+                    self.showAlert.toggle()
+                    return
+                }
+                self.comments = comments
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.showComments.toggle()
+                }
+            case .failure(let error):
+                self.alertMessage = error.localizedDescription
+                self.showAlert.toggle()
+            }
         }
     }
     
@@ -101,9 +115,6 @@ extension PublicStampView {
             
             Button {
                 loadComments()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    showComments.toggle()
-                }
             } label: {
                 Image(systemName: "bubble.left")
                     .foregroundColor(.white)
@@ -111,8 +122,7 @@ extension PublicStampView {
                     .font(.title)
             }
             .sheet(isPresented: $showComments) {
-                let user = User(verification: verification)
-                PostCommentView(comments: comments, verifier: user, verification: verification)
+                StampCommentView(stamp: verification, comments: comments)
             }
             
             Button {
@@ -220,7 +230,7 @@ extension PublicStampView {
             }
             .sheet(isPresented: $showComments) {
                 let user = User(verification: verification)
-                PostCommentView(comments: comments, verifier: user, verification: verification)
+                StampCommentView(stamp: verification, comments: comments)
             }
             
             Button {

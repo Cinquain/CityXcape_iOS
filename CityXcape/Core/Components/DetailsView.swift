@@ -131,10 +131,10 @@ struct DetailsView: View {
                     getSavedbyUsers(postId: spot.id)
                   } label: {
                       VStack(spacing: 0) {
-                         Image("save")
+                         Image("grid")
                               .resizable()
                               .aspectRatio(contentMode: .fit)
-                              .frame(width: 55)
+                              .frame(width: 50)
                           Text("saved by")
                               .font(.caption)
                               .fontWeight(.thin)

@@ -81,7 +81,14 @@ struct SpotDetailsView: View {
                         Button {
                             vm.showMission.toggle()
                         } label: {
-                            Text(vm.getDistanceMessage(spot: spot))
+                        HStack(spacing: 4) {
+                                Image(systemName: "figure.walk.diamond.fill")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 20)
+                                    .foregroundColor(.cx_blue)
+                                Text(vm.getDistanceMessage(spot: spot))
+                            }
                         }
                         .fullScreenCover(isPresented: $vm.showMission) {
                             MissionView(spot: spot, vm: mapViewModel, spotModel: vm)

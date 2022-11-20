@@ -31,7 +31,7 @@ struct MyJournal: View {
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always))
             
         }
-        .background(Color.cx_cream.edgesIgnoringSafeArea(.all))
+        .background(Color.black.edgesIgnoringSafeArea(.all))
       
         
         

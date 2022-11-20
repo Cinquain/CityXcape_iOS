@@ -91,6 +91,12 @@ struct FeedView: View {
         .sheet(isPresented: $vm.showListView) {
             UsersListView(users: vm.users)
         }
+        .onAppear(perform: {
+            vm.fetchFeeds()
+        })
+        .onDisappear {
+            vm.removeListener()
+        }
      
         //Body
     }

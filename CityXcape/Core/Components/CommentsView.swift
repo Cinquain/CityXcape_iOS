@@ -70,11 +70,7 @@ struct CommentsView: View {
 }
     
     fileprivate func getMessage() -> String {
-        if vm.comments.count <= 1 {
-            return "\(vm.comments.count) Comment on \(spot.spotName)"
-        } else {
-            return "\(vm.comments.count) Comments about \(spot.spotName)"
-        }
+       return "Comment on \(spot.spotName)"
     }
 }
 

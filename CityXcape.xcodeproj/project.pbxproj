@@ -26,7 +26,6 @@
 		21107C7C28D2015B00F2CCD1 /* OnboardingII.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21107C7B28D2015B00F2CCD1 /* OnboardingII.swift */; };
 		21107C7E28D206C700F2CCD1 /* OnboardingIII.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21107C7D28D206C700F2CCD1 /* OnboardingIII.swift */; };
 		2110D052286F2151003B71DA /* PublicStampView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D051286F2151003B71DA /* PublicStampView.swift */; };
-		2110D054286F4141003B71DA /* PostCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2110D053286F4141003B71DA /* PostCommentView.swift */; };
 		2117A7E5282573A20001C76C /* StampImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2117A7E4282573A20001C76C /* StampImage.swift */; };
 		2118FED9290468CF009DB882 /* InfoBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2118FED8290468CF009DB882 /* InfoBanner.swift */; };
 		211EC5DF27C65EB800F0B0A8 /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211EC5DE27C65EB800F0B0A8 /* MissionView.swift */; };
@@ -144,6 +143,7 @@
 		21D0359627093B770071C643 /* MissionRowHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0359527093B770071C643 /* MissionRowHeader.swift */; };
 		21D0F07A27EC9604003E8748 /* UserReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D0F07927EC9604003E8748 /* UserReportView.swift */; };
 		21D2413C27CCFE41004D3150 /* Verification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D2413B27CCFE41004D3150 /* Verification.swift */; };
+		21D532FA2929212C009AAAC4 /* StampCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21D532F92929212C009AAAC4 /* StampCommentView.swift */; };
 		21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */; };
 		21DA5AC828844D7E0051673E /* FeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DA5AC728844D7E0051673E /* FeedView.swift */; };
 		21DA5ACA288453C70051673E /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DA5AC9288453C70051673E /* Feed.swift */; };
@@ -199,7 +199,6 @@
 		21107C7B28D2015B00F2CCD1 /* OnboardingII.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingII.swift; sourceTree = "<group>"; };
 		21107C7D28D206C700F2CCD1 /* OnboardingIII.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIII.swift; sourceTree = "<group>"; };
 		2110D051286F2151003B71DA /* PublicStampView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicStampView.swift; sourceTree = "<group>"; };
-		2110D053286F4141003B71DA /* PostCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostCommentView.swift; sourceTree = "<group>"; };
 		2117A7E4282573A20001C76C /* StampImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampImage.swift; sourceTree = "<group>"; };
 		2118FED8290468CF009DB882 /* InfoBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoBanner.swift; sourceTree = "<group>"; };
 		211EC5DE27C65EB800F0B0A8 /* MissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionView.swift; sourceTree = "<group>"; };
@@ -317,6 +316,7 @@
 		21D0359527093B770071C643 /* MissionRowHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MissionRowHeader.swift; sourceTree = "<group>"; };
 		21D0F07927EC9604003E8748 /* UserReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserReportView.swift; sourceTree = "<group>"; };
 		21D2413B27CCFE41004D3150 /* Verification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Verification.swift; sourceTree = "<group>"; };
+		21D532F92929212C009AAAC4 /* StampCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StampCommentView.swift; sourceTree = "<group>"; };
 		21DA5AC728844D7E0051673E /* FeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedView.swift; sourceTree = "<group>"; };
 		21DA5AC9288453C70051673E /* Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feed.swift; sourceTree = "<group>"; };
 		21DCF82227E60906000BD1B3 /* Rank.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rank.swift; sourceTree = "<group>"; };
@@ -595,7 +595,6 @@
 				21A01F35285E131B00FAD74C /* SpotListView.swift */,
 				2168555A2860B2E400E445EB /* SpotSelectionList.swift */,
 				2110D051286F2151003B71DA /* PublicStampView.swift */,
-				2110D053286F4141003B71DA /* PostCommentView.swift */,
 				218CF042288594E400DF86FA /* FeedBubbleView.swift */,
 				21E318CD28AD367200F8A9A2 /* UserView.swift */,
 				21024D6028B10DCA0092B58A /* MessageBubble.swift */,
@@ -607,6 +606,7 @@
 				21E6B2B628D605390015B306 /* ProgressCircle.swift */,
 				2107D94A28E5CD2100EB09DF /* SideMenu.swift */,
 				2118FED8290468CF009DB882 /* InfoBanner.swift */,
+				21D532F92929212C009AAAC4 /* StampCommentView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -926,6 +926,7 @@
 				21A01F36285E131B00FAD74C /* SpotListView.swift in Sources */,
 				217C08E026D1CC4500751933 /* OnboardingViewII.swift in Sources */,
 				21730A8D27C5B0380036549F /* GetStampedButton.swift in Sources */,
+				21D532FA2929212C009AAAC4 /* StampCommentView.swift in Sources */,
 				212EE32F27A4640500232992 /* CommentsView.swift in Sources */,
 				21E908D328562E560039F703 /* StorePage.swift in Sources */,
 				21C8F64B27CEA3CB00006042 /* PassportView.swift in Sources */,
@@ -1057,7 +1058,6 @@
 				21A4697927C12417009F337D /* StampView.swift in Sources */,
 				21C85939271122C9008224E5 /* CardView.swift in Sources */,
 				21EA999A27D1006D00A13C6C /* JourneyViewModel.swift in Sources */,
-				2110D054286F4141003B71DA /* PostCommentView.swift in Sources */,
 				214F086228C4D712003FC517 /* FriendsForSpot.swift in Sources */,
 				217657D327FC642C0077B0A0 /* UserDiscoveryView.swift in Sources */,
 				218115ED2731860700026AAD /* PublicStreetPass.swift in Sources */,

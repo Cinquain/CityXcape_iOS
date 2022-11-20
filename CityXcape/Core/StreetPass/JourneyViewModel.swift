@@ -38,6 +38,8 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     @Published var showSignup: Bool = false 
     @Published var showSpotList: Bool = false
     @Published var spots: [SecretSpot] = []
+    @Published var comments: [Comment] = []
+    @Published var showComments: Bool = false
     
     @Published var disableFollowing: Bool = false
     @Published var disableRequest: Bool = false 
@@ -106,6 +108,25 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
             return "\(cities.keys.count) Cities"
         } else {
             return "\(cities.keys.count) City"
+        }
+    }
+    
+    func loadCommentsFor(id: String) {
+        guard let uid = userId else {return}
+        DataService.instance.downloadStampComments(forId: uid, verificationId: id) { result in
+            switch result {
+                case .success(let returnedComments):
+                    if returnedComments.isEmpty {
+                        self.alertMessage = "No comments on this stamp"
+                        self.showAlert.toggle()
+                        return
+                    }
+                    self.comments = returnedComments
+                    self.showComments.toggle()
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                    self.showAlert.toggle()
+            }
         }
     }
     

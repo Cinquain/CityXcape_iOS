@@ -23,7 +23,7 @@ struct FriendsView: View {
                     VStack {
                         
                         NavigationLink {
-                            ChatLogView(user: user)
+                            ChatLogView(user: user, vm: vm)
                         } label: {
                             UserChatView(user: user)
                         }

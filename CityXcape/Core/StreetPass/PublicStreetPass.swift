@@ -271,7 +271,7 @@ extension PublicStreetPass {
                  .cornerRadius(25)
          }
          .sheet(isPresented: $vm.showChatLog) {
-             ChatLogView(user: user)
+             ChatLogView(user: user, vm: ChatLogViewModel())
          }
                  
     }

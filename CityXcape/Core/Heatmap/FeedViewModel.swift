@@ -37,11 +37,11 @@ class FeedViewModel: ObservableObject {
     var searchTerm: String = "Search a user (case sensitive)"
     
     init() {
-        fetchFeeds()
+        
     }
     
     
-    fileprivate func fetchFeeds() {
+     func fetchFeeds() {
         
         DataService.instance.getCityFeed { [weak self] result in
             guard let self = self else {return}
@@ -94,6 +94,10 @@ class FeedViewModel: ObservableObject {
             self.showAlert = true
         }
         //End of function
+    }
+    
+    func removeListener() {
+        DataService.instance.removeFeedListener()
     }
     
     

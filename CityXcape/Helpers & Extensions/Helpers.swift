@@ -145,6 +145,7 @@ struct ServerPath {
     static let worlds = "worlds"
     static let maps = "maps"
     static let invite = "invite"
+    static let comments = "comments"
 }
 
 struct FeedField {
