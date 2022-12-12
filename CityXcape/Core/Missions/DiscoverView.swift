@@ -112,21 +112,24 @@ struct DiscoverView: View {
                     Spacer()
                     HStack(alignment: .center, spacing: 10) {
                         Button {
-                            vm.moveCards(-75)
+                            vm.undoMoveCard()
                         } label: {
                             Image("x")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 50)
+                                .rotationEffect(Angle(degrees: 180))
+
                         }
                         
                         Button {
-                            vm.undoMoveCard()
+                            vm.moveCards(-75)
                         } label: {
                             Image("back")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 50)
+                                .rotationEffect(Angle(degrees: 180))
                         }
                         
                         

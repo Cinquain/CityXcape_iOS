@@ -167,7 +167,7 @@ extension CheckinView {
         Button {
             showButtons.toggle()
         } label: {
-            Text("Replace Comment & Photo")
+            Text("Add Comment & Photo")
                 .fontWeight(.thin)
                 .foregroundColor(.blue)
         }

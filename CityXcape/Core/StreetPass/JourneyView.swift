@@ -129,7 +129,7 @@ struct JourneyView: View {
                     }
                     .padding(.top, 7)
                     .fullScreenCover(isPresented: $vm.showJournal) {
-                        MyJournal(vm: vm)
+                        MemoriesView(vm: vm)
                     }
 
                 }

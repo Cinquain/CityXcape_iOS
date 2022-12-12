@@ -23,10 +23,10 @@ struct Verification: Identifiable, Hashable {
     let spotOwnerId: String
     let city: String
     let country: String
-    
+    let checkinCount: Int
+    let imageCollection: [String]
     let verifierName: String
     let verifierImage: String
-
     
     init(data: [String: Any]) {
         self.comment = data[CheckinField.comment] as? String ?? ""
@@ -43,6 +43,8 @@ struct Verification: Identifiable, Hashable {
         self.name = data[CheckinField.spotName] as? String ?? ""
         self.verifierName = data[CheckinField.veriferName] as? String ?? ""
         self.verifierImage = data[CheckinField.verifierImage] as? String ?? ""
+        self.checkinCount = data[CheckinField.checkinCount] as? Int ?? 1
+        self.imageCollection = data[CheckinField.imageCollection] as? [String] ?? [self.imageUrl]
     }
     
     
@@ -60,6 +62,8 @@ struct Verification: Identifiable, Hashable {
         self.longitude = entity.longitude
         self.spotOwnerId = entity.spotOwnerId ?? ""
         self.city = entity.city ?? ""
+        self.checkinCount = Int(entity.checkincount)
+        self.imageCollection = entity.imageUrls ?? [entity.imageUrl ?? ""]
     }
     
     init(userInfo: [AnyHashable: Any]) {
@@ -73,7 +77,6 @@ struct Verification: Identifiable, Hashable {
         self.time = dateFormatter.date(from: timestamp) ?? Date()
         let lat =  userInfo["latitude"] as? String ?? ""
         let long =  userInfo["longitude"] as? String ?? ""
-        let count = userInfo["count"] as? String ?? ""
         self.latitude = Double(lat) ?? 0
         self.longitude = Double(long) ?? 0
         self.city =  userInfo["city"] as? String ?? ""
@@ -82,7 +85,10 @@ struct Verification: Identifiable, Hashable {
         self.verifierId =  userInfo["verifierId"] as? String ?? ""
         self.verifierName =  userInfo["verifierName"] as? String ?? ""
         self.verifierImage =  userInfo["verifierImage"] as? String ?? ""
+        self.checkinCount = userInfo[CheckinField.checkinCount] as? Int ?? 1
+        self.imageCollection = userInfo[CheckinField.imageCollection] as? [String] ?? []
     }
+    
     
     static let data: [String: Any] = [
         CheckinField.spotName : "Dance Competion",
@@ -92,13 +98,15 @@ struct Verification: Identifiable, Hashable {
         CheckinField.spotId: "12384855",
         CheckinField.verifierId: "abhfurgg",
         CheckinField.veriferName: "Cinquain",
+        CheckinField.checkinCount: 25,
         CheckinField.country: "US",
         CheckinField.verifierImage: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=1a4c018a-d539-4c95-87ca-fdec61f8e73c",
         CheckinField.comment: "This place is the bomb",
         CheckinField.longitude: -93.25519901402119,
         CheckinField.latitude: 44.97849074790292,
         CheckinField.spotOwnerId : "ahfuigog",
-        CheckinField.timestamp: Date()
+        CheckinField.timestamp: Date(),
+        CheckinField.imageCollection: ["https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2Fw3QA4EFQ1j0yJeCSWyww%2F1?alt=media&token=22fd7993-9352-4798-851a-18fa0a60800b", "https://pics.filmaffinity.com/White_Chicks-973832641-large.jpg"]
     ]
     
     static let demo = Verification(data: data)

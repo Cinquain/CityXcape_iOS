@@ -19,10 +19,11 @@ struct StampImage: View {
     var body: some View {
         
         ZStack(alignment: .top) {
-            Rectangle()
-                .fill(.black)
+            
+            Image(Labels.postalStam.rawValue)
                 .frame(width: width, height: height)
             
+    
             imageFrame
                 .overlay {
                     VStack(spacing: 0) {
@@ -69,20 +70,20 @@ extension StampImage {
     }
     
     private var imageFrame: some View {
-        
-        
-        ZStack {
-            Rectangle()
-                .fill(.white)
-                .frame(width: width - 20, height: height - 20)
-            Image(uiImage: image)
-                .resizable()
-                .scaledToFill()
-                .frame(width: width - 40, height: width - 40)
-                .clipped()
-        }
-            
-    }
+         
+         
+         ZStack {
+             Rectangle()
+                 .fill(.white)
+                 .frame(width: width - 20, height: height - 20)
+             Image(uiImage: image)
+                 .resizable()
+                 .scaledToFill()
+                 .frame(width: width - 40, height: width - 40)
+                 .clipped()
+         }
+             
+     }
     
     private var stamp: some View {
         Image("Stamp")

@@ -128,9 +128,9 @@ class ImageManager {
         
     }
     
-    func uploadVerifyImage(image: UIImage, userId: String, postId: String, completion: @escaping (_ url: String?) -> ()) {
+    func uploadVerifyImage(image: UIImage, userId: String, postId: String, imageName: String, completion: @escaping (_ url: String?) -> ()) {
         
-        let path = getVerificationPath(uid: userId, postId: postId)
+        let path = getVerificationPath(uid: userId, postId: postId, imageName: imageName)
         
         uploadImage(path: path, image: image) { success, imageUrl in
             if success {
@@ -170,8 +170,8 @@ class ImageManager {
         return storagePath
     }
     
-    fileprivate func getVerificationPath(uid: String, postId: String) -> StorageReference {
-        let verifiedPath = "users/\(uid)/\(postId)/verifiedImage"
+    fileprivate func getVerificationPath(uid: String, postId: String, imageName: String) -> StorageReference {
+        let verifiedPath = "users/\(uid)/\(postId)/\(imageName)"
         let storagePath = REF_STORE.reference(withPath: verifiedPath)
         return storagePath
     }

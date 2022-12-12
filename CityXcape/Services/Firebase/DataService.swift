@@ -946,6 +946,13 @@ class DataService {
         }
     }
     
+    func createdImageName() -> String {
+        let dateFormatter = DateFormatter()
+        let date = Date()
+        dateFormatter.locale = Locale(identifier: "en_US")
+        dateFormatter.setLocalizedDateFormatFromTemplate("MMM d, yyyy")
+        return dateFormatter.string(from: date)
+    }
     
     func updateStamp(spot: SecretSpot, image: UIImage?, comment: String?, completion: @escaping (Result<Bool, Error>) -> ()) {
         guard let uid = userId, let profileUrl = profileUrl, let bio = bio, let displayName = displayName else {return}
@@ -954,27 +961,23 @@ class DataService {
         let feedDocument = REF_FEED.document()
         let feedId = feedDocument.documentID
         
-        let ref = REF_WORLD.document(ServerPath.verified).collection(uid).document(postId)
-        let dateFormatter = DateFormatter()
-        let date = Date()
-        dateFormatter.locale = Locale(identifier: "en_US")
-        dateFormatter.setLocalizedDateFormatFromTemplate("MMMMd")
-        let time = dateFormatter.string(from: date)
+        let imageName = createdImageName()
         
-
+        let ref = REF_WORLD.document(ServerPath.verified).collection(uid).document(postId)
+        let increment: Int64 = 1
         let updateData: [String: Any] = [
-            CheckinField.timestamp: FieldValue.serverTimestamp(),
             CheckinField.verifierImage : profileUrl,
-            CheckinField.checkins: [time:FieldValue.serverTimestamp()]
+            CheckinField.checkins: FieldValue.arrayUnion([imageName]),
+            CheckinField.checkinCount: FieldValue.increment(increment)
         ]
         
         if let image = image {
             let imageSaver = ImageSaver()
             imageSaver.writeToPhotoAlbum(image: image)
-            ImageManager.instance.uploadVerifyImage(image: image, userId: uid, postId: postId) { url in
+            ImageManager.instance.uploadVerifyImage(image: image, userId: uid, postId: postId, imageName: imageName) { url in
                 if let imageUrl = url {
                     let imageData: [String: Any] = [
-                        CheckinField.image: imageUrl
+                        CheckinField.imageCollection: FieldValue.arrayUnion([imageUrl])
                     ]
                     ref.updateData(imageData)
                 }
@@ -984,7 +987,8 @@ class DataService {
         if let comment = comment {
             if !comment.isEmpty {
                 let commentData: [String: Any] = [
-                    CheckinField.comment: comment
+                    CheckinField.comments: FieldValue.arrayUnion([comment]),
+                    CheckinField.commentCount: FieldValue.increment(increment)
                 ]
                 ref.updateData(commentData)
             }
@@ -1019,6 +1023,7 @@ class DataService {
             
             //Update Last Verified
             self.manager.updateLastVerified(spotId: postId, date: Date())
+            self.manager.updateCheckinCount(stampId: postId)
             
             //Update Feed
             let rank = self.rank ?? "Tourist"
@@ -1056,20 +1061,18 @@ class DataService {
         let feedId = feedDocument.documentID
         let postId = spot.id
         let ownerId = spot.ownerId
-       
         
-        let dateFormatter = DateFormatter()
-        let date = Date()
-        dateFormatter.locale = Locale(identifier: "en_US")
-        dateFormatter.setLocalizedDateFormatFromTemplate("MMMMd")
-        let time = dateFormatter.string(from: date)
-     
-        ImageManager.instance.uploadVerifyImage(image: image, userId: uid, postId: postId) { [weak self] url in
+        let imageName = createdImageName()
+        let oneIncrement: Int64 = 1
+
+       
+        ImageManager.instance.uploadVerifyImage(image: image, userId: uid, postId: postId, imageName: imageName) { [weak self] url in
             if let imageUrl = url {
                 
                 let checkinData: [String: Any] = [
                     CheckinField.comment: comment,
                     CheckinField.image: imageUrl,
+                    CheckinField.imageCollection: [imageUrl],
                     CheckinField.veriferName: username,
                     CheckinField.verifierImage: profileUrl,
                     CheckinField.verifierId: uid,
@@ -1081,7 +1084,8 @@ class DataService {
                     CheckinField.longitude: spot.longitude,
                     CheckinField.country: spot.country,
                     CheckinField.timestamp: FieldValue.serverTimestamp(),
-                    CheckinField.checkins: [time:FieldValue.serverTimestamp()]
+                    CheckinField.checkins: [imageName],
+                    CheckinField.checkinCount: oneIncrement
                 ]
                 
                 self?.REF_WORLD.document(ServerPath.verified).collection(uid).document(postId).setData(checkinData)
@@ -1094,7 +1098,7 @@ class DataService {
                 
                 self?.REF_POST.document(postId).updateData(fieldUpdate)
                 
-                self?.REF_POST.document(postId).collection("verifiers").document(uid).setData(checkinData) { [weak self] error in
+                self?.REF_POST.document(postId).collection(ServerPath.verifiers).document(uid).setData(checkinData) { [weak self] error in
                     guard let self = self else {return}
                     if let error = error {
                         print("Error saving check-in to database", error.localizedDescription)
@@ -1102,7 +1106,6 @@ class DataService {
                         return
                     }
                     
-                    let oneIncrement: Int64 = 1
                     let verifierIncrement: Int64 = 3
                     
                     //Update verifier info
@@ -1164,14 +1167,14 @@ class DataService {
     func changeStampPhoto(postId: String, image: UIImage, completion: @escaping (Result<String, Error>) -> Void) {
         guard let uid = userId else {return}
         let ref = REF_WORLD.document(ServerPath.verified).collection(uid).document(postId)
-        
+        let imageName = createdImageName()
         let decrement: Int64 = -1
         let walletData: [String: Any] = [
             UserField.streetCred : FieldValue.increment(decrement)
         ]
         AuthService.instance.updateUserField(uid: uid, data: walletData)
 
-        ImageManager.instance.uploadVerifyImage(image: image, userId: uid, postId: postId) { url in
+        ImageManager.instance.uploadVerifyImage(image: image, userId: uid, postId: postId, imageName: imageName) { url in
             if let imageUrl = url {
                 let imageData: [String: Any] = [
                     CheckinField.image: imageUrl

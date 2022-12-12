@@ -16,7 +16,7 @@ struct PassportView: View {
     @StateObject var vm: JourneyViewModel
     var width: CGFloat = UIScreen.screenWidth
     @State private var currentObject: Verification?
-    @State private var obect2: Verification?
+    @State private var currentStamp: Verification?
     
     var body: some View {
         ScrollView {
@@ -59,12 +59,14 @@ extension PassportView {
             } label: {
                 ZStack {
                     Color.white
+                        .frame(width: width - 15, height: width - 15)
+                    
                     WebImage(url: URL(string: vm.url == nil ? verification.imageUrl : vm.url ?? ""))
                         .resizable()
                         .frame(width: width - 40, height: width - 40)
                         
                 }
-                .frame(width: width - 20, height: width - 20)
+                
             }
             .actionSheet(item: $currentObject) { item in
                 getActionSheet(object: item)
@@ -101,6 +103,9 @@ extension PassportView {
                 Text(verification.comment)
                        .font(Font.custom("Savoye LET", size: 25))
                        .foregroundColor(.white)
+                       .sheet(item: $currentStamp) { stamp in
+                           StampMemoriesView(stamp: stamp)
+                       }
                      
                                           
                     
@@ -157,7 +162,6 @@ extension PassportView {
                
             }
           
-           
             Button {
                 vm.loadCommentsFor(id: verification.id)
             } label: {
@@ -168,6 +172,14 @@ extension PassportView {
             }
           
             
+             Button {
+                 currentStamp = verification
+             } label: {
+                 Label("Memories", systemImage: "photo.on.rectangle")
+             }
+             
+            
+
 
         })
     }
@@ -226,23 +238,6 @@ extension PassportView {
 
 struct PassportView_Previews: PreviewProvider {
     static var previews: some View {
-        
-        
-    let data: [String: Any] = [
-        "comment": "Wow, what an amazing spot",
-        "imageUrl":"https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2Fw3QA4EFQ1j0yJeCSWyww%2F1?alt=media&token=22fd7993-9352-4798-851a-18fa0a60800b",
-        "verifierId": "abc123",
-        "spotOwnerId": "xyzabc",
-        "city": "New York",
-        "country": "United States",
-        "time": FieldValue.serverTimestamp(),
-        "latitude": 10110,
-        "longitude": 304004,
-        "name": "Pier 24",
-        "postId": "ahfigoshg"
-    ]
-        let verification = Verification(data: data)
-        
-        PassportView(verification: verification, vm: JourneyViewModel())
+        PassportView(verification: Verification.demo, vm: JourneyViewModel())
     }
 }

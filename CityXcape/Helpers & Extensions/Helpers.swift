@@ -146,6 +146,7 @@ struct ServerPath {
     static let maps = "maps"
     static let invite = "invite"
     static let comments = "comments"
+    static let verifiers = "verifiers"
 }
 
 struct FeedField {
@@ -243,7 +244,9 @@ struct WorldField {
 
 struct CheckinField {
     static let comment = "comment"
+    static let comments = "comments"
     static let image =  "imageUrl"
+    static let imageCollection = "imageCollection"
     static let veriferName = "verifierName"
     static let verifierImage = "verifierImageUrl"
     static let verifierId =  "verifierId"
@@ -307,6 +310,9 @@ enum Labels: String {
     case headerName = "Name"
     case headerDistance = "Distance"
     case headerPhoto = "Spot Image"
+    case postalStam = "Postal_Stamp"
+    case pin = "pin_blue"
+    case stamp = "Stamp"
 }
 
 enum SpotActionSheetType {

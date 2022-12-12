@@ -40,6 +40,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     @Published var spots: [SecretSpot] = []
     @Published var comments: [Comment] = []
     @Published var showComments: Bool = false
+    @Published var showCheckins: Bool = false 
     
     @Published var disableFollowing: Bool = false
     @Published var disableRequest: Bool = false 

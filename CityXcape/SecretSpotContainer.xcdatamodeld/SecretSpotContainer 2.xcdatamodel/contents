@@ -43,11 +43,13 @@
         <attribute name="world" optional="YES" attributeType="String"/>
     </entity>
     <entity name="VerificationEntity" representedClassName="VerificationEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="checkincount" optional="YES" attributeType="Integer 32" defaultValueString="1" usesScalarValueType="YES"/>
         <attribute name="city" optional="YES" attributeType="String"/>
         <attribute name="comment" optional="YES" attributeType="String"/>
         <attribute name="country" optional="YES" attributeType="String"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="imageUrl" optional="YES" attributeType="String"/>
+        <attribute name="imageUrls" optional="YES" attributeType="Transformable" customClassName="[String]"/>
         <attribute name="latitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="longitude" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -61,6 +63,6 @@
     <elements>
         <element name="SecretSpotEntity" positionX="-63" positionY="-18" width="128" height="419"/>
         <element name="UserEntity" positionX="-54" positionY="153" width="128" height="209"/>
-        <element name="VerificationEntity" positionX="-63" positionY="144" width="128" height="239"/>
+        <element name="VerificationEntity" positionX="-63" positionY="144" width="128" height="269"/>
     </elements>
 </model>

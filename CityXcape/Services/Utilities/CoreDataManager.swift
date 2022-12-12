@@ -72,7 +72,7 @@ class CoreDataManager {
         }
     }
     
-    
+    //MARK: UPDATE SPOT FUNCTIONS
     func delete(spotId: String) {
         let entity = spotEntities.first(where: {$0.spotId == spotId})
         guard let entity = entity else {return}
@@ -189,6 +189,16 @@ class CoreDataManager {
         save()
     }
     
+    //MARK: STAMP UPDATES
+    
+    func updateCheckinCount(stampId: String) {
+        let entity = verifications.first(where: {$0.id == stampId})
+        entity?.checkincount += 1
+        save()
+    }
+    
+    //MARK: INITIALIZING FUNCTIONS
+    
     func addSpotEntity(spotId: String, spotName: String, description: String, longitude: Double, latitude: Double, imageUrls: [String], address: String, uid: String, ownerImageUrl: String, ownerDisplayName: String, price: Double, viewCount: Double, saveCount: Double, zipCode: Double, world: String, isPublic: Bool, dateCreated: Date, city: String, didLike: Bool, likedCount: Int, verifierCount: Int, commentCount: Int, social: String) {
         
         let secretSpotEntity = SecretSpotEntity(context: context)
@@ -236,6 +246,7 @@ class CoreDataManager {
         verificationEntity.country = verification.country
         verificationEntity.verifierName = verification.verifierName
         verificationEntity.verifierImage = verification.verifierImage
+        verificationEntity.checkincount = Int32(verification.checkinCount)
     }
 
     func addEntityFromSpot(spot: SecretSpot) {
