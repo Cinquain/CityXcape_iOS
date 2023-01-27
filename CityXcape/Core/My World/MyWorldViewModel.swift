@@ -64,7 +64,7 @@ class MyWorldViewModel: NSObject, ObservableObject {
     func fetchVerifications() {
    
         guard let uid = userId else {return}
-        DataService.instance.getVerifications(uid: uid) { [weak self] verifications in
+        DataService.instance.getVerificationsForUser(uid: uid) { [weak self] verifications in
             guard let self = self else {return}
             self.verifications = verifications
             verifications.forEach { verification in

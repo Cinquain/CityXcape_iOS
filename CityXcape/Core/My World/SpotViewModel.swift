@@ -194,15 +194,21 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     }
     
     func getVerifiedUsers(postId: String) {
-        
-        DataService.instance.getVerifiersForSpot(postId: postId) { [weak self] users in
+    
+        DataService.instance.getVerifiersForSpot(postId: postId) { [weak self] results in
             guard let self = self else {return}
-            if users.isEmpty {
-                print("No users verified this spiot")
-                self.users = []
-                return
-            } else {
-                self.users = users
+            
+            switch results {
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                case .success(let users):
+                    if users.isEmpty {
+                        print("No users verified this spiot")
+                        self.users = []
+                        return
+                    } else {
+                        self.users = users
+                    }
             }
         }
         
@@ -496,7 +502,7 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     }
     
     
-    func checkIfPresent(spot: SecretSpot) {
+    func checkIfPresent(spot: SecretSpot) -> Bool {
         let manager = LocationService.instance.manager
         if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
             let manager = LocationService.instance.manager
@@ -505,10 +511,13 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
             let distance = userLocation.distance(from: spotLocation)
             let distanceInFeet = distance * 3.28084
             if distanceInFeet < 200 {
-                showCheckin = true
+                return true
+            } else {
+                return false
             }
         } else {
             manager.requestWhenInUseAuthorization()
+            return false
         }
     }
     

@@ -14,110 +14,92 @@ struct OnboardingIII: View {
     let width = UIScreen.screenWidth * 0.90
     let height = UIScreen.screenHeight * 0.4
     @State private var showAlert: Bool = false
-    
+    let spot: SecretSpot = SecretSpot.spot
+    @State private var submissionText: String = ""
+    @State var feed: [Feed] = [Feed.feed]
+
     
     var body: some View {
-        VStack {
-            
-            OnboardingMap()
-                .frame(width: width, height: height)
-                .colorScheme(.dark)
-                .cornerRadius(5)
-            
-            HStack {
-                Spacer()
-                VStack {
-                    Text("Build Your Journey")
-                        .font(.title)
-                    .fontWeight(.thin)
-                    Text("by collecting stamps")
-                        .font(.subheadline)
-                        .fontWeight(.thin)
-                        .multilineTextAlignment(.center)
-                }
-                Spacer()
-            }
-            .foregroundColor(.white)
-            .padding(.bottom, 50)
-            
+        ZStack {
             VStack {
                 
-                Button {
-                    //TBD
-                    showAlert.toggle()
-                } label: {
-                    
-                    HStack {
-                        
-                    Image("pin_blue")
+                HStack {
+                    SecretSpotView(width: 60, height: 60, imageUrl: spot.imageUrls.first ?? "")
+                    Text("\(spot.spotName) Real Time")
+                        .font(.title3)
+                        .fontWeight(.thin)
+                    Spacer()
+                }
+                .padding(.horizontal, 20)
+                .foregroundColor(.white)
+                
+                Spacer()
+                
+                ScrollView {
+                  
+                 
+                       
+                    }
+                
+                Spacer()
+                
+                commentField
+            }
+            .background(
+                ZStack {
+                    Color.black
+                    Image(Icon.heatmap.rawValue)
                         .resizable()
-                        .renderingMode(.template)
-                        .foregroundColor(.white)
                         .scaledToFit()
-                        .frame(width: 50, height: 50)
-                            
-                        Text("87 Locations")
-                        .foregroundColor(.white)
-                        .fontWeight(.thin)
-                        .frame(width: 100, height: 50, alignment: .leading)
-                    }
+                        .frame(height: UIScreen.screenHeight)
+                        .shimmering(active: true, duration: 3, bounce: true)
                 }
-                
-                Button {
-                    //TBD
-                    showAlert.toggle()
-                } label: {
-                    HStack {
-                        Image("city")
-                            .resizable()
-                            .renderingMode(.template)
-                            .foregroundColor(.white)
-                            .scaledToFit()
-                            .frame(width: 50, height: 50)
-                        
-                        Text("12 Cities")
-                        .foregroundColor(.white)
-                        .fontWeight(.thin)
-                        .frame(width: 100, height: 50, alignment: .leading)
-                    }
-                }
-                
-                Button {
-                    //TBD
-                    showAlert.toggle()
-                } label: {
-                    HStack {
-                        Image("Stamp")
-                            .resizable()
-                            .renderingMode(.template)
-                            .foregroundColor(.white)
-                            .scaledToFit()
-                            .frame(width: 50)
-                            .opacity(0.8)
-                            .padding(.top, 7)
-                        
-                        Text("Memories")
-                        .foregroundColor(.white)
-                        .fontWeight(.thin)
-                        .frame(width: 100, height: 50, alignment: .leading)
-                    }
-                }
-                .padding(.top, 7)
-               
+                .edgesIgnoringSafeArea(.all)
+                .zIndex(-100)
+            )
+            .alert(isPresented: $showAlert) {
+                return Alert(title: Text("Start saving & visiting places to build your journey"))
             }
             
+            VStack {
+                Image(Icon.hive.rawValue)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 200)
+                Text("Press hive button to message \n people inside a location")
+                    .font(.title3)
+                    .fontWeight(.thin)
+                    .foregroundColor(.white)
+                    .multilineTextAlignment(.center)
+            }
+        }
+    }
+}
+
+extension OnboardingIII {
+    
+    private var commentField: some View {
+        HStack {
+            UserDotView(imageUrl: "", width: 30)
+               
+            TextField("Broadcast a message", text: $submissionText)
+                .placeholder(when: submissionText.isEmpty) {
+                    Text("Broadcast a message").foregroundColor(.gray)
+            }
+            .padding()
             
-            Spacer()
+            
+            Button {
+            } label: {
+                Image(systemName: "paperplane.fill")
+                    .renderingMode(.template)
+                    .font(.title2)
+                    .foregroundColor(.white)
+            }
+           
+
         }
-        .background(
-            LinearGradient(gradient: Gradient(stops: [
-                Gradient.Stop(color: .black, location: 0.40),
-                Gradient.Stop(color: .cx_orange, location: 3.0),
-            ]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all)
-        )
-        .alert(isPresented: $showAlert) {
-            return Alert(title: Text("Start saving & visiting places to build your journey"))
-        }
+        .padding(.horizontal, 20)
     }
 }
 

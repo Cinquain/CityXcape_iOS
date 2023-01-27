@@ -27,6 +27,7 @@ struct StreetPass: View {
     @State private var instagram = ""
     @State private var streetCred : Double = 0
     @State private var user: User?
+    @State private var membership: String = ""
     @State var videoUrl: URL?
     @State var refresh: Bool = false
     @State var userImage: UIImage?
@@ -109,11 +110,28 @@ struct StreetPass: View {
                                 Button {
                                     vm.showRanks.toggle()
                                 } label: {
-                                    WebImage(url: URL(string: tribeImageUrl ?? ""))
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(width: 200, height: 50)
-                                        .opacity(0.8)
+                                    VStack {
+                                        WebImage(url: URL(string: tribeImageUrl ?? ""))
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 200, height: 50)
+                                            .opacity(0.8)
+                                        Image("ribbon")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(height: 40)
+                                            .opacity(0.8)
+                                            .overlay {
+                                                Text(membership)
+                                                    .fontWeight(.light)
+                                                    .foregroundColor(.white)
+                                                    .font(.caption)
+                                                    .padding(.bottom, 13)
+                                                    .shimmering(active: true, duration: 10, bounce: false)
+                                            }
+                                          
+                                           
+                                    }
                                 }
                                 .padding(.top, 10)
                                 .animation(.easeIn)
@@ -270,9 +288,14 @@ struct StreetPass: View {
                 self.userbio = user.bio ?? ""
                 self.profileUrl = user.profileImageUrl
                 self.streetCred = user.streetCred ?? 12.0
+                self.membership = user.membership?.ribbonFormat() ?? ""
                 if user.tribeImageUrl ?? "" != "" {
                     let url = user.tribeImageUrl ?? ""
+                    let tribe = user.tribe ?? ""
+                    let joinDate = user.membership?.ribbonFormat()
                     UserDefaults.standard.set(url, forKey: CurrentUserDefaults.tribeImageUrl)
+                    UserDefaults.standard.set(tribe, forKey: CurrentUserDefaults.tribe)
+                    UserDefaults.standard.set(joinDate, forKey: CurrentUserDefaults.tribeJoinDate)
                 }
 
             }

@@ -53,7 +53,6 @@ class StreetPassViewModel: NSObject, ObservableObject {
     override init() {
         super.init()
         getScoutLeaders()
-        calculateRank()
     }
     
     func generateColors() -> [Color] {

@@ -11,6 +11,8 @@ import Shimmer
 struct FeedView: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
+    
+    @StateObject var worldVM: WorldViewModel
     @Binding var selectedTab: Int
     @StateObject var discoverVM: DiscoverViewModel
     @StateObject var vm: FeedViewModel
@@ -25,7 +27,7 @@ struct FeedView: View {
                     ScrollView {
                      
                         ForEach(vm.feeds) { feed in
-                            FeedBubbleView(feed: feed, vm: vm)
+                            FeedBubbleView(feed: feed)
                                 .padding(.top, 10)
                                 .sheet(item: $vm.secretSpot) { spot in
                                     SecretSpotPage(spot: spot, vm: discoverVM)
@@ -39,7 +41,7 @@ struct FeedView: View {
                 
                 GeometryReader { _ in
                     HStack {
-                        SideMenu(selectedTab: $selectedTab, showMenu: $showMenu)
+                        SideMenu(worldVM: worldVM, selectedTab: $selectedTab, showMenu: $showMenu)
                             .offset(x: showMenu ? 0 : -width - 50)
                             .animation(.easeOut(duration: 0.3), value: showMenu)
                         
@@ -213,7 +215,7 @@ extension FeedView {
 struct Feed_Previews: PreviewProvider {
     @State static var number: Int = 1
     static var previews: some View {
-        FeedView(selectedTab: $number, discoverVM: DiscoverViewModel(), vm: FeedViewModel())
+        FeedView(worldVM: WorldViewModel(), selectedTab: $number, discoverVM: DiscoverViewModel(), vm: FeedViewModel())
             .colorScheme(.dark)
     }
 }

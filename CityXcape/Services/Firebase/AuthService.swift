@@ -81,6 +81,7 @@ class AuthService {
                 let social = user.social ?? ""
                 let rank = user.rank ?? ""
                 let tribeImageUrl = user.tribeImageUrl ?? ""
+                let tribeJoinDate = user.membership?.ribbonFormat() ?? ""
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     UserDefaults.standard.set(userId, forKey: CurrentUserDefaults.userId)
                     UserDefaults.standard.set(user.displayName, forKey: CurrentUserDefaults.displayName)
@@ -90,6 +91,7 @@ class AuthService {
                     UserDefaults.standard.set(social, forKey: CurrentUserDefaults.social)
                     UserDefaults.standard.set(tribeImageUrl, forKey: CurrentUserDefaults.tribeImageUrl)
                     UserDefaults.standard.set(rank, forKey: CurrentUserDefaults.rank)
+                    UserDefaults.standard.set(tribeJoinDate, forKey: CurrentUserDefaults.tribeJoinDate)
                     completion(true)
                 }
             }

@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct FeedBubbleView: View {
-    
+    @EnvironmentObject var vm: FeedViewModel
     var feed: Feed
-    @StateObject var vm: FeedViewModel
     
     var width: CGFloat = UIScreen.screenWidth
     
@@ -78,7 +77,7 @@ extension FeedBubbleView {
 
 struct FeedBubbleView_Previews: PreviewProvider {
     static var previews: some View {
-        FeedBubbleView(feed: Feed.feed, vm: FeedViewModel())
+        FeedBubbleView(feed: Feed.feed)
             .previewLayout(.sizeThatFits)
     }
 }

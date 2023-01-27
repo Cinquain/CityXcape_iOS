@@ -9,7 +9,9 @@ import SwiftUI
 
 struct DiscoverView: View {
     
+    @EnvironmentObject var worldVM: WorldViewModel
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @StateObject var vm: DiscoverViewModel
     
 
     @State private var isPresented: Bool = false
@@ -22,7 +24,6 @@ struct DiscoverView: View {
     
     let width =  UIScreen.screenWidth
     var dragThreshold: CGFloat = 65.0
-    @StateObject var vm: DiscoverViewModel
     
     var body: some View {
  
@@ -148,7 +149,7 @@ struct DiscoverView: View {
                 
                 GeometryReader { _ in
                     HStack {
-                        SideMenu(selectedTab: $selectedTab, showMenu: $showMenu)
+                        SideMenu(worldVM: worldVM, selectedTab: $selectedTab, showMenu: $showMenu)
                             .offset(x: showMenu ? 0 : -width - 50)
                             .animation(.easeOut(duration: 0.3), value: showMenu)
                         
@@ -280,6 +281,6 @@ extension DiscoverView {
 struct MissionsView_Previews: PreviewProvider {
     @State static var selection: Int = 0
     static var previews: some View {
-        DiscoverView(selectedTab: .constant(2), vm: DiscoverViewModel())
+        DiscoverView(vm: DiscoverViewModel(), selectedTab: .constant(2))
     }
 }

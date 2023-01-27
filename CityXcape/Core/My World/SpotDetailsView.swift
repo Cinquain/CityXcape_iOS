@@ -20,6 +20,7 @@ struct SpotDetailsView: View {
     let height = UIScreen.screenHeight
     
     @State var detailsTapped: Bool = false
+    @State private var showFeed: Bool = false 
     @State private var showMission: Bool = false
 
     @State var sourceType: UIImagePickerController.SourceType = .photoLibrary
@@ -107,37 +108,7 @@ struct SpotDetailsView: View {
                     Button {
                         vm.checkIfVerifiable(spot: spot)
                     } label: {
-                        Text("Get Stamp")
-                            .foregroundColor(.black)
-                            .fontWeight(.thin)
-                            .font(.title3)
-                            .frame(width: 180, height: 45)
-                            .background(
-                                Capsule().fill(Color.cx_orange)
-                                    .overlay(
-                                        HStack {
-                                            Image("Stamp")
-                                                .renderingMode(.template)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(height: 20)
-                                                .foregroundColor(.black)
-                                            
-                                            Spacer()
-                                            
-                                            Image("Stamp")
-                                                .renderingMode(.template)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(height: 20)
-                                                .foregroundColor(.black)
-                                        }
-                                        .padding(.horizontal, 15)
-                                    )
-                            )
-                            .cornerRadius(25)
-                            .animation(.easeOut)
-                           
+                        GetStampButton()
                     }
                     .padding(.bottom, 4)
                  
@@ -232,6 +203,10 @@ struct SpotDetailsView: View {
                         }
                     }),
                     
+                    .default(Text("Share"), action: {
+                        vm.getFriends()
+                    }),
+                    
                 .default(Text("Report"), action: {
                     vm.actionSheetType = .report
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -299,6 +274,9 @@ extension SpotDetailsView {
                     .font(.title)
                     .fontWeight(.thin)
                     .lineLimit(1)
+                    .sheet(isPresented: $vm.showFriendsList) {
+                        FriendsForSpot(vm: vm, spot: spot)
+                    }
              
 
             }
@@ -312,16 +290,22 @@ extension SpotDetailsView {
 
             
             Button {
-                vm.getFriends()
+                if vm.checkIfPresent(spot: spot) {
+                    showFeed.toggle()
+                } else {
+                    vm.alertMessage = "You must be at the location to see who's there now"
+                    vm.showAlert = true
+                }
             } label: {
-                Image("share")
+                Image(Icon.hive.rawValue)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 55)
             }
-            .sheet(isPresented: $vm.showFriendsList) {
-                FriendsForSpot(vm: vm, spot: spot)
+            .sheet(isPresented: $showFeed) {
+                LocalFeedView(spot: spot)
             }
+            
             
             
             Button {

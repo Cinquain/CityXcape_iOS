@@ -57,6 +57,27 @@ struct Feed: Hashable, Identifiable, Equatable {
         self.followingDisplayName = data[FeedField.followingName] as? String ?? nil
     }
     
+    init(user: User) {
+        self.id = user.id
+        self.uid = user.id
+        self.username = user.displayName
+        self.userImageUrl = user.profileImageUrl
+        self.userBio = user.bio ?? ""
+        self.userRank = user.rank ?? ""
+        self.content = "Checked in \(user.verified?.timeAgo() ?? "")"
+        self.date = user.verified ?? Date()
+        self.type = .stamp
+        self.geohash = 0
+        self.latitude = user.latitude ?? 0
+        self.longitude = user.longitude ?? 0
+        
+        self.spotId = user.postId 
+        self.userId = nil
+        self.followingImage = nil
+        self.followingDisplayName = nil
+        self.stampImageUrl = nil
+    }
+    
     init(id: String, uid: String, username: String, userImageUrl: String, userBio: String, userRank: String, content: String, date: Date, type: FeedType, geohash: Double, longitude: Double, latitude: Double, spotId: String, userId: String, followingImage: String, followingDisplayName: String, stampImageUrl: String) {
         self.id = id
         self.uid = uid

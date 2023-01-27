@@ -24,7 +24,7 @@ struct OnboardingI: View {
                     
                         Spacer()
                         HStack {
-                            Image("pin_blue")
+                            Image(Icon.pin.rawValue)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(height: 30)
@@ -32,9 +32,10 @@ struct OnboardingI: View {
                                 .font(.title3)
                                 .foregroundColor(.white)
                                 .fontWeight(.thin)
+                            
                             Spacer()
                             
-                            Image("dot")
+                            Image(Icon.dot.rawValue)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(height: 30)
@@ -55,7 +56,7 @@ struct OnboardingI: View {
             
             HStack {
                 Spacer()
-                Text("Star by saving spots to visit")
+                Text("Start by Saving a Location")
                     .font(.title2)
                     .fontWeight(.thin)
                 Spacer()
@@ -66,9 +67,10 @@ struct OnboardingI: View {
                 
                 VStack {
                     
-                    Image(systemName: "hand.thumbsdown.fill")
-                        .font(.system(size: 50))
-                        .foregroundColor(.red)
+                    Image(Icon.x.rawValue)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 50)
                     Text("pass")
                         .fontWeight(.thin)
                         .foregroundColor(.red)
@@ -78,7 +80,10 @@ struct OnboardingI: View {
                     .frame(width: 50)
                 
                 VStack {
-                    LikeAnimationView(color: .green, didLike: $didLike, size: 50)
+                    Image(Icon.heart.rawValue)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 50)
                     Text("save")
                         .fontWeight(.thin)
                         .foregroundColor(.green)

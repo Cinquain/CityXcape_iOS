@@ -13,6 +13,7 @@ struct MyWorld: View {
     
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var username: String?
+    @EnvironmentObject var worldVM: WorldViewModel
 
     @StateObject var vm = MyWorldViewModel()
     @State private var isPresented: Bool = false
@@ -73,7 +74,7 @@ struct MyWorld: View {
                      
                     GeometryReader { _ in
                         HStack {
-                            SideMenu(selectedTab: $selectedTab, showMenu: $showMenu)
+                            SideMenu(worldVM: worldVM, selectedTab: $selectedTab, showMenu: $showMenu)
                                 .offset(x: showMenu ? 0 : -width - 50)
                                 .animation(.easeOut(duration: 0.3), value: showMenu)
                             

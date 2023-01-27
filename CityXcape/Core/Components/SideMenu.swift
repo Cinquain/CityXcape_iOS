@@ -10,7 +10,8 @@ import SwiftUI
 struct SideMenu: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.incognito) var incognito: Bool?
-
+    @StateObject var worldVM: WorldViewModel
+    
     @State private var showAnalytics: Bool = false
     @State private var showJourney: Bool = false
     @State private var showFriends: Bool = false
@@ -22,8 +23,6 @@ struct SideMenu: View {
     @Binding var showMenu: Bool
     
     let manager = CoreDataManager.instance
-    @StateObject var chatVM = ChatLogViewModel()
-    @StateObject var worldVM: WorldViewModel = WorldViewModel()
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -82,7 +81,7 @@ struct SideMenu: View {
                 }
                 .padding()
                 .fullScreenCover(isPresented: $showFriends) {
-                    FriendsView(vm: chatVM)
+                    FriendsView(vm: ChatLogViewModel())
                 }
                 
               
@@ -160,12 +159,12 @@ struct SideMenu: View {
                             .resizable()
                             .scaledToFit()
                             .frame(height: 22)
-                            .foregroundColor(chatVM.count > 0 ? .yellow : .white)
+                            .foregroundColor(.white)
                          
                            Text("Request")
                                 .font(.title2)
                                 .fontWeight(.thin)
-                                .foregroundColor(chatVM.count > 0 ? .yellow : .white)
+                                .foregroundColor(.white)
                         
                         }
                 }
@@ -205,12 +204,12 @@ struct SideMenu: View {
                             .resizable()
                             .scaledToFit()
                             .frame(height: 22)
-                            .foregroundColor(chatVM.count > 0 ? .yellow : .white)
+                            .foregroundColor(.white)
                          
                            Text("Worlds")
                                 .font(.title2)
                                 .fontWeight(.thin)
-                                .foregroundColor(chatVM.count > 0 ? .yellow : .white)
+                                .foregroundColor(.white)
                         
                         }
                 }
@@ -256,6 +255,6 @@ struct SideMenu_Previews: PreviewProvider {
     @State static var isOpen: Bool = true
 
     static var previews: some View {
-        SideMenu(selectedTab: $number, showMenu: $isOpen)
+        SideMenu(worldVM: WorldViewModel(), selectedTab: $number, showMenu: $isOpen)
     }
 }

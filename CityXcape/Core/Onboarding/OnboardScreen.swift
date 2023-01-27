@@ -20,7 +20,7 @@ struct OnboardScreen: View {
                     
                   OnboardingIII()
                 
-                Onboarding(imageName: "Scout-Logo", description: "Start Saving Places to Visit", width: 200, height: 100, lastScreen: true)
+                Onboarding(imageName: Icon.pin.rawValue, description: "Start Saving Locations", width: 150, height: 150, lastScreen: true)
                     .onTapGesture(perform: {
                         self.presentationMode.wrappedValue.dismiss()
                     })

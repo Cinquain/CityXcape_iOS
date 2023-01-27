@@ -75,7 +75,7 @@ class FeedViewModel: ObservableObject {
             wallet -= 1
             UserDefaults.standard.set(wallet, forKey: CurrentUserDefaults.wallet)
             
-            DataService.instance.postFeedMessage(content: submissionText) { [weak self] result in
+            DataService.instance.postFeedMessage(content: submissionText, type: .feed, spotId: nil ) { [weak self] result in
                 guard let self = self else {return}
                 switch result {
                 case .failure(let error):
@@ -145,6 +145,7 @@ class FeedViewModel: ObservableObject {
                 self.user = user
             case .props:
                 getPropsVerification(feed: feed)
+            
         }
         
     }

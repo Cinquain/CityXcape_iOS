@@ -16,6 +16,11 @@ enum DeepLink: String, CaseIterable {
     case streetPass
 }
 
+enum MessageType {
+    case feed
+    case spot
+}
+
 struct Keys {
     static let proxy = "proxy"
 }
@@ -147,6 +152,8 @@ struct ServerPath {
     static let invite = "invite"
     static let comments = "comments"
     static let verifiers = "verifiers"
+    static let chat = "chat"
+    static let localFeed = "localFeeds"
 }
 
 struct FeedField {
@@ -188,6 +195,7 @@ struct CurrentUserDefaults {
     static let tribe = "tribe"
     static let tribeImageUrl = "tribeImageUrl"
     static let incognito = "incognito"
+    static let tribeJoinDate = "tribeJoinDate"
 }
 
 struct TrailField {
@@ -285,6 +293,8 @@ enum Icon: String {
     case pass = "pass"
     case gear = "Gears"
     case logo = "logo"
+    case heart = "heart"
+    case x = "x"
     case refresh = "refresh"
     case check = "checkmark"
     case globe = "globe"
@@ -297,6 +307,9 @@ enum Icon: String {
     case tabItemIII = "tab3"
     case grid = "grid_tab"
     case history = "history"
+    case ribbon = "ribbon"
+    case hive = "Hive"
+    case heatmap = "orange-paths"
 }
 
 enum Labels: String {

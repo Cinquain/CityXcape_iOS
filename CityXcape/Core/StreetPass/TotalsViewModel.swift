@@ -96,8 +96,16 @@ class TotalsViewModel: NSObject, ObservableObject {
    
     
    fileprivate func getVerifiedusers(spot: SecretSpot) {
-       DataService.instance.getVerifiersForSpot(postId: spot.id) { users in
-           self.verifiedUsers = users
+       DataService.instance.getVerifiersForSpot(postId: spot.id) { [weak self] results in
+           guard let self = self else {return}
+           
+           switch results {
+           case .failure(let error):
+               self.alertMessage = error.localizedDescription
+           case .success(let users):
+               self.verifiedUsers = users
+           }
+           
        }
     }
     

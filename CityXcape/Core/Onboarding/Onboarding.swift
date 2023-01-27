@@ -64,7 +64,7 @@ struct Onboarding: View {
 struct Onboarding_Previews: PreviewProvider {
     static var previews: some View {
         
-        Onboarding(imageName: "pin_blue", description: "Secret Spots are cool places \n unknown to most people", width: 100, height: 100, lastScreen: false)
+        Onboarding(imageName: Icon.pin.rawValue, description: "Start Saving Locations", width: 150, height: 150, lastScreen: false)
         
     }
 }

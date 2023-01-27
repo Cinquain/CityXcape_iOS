@@ -68,7 +68,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     fileprivate func getVerificationsForUser() {
         guard let uid = userId else {return}
     
-        DataService.instance.getVerifications(uid: uid) { [weak self] verifications in
+        DataService.instance.getVerificationsForUser(uid: uid) { [weak self] verifications in
             self?.verifications = verifications
             self?.getCities()
         }
@@ -246,7 +246,7 @@ class JourneyViewModel: NSObject, ObservableObject, UIDocumentInteractionControl
     
     func getVerificationForUser(userId: String) {
        AnalyticsService.instance.checkUserJourney()
-       DataService.instance.getVerifications(uid: userId) { [weak self] verifications in
+       DataService.instance.getVerificationsForUser(uid: userId) { [weak self] verifications in
            guard let self = self else {return}
            if verifications.count == 0 {
                self.alertMessage = "This user has been nowhere"

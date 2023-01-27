@@ -359,6 +359,13 @@ extension Date {
         return date
     }
     
+    func ribbonFormat() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM yyyy"
+        let date = dateFormatter.string(from: self)
+        return date
+    }
+    
     func timeAgo() -> String {
 
         let secondsAgo = Int(Date().timeIntervalSince(self))

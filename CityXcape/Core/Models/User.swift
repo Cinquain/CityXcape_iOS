@@ -34,6 +34,7 @@ struct User: Identifiable, Hashable, Equatable {
     var membership: Date?
     var world: [String: Double]?
     var newFriend: Bool?
+    var postId: String?
     
     
     var distanceFromUser: Double {
@@ -81,7 +82,7 @@ struct User: Identifiable, Hashable, Equatable {
         self.social = data?[UserField.ig] as? String ?? nil
         self.world = data?[UserField.world] as? [String: Double] ?? [:]
         self.rank = data?[UserField.rank] as? String ?? "Tourist"
-        let timestamp = data?[UserField.dataCreated] as? Timestamp
+        let timestamp = data?[UserField.tribeJoinDate] as? Timestamp
         self.tribe = data?[UserField.tribe] as? String ?? ""
         self.longitude = data?[UserField.longitude] as? Double ?? 0
         self.latitude = data?[UserField.latitude] as? Double ?? 0

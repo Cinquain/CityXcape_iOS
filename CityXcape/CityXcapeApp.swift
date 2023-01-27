@@ -18,6 +18,9 @@ struct CityXcapeApp: App {
     @StateObject private var store = Store()
     @State private var showLaunchView: Bool = true
     
+
+
+    
     let router = Router.shared
     let locManager = LocationService.instance
     
@@ -27,6 +30,8 @@ struct CityXcapeApp: App {
                 ZStack {
                     HomeView()
                         .environmentObject(store)
+                        .environmentObject(router)
+                        .environmentObject(locManager)
                         .onOpenURL { url in
                             router.handleUrl(url: url)
                         }

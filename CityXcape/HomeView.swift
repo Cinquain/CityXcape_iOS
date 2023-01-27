@@ -9,15 +9,20 @@ import SwiftUI
 
 struct HomeView: View {
     
+    
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
-    let router =  Router.shared
+    let router = Router.shared
     @State var selectedTab: Int = 0
     @State var showSideMenu: Bool = false
-    @StateObject var manager = NotificationsManager.instance
+    
+    
+    @StateObject var notifManager = NotificationsManager.instance
     @StateObject var discoverVM: DiscoverViewModel = DiscoverViewModel()
     @StateObject var feedVM: FeedViewModel = FeedViewModel()
     @StateObject var streetPassVM: StreetPassViewModel = StreetPassViewModel()
+    @StateObject var worldVM: WorldViewModel = WorldViewModel()
 
+    
 
     init() {
         let tabBarAppearance = UITabBarAppearance()
@@ -31,7 +36,7 @@ struct HomeView: View {
         TabView(selection: $selectedTab) {
             
                    
-            DiscoverView(selectedTab: $selectedTab, vm: discoverVM)
+            DiscoverView(vm: discoverVM, selectedTab: $selectedTab)
                 .tabItem {
                     Image(Icon.tabItem0.rawValue)
                         .renderingMode(.template)
@@ -39,6 +44,7 @@ struct HomeView: View {
                 }
                 .tag(0)
                 .badge(discoverVM.newSpotCount)
+                .environmentObject(worldVM)
             
             MyWorld(selectedTab: $selectedTab)
             .tabItem {
@@ -48,9 +54,16 @@ struct HomeView: View {
             }
             .tag(1)
             .badge(discoverVM.newlySaved)
+            .environmentObject(worldVM)
+            .environmentObject(feedVM)
+
             
             
-            FeedView(selectedTab: $selectedTab, discoverVM: discoverVM, vm: feedVM)
+            FeedView(worldVM: worldVM,
+                     selectedTab: $selectedTab,
+                     discoverVM: discoverVM,
+                     vm: feedVM)
+                .environmentObject(worldVM)
                 .tabItem {
                     Image(Icon.grid.rawValue)
                         .renderingMode(.template)
@@ -58,10 +71,11 @@ struct HomeView: View {
                 }
                 .tag(2)
                 .badge(feedVM.newFeeds)
+                .environmentObject(feedVM)
                 .onAppear {
                     feedVM.newFeeds = 0
                 }
-                .fullScreenCover(item: $manager.stamp, content: { verification in
+                .fullScreenCover(item: $notifManager.stamp, content: { verification in
                     PublicStampView(verification: verification)
                 })
             
@@ -74,7 +88,7 @@ struct HomeView: View {
                     Text(Labels.tab3.rawValue)
                 }
                 .tag(3)
-                .fullScreenCover(item: $manager.world) { world in
+                .fullScreenCover(item: $notifManager.world) { world in
                     WorldInviteView(world: world)
                 }
             
@@ -89,11 +103,11 @@ struct HomeView: View {
                 .badge(streetPassVM.count)
                 
         }
-        .sheet(item: $manager.user) { user in
+        .sheet(item: $notifManager.user) { user in
             PublicStreetPass(user: user)
         }
         .accentColor(.orange)
-        .fullScreenCover(item: $manager.secretSpot) { spot in
+        .fullScreenCover(item: $notifManager.secretSpot) { spot in
             SecretSpotPage(spot: spot, vm: discoverVM)
         }
         .onAppear(perform: {

@@ -108,7 +108,7 @@ class WorldViewModel: NSObject, ObservableObject {
             
             switch result {
                 case .failure(let error):
-                    self.alertMessage = error.localizedDescription
+                    self.alertMessage = "No invitation found!"
                     self.showAlert.toggle()
                 case .success(let world):
                     self.worldInvite = world

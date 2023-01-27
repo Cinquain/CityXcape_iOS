@@ -10,7 +10,7 @@ import CoreLocation
 import SwiftUI
 
 
-class LocationService: NSObject, CLLocationManagerDelegate {
+class LocationService: NSObject, CLLocationManagerDelegate, ObservableObject {
     
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.tribe) var tribe: String?

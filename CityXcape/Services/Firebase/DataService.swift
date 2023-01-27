@@ -30,8 +30,11 @@ class DataService {
     static let instance = DataService()
     let manager = CoreDataManager.instance
     let locationManager = LocationService.instance
+    
     private var feedListener: ListenerRegistration?
     private var chatListener: ListenerRegistration?
+    private var stampListener: ListenerRegistration?
+    private var localListener: ListenerRegistration?
     
     private init() {}
     
@@ -43,8 +46,8 @@ class DataService {
     private var REF_Rankings = DB_BASE.collection(ServerPath.rankings)
     private var REF_TRAILS = DB_BASE.collection(ServerPath.trail)
     private var REF_HUNTS = DB_BASE.collection(ServerPath.hunt)
-    private var REF_CITY = DB_BASE.collection(ServerPath.cities)
     private var REF_FEED = DB_BASE.collection(ServerPath.feed)
+    private var REF_LOCALFEED = DB_BASE.collection(ServerPath.localFeed)
     private var REF_WORLDS = DB_BASE.collection(ServerPath.worlds)
     private var REF_MESSAGES = DB_BASE.collection(ServerPath.messages)
     private var REF_RECENTMESSAGE = DB_BASE.collection(ServerPath.recentMessage)
@@ -882,12 +885,24 @@ class DataService {
         
     }
     
-    func postFeedMessage(content: String, completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName, let bio = bio
-        else {return}
-        let feedDocument = REF_FEED.document()
-        let feedId = feedDocument.documentID
+    func postFeedMessage(content: String,
+                         type: MessageType,
+                         spotId: String?,
+                         completion: @escaping (Result<Bool, Error>) -> Void) {
         
+        guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName, let bio = bio else {return}
+        var feedDocument: DocumentReference?
+        
+        switch type {
+        case .feed:
+            feedDocument = REF_FEED.document()
+        case .spot:
+            guard let spotId = spotId else {return}
+            feedDocument = REF_LOCALFEED.document(spotId).collection(ServerPath.chat).document()
+        }
+        guard let feedDocument = feedDocument else {return}
+        let feedId = feedDocument.documentID
+
         let rank = self.rank ?? "Tourist"
         let userLong = self.locationManager.userlocation?.longitude ?? 0
         let userLat = self.locationManager.userlocation?.latitude ?? 0
@@ -926,6 +941,61 @@ class DataService {
         }
         
         
+    }
+    
+//    func fetchLocalMessages(postId: String) async -> [Feed] {
+//        var feeds: [Feed] = []
+//
+//         chatListener = REF_LOCALFEED
+//                            .document(postId)
+//                            .collection(ServerPath.chat)
+//                            .addSnapshotListener { querySnapshot, error in
+//                                if let error = error {
+//                                    print(error.localizedDescription)
+//                                }
+//
+//                                guard let snapshot = querySnapshot else {return}
+//                                print("Added local feed listener")
+//                                snapshot.documentChanges.forEach { change in
+//                                    if change.type == .added {
+//                                        let data = change.document.data()
+//                                        let feed = Feed(data: data)
+//                                        feeds.append(feed)
+//                                    }
+//                                }
+//                            }
+//            return feeds
+//    }
+    
+    func fetchLocalMessages(postId: String, completion: @escaping (Result<[Feed], Error>) -> Void) {
+        var feeds: [Feed] = []
+
+         chatListener = REF_LOCALFEED
+                            .document(postId)
+                            .collection(ServerPath.chat)
+                            .addSnapshotListener { querySnapshot, error in
+                                if let error = error {
+                                    print(error.localizedDescription)
+                                    completion(.failure(error))
+                                }
+
+                                guard let snapshot = querySnapshot else {return}
+                                print("Added local feed listener")
+                                snapshot.documentChanges.forEach { change in
+                                    if change.type == .added {
+                                        let data = change.document.data()
+                                        let feed = Feed(data: data)
+                                        feeds.append(feed)
+                                    }
+                                }
+                                completion(.success(feeds))
+                            }
+    }
+    
+    
+    func removeChatListener() {
+        chatListener?.remove()
+        print("Removing Local Feed Listener")
     }
     
 
@@ -1194,7 +1264,7 @@ class DataService {
         
     }
     
-    func getVerifications(uid: String, completion: @escaping (_ verifications: [Verification]) ->()) {
+    func getVerificationsForUser(uid: String, completion: @escaping (_ verifications: [Verification]) ->()) {
         
         REF_WORLD.document("verified").collection(uid).getDocuments { [weak self] querySnapshot, error in
             guard let self = self else {return}
@@ -1629,11 +1699,7 @@ class DataService {
         print("Removed Feed Listener")
     }
     
-    func removeChatListener() {
-        chatListener?.remove()
-        print("Removed Chat Listener")
-    }
-    
+   
     
     func getMessagesForUser(userID: String, completion: @escaping (Result<[Message], NetworkError>) -> ()) {
         guard let uid = userId else {return}
@@ -2573,14 +2639,14 @@ class DataService {
         }
     }
     
-    func getVerifiersForSpot(postId: String, completion: @escaping (_ users: [User]) -> ()) {
+    func getVerifiersForSpot(postId: String, completion: @escaping (Result<[User], Error>) -> Void) {
         var verifiedUsers: [User] = []
         
-        REF_POST.document(postId).collection("verifiers").getDocuments { snapshot, error in
+        REF_POST.document(postId).collection(ServerPath.verifiers).getDocuments { snapshot, error in
             
             if let err = error {
                 print("Error finding verifiers for secret spot", err.localizedDescription)
-                completion(verifiedUsers)
+                completion(.failure(err))
                 return
             }
             
@@ -2588,7 +2654,7 @@ class DataService {
                 print("No verifiers found")
                 let count: Double = 0
                 self.manager.updateVerifierCount(spotId: postId, count: count)
-                completion(verifiedUsers)
+                completion(.success(verifiedUsers))
                 return
             }
             
@@ -2596,10 +2662,11 @@ class DataService {
                 print("Found verifiers")
                 let count: Double = Double(snapshot.count)
                 self.manager.updateVerifierCount(spotId: postId, count: count)
-                
+        
                 snapshot.documents.forEach { document in
                     let id = document.documentID
                     let data = document.data()
+                    let postId = data[CheckinField.spotId] as? String
                     let timestamp = data[CheckinField.timestamp] as? Timestamp
                     let date = timestamp?.dateValue()
                     
@@ -2611,10 +2678,11 @@ class DataService {
                         let data = snapshot?.data()
                         var user = User(data: data)
                         user.verified = date
+                        user.postId = postId
                         verifiedUsers.append(user)
 
                         DispatchQueue.main.async {
-                            completion(verifiedUsers)
+                            completion(.success(verifiedUsers))
                         }
                         
                     }
@@ -2623,6 +2691,71 @@ class DataService {
             }
             
         }
+    }
+    
+    func getVerifiersForFeed(postId: String, completion: @escaping (Result<[Feed], Error>) -> Void) {
+        var verifiedUsers: [Feed] = []
+    
+        stampListener = REF_POST.document(postId)
+            .collection(ServerPath.verifiers)
+            .addSnapshotListener({ snapshot, error in
+                
+                if let err = error {
+                    print("Error finding verifiers for secret spot", err.localizedDescription)
+                    completion(.failure(err))
+                    return
+                }
+                
+            
+             
+                if let snapshot = snapshot {
+                    
+                    if snapshot.isEmpty {
+                        print("Verification field is empty")
+                        completion(.success(verifiedUsers))
+                        return
+                    }
+                    
+                    print("Found verifiers")
+                    let count: Double = Double(snapshot.count)
+                    self.manager.updateVerifierCount(spotId: postId, count: count)
+                    
+                    snapshot.documentChanges.forEach({ change in
+                        if change.type == .added {
+                            let id = change.document.documentID
+                            let data = change.document.data()
+                            
+                            let postId = data[CheckinField.spotId] as? String
+                            let timestamp = data[CheckinField.timestamp] as? Timestamp
+                            let date = timestamp?.dateValue()
+                            
+                            self.REF_USERS.document(id).getDocument { snapshot, error in
+                                
+                                if let error = error {
+                                    print("Could not find users", error.localizedDescription)
+                                }
+                                let data = snapshot?.data()
+                                var user = User(data: data)
+                                user.verified = date
+                                user.postId = postId
+                                let feed = Feed(user: user)
+                                verifiedUsers.append(feed)
+                                DispatchQueue.main.async {
+                                    completion(.success(verifiedUsers))
+                                }
+                                
+                            }
+                        }
+                        
+                    })
+                }
+            })
+        
+    }
+    
+    func removeStampListener() {
+        print("Removing location listener")
+        stampListener?.remove()
     }
     
     

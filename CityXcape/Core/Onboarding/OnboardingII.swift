@@ -23,19 +23,22 @@ struct OnboardingII: View {
                     .scaledToFill()
                     .frame(width: width - 40, height: width - 40)
                     .clipped()
+                
+                StampView(spot: SecretSpot.spot)
+                    .opacity(0.8)
             }
             
             HStack {
                 Spacer()
-                Text("Collect stamps by visiting \n the locations you save")
+                Text("Get a stamp by pressing \n button when you're there")
                     .font(.title2)
                     .fontWeight(.thin)
                 Spacer()
             }
             .foregroundColor(.white)
             
-            
-            StampView(spot: SecretSpot.spot)
+            GetStampButton()
+                .padding(.top, 30)
             
             Spacer()
         }
