@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "trail_feed.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

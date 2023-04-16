@@ -10,7 +10,7 @@ import SwiftUI
 struct SpotListView: View {
     
     @Environment(\.presentationMode) var presentationMode
-    @StateObject var vm: PostTrailViewModel
+    @EnvironmentObject var vm: PostTrailViewModel
     @State private var showAlert: Bool = false
     var body: some View {
         
@@ -78,6 +78,7 @@ extension SpotListView {
 
 struct SpotListView_Previews: PreviewProvider {
     static var previews: some View {
-        SpotListView(vm: PostTrailViewModel())
+        SpotListView()
+            .environmentObject(PostTrailViewModel())
     }
 }

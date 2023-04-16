@@ -117,6 +117,10 @@ struct User: Identifiable, Hashable, Equatable {
         let streetcred = userInfo["streetCred"] as? String ?? "0"
         self.streetCred = Double(streetcred)
         self.bio = userInfo["biography"] as? String ?? ""
+        self.tribe = userInfo["tribe"] as? String ?? ""
+        let timestamp = userInfo["joinDate"] as? Timestamp
+        self.membership = timestamp?.dateValue() ?? Date()
+        self.tribeImageUrl = userInfo["tribeUrl"] as? String ?? ""
         self.social = userInfo["instagram"] as? String ?? nil
         self.rank = userInfo["rank"] as? String ?? ""
         if let _ = userInfo["friend"] as? String {
@@ -147,6 +151,13 @@ struct User: Identifiable, Hashable, Equatable {
         self.profileImageUrl = message.profileUrl
         self.bio = message.bio
         self.rank = message.rank
+    }
+    
+    init(trail: Trail) {
+        self.id = trail.ownerId
+        self.profileImageUrl = trail.ownerImageUrl
+        self.displayName = trail.ownerDisplayName
+        self.rank = trail.ownerRank
     }
  
     init() {

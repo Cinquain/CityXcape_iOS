@@ -197,6 +197,26 @@ class CoreDataManager {
         save()
     }
     
+    func updateLikedIds(stampId: String, uid: String) {
+        let entity = verifications.first(where: {$0.id == stampId})
+        entity?.likedIds?.append(uid)
+        save()
+    }
+    
+    func removeLikeId(stampId: String, uid: String) {
+        let entity = verifications.first(where: {$0.id == stampId})
+        if let index = entity?.likedIds?.firstIndex(where: {$0 == uid}) {
+            entity?.likedIds?.remove(at: index)
+        }
+        save()
+    }
+    
+    func updatePropIds(stampId: String, uid: String) {
+        let entity = verifications.first(where: {$0.id == stampId})
+        entity?.propIds?.append(uid)
+        save()
+    }
+    
     //MARK: INITIALIZING FUNCTIONS
     
     func addSpotEntity(spotId: String, spotName: String, description: String, longitude: Double, latitude: Double, imageUrls: [String], address: String, uid: String, ownerImageUrl: String, ownerDisplayName: String, price: Double, viewCount: Double, saveCount: Double, zipCode: Double, world: String, isPublic: Bool, dateCreated: Date, city: String, didLike: Bool, likedCount: Int, verifierCount: Int, commentCount: Int, social: String) {
@@ -230,23 +250,25 @@ class CoreDataManager {
         
     }
     
-    func addStampEntity(verification: Verification) {
+    func addStampEntity(stamp: Verification) {
         let verificationEntity = VerificationEntity(context: context)
 
-        verificationEntity.id = verification.id
-        verificationEntity.imageUrl = verification.imageUrl
-        verificationEntity.comment = verification.comment
-        verificationEntity.timestamp = verification.time
-        verificationEntity.name = verification.name
-        verificationEntity.verifierId = verification.verifierId
-        verificationEntity.postId = verification.postId
-        verificationEntity.latitude = verification.latitude
-        verificationEntity.longitude = verification.longitude
-        verificationEntity.spotOwnerId = verification.spotOwnerId
-        verificationEntity.country = verification.country
-        verificationEntity.verifierName = verification.verifierName
-        verificationEntity.verifierImage = verification.verifierImage
-        verificationEntity.checkincount = Int32(verification.checkinCount)
+        verificationEntity.id = stamp.id
+        verificationEntity.imageUrl = stamp.imageUrl
+        verificationEntity.comment = stamp.comment
+        verificationEntity.timestamp = stamp.time
+        verificationEntity.name = stamp.name
+        verificationEntity.verifierId = stamp.verifierId
+        verificationEntity.postId = stamp.postId
+        verificationEntity.latitude = stamp.latitude
+        verificationEntity.longitude = stamp.longitude
+        verificationEntity.spotOwnerId = stamp.spotOwnerId
+        verificationEntity.country = stamp.country
+        verificationEntity.verifierName = stamp.verifierName
+        verificationEntity.verifierImage = stamp.verifierImage
+        verificationEntity.checkincount = Int32(stamp.checkinCount)
+        verificationEntity.propIds = stamp.propIds
+        verificationEntity.likedIds = stamp.likedIds
     }
 
     func addEntityFromSpot(spot: SecretSpot) {

@@ -14,8 +14,7 @@ struct MyWorld: View {
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var username: String?
     @EnvironmentObject var worldVM: WorldViewModel
-
-    @StateObject var vm = MyWorldViewModel()
+    @StateObject var vm: MyWorldViewModel
     @State private var isPresented: Bool = false
     @State private var showMenu: Bool = false
     @Binding var selectedTab: Int
@@ -74,8 +73,9 @@ struct MyWorld: View {
                      
                     GeometryReader { _ in
                         HStack {
-                            SideMenu(worldVM: worldVM, selectedTab: $selectedTab, showMenu: $showMenu)
+                            SideMenu(selectedTab: $selectedTab, showMenu: $showMenu)
                                 .offset(x: showMenu ? 0 : -width - 50)
+                                .environmentObject(worldVM)
                                 .animation(.easeOut(duration: 0.3), value: showMenu)
                             
                             Spacer()
@@ -228,6 +228,7 @@ struct MyJourney_Previews: PreviewProvider {
     @State static var selection: Int = 0
 
     static var previews: some View {
-        MyWorld(selectedTab: $selection)
+        MyWorld(vm: MyWorldViewModel(), selectedTab: $selection)
+            .environmentObject(WorldViewModel())
     }
 }

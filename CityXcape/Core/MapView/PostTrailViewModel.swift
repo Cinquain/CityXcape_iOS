@@ -25,7 +25,7 @@ class PostTrailViewModel: NSObject, ObservableObject {
     @Published var showPicker: Bool = false 
     @Published var actionSheet: Bool = false
     @Published var showAlert: Bool = false 
-    
+    @Published var alertMessage: String = ""
     
     @Published var selectedSpots: [SecretSpot] = []
     @Published var allspots: [SecretSpot] = CoreDataManager.instance.spotEntities
@@ -95,11 +95,29 @@ class PostTrailViewModel: NSObject, ObservableObject {
         let price = Int(priceString) ?? 10
         let image = selectedImage ?? UIImage()
         if isHunt {
-            DataService.instance.createHunt(name: trailName, details: trailDetails, image: image, startDate: startDate, endDate: endDate, location: location, world: world, user: user, price: price, spots: selectedSpots)
-            AnalyticsService.instance.createdTrail()
+            DataService.instance.createHunt(name: trailName, details: trailDetails, image: image, startDate: startDate, endDate: endDate, location: location, world: world, user: user, price: price, spots: selectedSpots, completion: { [weak self] result in
+                guard let self = self else {return}
+                switch result {
+                    case .success(_):
+                        self.alertMessage = "Successfully posted scavenger hunt"
+                        self.showAlert.toggle()
+                    case .failure(let error):
+                        self.alertMessage = error.localizedDescription
+                        self.showAlert.toggle()
+                }
+            })
         } else {
-            DataService.instance.createTrail(name: trailName, details: trailDetails, image: image, world: world, user: user, price: price, spots: selectedSpots)
-            AnalyticsService.instance.createdHunt()
+            DataService.instance.createTrail(name: trailName, details: trailDetails, image: image, world: world, user: user, price: price, location: location, spots: selectedSpots, completion: { [weak self] result in
+                guard let self = self else {return}
+                switch result {
+                    case .success(_):
+                        self.alertMessage = "Successfully posted trail"
+                        self.showAlert.toggle()
+                    case .failure(let error):
+                        self.alertMessage = error.localizedDescription
+                        self.showAlert.toggle()
+                }
+            })
         }
     }
     

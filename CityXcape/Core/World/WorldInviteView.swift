@@ -10,7 +10,7 @@ import SDWebImageSwiftUI
 import Shimmer
 
 struct WorldInviteView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
 
     let world: World
     let width: CGFloat = UIScreen.screenWidth
@@ -106,7 +106,7 @@ struct WorldInviteView: View {
                             case .success(_), .failure(_):
                                 alertMessage = "Invitation Denied"
                                 showAlert.toggle()
-                                presentationMode.wrappedValue.dismiss()
+                                dismiss()
                             }
                         }
                     } label: {
@@ -135,7 +135,7 @@ struct WorldInviteView: View {
                                     alertMessage = message
                                     showAlert.toggle()
                                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    presentationMode.wrappedValue.dismiss()
+                                    dismiss()
                                 }
                             }
                         }
@@ -168,7 +168,7 @@ struct WorldInviteView: View {
             
             Button {
                 //
-                self.presentationMode.wrappedValue.dismiss()
+                dismiss()
             } label: {
                 Image("arrow")
                     .resizable()

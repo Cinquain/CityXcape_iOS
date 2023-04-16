@@ -21,10 +21,9 @@ class PostViewModel: NSObject, ObservableObject {
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     
     
-    var worldPlaceHolder = "Related Hashtags i.e: #Artists #Urbex"
+    var worldPlaceHolder = "Add Hashtags"
     var privatePlaceHolder = "Secret Spot is Private"
     var worldDefinition = "Different World Different Spots"
-    var detailsPlaceHolder = "Describe why this spot is special"
     var pricePlaceHolder = "1"
     let manager = CoreDataManager.instance
     let analytics = AnalyticsService.instance

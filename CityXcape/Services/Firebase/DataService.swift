@@ -239,7 +239,6 @@ class DataService {
              UserField.profileImageUrl: imageUrl,
              UserField.providerId: uid,
              UserField.bio: bio,
-             UserField.ig: social ?? ""
             ]
         
         REF_WORLD.document(ServerPath.secret).collection(uid).document(spotId).setData(savedData)
@@ -347,14 +346,23 @@ class DataService {
     }
     
     
-    func createTrail(name: String, details: String, image: UIImage, world: String, user: User, price: Int, spots: [SecretSpot]) {
-        
+    func createTrail(name: String, details: String, image: UIImage,
+                     world: String, user: User, price: Int,
+                     location: MKMapItem, spots: [SecretSpot],
+                     completion: @escaping (Result<Bool, Error>) -> ()) {
+        guard let uid = userId else  {return}
         let users = [user]
-        let document = REF_TRAILS.document()
-        let trailId = document.documentID
-        let userWorldRef = REF_TRAILS.document(ServerPath.secure).collection(user.id).document(trailId)
+        let trailRef = REF_TRAILS.document()
+        let trailId = trailRef.documentID
+        
+        let userRef = REF_WORLD
+                        .document(ServerPath.trail)
+                        .collection(uid)
+                        .document(trailId)
 
-        ImageManager.instance.uploadTrailImage(image: image, numb: 1, trailId: trailId) { result in
+        ImageManager.instance.uploadTrailImage(image: image, numb: 1, trailId: trailId) { [weak self] result in
+            guard let self = self else {return}
+            
             switch result {
             case .success(let imageUrl):
                 let data: [String: Any] = [
@@ -366,29 +374,36 @@ class DataService {
                     TrailField.ownerId: user.id,
                     TrailField.ownerName: user.displayName,
                     TrailField.ownerImage: user.profileImageUrl,
-                    TrailField.ownerRank: user.rank ?? "tourist",
+                    TrailField.ownerRank: user.rank ?? Ranking.Tourist.rawValue,
                     TrailField.world: world,
+                    TrailField.tribe: self.tribe ?? "",
+                    TrailField.tribeImageUrl: self.tribeImageUrl ?? "",
                     TrailField.price: price,
+                    TrailField.latitude: location.placemark.coordinate.latitude,
+                    TrailField.longitude: location.placemark.coordinate.longitude,
+                    TrailField.isHunt: false,
                     TrailField.spots : spots.map({$0.id}),
                     TrailField.users: users.map({$0.id})
                 ]
                 
-                document.setData(data) { error in
-                    
+                trailRef.setData(data) { error in
+
                     if let error = error {
                         print("Error uploading trail to database", error.localizedDescription)
+                        completion(.failure(error))
                     }
-                    
                     print("Successfully saved trail to database")
+                    
+                    userRef.setData(data)
+                    
+                    let userRef = trailRef.collection(ServerPath.save).document(user.id)
                     let savedData: [String: Any] =
                         ["savedOn": FieldValue.serverTimestamp()]
-                    userWorldRef.setData(savedData)
+                    userRef.setData(savedData)
                     
                     //Increment user's wallet and world
-                    let increment: Int64 = 3
                     let userData : [String: Any] = [
-                        UserField.world : [world: FieldValue.increment(increment)],
-                        UserField.streetCred : FieldValue.increment(increment)
+                        UserField.streetCred : FieldValue.increment(Int64(3))
                     ]
                     
                     let rankData: [String: Any] = [
@@ -398,10 +413,36 @@ class DataService {
                     //Save to users profile and rank
                     AuthService.instance.updateUserField(uid: user.id, data: userData)
                     self.REF_Rankings.document(user.id).updateData(rankData)
+                    
+                    if let tribe = self.tribe {
+                        self.REF_WORLDS.document(tribe).collection(ServerPath.trail).document(trailId).setData(data)
+                        self.REF_WORLDS.document(tribe).collection(ServerPath.rankings).document(user.id).updateData(rankData)
+                    }
+                    
+                    
+                    let feedDocument = self.REF_FEED.document()
+                    let feedId = feedDocument.documentID
+                    let feedData: [String: Any] = [
+                        FeedField.id: feedId,
+                        FeedField.uid: user.id,
+                        FeedField.username: user.displayName,
+                        FeedField.profileUrl: user.profileImageUrl,
+                        FeedField.bio: self.bio ?? "",
+                        FeedField.rank: self.rank ?? Ranking.Tourist.rawValue,
+                        FeedField.date: FieldValue.serverTimestamp(),
+                        FeedField.content: name,
+                        FeedField.type: FeedType.trail.rawValue,
+                        FeedField.spotId: trailId,
+                        FeedField.stampImageUrl: imageUrl ?? ""
+                    ]
+                    feedDocument.setData(feedData)
+                    AnalyticsService.instance.createdHunt()
+                    completion(.success(true))
                 }
-            case .failure(let error):
-                print("There was error uploading image", error.localizedDescription)
-            }
+                case .failure(let error):
+                    print("There was error uploading image", error.localizedDescription)
+                    completion(.failure(error))
+                }
         }
     }
     
@@ -498,7 +539,9 @@ class DataService {
     }
     
     
-    func createHunt(name: String, details: String, image: UIImage, startDate: Date, endDate: Date, location: MKMapItem, world: String, user: User, price: Int, spots: [SecretSpot]) {
+    func createHunt(name: String, details: String, image: UIImage, startDate: Date,
+                    endDate: Date, location: MKMapItem, world: String, user: User, price: Int,
+                    spots: [SecretSpot], completion: @escaping (Result<Bool, Error>) -> ()) {
         
         let users = [user]
         let address = location.getAddress()
@@ -506,11 +549,11 @@ class DataService {
         let latitude = location.placemark.coordinate.latitude
         let city = location.getCity()
         
-        let document = REF_HUNTS.document()
+        let document = REF_TRAILS.document()
         let huntId = document.documentID
-        let userWorldRef = REF_HUNTS.document(ServerPath.secure).collection(user.id).document(huntId)
 
-        ImageManager.instance.uploadHuntImage(image: image, num: 1, huntId: huntId) { result in
+        ImageManager.instance.uploadHuntImage(image: image, num: 1, huntId: huntId) { [weak self] result in
+            guard let self = self else {return}
             switch result {
             case .success(let imageUrl):
                 let data: [String: Any] = [
@@ -525,10 +568,13 @@ class DataService {
                     TrailField.startDate: startDate,
                     TrailField.endDate : endDate,
                     TrailField.dateCreated : FieldValue.serverTimestamp(),
+                    TrailField.tribe: self.tribe ?? "",
+                    TrailField.tribeImageUrl: self.tribeImageUrl ?? "",
                     TrailField.ownerId: user.id,
+                    TrailField.isHunt: true,
                     TrailField.ownerName: user.displayName,
                     TrailField.ownerImage: user.profileImageUrl,
-                    TrailField.ownerRank: user.rank ?? "tourist",
+                    TrailField.ownerRank: user.rank ?? Ranking.Tourist.rawValue,
                     TrailField.world: world,
                     TrailField.price: price,
                     TrailField.spots : spots.map({$0.id}),
@@ -539,31 +585,37 @@ class DataService {
                     
                     if let error = error {
                         print("Error uploading trail to database", error.localizedDescription)
+                        completion(.failure(error))
                     }
                     
                     print("Successfully saved trail to database")
                     
-                    //Save trail on User branch
+                    //Save trail on saveBy collection
                     let savedData: [String: Any] =
                         ["savedOn": FieldValue.serverTimestamp()]
-                    userWorldRef.setData(savedData)
+                    document.collection(ServerPath.save).document(user.id).setData(savedData)
                     
                     //Increment user's wallet and world
-                    let increment: Int64 = 3
                     let userData : [String: Any] = [
-                        UserField.world : [world: FieldValue.increment(increment)],
-                        UserField.streetCred : FieldValue.increment(increment)
+                        UserField.streetCred : FieldValue.increment(Int64(3))
                     ]
                     let rankData: [String: Any] = [
                         RankingField.totalHunts: FieldValue.increment(Int64(1))
                     ]
                     
+                    if let tribe = self.tribe {
+                        self.REF_WORLDS.document(tribe).collection(ServerPath.hunt).document(huntId).setData(data)
+                        self.REF_WORLDS.document(tribe).collection(ServerPath.rankings).document(user.id).updateData(rankData)
+                    }
                     //Save to users profile and rank
                     AuthService.instance.updateUserField(uid: user.id, data: userData)
                     self.REF_Rankings.document(user.id).updateData(rankData)
+                    AnalyticsService.instance.createdTrail()
+                    completion(.success(true))
                 }
             case .failure(let error):
                 print("There was error uploading image", error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
@@ -605,6 +657,27 @@ class DataService {
         }
         
         
+    }
+    
+    
+    func saveTrail2UserDB(trail: Trail, completion: @escaping (Result<Bool,Error>) -> ()) {
+        guard let uid = userId else {return}
+        
+        let trailData: [String: Any] = [
+            "savedOn": FieldValue.serverTimestamp()
+        ]
+        
+        REF_WORLD
+            .document(ServerPath.trail)
+            .collection(uid)
+            .document(trail.id)
+            .setData(trailData) { error in
+                if let error = error {
+                    print("Error saving trail!")
+                    completion(.failure(error))
+                }
+                completion(.success(true))
+            }
     }
     
     func postStampComment(spotId: String, content: String, verifierId: String, user: User, completion: @escaping (Result<String?, UploadError>) -> Void) {
@@ -649,79 +722,82 @@ class DataService {
 
     }
     
-    func likeVerification(postId: String, user: User, completion: @escaping (Result<String,Error>) -> Void) {
+    func likeOrUnlike(stamp: Verification, didLike: Bool, completion: @escaping (Result<String,Error>) -> Void) {
         guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName else {return}
-        let reference = REF_WORLD.document("verified")
-                            .collection(user.id)
-                            .document(postId)
-        
-        let increment: Int64 = 1
-        let data: [String: Any] = [
-            CheckinField.likeCount: FieldValue.increment(increment)
-        ]
-        let streetCred: Double = 0.1
-        
-        let userData : [String: Any] = [
-            UserField.streetCred : FieldValue.increment(streetCred)
-        ]
-        AuthService.instance.updateUserField(uid: user.id, data: userData)
-
-        reference.updateData(data)
+        let reference = REF_WORLD.document(ServerPath.verified)
+                            .collection(stamp.verifierId)
+                            .document(stamp.postId)
         
         let likedData: [String: Any] = [
             UserField.providerId: uid,
             UserField.displayName: displayName,
             UserField.profileImageUrl: imageUrl,
             UserField.bio: bio ?? "",
-            UserField.rank: rank ?? "Tourist",
+            UserField.rank: rank ?? Ranking.Tourist.rawValue,
             UserField.dataCreated: FieldValue.serverTimestamp()
         ]
         
-        reference.collection("likedby")
-            .document(uid)
-            .setData(likedData) { error in
-                if let error = error {
-                    print("Error liking verification", error.localizedDescription)
-                    completion(.failure(error))
+        let increment: Int64 = 1
+        let decrement: Int64 = -1
+        
+        if didLike {
+            reference
+                .updateData([
+                        CheckinField.likeCount: FieldValue.increment(increment),
+                        CheckinField.likedIds: FieldValue.arrayUnion([uid])
+                ])
+           
+            
+            reference.collection(ServerPath.likedBy)
+                .document(uid)
+                .setData(likedData) { error in
+                    if let error = error {
+                        print("Error liking stamp", error.localizedDescription)
+                        completion(.failure(error))
+                    }
+                    
+                    let message = "Successfully liked \(stamp.verifierName)'s stamp"
+                    completion(.success(message))
+                    
                 }
-                
-                let message = "Successfully liked \(user.displayName)'s stamp"
-                completion(.success(message))
-                
-            }
+
+        } else {
+            reference
+                .updateData([
+                        CheckinField.likeCount: FieldValue.increment(decrement),
+                        CheckinField.likedIds: FieldValue.arrayRemove([uid])
+                ])
+            reference.collection(ServerPath.likedBy)
+                .document(uid)
+                .delete()
+            let message = "Successfully unliked \(stamp.verifierName)'s stamp"
+            completion(.success(message))
+        }
         
     }
     
     
-    func givePropsToUser(user: User, object: Verification, completion: @escaping (Result<String, Error>) -> Void) {
+    
+    func givePropsToUser(stamp: Verification, completion: @escaping (Result<String, Error>) -> Void) {
         guard let uid = userId, let imageUrl = profileUrl, let displayName = displayName else {return}
         
-        let postId = object.postId
-        let reference = REF_WORLD.document("verified")
-                            .collection(user.id)
-                            .document(postId)
+        let reference = REF_WORLD.document(ServerPath.verified)
+                            .collection(stamp.verifierId)
+                            .document(stamp.postId)
         
-        //Increment verifier wallet
-        let streetCred: Int64 = 1
-        let walletData: [String: Any] = [
-            UserField.streetCred: FieldValue.increment(streetCred)
-        ]
-        AuthService.instance.updateUserField(uid: user.id, data: walletData)
-        
-     
-        
-        //Decrement User Wallet
-        let decrement: Int64 = -1
-        let userData: [String: Any] = [
-            UserField.streetCred: FieldValue.increment(decrement)
-        ]
-        AuthService.instance.updateUserField(uid: uid, data: userData)
-
-        
-        //Increase the prop count of verification 
+        //Increment & Decrement respective wallets
         let increment: Int64 = 1
+        let decrement: Int64 = -1
+        AuthService.instance.updateUserField(uid: stamp.verifierId, data: [
+            UserField.streetCred: FieldValue.increment(increment)
+        ])
+        AuthService.instance.updateUserField(uid: uid, data: [
+            UserField.streetCred: FieldValue.increment(decrement)
+        ])
+        
         let data: [String: Any] = [
-            CheckinField.props: FieldValue.increment(increment)
+            CheckinField.propCount: FieldValue.increment(increment),
+            CheckinField.propIds: FieldValue.arrayUnion([uid])
         ]
         reference.updateData(data)
         
@@ -730,39 +806,38 @@ class DataService {
             UserField.displayName: displayName,
             UserField.profileImageUrl: imageUrl,
             UserField.bio: bio ?? "",
-            UserField.rank: rank ?? "Tourist",
+            UserField.rank: rank ?? Ranking.Tourist.rawValue,
             UserField.dataCreated: FieldValue.serverTimestamp()
         ]
         
-        reference.collection("propsby")
+        reference.collection(ServerPath.propsBy)
             .document(uid)
-            .setData(propsData) { error in
+            .setData(propsData) { [weak self] error in
                 if let error = error {
-                    print("Error liking verification", error.localizedDescription)
+                    print("Error liking stamp", error.localizedDescription)
                     completion(.failure(error))
                 }
+                guard let self = self else {return}
+                let feedDocument = self.REF_FEED.document()
                 
-                let message = "Successfully gave props to \(user.displayName)"
+                let feedData: [String: Any] = [
+                    FeedField.id: stamp.verifierId,
+                    FeedField.uid: uid,
+                    FeedField.username: displayName,
+                    FeedField.profileUrl: imageUrl,
+                    FeedField.date: FieldValue.serverTimestamp(),
+                    FeedField.content: stamp.verifierName,
+                    FeedField.type: FeedType.props.rawValue,
+                    FeedField.spotId: stamp.postId,
+                ]
+                
+                feedDocument.setData(feedData)
+
+                let message = "Successfully gave props to \(stamp.verifierName)"
                 completion(.success(message))
                 
             }
-        
-        
-        let feedDocument = REF_FEED.document()
-        
-        let feedData: [String: Any] = [
-            FeedField.id: object.verifierId,
-            FeedField.uid: uid,
-            FeedField.username: displayName,
-            FeedField.profileUrl: imageUrl,
-            FeedField.date: FieldValue.serverTimestamp(),
-            FeedField.content: object.verifierName,
-            FeedField.type: FeedType.props.rawValue,
-            FeedField.spotId: object.postId,
-        ]
-        
-        feedDocument.setData(feedData)
-
+    
     }
     
     func sendMessage(user: User, content: String, completion: @escaping (Result<Message,UploadError>) -> ()) {
@@ -851,17 +926,7 @@ class DataService {
             }
         
     }
-    
-    func deleteRecentMessages(user: String) {
-        
-        guard let uid = userId else {return}
-        
-        REF_RECENTMESSAGE
-            .document(uid)
-            .collection("messages")
-            .document(user)
-            .delete()
-    }
+   
     
     
     func downloadStampComments(forId: String, verificationId: String, completion: @escaping (Result<[Comment], Error>) -> ()) {
@@ -1158,6 +1223,9 @@ class DataService {
                     CheckinField.checkinCount: oneIncrement
                 ]
                 
+                let entity = Verification(data: checkinData)
+                self?.manager.addStampEntity(stamp: entity)
+                
                 self?.REF_WORLD.document(ServerPath.verified).collection(uid).document(postId).setData(checkinData)
                 
                 let checkinIncrement: Int64 = 1
@@ -1262,30 +1330,6 @@ class DataService {
             }
         }
         
-    }
-    
-    func getVerificationsForUser(uid: String, completion: @escaping (_ verifications: [Verification]) ->()) {
-        
-        REF_WORLD.document("verified").collection(uid).getDocuments { [weak self] querySnapshot, error in
-            guard let self = self else {return}
-            
-            var verifications: [Verification] = []
-            if let error = error {
-                print("Error fetching verifications", error.localizedDescription)
-                return
-            }
-            
-            if let snapshot = querySnapshot, snapshot.count > 0 {
-                snapshot.documents.forEach { document in
-                    let data = document.data()
-                    let verification = Verification(data: data)
-                    self.manager.addStampEntity(verification: verification)
-                    verifications.append(verification)
-                }
-                completion(verifications)
-            }
-            
-        }
     }
     
     
@@ -1470,6 +1514,55 @@ class DataService {
                 }
             }
         }
+    }
+    
+    
+    func getVerificationsForUser(uid: String, completion: @escaping (_ verifications: [Verification]) ->()) {
+        
+        REF_WORLD.document("verified").collection(uid).getDocuments { querySnapshot, error in
+            
+            var verifications: [Verification] = []
+            if let error = error {
+                print("Error fetching verifications", error.localizedDescription)
+                return
+            }
+            
+            if let snapshot = querySnapshot, snapshot.count > 0 {
+                snapshot.documents.forEach { document in
+                    let data = document.data()
+                    let verification = Verification(data: data)
+                    verifications.append(verification)
+                }
+                completion(verifications)
+            }
+            
+        }
+    }
+    
+    
+    func getCityFeed(completion: @escaping (Result<[Feed],Error>) -> Void) {
+        var feeds: [Feed] = []
+        
+        feedListener = REF_FEED
+            .order(by: FeedField.date, descending: true)
+            .limit(to: 15)
+            .addSnapshotListener { querySnapshot, error in
+                
+                if let error = error {
+                    print("Error fetching feed from database", error.localizedDescription)
+                    completion(.failure(error))
+                }
+                
+                querySnapshot?.documentChanges.forEach({ change in
+                    if change.type == .added {
+                        let data = change.document.data()
+                        let feed = Feed(data: data)
+                        feeds.insert(feed, at: 0)
+                    }
+                    completion(.success(feeds))
+                })
+
+            }
     }
     
     func getPublicWorlds(completion: @escaping (Result<[World],Error>) -> ()) {
@@ -1668,37 +1761,6 @@ class DataService {
             }
     
     }
-    
-    func getCityFeed(completion: @escaping (Result<[Feed],Error>) -> Void) {
-        var feeds: [Feed] = []
-        
-        feedListener = REF_FEED
-            .order(by: FeedField.date, descending: true)
-            .limit(to: 15)
-            .addSnapshotListener { querySnapshot, error in
-                
-                if let error = error {
-                    print("Error fetching feed from database", error.localizedDescription)
-                    completion(.failure(error))
-                }
-                
-                querySnapshot?.documentChanges.forEach({ change in
-                    if change.type == .added {
-                        let data = change.document.data()
-                        let feed = Feed(data: data)
-                        feeds.insert(feed, at: 0)
-                    }
-                    completion(.success(feeds))
-                })
-
-            }
-    }
-    
-    func removeFeedListener() {
-        feedListener?.remove()
-        print("Removed Feed Listener")
-    }
-    
    
     
     func getMessagesForUser(userID: String, completion: @escaping (Result<[Message], NetworkError>) -> ()) {
@@ -1728,6 +1790,64 @@ class DataService {
         
     }
     
+    //Get functions for trails (specific&feed)
+    
+    func getAllTrails(completion: @escaping (Result<[Trail], Error>) -> ()) {
+        var trails: [Trail] = []
+        REF_TRAILS
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("Failed to load trails due to", error.localizedDescription)
+                    completion(.failure(error))
+                }
+                guard let snapshot = snapshot else {return}
+                
+                snapshot.documents.forEach { document in
+                    let data = document.data()
+                    let trail = Trail(data: data)
+                    trails.append(trail)
+                }
+                completion(.success(trails))
+            }
+    }
+    
+    func getSpecificTrail(trailId: String, completion: @escaping (Result<Trail, Error>)-> ()) {
+        REF_TRAILS
+            .document(trailId)
+            .getDocument { snapshot, error in
+                if let error = error {
+                    print("Error finding specific trail", error.localizedDescription)
+                    completion(.failure(error))
+                }
+                
+                guard let document = snapshot else {return}
+                let data = document.data()
+                let trail = Trail(data: data)
+                completion(.success(trail))
+            }
+    }
+    
+    //Fetches user trails
+    func getTrailForUser(completion: @escaping (Result<[Trail], Error>) -> ()) {
+        guard let uid = userId else {return}
+        var trails: [Trail] = []
+        REF_WORLD
+            .document(ServerPath.trail)
+            .collection(uid)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                    completion(.failure(error))
+                }
+                guard let snapshot = snapshot else {return}
+                snapshot.documents.forEach({ document in
+                    let data = document.data()
+                    let trail = Trail(data: data)
+                    trails.append(trail)
+                })
+                completion(.success(trails))
+            }
+    }
     
     func getSpotsFromWorld(userId: String, completion: @escaping (_ spots: [SecretSpot]) -> ()) {
         REF_WORLD.document("private").collection(userId).getDocuments { snapshot, error in
@@ -3071,6 +3191,35 @@ class DataService {
                 
             }
         
+    }
+    
+    func deleteUser() {
+        guard let uid = userId else {return}
+        
+        REF_USERS
+            .document(uid)
+            .delete()
+        
+        ImageManager.instance.deleteUserStorage(uid: uid)
+        
+    }
+    
+    
+    func removeFeedListener() {
+        feedListener?.remove()
+        print("Removed Feed Listener")
+    }
+    
+    
+    func deleteRecentMessages(user: String) {
+        
+        guard let uid = userId else {return}
+        
+        REF_RECENTMESSAGE
+            .document(uid)
+            .collection("messages")
+            .document(user)
+            .delete()
     }
     
     

@@ -11,6 +11,8 @@ struct SettingsView: View {
     
     
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.colorScheme) private var colorScheme
+
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.incognito) var incognito: Bool?
 
@@ -175,6 +177,7 @@ struct SettingsView: View {
                     }, label: {
                         Image(systemName: "xmark")
                             .font(.title2)
+                            .foregroundColor(colorScheme == .dark ? .white : .black)
                     })
                     .accentColor(.black)
             )
@@ -247,8 +250,10 @@ struct SettingsView: View {
     }
     
     func delete() {
+ 
         AuthService.instance.deleteUser { success in
             if success {
+                DataService.instance.deleteUser()
                 message = "Account Deleted"
                 showAlert.toggle()
                 self.presentationMode.wrappedValue.dismiss()
@@ -288,5 +293,6 @@ struct SettingsView_Previews: PreviewProvider {
     @State static var refresh: Bool = false
     static var previews: some View {
         SettingsView(displayName: $testString, userBio: $testString, profileUrl: $testString)
+            .colorScheme(.light)
     }
 }

@@ -121,6 +121,8 @@ class FeedViewModel: ObservableObject {
                 return Text("\(feed.username) shared a spot \(Image("pin_feed")) with \(feed.content)")
             case .props:
                 return Text("\(feed.username) gave \(Image("props_feed")) props to \(feed.content)'s stamps")
+            case .trail:
+                return Text("\(feed.username) posted a trail \(Image("trail_feed"))")
         }
     }
     
@@ -145,7 +147,8 @@ class FeedViewModel: ObservableObject {
                 self.user = user
             case .props:
                 getPropsVerification(feed: feed)
-            
+            case .trail:
+                getTrail(trailId: feed.spotId ?? "")
         }
         
     }
@@ -164,6 +167,12 @@ class FeedViewModel: ObservableObject {
         }
     }
     
+    func getTrail(trailId: String) {
+        //Write code to fetch the specific trai object
+        
+        
+    }
+    
     func getVerification(feed: Feed) {
         let spotId = feed.spotId ?? ""
         let uid = feed.uid
@@ -176,9 +185,8 @@ class FeedViewModel: ObservableObject {
                     case .success(let verification):
                         self.verification = verification
                 }
-
         }                                                     
-                                                     
+                                                
     }
     
     func getPropsVerification(feed: Feed) {

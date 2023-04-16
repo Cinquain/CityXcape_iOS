@@ -12,10 +12,9 @@ struct FeedView: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     
-    @StateObject var worldVM: WorldViewModel
+    @EnvironmentObject var vm: FeedViewModel
+    @EnvironmentObject var worldVM: WorldViewModel
     @Binding var selectedTab: Int
-    @StateObject var discoverVM: DiscoverViewModel
-    @StateObject var vm: FeedViewModel
     @State private var showMenu: Bool = false
     let width: CGFloat = UIScreen.screenWidth
     
@@ -30,7 +29,7 @@ struct FeedView: View {
                             FeedBubbleView(feed: feed)
                                 .padding(.top, 10)
                                 .sheet(item: $vm.secretSpot) { spot in
-                                    SecretSpotPage(spot: spot, vm: discoverVM)
+                                    SecretSpotPage(spot: spot)
                                 }
                             }
                         
@@ -41,7 +40,8 @@ struct FeedView: View {
                 
                 GeometryReader { _ in
                     HStack {
-                        SideMenu(worldVM: worldVM, selectedTab: $selectedTab, showMenu: $showMenu)
+                        SideMenu(selectedTab: $selectedTab, showMenu: $showMenu)
+                            .environmentObject(worldVM)
                             .offset(x: showMenu ? 0 : -width - 50)
                             .animation(.easeOut(duration: 0.3), value: showMenu)
                         
@@ -215,7 +215,9 @@ extension FeedView {
 struct Feed_Previews: PreviewProvider {
     @State static var number: Int = 1
     static var previews: some View {
-        FeedView(worldVM: WorldViewModel(), selectedTab: $number, discoverVM: DiscoverViewModel(), vm: FeedViewModel())
+        FeedView(selectedTab: $number)
             .colorScheme(.dark)
+            .environmentObject(FeedViewModel())
+            .environmentObject(WorldViewModel())
     }
 }

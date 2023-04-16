@@ -10,8 +10,10 @@ import MapKit
 
 struct PostTrailForm: View {
     
+    
+    //Add location object for trail start
     @Environment(\.presentationMode) var presentationMode
-    @Binding var isHunt: Bool
+    @State var isHunt: Bool = false
     @State var mapItem: MKMapItem
     @StateObject var vm: PostTrailViewModel = PostTrailViewModel()
     
@@ -31,7 +33,7 @@ struct PostTrailForm: View {
                     
                     TextField(vm.worldPlaceHolder, text: $vm.world)
                         .frame(height: 40)
-                    
+                    Toggle(isHunt ? "Scavenger Hunt" : "Trail" , isOn: $isHunt)
                 }
                 
                 
@@ -147,7 +149,8 @@ extension PostTrailForm {
 
         }
         .fullScreenCover(isPresented: $vm.showList) {
-            SpotListView(vm: vm)
+            SpotListView()
+                .environmentObject(vm)
         }
     }
                 
@@ -191,6 +194,6 @@ extension PostTrailForm {
 
 struct PostTrailForm_Previews: PreviewProvider {
     static var previews: some View {
-        PostTrailForm(isHunt: .constant(false), mapItem: MKMapItem())
+        PostTrailForm(mapItem: MKMapItem())
     }
 }

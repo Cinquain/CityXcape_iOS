@@ -7,6 +7,7 @@
 import Shimmer
 import SwiftUI
 import FirebaseMessaging
+import SDWebImageSwiftUI
 
 struct PublicStreetPass: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
@@ -83,7 +84,37 @@ struct PublicStreetPass: View {
                      Spacer()
                  }
                 
-                
+                if let tribeUrl = user.tribeImageUrl {
+                    Button {
+                        vm.alertMessage = "\(user.displayName) is part of the \(user.tribe) community"
+                        vm.showAlert.toggle()
+                    } label: {
+                        VStack {
+                            WebImage(url: URL(string: tribeUrl))
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 200, height: 50)
+                                .opacity(0.8)
+                            if let membership = user.membership?.formattedDate() {
+                                Image(Icon.ribbon.rawValue)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(height: 40)
+                                    .opacity(0.8)
+                                    .overlay {
+                                        Text(membership)
+                                            .fontWeight(.light)
+                                            .foregroundColor(.white)
+                                            .font(.caption)
+                                            .padding(.bottom, 13)
+                                            .shimmering(active: true, duration: 10, bounce: false)
+                                    }
+                            }
+                       
+                        }
+                    }
+                }
+             
                 Spacer()
                     .frame(height: width / 1.5)
                 
@@ -256,7 +287,7 @@ extension PublicStreetPass {
         
         }
     }
-    
+  
     private var messageButton: some View {
         Button {
              vm.showChatLog.toggle()
@@ -348,7 +379,7 @@ extension PublicStreetPass {
 }
 
 struct PublicStreetPass_Previews: PreviewProvider {
-    
+
     static var previews: some View {
         let user = User(id: "abc123", displayName: "Cinquain", profileImageUrl: "https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/users%2FL8f41O2WTbRKw8yitT6e%2FprofileImage?alt=media&token=c4bc2840-a6ee-49d0-a6ff-f4073b9f1073")
        PublicStreetPass(user: user)

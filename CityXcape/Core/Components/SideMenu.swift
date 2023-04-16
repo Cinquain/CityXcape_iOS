@@ -10,7 +10,7 @@ import SwiftUI
 struct SideMenu: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.incognito) var incognito: Bool?
-    @StateObject var worldVM: WorldViewModel
+    @EnvironmentObject var worldVM: WorldViewModel
     
     @State private var showAnalytics: Bool = false
     @State private var showJourney: Bool = false
@@ -18,6 +18,7 @@ struct SideMenu: View {
     @State private var showMessages: Bool = false
     @State private var createWorld: Bool = false
     @State private var showWorlds: Bool = false
+    @State private var showTrails: Bool = false
     
     @Binding var selectedTab: Int
     @Binding var showMenu: Bool
@@ -46,6 +47,25 @@ struct SideMenu: View {
                 .alert(isPresented: $worldVM.showAlert) {
                     return Alert(title: Text(worldVM.alertMessage))
                 }
+                
+                Button {
+                    showTrails.toggle()
+                } label: {
+                    HStack {
+                        Image("trail")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 20)
+                        Text("Find Trails")
+                            .font(.title3)
+                            .fontWeight(.light)
+                    }
+                    .padding()
+                }
+                .fullScreenCover(isPresented: $showTrails) {
+                    MyTrailsView()
+                }
+
                 
                 Button {
                     worldVM.fetchUsersFromWorld()
@@ -255,6 +275,7 @@ struct SideMenu_Previews: PreviewProvider {
     @State static var isOpen: Bool = true
 
     static var previews: some View {
-        SideMenu(worldVM: WorldViewModel(), selectedTab: $number, showMenu: $isOpen)
+        SideMenu(selectedTab: $number, showMenu: $isOpen)
+            .environmentObject(WorldViewModel())
     }
 }

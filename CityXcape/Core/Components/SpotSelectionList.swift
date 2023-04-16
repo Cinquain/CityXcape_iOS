@@ -11,12 +11,13 @@ struct SpotSelectionList: View {
     
     @StateObject var vm: PostTrailViewModel
     @State private var currentSpot: SecretSpot?
+    
     var body: some View {
         VStack {
         
             HStack {
                 Spacer()
-                Text(vm.allspots.count > 0 ? "Select Spots for your trail" : "You have no spots posted")
+                Text(vm.allspots.count > 0 ? "Select spots for your trail/hunt" : "You have no spots posted")
                     .font(.title)
                     .fontWeight(.thin)
                 Spacer()

@@ -13,7 +13,7 @@ struct CheckinView: View {
 
     var spot: SecretSpot
     @StateObject var vm: SpotViewModel
-    
+    let manager = CoreDataManager.instance
     @State private var showComments: Bool = false
     @State private var showButtons: Bool = false
     var body: some View {

@@ -18,6 +18,8 @@ struct Verification: Identifiable, Hashable {
     let name: String
     let verifierId: String
     let postId: String
+    let likedIds: [String]
+    let propIds: [String]
     let latitude: Double
     let longitude: Double
     let spotOwnerId: String
@@ -45,6 +47,8 @@ struct Verification: Identifiable, Hashable {
         self.verifierImage = data[CheckinField.verifierImage] as? String ?? ""
         self.checkinCount = data[CheckinField.checkinCount] as? Int ?? 1
         self.imageCollection = data[CheckinField.imageCollection] as? [String] ?? [self.imageUrl]
+        self.likedIds = data[CheckinField.likedIds] as? [String] ?? []
+        self.propIds = data[CheckinField.propIds] as? [String] ?? []
     }
     
     
@@ -64,6 +68,8 @@ struct Verification: Identifiable, Hashable {
         self.city = entity.city ?? ""
         self.checkinCount = Int(entity.checkincount)
         self.imageCollection = entity.imageUrls ?? [entity.imageUrl ?? ""]
+        self.likedIds = entity.likedIds ?? []
+        self.propIds = entity.propIds ?? []
     }
     
     init(userInfo: [AnyHashable: Any]) {
@@ -87,6 +93,8 @@ struct Verification: Identifiable, Hashable {
         self.verifierImage =  userInfo["verifierImage"] as? String ?? ""
         self.checkinCount = userInfo[CheckinField.checkinCount] as? Int ?? 1
         self.imageCollection = userInfo[CheckinField.imageCollection] as? [String] ?? []
+        self.likedIds = userInfo[CheckinField.likedIds] as? [String] ?? []
+        self.propIds = userInfo[CheckinField.propIds] as? [String] ?? []
     }
     
     
@@ -106,7 +114,8 @@ struct Verification: Identifiable, Hashable {
         CheckinField.latitude: 44.97849074790292,
         CheckinField.spotOwnerId : "ahfuigog",
         CheckinField.timestamp: Date(),
-        CheckinField.imageCollection: ["https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2Fw3QA4EFQ1j0yJeCSWyww%2F1?alt=media&token=22fd7993-9352-4798-851a-18fa0a60800b", "https://pics.filmaffinity.com/White_Chicks-973832641-large.jpg"]
+        CheckinField.imageCollection: ["https://firebasestorage.googleapis.com/v0/b/cityxcape-1e84f.appspot.com/o/posts%2Fw3QA4EFQ1j0yJeCSWyww%2F1?alt=media&token=22fd7993-9352-4798-851a-18fa0a60800b", "https://pics.filmaffinity.com/White_Chicks-973832641-large.jpg"],
+        CheckinField.likedIds: ["abxuf", "ajfjg", "gjfdjhd"]
     ]
     
     static let demo = Verification(data: data)

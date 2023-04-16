@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import AVFoundation
 
 
 
@@ -16,9 +17,34 @@ enum DeepLink: String, CaseIterable {
     case streetPass
 }
 
+enum Permissions: String {
+    case idle = "Not Determined"
+    case approved = "Access Granted"
+    case denied = "Access Denied"
+}
+
 enum MessageType {
     case feed
     case spot
+}
+
+enum FormType {
+    case spot
+    case news
+    case trail
+}
+
+enum CardType {
+    case trail
+    case newTrail
+    case hunt
+}
+
+enum SelectedBar: String, CaseIterable, Identifiable {
+    var id: Self {self}
+    case map
+    case spots
+    case completed
 }
 
 struct Keys {
@@ -154,6 +180,8 @@ struct ServerPath {
     static let verifiers = "verifiers"
     static let chat = "chat"
     static let localFeed = "localFeeds"
+    static let likedBy = "likedby"
+    static let propsBy = "propsby"
 }
 
 struct FeedField {
@@ -177,6 +205,9 @@ struct FeedField {
     static let stampImageUrl = "stamp_image"
     static let followingImage = "following_image"
     static let followingName = "following_username"
+    static let price = "price"
+    static let world = "world"
+    static let trailSpots = "trail_spots"
 }
 
 struct CurrentUserDefaults {
@@ -215,9 +246,12 @@ struct TrailField {
     static let city = "city"
     static let longitude = "longitude"
     static let latitude = "latitude"
+    static let isHunt = "isHunt"
     static let startDate = "start_date"
     static let endDate = "end_date"
     static let dateCreated = "date_created"
+    static let tribe = "tribe"
+    static let tribeImageUrl = "tribeImageUrl"
 }
 
 struct WorldField {
@@ -270,7 +304,9 @@ struct CheckinField {
     static let checkinCount = "check-in_count"
     static let checkins = "checkins"
     static let likeCount = "like_count"
-    static let props = "props_count"
+    static let propCount = "props_count"
+    static let likedIds = "liked_ids"
+    static let propIds = "prop_ids"
 }
 
 struct MessageField {
@@ -399,6 +435,7 @@ enum FeedType: String, CaseIterable {
     case friends
     case share
     case props
+    case trail
 }
 
 
@@ -448,7 +485,19 @@ enum DragState {
     }
 }
 
-
+class QRScannerDelegae: NSObject, ObservableObject, AVCaptureMetadataOutputObjectsDelegate {
+    
+    @Published var scannedCode: String?
+    
+    func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+        if let metaObject = metadataObjects.first {
+            guard let readableObject = metaObject as? AVMetadataMachineReadableCodeObject else {return}
+            guard let code = readableObject.stringValue else {return}
+            print(code)
+            scannedCode = code
+        }
+    }
+}
 
 struct StandardButton: ViewModifier {
     

@@ -11,6 +11,8 @@ import SDWebImageSwiftUI
 
 struct PublicStampView: View {
     @Environment(\.presentationMode) var presentationMode
+    @AppStorage(CurrentUserDefaults.userId) var userId: String?
+
 
     let verification: Verification
     let width: CGFloat = UIScreen.screenWidth
@@ -36,7 +38,12 @@ struct PublicStampView: View {
             Gradient.Stop(color: .black, location: 0.40),
             Gradient.Stop(color: .cx_orange, location: 3.0),
         ]), startPoint: .top, endPoint: .bottom).edgesIgnoringSafeArea(.all))
+        .onAppear {
+            checkUserLike()
+            checkUserProp()
+        }
     }
+    
     
     fileprivate func loadComments() {
         DataService.instance.downloadStampComments(forId: verification.verifierId, verificationId: verification.id) {  result in
@@ -70,38 +77,50 @@ struct PublicStampView: View {
         }
     }
     
-    func likePost() {
-        let user = User(verification: verification)
-        DataService.instance.likeVerification(postId: verification.postId, user: user) { result in
-            
-            switch result {
-            case .failure(let error):
-                alertMessage = error.localizedDescription
-                showAlert = true
-            case .success(let message):
-                didLike.toggle()
-                alertMessage = message
-                showAlert = true
-            }
-            
+    func likeUnlikePost() {
+        didLike.toggle()
+        DataService.instance
+            .likeOrUnlike(stamp: verification, didLike: didLike) { result in
+                switch result {
+                    case .failure(let error):
+                        alertMessage = error.localizedDescription
+                        showAlert = true
+                    case .success(let message):
+                        didLike.toggle()
+                        alertMessage = message
+                        showAlert = true
+                    }
         }
     }
     
     func giveProps() {
-        let user = User(verification: verification)
-        let id = verification.postId
-        DataService.instance.givePropsToUser(user: user, object: verification) { result in
+        DataService.instance.givePropsToUser(stamp: verification) { result in
             switch result {
-            case .failure(let error):
-                alertMessage = error.localizedDescription
-                showAlert = true
-            case .success(let message):
-                didProps.toggle()
-                alertMessage = message
-                showAlert = true
-            }
-            }
+                case .failure(let error):
+                    alertMessage = error.localizedDescription
+                    showAlert = true
+                case .success(let message):
+                    didProps.toggle()
+                    alertMessage = message
+                    showAlert = true
+                }
         }
+    }
+    
+
+    func checkUserLike() {
+        guard let uid = userId else {return}
+        guard !verification.likedIds.isEmpty else {return}
+        didLike = verification.likedIds.contains(where: {$0 == uid})
+    }
+    
+    func checkUserProp() {
+        guard let uid = userId else {return}
+        guard !verification.propIds.isEmpty else {return}
+        didProps = verification.propIds.contains(where: {$0 == uid})
+    }
+    
+    
     
     }
 
@@ -126,15 +145,14 @@ extension PublicStampView {
             }
             
             Button {
-                likePost()
+                likeUnlikePost()
             } label: {
                 Image(systemName: didLike ? "heart.fill" : "heart")
                     .opacity(0.8)
                     .font(.title)
                     .foregroundColor(didLike ? .red : .white)
-                    .animation(.easeIn(duration: 0.5))
+                    .animation(.easeInOut(duration: 0.5), value: didLike)
             }
-            .disabled(didLike)
 
             Button {
                 giveProps()

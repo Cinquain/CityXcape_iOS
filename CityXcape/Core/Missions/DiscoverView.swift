@@ -9,9 +9,11 @@ import SwiftUI
 
 struct DiscoverView: View {
     
+    @EnvironmentObject var vm: DiscoverViewModel
     @EnvironmentObject var worldVM: WorldViewModel
+    @EnvironmentObject var spotVM: SpotViewModel
+
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
-    @StateObject var vm: DiscoverViewModel
     
 
     @State private var isPresented: Bool = false
@@ -44,6 +46,7 @@ struct DiscoverView: View {
                          ZStack {
                              ForEach(vm.cardViews) { cardview in
                                cardview
+                                .environmentObject(spotVM)
                                 .zIndex(vm.isTopCard(cardView: cardview) ? 1 : 0)
                                 .overlay(
                                     ZStack {
@@ -149,9 +152,10 @@ struct DiscoverView: View {
                 
                 GeometryReader { _ in
                     HStack {
-                        SideMenu(worldVM: worldVM, selectedTab: $selectedTab, showMenu: $showMenu)
+                        SideMenu(selectedTab: $selectedTab, showMenu: $showMenu)
                             .offset(x: showMenu ? 0 : -width - 50)
                             .animation(.easeOut(duration: 0.3), value: showMenu)
+                            .environmentObject(worldVM)
                         
                         Spacer()
                     }
@@ -281,6 +285,9 @@ extension DiscoverView {
 struct MissionsView_Previews: PreviewProvider {
     @State static var selection: Int = 0
     static var previews: some View {
-        DiscoverView(vm: DiscoverViewModel(), selectedTab: .constant(2))
+        DiscoverView(selectedTab: .constant(2))
+            .environmentObject(DiscoverViewModel())
+            .environmentObject(WorldViewModel())
+            .environmentObject(SpotViewModel())
     }
 }

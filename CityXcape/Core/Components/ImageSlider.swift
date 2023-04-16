@@ -43,6 +43,6 @@ struct ImageSlider: View {
 
 struct ImageSlider_Previews: PreviewProvider {
     static var previews: some View {
-        ImageSlider(images: [""])
+        ImageSlider(images: ["https://www.southernliving.com/thmb/guNnKC5ZnAcVLsQlq73_pmOR_14=/750x0/filters:no_upscale():max_bytes(150000):strip_icc()/GettyImages-144938832-1-b64bf4fb82b34d4e8f8a44cb4a36a402.jpg", "https://pbs.twimg.com/media/CmD_27cXIAEeHqk?format=jpg&name=large"])
     }
 }

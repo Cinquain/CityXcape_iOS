@@ -15,23 +15,22 @@ struct PostSpotForm: View {
     @Environment(\.dismiss) private var dismiss
     @AppStorage(CurrentUserDefaults.tribe) var tribe: String?
 
-    @Binding var selectedTab: Int
-    @StateObject var vm: PostViewModel
+    @StateObject var vm: PostViewModel = PostViewModel()
     var mapItem: MKMapItem
-    
+    var type: FormType
     
     var body: some View {
         
             NavigationView {
                 Form {
-                    TextField("Secret Spot Name", text: $vm.spotName)
+                    TextField(type == .spot ? "Secret Spot Name" : "News Title", text: $vm.spotName)
                         .frame(height: 40)
                         .fullScreenCover(isPresented: $vm.showSignUp) {
                             OnboardingView()
                         }
                     
                     
-                    TextField(vm.detailsPlaceHolder, text: $vm.details)
+                    TextField(type == .spot ? "Describe why this spot is special" : "Describe the event taking place", text: $vm.details)
                         .frame(height: 40)
                     
                     Section("\(Image(systemName: vm.isPublic ?  "eye.fill" : "eye.slash")) Visibility") {
@@ -58,7 +57,13 @@ struct PostSpotForm: View {
                     Section("Upload Image") {
                         Button(action: {
                             vm.selectedImage = nil
-                            vm.showActionSheet.toggle()
+                            if type == .news {
+                                vm.sourceType = .camera
+                                vm.showPicker.toggle()
+                                return
+                            } else {
+                                vm.showActionSheet.toggle()
+                            }
                         }, label: {
                             ZStack {
                          
@@ -77,9 +82,7 @@ struct PostSpotForm: View {
                                     Image("spot_image")
                                         .resizable()
                                         .scaledToFit()
-                                        
-
-                                    
+                                                                            
                                         
                                 }
                                                                         
@@ -93,9 +96,10 @@ struct PostSpotForm: View {
 
                     }
                     
-                    Section(header: Text("Price: \(vm.price) StreetCred" )) {
-                        Stepper("Number of StreetCred", value: $vm.price, in: 1...100)
-
+                    if type == .spot {
+                        Section(header: Text("Price: \(vm.price) StreetCred" )) {
+                            Stepper("Number of StreetCred", value: $vm.price, in: 1...100)
+                        }
                     }
                             
                     locationView
@@ -193,7 +197,7 @@ extension PostSpotForm {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 25, height: 25)
-                Text("Create Spot")
+                Text(type == .spot ? "Create Spot" : "Post News")
                     .font(.headline)
                 Spacer()
             }
@@ -225,7 +229,7 @@ struct CreateSpotFormView_Previews: PreviewProvider {
      @State static var coordinate: CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: 39.75879282513146, longitude: -86.1373309437772)
     @State static var tabIndex: Int = 1
     static var previews: some View {
-        PostSpotForm(selectedTab: $tabIndex, vm: PostViewModel(), mapItem: MKMapItem())
+        PostSpotForm(mapItem: MKMapItem(), type: .news)
     }
     
 }

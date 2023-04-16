@@ -15,12 +15,14 @@ struct HomeView: View {
     @State var selectedTab: Int = 0
     @State var showSideMenu: Bool = false
     
-    
+    @EnvironmentObject var discoverVM: DiscoverViewModel
+    @EnvironmentObject var feedVM: FeedViewModel
+    @EnvironmentObject var streetPassVM: StreetPassViewModel
+    @EnvironmentObject var worldVM: WorldViewModel
+    @EnvironmentObject var myWorld: MyWorldViewModel
+    @EnvironmentObject var spotVM: SpotViewModel
     @StateObject var notifManager = NotificationsManager.instance
-    @StateObject var discoverVM: DiscoverViewModel = DiscoverViewModel()
-    @StateObject var feedVM: FeedViewModel = FeedViewModel()
-    @StateObject var streetPassVM: StreetPassViewModel = StreetPassViewModel()
-    @StateObject var worldVM: WorldViewModel = WorldViewModel()
+
 
     
 
@@ -36,7 +38,7 @@ struct HomeView: View {
         TabView(selection: $selectedTab) {
             
                    
-            DiscoverView(vm: discoverVM, selectedTab: $selectedTab)
+            DiscoverView(selectedTab: $selectedTab)
                 .tabItem {
                     Image(Icon.tabItem0.rawValue)
                         .renderingMode(.template)
@@ -45,8 +47,9 @@ struct HomeView: View {
                 .tag(0)
                 .badge(discoverVM.newSpotCount)
                 .environmentObject(worldVM)
+                .environmentObject(spotVM)
             
-            MyWorld(selectedTab: $selectedTab)
+            MyWorld(vm: myWorld, selectedTab: $selectedTab)
             .tabItem {
                 Image(Icon.tabItemI.rawValue)
                     .renderingMode(.template)
@@ -55,23 +58,20 @@ struct HomeView: View {
             .tag(1)
             .badge(discoverVM.newlySaved)
             .environmentObject(worldVM)
-            .environmentObject(feedVM)
+            .environmentObject(spotVM)
+        
 
             
             
-            FeedView(worldVM: worldVM,
-                     selectedTab: $selectedTab,
-                     discoverVM: discoverVM,
-                     vm: feedVM)
-                .environmentObject(worldVM)
+            FeedView(selectedTab: $selectedTab)
                 .tabItem {
                     Image(Icon.grid.rawValue)
                         .renderingMode(.template)
                     Text(Labels.tab0.rawValue)
                 }
                 .tag(2)
+                .environmentObject(worldVM)
                 .badge(feedVM.newFeeds)
-                .environmentObject(feedVM)
                 .onAppear {
                     feedVM.newFeeds = 0
                 }
@@ -93,7 +93,7 @@ struct HomeView: View {
                 }
             
             
-            StreetPass(vm: streetPassVM)
+            StreetPass()
                 .tabItem {
                     Image(Icon.tabItemIII.rawValue)
                         .renderingMode(.template)
@@ -108,7 +108,7 @@ struct HomeView: View {
         }
         .accentColor(.orange)
         .fullScreenCover(item: $notifManager.secretSpot) { spot in
-            SecretSpotPage(spot: spot, vm: discoverVM)
+            SecretSpotPage(spot: spot)
         }
         .onAppear(perform: {
             
@@ -135,5 +135,11 @@ struct HomeView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
+            .environmentObject(MyWorldViewModel())
+            .environmentObject(WorldViewModel())
+            .environmentObject(DiscoverViewModel())
+            .environmentObject(StreetPassViewModel())
+            .environmentObject(FeedViewModel())
+            .environmentObject(SpotViewModel())
     }
 }

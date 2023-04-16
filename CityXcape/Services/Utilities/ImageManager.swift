@@ -206,6 +206,24 @@ class ImageManager {
         return storagePath
     }
     
+    func deleteTrailStorage(trailId: String) {
+        let trailPath = "trails/\(trailId)"
+        let storagePath = REF_STORE.reference(withPath: trailPath)
+        storagePath.delete()
+    }
+    
+    func deleteHuntStorage(huntId: String) {
+        let huntPath = "hunts/\(huntId)"
+        let storagePath = REF_STORE.reference(withPath: huntPath)
+        storagePath.delete()
+    }
+    
+    func deleteUserStorage(uid: String) {
+        let userPath = "users/\(uid)"
+        let storagePath = REF_STORE.reference(withPath: userPath)
+        storagePath.delete()
+    }
+    
     
     fileprivate func uploadImage(path: StorageReference, image: UIImage, completion: @escaping (_ success: Bool, _ imageUrl: String?) -> ()) {
         

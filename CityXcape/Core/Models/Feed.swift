@@ -24,7 +24,6 @@ struct Feed: Hashable, Identifiable, Equatable {
     let geohash: Double
     let longitude: Double
     let latitude: Double
-    
     let spotId: String?
     let userId: String?
     let followingImage: String?

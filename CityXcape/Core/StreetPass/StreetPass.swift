@@ -18,9 +18,8 @@ struct StreetPass: View {
     @AppStorage(CurrentUserDefaults.social) var social: Int?
     @AppStorage(CurrentUserDefaults.tribeImageUrl) var tribeImageUrl: String?
 
+    @EnvironmentObject var vm: StreetPassViewModel
 
-    @StateObject var vm: StreetPassViewModel
-    
     @State private var username: String = ""
     @State private var userbio: String = ""
     @State private var profileUrl = ""
@@ -116,19 +115,7 @@ struct StreetPass: View {
                                             .scaledToFit()
                                             .frame(width: 200, height: 50)
                                             .opacity(0.8)
-                                        Image("ribbon")
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(height: 40)
-                                            .opacity(0.8)
-                                            .overlay {
-                                                Text(membership)
-                                                    .fontWeight(.light)
-                                                    .foregroundColor(.white)
-                                                    .font(.caption)
-                                                    .padding(.bottom, 13)
-                                                    .shimmering(active: true, duration: 10, bounce: false)
-                                            }
+                                     
                                           
                                            
                                     }
@@ -159,31 +146,31 @@ struct StreetPass: View {
                                      .resizable()
                                      .scaledToFit()
                                      .frame(height: 30)
-                                                             
+
                                     Text("My Journey")
                                          .font(.title2)
                                          .fontWeight(.thin)
                                          .foregroundColor(.white)
-                                
+
                             }
                             .frame(width: 150, height: 30)
-                        
+
                         }
                         .fullScreenCover(isPresented: $vm.showJourney) {
                             JourneyView()
                         }
-                        
+
                         Spacer()
-                   
+
                     }
                     .padding(.top, 20)
-                    
-                    
-                    
+
+
+
                     HStack {
-                                            
+
                         Spacer()
-                        
+
                         Button {
                             //Show Stats
                             vm.showStats.toggle()
@@ -196,7 +183,7 @@ struct StreetPass: View {
                                     .fullScreenCover(isPresented: $vm.showSignup) {
                                         OnboardingView()
                                     }
-                                 
+
                                    Text("Analytics")
                                         .font(.title2)
                                         .fontWeight(.thin)
@@ -307,8 +294,9 @@ struct StreetPass: View {
 }
 
 struct StreetPass_Previews: PreviewProvider {
-    
+
     static var previews: some View {
-        StreetPass(vm: StreetPassViewModel())
+        StreetPass()
+            .environmentObject(StreetPassViewModel())
     }
 }

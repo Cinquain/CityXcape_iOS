@@ -11,9 +11,9 @@ struct SecretSpotPage: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     @Environment(\.presentationMode) var presentationMode
+    @EnvironmentObject var vm: DiscoverViewModel
     
     var spot: SecretSpot
-    var vm: DiscoverViewModel
 
     var width: CGFloat = UIScreen.screenWidth
     @State private var showActionsheet: Bool = false
@@ -179,6 +179,7 @@ extension SecretSpotPage {
 
 struct SecretSpotPage_Previews: PreviewProvider {
     static var previews: some View {
-        SecretSpotPage(spot: SecretSpot.spot, vm: DiscoverViewModel())
+        SecretSpotPage(spot: SecretSpot.spot)
+            .environmentObject(DiscoverViewModel())
     }
 }

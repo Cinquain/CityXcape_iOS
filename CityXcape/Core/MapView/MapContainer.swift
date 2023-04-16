@@ -13,11 +13,11 @@ struct MapContainer: View {
     @Environment(\.presentationMode) var presentationMode
     
     @Binding var selectedTab: Int
-    @State var isHunt: Bool = false
+    @State var isTrail: Bool = false
     
     @ObservedObject var vm = MapSearchViewModel()
     @State var mapItem: MKMapItem = MKMapItem()
-    
+    @State var formType: FormType = .spot
     var body: some View {
         
         ZStack(alignment: .top) {
@@ -51,8 +51,7 @@ struct MapContainer: View {
                             Button(action: {
                                 vm.selectedMapItem = mapItem
                                 self.mapItem = mapItem
-                                isHunt ? vm.showTrailForm.toggle() : vm.showForm.toggle()
-                                
+                                isTrail ? vm.showTrailForm.toggle() : vm.showForm.toggle()
                             }, label: {
                                 
                                 VStack(alignment: .leading, spacing: 4) {
@@ -83,19 +82,7 @@ struct MapContainer: View {
                 
                 HStack {
                     
-//                    Button {
-//                        vm.showActionSheet.toggle()
-//                    } label: {
-//                        Image("trail")
-//                            .resizable()
-//                            .scaledToFit()
-//                            .frame(height: 45)
-//                    }
-//                    .fullScreenCover(isPresented: $vm.showTrailForm) {
-//                        isHunt = false
-//                    } content: {
-//                        PostTrailForm(isHunt: $isHunt, mapItem: mapItem)
-//                    }
+                   
 
 
                     Button(action: {
@@ -126,14 +113,21 @@ struct MapContainer: View {
                         
                         Button {
                             AnalyticsService.instance.droppedPin()
-                            vm.dropPin()
+                            vm.showActionSheet.toggle()
                         } label: {
                             Image("Post Pin")
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 45)
                         }
-                    .opacity(vm.mapItems.count >= 1 ? 0 : 1)
+                        .opacity(vm.mapItems.count >= 1 ? 0 : 1)
+                        .sheet(isPresented: $vm.showTrailForm) {
+                            formType = .spot
+                        } content: {
+                            PostTrailForm(mapItem: mapItem)
+                        }
+
+
                         
                     
 
@@ -151,29 +145,34 @@ struct MapContainer: View {
         }
         .edgesIgnoringSafeArea(.all)
         .sheet(isPresented: $vm.showForm, onDismiss: {
-
+            formType = .spot
         }, content: {
-            PostSpotForm(selectedTab: $selectedTab, vm: PostViewModel(), mapItem: mapItem)
+            PostSpotForm(mapItem: mapItem, type: formType)
         })
         .alert(isPresented: $vm.showAlert) {
             return Alert(title: Text(vm.alertMessgae))
         }
-//        .actionSheet(isPresented: $vm.showActionSheet) {
-//            return ActionSheet(title: Text("What type of trail is this?"), message: nil, buttons: [
-//
-//            .default(Text("Normal Trail"), action: {
-//                vm.showTrailForm.toggle()
-//            }),
-//
-//            .default(Text("Scavenger Hunt"), action: {
-//                isHunt = true
-//                vm.alertMessgae = "Start by choosing a starting location"
-//                vm.showAlert.toggle()
-//            }),
-//
-//            .cancel()
-//        ])
-//        }
+        .actionSheet(isPresented: $vm.showActionSheet) {
+            return ActionSheet(title: Text("What type of content is this?"), message: nil, buttons: [
+
+            .default(Text("News"), action: {
+                formType = .news
+                vm.dropPin()
+            }),
+            
+            .default(Text("Trail"), action: {
+                isTrail = true
+                vm.dropPin()
+            }),
+
+            .default(Text("Cool Spot"), action: {
+                formType = .spot
+                vm.dropPin()
+            }),
+
+            .cancel()
+        ])
+        }
         
         
 

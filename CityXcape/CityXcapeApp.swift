@@ -20,7 +20,12 @@ struct CityXcapeApp: App {
     
 
 
-    
+    @StateObject var discoverVM: DiscoverViewModel = DiscoverViewModel()
+    @StateObject var feedVM: FeedViewModel = FeedViewModel()
+    @StateObject var streetPassVM: StreetPassViewModel = StreetPassViewModel()
+    @StateObject var worldVM: WorldViewModel = WorldViewModel()
+    @StateObject var myWorld: MyWorldViewModel = MyWorldViewModel()
+    @StateObject var spotVM: SpotViewModel = SpotViewModel()
     let router = Router.shared
     let locManager = LocationService.instance
     
@@ -32,6 +37,12 @@ struct CityXcapeApp: App {
                         .environmentObject(store)
                         .environmentObject(router)
                         .environmentObject(locManager)
+                        .environmentObject(discoverVM)
+                        .environmentObject(feedVM)
+                        .environmentObject(streetPassVM)
+                        .environmentObject(myWorld)
+                        .environmentObject(worldVM)
+                        .environmentObject(spotVM)
                         .onOpenURL { url in
                             router.handleUrl(url: url)
                         }

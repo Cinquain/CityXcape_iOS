@@ -11,6 +11,7 @@ import SDWebImageSwiftUI
 struct CardView: View, Identifiable {
     
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
+    @EnvironmentObject var vm: SpotViewModel
 
     @State private var showStreetPass: Bool = false
     @State private var showComments: Bool = false
@@ -25,8 +26,6 @@ struct CardView: View, Identifiable {
         spot.id
     }
     var spot: SecretSpot
-    var vm: SpotViewModel = SpotViewModel()
-    
     
     var body: some View {
         
@@ -232,5 +231,7 @@ struct CardView_Previews: PreviewProvider {
     
     static var previews: some View {
         CardView(spot: SecretSpot.spot)
+            .environmentObject(SpotViewModel())
+            .previewLayout(.sizeThatFits)
     }
 }
