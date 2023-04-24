@@ -14,7 +14,7 @@ struct MyTrailsView: View {
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @Environment(\.dismiss) private var dismiss
 
-    @State var trails: [Trail] = [Trail.demo, Trail.demo2]
+    @State var trails: [Trail] = []
     @State private var currentTrail: Trail?
     @State private var showNewTrails: Bool = false
     @State var spots: [SecretSpot] = []

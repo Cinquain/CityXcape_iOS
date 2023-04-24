@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SpotSelectionList: View {
     
+    @Environment(\.dismiss) var dismiss
     @StateObject var vm: PostTrailViewModel
     @State private var currentSpot: SecretSpot?
     
@@ -16,11 +17,16 @@ struct SpotSelectionList: View {
         VStack {
         
             HStack {
-                Spacer()
-                Text(vm.allspots.count > 0 ? "Select spots for your trail/hunt" : "You have no spots posted")
+                Text(vm.allspots.count > 0 ? "Select spots to add" : "You have no spots!")
                     .font(.title)
                     .fontWeight(.thin)
                 Spacer()
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.title)
+                }
             }
             .foregroundColor(.white)
             .padding()

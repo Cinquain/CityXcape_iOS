@@ -10,6 +10,8 @@ import SDWebImageSwiftUI
 
 struct TrailDetailedView: View {
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var vm: SpotViewModel
+
     var spots: [SecretSpot]
     var trail: Trail
     
@@ -61,6 +63,17 @@ struct TrailDetailedView: View {
                 
                 Spacer()
             }
+            .onReceive(vm.$gotStamped, perform: { success in
+                if success {
+                    if let spot = currentSpot {
+                        if let index = incompleteSpots.firstIndex(of: spot) {
+                            incompleteSpots.remove(at: index)
+                            completedSpots.append(spot)
+                            vm.gotStamped = false
+                        }
+                    }
+                }
+            })
             .navigationBarTitle(Text(trail.name).font(.title), displayMode: .inline)
             .toolbar {
                   ToolbarItem(placement: .navigationBarLeading) {
@@ -144,12 +157,7 @@ struct TrailDetailedView: View {
                             spotItem(spot: spot, stamped: true)
                         }
                         .sheet(item: $currentSpot, onDismiss: {
-                            manager.fetchVerifications()
-                            verifications = manager
-                                                .verifications
-                                                .map({Verification(entity: $0)})
-                                                .map({$0.id})
-                            
+
                         }) { spot in
                             SpotDetailsView(spot: spot)
                         }
@@ -188,5 +196,6 @@ struct TrailDetailedView: View {
 struct TrailDetailedView_Previews: PreviewProvider {
     static var previews: some View {
         TrailDetailedView(spots: [SecretSpot.spot, SecretSpot.spot2, SecretSpot.spot3], trail: Trail.demo)
+            .environmentObject(SpotViewModel())
     }
 }

@@ -13,9 +13,9 @@ import Shimmer
 struct SpotDetailsView: View {
     @Environment(\.presentationMode) var presentationMode
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
+    @EnvironmentObject var vm: SpotViewModel
 
     @State var spot: SecretSpot 
-    @StateObject var vm: SpotViewModel = SpotViewModel()
     @StateObject var mapViewModel: MapViewModel = MapViewModel()
     let height = UIScreen.screenHeight
     
@@ -392,7 +392,7 @@ struct SpotDetailsView_Previews: PreviewProvider {
     @State static var refresh: Bool = false
 
     static var previews: some View {
-
         SpotDetailsView(spot: SecretSpot.spot)
+            .environmentObject(SpotViewModel())
     }
 }

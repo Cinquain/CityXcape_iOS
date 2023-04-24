@@ -30,7 +30,7 @@ class PostTrailViewModel: NSObject, ObservableObject {
     @Published var selectedSpots: [SecretSpot] = []
     @Published var allspots: [SecretSpot] = CoreDataManager.instance.spotEntities
                                                 .map({SecretSpot(entity: $0)})
-                                                .filter({$0.ownerId == User().id})
+    
     @Published var showList: Bool = false
     @Published var showAllSpots: Bool = false
     @Published var showMap: Bool = false
@@ -91,8 +91,33 @@ class PostTrailViewModel: NSObject, ObservableObject {
     }
     
     func postTrailtoDb(location: MKMapItem, isHunt: Bool) {
+        if trailName.count < 3 {
+            alertMessage = "Please add a name greater than 3 characters"
+            showAlert.toggle()
+            return
+        }
+        if description.count < 10 {
+            alertMessage = "Please add a description longer than 10 characters"
+            showAlert.toggle()
+            return
+        }
+        if world.isEmpty {
+            alertMessage = "Please add a hashtag for the community this trail is for"
+            showAlert.toggle()
+            return
+        }
+        if selectedImage == nil {
+            alertMessage = "Please add a cover image for your trail"
+            showAlert.toggle()
+            return
+        }
+        if selectedSpots.isEmpty {
+            alertMessage = "Please add spots to your trail"
+            showAlert.toggle()
+            return
+        }
         let user = User()
-        let price = Int(priceString) ?? 10
+        let price = Int(priceString) ?? 2
         let image = selectedImage ?? UIImage()
         if isHunt {
             DataService.instance.createHunt(name: trailName, details: trailDetails, image: image, startDate: startDate, endDate: endDate, location: location, world: world, user: user, price: price, spots: selectedSpots, completion: { [weak self] result in

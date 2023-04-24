@@ -154,11 +154,6 @@ struct MapContainer: View {
         }
         .actionSheet(isPresented: $vm.showActionSheet) {
             return ActionSheet(title: Text("What type of content is this?"), message: nil, buttons: [
-
-            .default(Text("News"), action: {
-                formType = .news
-                vm.dropPin()
-            }),
             
             .default(Text("Trail"), action: {
                 isTrail = true

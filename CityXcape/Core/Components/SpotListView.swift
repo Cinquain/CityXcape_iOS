@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SpotListView: View {
     
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @EnvironmentObject var vm: PostTrailViewModel
     @State private var showAlert: Bool = false
     var body: some View {
@@ -67,7 +67,7 @@ extension SpotListView {
     
     private var exitButton: some View {
         Button {
-            self.presentationMode.wrappedValue.dismiss()
+            dismiss()
         } label: {
             Text("Done")
                 

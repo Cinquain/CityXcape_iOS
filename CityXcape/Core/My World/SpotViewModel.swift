@@ -27,6 +27,8 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
     @Published var actionSheetType: SpotActionSheetType = .general
     @Published var videoUrl: URL?
     
+    @Published var gotStamped: Bool = false 
+
     @Published var comment: String = ""
     @Published var commentString: String = ""
     @Published var journeyImage: UIImage?
@@ -386,9 +388,11 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
         }
         
         
-        DataService.instance.updateStamp(spot: spot, image: journeyImage, comment: comment) { result in
+        DataService.instance.updateStamp(spot: spot, image: journeyImage, comment: comment) { [weak self] result in
+            guard let self = self else {return}
             switch result {
             case .success(let complete):
+                self.gotStamped = true
                 completion(complete)
             case .failure(let error):
                 print("Error updating stamp", error.localizedDescription)
@@ -425,6 +429,7 @@ class SpotViewModel: NSObject, ObservableObject, UIDocumentInteractionController
                 guard let self = self else {return}
                 if success {
                     self.manager.updateVerification(spotId: spot.id, verified: true)
+                    self.gotStamped = true
                     completion(success)
                 } else {
                     self.isLoading = false

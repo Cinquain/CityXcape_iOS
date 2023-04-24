@@ -77,6 +77,9 @@ struct PostTrailForm: View {
           //NavigationView
         }
         .colorScheme(.dark)
+        .alert(isPresented: $vm.showAlert, content: {
+            return Alert(title: Text(vm.alertMessage))
+        })
         .actionSheet(isPresented: $vm.actionSheet) {
             ActionSheet(title: Text("Source Options"), message: nil, buttons: [
                 .default(Text("Camera"), action: {
