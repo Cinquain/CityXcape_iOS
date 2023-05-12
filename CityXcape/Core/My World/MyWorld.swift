@@ -13,8 +13,10 @@ struct MyWorld: View {
     
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     @AppStorage(CurrentUserDefaults.displayName) var username: String?
-    @EnvironmentObject var worldVM: WorldViewModel
+    
+    @StateObject var worldVM: WorldViewModel
     @StateObject var vm: MyWorldViewModel
+    
     @State private var isPresented: Bool = false
     @State private var showMenu: Bool = false
     @Binding var selectedTab: Int
@@ -228,7 +230,7 @@ struct MyJourney_Previews: PreviewProvider {
     @State static var selection: Int = 0
 
     static var previews: some View {
-        MyWorld(vm: MyWorldViewModel(), selectedTab: $selection)
+        MyWorld(worldVM: WorldViewModel(), vm: MyWorldViewModel(), selectedTab: $selection)
             .environmentObject(WorldViewModel())
     }
 }

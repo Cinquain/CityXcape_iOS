@@ -31,7 +31,6 @@ enum MessageType {
 enum FormType {
     case spot
     case news
-    case trail
 }
 
 enum CardType {

@@ -49,63 +49,6 @@ struct SideMenu: View {
                 }
                 
                 Button {
-                    showTrails.toggle()
-                } label: {
-                    HStack {
-                        Image("trail")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 20)
-                        Text("Find Trails")
-                            .font(.title3)
-                            .fontWeight(.light)
-                    }
-                    .padding()
-                }
-                .fullScreenCover(isPresented: $showTrails) {
-                    MyTrailsView()
-                }
-
-                
-                Button {
-                    worldVM.fetchUsersFromWorld()
-                } label: {
-                    HStack(spacing: 5) {
-                        Image("grid")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 25)
-                        Text("Heatmap")
-                            .font(.title3)
-                        .fontWeight(.light)
-                    }
-                }
-                .padding()
-                .fullScreenCover(isPresented: $worldVM.showHeatmap) {
-                    HeatMap(vm: worldVM)
-                        .colorScheme(.dark)
-                }
-                
-                Button {
-                    showFriends.toggle()
-                } label: {
-                    HStack(spacing: 5) {
-                        Image("dot")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 28)
-                        Text("Message")
-                            .font(.title3)
-                        .fontWeight(.light)
-                    }
-                }
-                .padding()
-                .fullScreenCover(isPresented: $showFriends) {
-                    FriendsView(vm: ChatLogViewModel())
-                }
-                
-              
-                Button {
                     worldVM.loadUserSecretSpots()
                 } label: {
                     HStack(spacing: 5) {
@@ -124,52 +67,24 @@ struct SideMenu: View {
                 }
                 
                 Button {
-                    showJourney.toggle()
+                    showFriends.toggle()
                 } label: {
                     HStack(spacing: 5) {
-                        Image("walking")
-                             .resizable()
-                             .scaledToFit()
-                             .frame(height: 23)
-                                                 
-                        Text("My Journey")
-                             .font(.title3)
-                             .fontWeight(.light)
-                    }
-                }
-                .padding()
-                .fullScreenCover(isPresented: $showJourney) {
-                    JourneyView()
-                }
-                
-                
-           
-                
-            }
-            
-            
-
-            Group {
-                
-                Button {
-                    showAnalytics.toggle()
-                } label: {
-                    HStack(spacing: 5) {
-                        Image("graph")
+                        Image("dot")
                             .resizable()
                             .scaledToFit()
-                            .frame(height: 18)
-                        Text("Analytics")
+                            .frame(height: 28)
+                        Text("Friends")
                             .font(.title3)
                         .fontWeight(.light)
                     }
                 }
                 .padding()
-                .fullScreenCover(isPresented: $showAnalytics) {
-                    StreetReportCard()
+                .fullScreenCover(isPresented: $showFriends) {
+                    FriendsView(vm: ChatLogViewModel())
                 }
                 
-           
+             
                 
                 Button {
                     worldVM.getFriendRequest()
@@ -193,7 +108,19 @@ struct SideMenu: View {
                     RequestList(friends: worldVM.friendRequest)
                 }
                 
+        
+              
+           
                 
+           
+                
+            }
+            
+            
+
+            Group {
+                
+            
                 
                 
                 Button {
@@ -203,7 +130,7 @@ struct SideMenu: View {
                        Image(systemName:"envelope")
                             .resizable()
                             .scaledToFit()
-                            .frame(height: 22)
+                            .frame(height: 20)
                          
                            Text("Invitations")
                                 .font(.title2)
@@ -214,28 +141,69 @@ struct SideMenu: View {
                 .sheet(isPresented: $worldVM.showInvite) {
                     WorldInvitationView(vm: worldVM)
                 }
+            
+                
+             
+                
+                //                Button {
+                //                    showTrails.toggle()
+                //                } label: {
+                //                    HStack {
+                //                        Image("trail")
+                //                            .resizable()
+                //                            .scaledToFit()
+                //                            .frame(height: 20)
+                //                        Text("Find Trails")
+                //                            .font(.title3)
+                //                            .fontWeight(.light)
+                //                    }
+                //                    .padding()
+                //                }
+                //                .fullScreenCover(isPresented: $showTrails) {
+                //                    MyTrailsView()
+                //                }
+
+                
+//                Button {
+//                    worldVM.fetchWorlds()
+//                    showWorlds.toggle()
+//                } label: {
+//                    HStack(spacing: 5) {
+//                       Image(systemName:"globe")
+//                            .resizable()
+//                            .scaledToFit()
+//                            .frame(height: 22)
+//                            .foregroundColor(.white)
+//
+//                           Text("Worlds")
+//                                .font(.title2)
+//                                .fontWeight(.thin)
+//                                .foregroundColor(.white)
+//
+//                        }
+//                }
+//                .padding()
+//                .fullScreenCover(isPresented: $showWorlds) {
+//                    DiscoverWorlds(vm: worldVM)
+//                }
                 
                 Button {
-                    worldVM.fetchWorlds()
-                    showWorlds.toggle()
+                    worldVM.fetchUsersFromWorld()
                 } label: {
                     HStack(spacing: 5) {
-                       Image(systemName:"globe")
+                        Image("grid")
                             .resizable()
                             .scaledToFit()
-                            .frame(height: 22)
-                            .foregroundColor(.white)
-                         
-                           Text("Worlds")
-                                .font(.title2)
-                                .fontWeight(.thin)
-                                .foregroundColor(.white)
-                        
-                        }
+                            .frame(height: 25)
+                        Text("Heatmap")
+                            .font(.title3)
+                        .fontWeight(.light)
+                    }
                 }
                 .padding()
-                .fullScreenCover(isPresented: $showWorlds) {
-                    DiscoverWorlds(vm: worldVM)
+                .fullScreenCover(isPresented: $worldVM.showHeatmap) {
+                    HeatMap(vm: worldVM)
+                        .colorScheme(.dark)
                 }
                 
                 

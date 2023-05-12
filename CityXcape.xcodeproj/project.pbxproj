@@ -30,7 +30,6 @@
 		211EC5DF27C65EB800F0B0A8 /* MissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211EC5DE27C65EB800F0B0A8 /* MissionView.swift */; };
 		211F664427D247800035DB83 /* StampCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211F664327D247800035DB83 /* StampCollectionView.swift */; };
 		211F6AB128577EFF00441790 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211F6AB028577EFF00441790 /* Product.swift */; };
-		211F6AB428578A8400441790 /* PartialSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 211F6AB328578A8400441790 /* PartialSheet */; };
 		2120579E27DE1B3500602EE8 /* Stamp.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 2120579D27DE1B3500602EE8 /* Stamp.mp3 */; };
 		212057A027DE1C2E00602EE8 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120579F27DE1C2E00602EE8 /* SoundManager.swift */; };
 		2120CE66275FA254006367FE /* LocationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2120CE65275FA254006367FE /* LocationCamera.swift */; };
@@ -102,6 +101,7 @@
 		217EFE8A26DEAB1F005C7C88 /* CongratsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217EFE8926DEAB1F005C7C88 /* CongratsView.swift */; };
 		218115EB27315E9400026AAD /* NotificationsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218115EA27315E9400026AAD /* NotificationsManager.swift */; };
 		218115ED2731860700026AAD /* PublicStreetPass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218115EC2731860700026AAD /* PublicStreetPass.swift */; };
+		218516F729F957B300206725 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 218516F629F957B300206725 /* MapboxMaps */; };
 		218980A726DC54C500A6FD23 /* LikeAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218980A626DC54C500A6FD23 /* LikeAnimationView.swift */; };
 		218B6A99289170420005CF3B /* SecretSpotPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218B6A98289170420005CF3B /* SecretSpotPage.swift */; };
 		218CADBE26D5C94300496884 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218CADBD26D5C94300496884 /* SettingsView.swift */; };
@@ -161,7 +161,6 @@
 		21DCF82727E63090000BD1B3 /* Follower.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DCF82627E63090000BD1B3 /* Follower.swift */; };
 		21DE9D9129DAEBC400034DC2 /* MyTrailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DE9D9029DAEBC400034DC2 /* MyTrailsView.swift */; };
 		21DEA243289D6DFB00629426 /* ChatLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DEA242289D6DFB00629426 /* ChatLogView.swift */; };
-		21E0DB702895679D00C34761 /* MapboxMaps in Frameworks */ = {isa = PBXBuildFile; productRef = 21E0DB6F2895679D00C34761 /* MapboxMaps */; };
 		21E0DB722895685D00C34761 /* HeatMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E0DB712895685D00C34761 /* HeatMap.swift */; };
 		21E2861527CE56150068208E /* MyJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E2861427CE56150068208E /* MyJournal.swift */; };
 		21E318CC28AD240500F8A9A2 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E318CB28AD240500F8A9A2 /* FriendsView.swift */; };
@@ -380,13 +379,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				211F6AB428578A8400441790 /* PartialSheet in Frameworks */,
 				219A9C102850E1F400BD6060 /* CodeScanner in Frameworks */,
-				21E0DB702895679D00C34761 /* MapboxMaps in Frameworks */,
 				21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */,
 				21E92CB628552572005D11DE /* StoreKit.framework in Frameworks */,
 				B19BDA97BA9BF69BFAD7AEA7 /* Pods_CityXcape.framework in Frameworks */,
 				21CB97ED2889933900F35464 /* Shimmer in Frameworks */,
+				218516F729F957B300206725 /* MapboxMaps in Frameworks */,
 				213E8ECA282D3F39002A1495 /* SwiftPieChart in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -797,9 +795,8 @@
 				21D85F4F26EAAE1E00502636 /* SDWebImageSwiftUI */,
 				213E8EC9282D3F39002A1495 /* SwiftPieChart */,
 				219A9C0F2850E1F400BD6060 /* CodeScanner */,
-				211F6AB328578A8400441790 /* PartialSheet */,
 				21CB97EC2889933900F35464 /* Shimmer */,
-				21E0DB6F2895679D00C34761 /* MapboxMaps */,
+				218516F629F957B300206725 /* MapboxMaps */,
 			);
 			productName = CityXcape;
 			productReference = 217DA72426CC8F8B0039A145 /* CityXcape.app */;
@@ -1168,7 +1165,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1223,7 +1220,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1246,12 +1243,13 @@
 				DEVELOPMENT_TEAM = M85RTB7279;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CityXcape/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.3;
+				MARKETING_VERSION = 1.7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1272,12 +1270,13 @@
 				DEVELOPMENT_TEAM = M85RTB7279;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = CityXcape/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.3;
+				MARKETING_VERSION = 1.7.4;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1376,15 +1375,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		211F6AB328578A8400441790 /* PartialSheet */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 211F6AB228578A8400441790 /* XCRemoteSwiftPackageReference "PartialSheet" */;
-			productName = PartialSheet;
-		};
 		213E8EC9282D3F39002A1495 /* SwiftPieChart */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 213E8EC8282D3F39002A1495 /* XCRemoteSwiftPackageReference "SwiftPieChart" */;
 			productName = SwiftPieChart;
+		};
+		218516F629F957B300206725 /* MapboxMaps */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 21E0DB6E2895679D00C34761 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */;
+			productName = MapboxMaps;
 		};
 		219A9C0F2850E1F400BD6060 /* CodeScanner */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1400,11 +1399,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 21D85F4E26EAAE1E00502636 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
 			productName = SDWebImageSwiftUI;
-		};
-		21E0DB6F2895679D00C34761 /* MapboxMaps */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 21E0DB6E2895679D00C34761 /* XCRemoteSwiftPackageReference "mapbox-maps-ios" */;
-			productName = MapboxMaps;
 		};
 /* End XCSwiftPackageProductDependency section */
 

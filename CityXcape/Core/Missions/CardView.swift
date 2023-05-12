@@ -11,7 +11,7 @@ import SDWebImageSwiftUI
 struct CardView: View, Identifiable {
     
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
-    @EnvironmentObject var vm: SpotViewModel
+    @StateObject var vm: SpotViewModel = SpotViewModel()
 
     @State private var showStreetPass: Bool = false
     @State private var showComments: Bool = false

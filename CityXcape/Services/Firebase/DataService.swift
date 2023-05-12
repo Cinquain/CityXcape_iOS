@@ -1972,6 +1972,7 @@ class DataService {
 
             self.REF_POST
                 .order(by: SecretSpotField.dateCreated, descending: true)
+                .limit(to: 100)
                 .getDocuments { querysnapshot, error in
                     if let error = error {
                         print("Error fetching secret spots", error.localizedDescription)

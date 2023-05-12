@@ -79,5 +79,6 @@ struct FeedBubbleView_Previews: PreviewProvider {
     static var previews: some View {
         FeedBubbleView(feed: Feed.feed)
             .previewLayout(.sizeThatFits)
+            .environmentObject(FeedViewModel())
     }
 }

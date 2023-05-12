@@ -18,9 +18,7 @@ struct MainWorldPage: View {
     var body: some View {
         
         VStack {
-          
-              
-            
+                      
             VStack {
                 Text("Your Street Report Card")
                     .font(.title2)

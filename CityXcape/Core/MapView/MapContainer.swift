@@ -51,7 +51,7 @@ struct MapContainer: View {
                             Button(action: {
                                 vm.selectedMapItem = mapItem
                                 self.mapItem = mapItem
-                                isTrail ? vm.showTrailForm.toggle() : vm.showForm.toggle()
+                                vm.showForm.toggle()
                             }, label: {
                                 
                                 VStack(alignment: .leading, spacing: 4) {
@@ -112,8 +112,7 @@ struct MapContainer: View {
 
                         
                         Button {
-                            AnalyticsService.instance.droppedPin()
-                            vm.showActionSheet.toggle()
+                            vm.dropPin()
                         } label: {
                             Image("Post Pin")
                                 .resizable()
@@ -121,11 +120,7 @@ struct MapContainer: View {
                                 .frame(width: 45)
                         }
                         .opacity(vm.mapItems.count >= 1 ? 0 : 1)
-                        .sheet(isPresented: $vm.showTrailForm) {
-                            formType = .spot
-                        } content: {
-                            PostTrailForm(mapItem: mapItem)
-                        }
+                      
 
 
                         
@@ -152,23 +147,7 @@ struct MapContainer: View {
         .alert(isPresented: $vm.showAlert) {
             return Alert(title: Text(vm.alertMessgae))
         }
-        .actionSheet(isPresented: $vm.showActionSheet) {
-            return ActionSheet(title: Text("What type of content is this?"), message: nil, buttons: [
-            
-            .default(Text("Trail"), action: {
-                isTrail = true
-                vm.dropPin()
-            }),
-
-            .default(Text("Cool Spot"), action: {
-                formType = .spot
-                vm.dropPin()
-            }),
-
-            .cancel()
-        ])
-        }
-        
+     
         
 
     }

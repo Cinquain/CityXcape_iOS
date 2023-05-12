@@ -11,7 +11,7 @@ struct SecretSpotPage: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.wallet) var wallet: Int?
     @Environment(\.presentationMode) var presentationMode
-    @EnvironmentObject var vm: DiscoverViewModel
+    @StateObject var vm: DiscoverViewModel
     
     var spot: SecretSpot
 
@@ -179,7 +179,7 @@ extension SecretSpotPage {
 
 struct SecretSpotPage_Previews: PreviewProvider {
     static var previews: some View {
-        SecretSpotPage(spot: SecretSpot.spot)
+        SecretSpotPage(vm: DiscoverViewModel(), spot: SecretSpot.spot)
             .environmentObject(DiscoverViewModel())
     }
 }

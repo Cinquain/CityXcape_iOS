@@ -12,7 +12,8 @@ struct FeedView: View {
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     @AppStorage(CurrentUserDefaults.profileUrl) var profileUrl: String?
     
-    @EnvironmentObject var vm: FeedViewModel
+    @ObservedObject var vm: FeedViewModel
+    @ObservedObject var discoverVM: DiscoverViewModel
     @EnvironmentObject var worldVM: WorldViewModel
     @Binding var selectedTab: Int
     @State private var showMenu: Bool = false
@@ -27,16 +28,17 @@ struct FeedView: View {
                      
                         ForEach(vm.feeds) { feed in
                             FeedBubbleView(feed: feed)
+                                .environmentObject(vm)
                                 .padding(.top, 10)
                                 .sheet(item: $vm.secretSpot) { spot in
-                                    SecretSpotPage(spot: spot)
+                                    SecretSpotPage(vm: discoverVM, spot: spot)
                                 }
                             }
                         
                         }
-                    .alert(isPresented: $vm.showAlert) {
-                        return Alert(title: Text(vm.alertMessage))
-                    }
+                        .alert(isPresented: $vm.showAlert) {
+                            return Alert(title: Text(vm.alertMessage))
+                        }
                 
                 GeometryReader { _ in
                     HStack {
@@ -215,9 +217,8 @@ extension FeedView {
 struct Feed_Previews: PreviewProvider {
     @State static var number: Int = 1
     static var previews: some View {
-        FeedView(selectedTab: $number)
+        FeedView(vm: FeedViewModel(),discoverVM: DiscoverViewModel(), selectedTab: $number)
             .colorScheme(.dark)
-            .environmentObject(FeedViewModel())
             .environmentObject(WorldViewModel())
     }
 }

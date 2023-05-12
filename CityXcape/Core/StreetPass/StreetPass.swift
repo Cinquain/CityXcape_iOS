@@ -18,7 +18,7 @@ struct StreetPass: View {
     @AppStorage(CurrentUserDefaults.social) var social: Int?
     @AppStorage(CurrentUserDefaults.tribeImageUrl) var tribeImageUrl: String?
 
-    @EnvironmentObject var vm: StreetPassViewModel
+    @StateObject var vm: StreetPassViewModel
 
     @State private var username: String = ""
     @State private var userbio: String = ""
@@ -296,7 +296,7 @@ struct StreetPass: View {
 struct StreetPass_Previews: PreviewProvider {
 
     static var previews: some View {
-        StreetPass()
+        StreetPass(vm: StreetPassViewModel())
             .environmentObject(StreetPassViewModel())
     }
 }

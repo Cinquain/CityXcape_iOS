@@ -33,7 +33,7 @@ struct PostTrailForm: View {
                     
                     TextField(vm.worldPlaceHolder, text: $vm.world)
                         .frame(height: 40)
-                    Toggle(isHunt ? "Scavenger Hunt" : "Trail" , isOn: $isHunt)
+//                    Toggle(isHunt ? "Scavenger Hunt" : "Trail" , isOn: $isHunt)
                 }
                 
                 
@@ -44,7 +44,7 @@ struct PostTrailForm: View {
                 
                
                 Section(header: Text("Price: \(vm.streetcred) StreetCred, \(vm.selectedSpots.count) spot(s)" )) {
-                    Stepper("Number of StreetCred", value: $vm.streetcred, in: 1...100)
+                    Stepper("Number of StreetCred", value: $vm.streetcred, in: 1...12)
                     addSpotButton
 
                 }
@@ -94,8 +94,11 @@ struct PostTrailForm: View {
                 .cancel()
                 
             ])
-            
         }
+        .onAppear{
+            vm.manager.fetchSecretSpots()
+        }
+        
         
         //End of body
     }
@@ -152,8 +155,11 @@ extension PostTrailForm {
 
         }
         .fullScreenCover(isPresented: $vm.showList) {
-            SpotListView()
-                .environmentObject(vm)
+            if vm.selectedSpots.isEmpty {
+                SpotSelectionList(vm: vm)
+            } else {
+                SpotListView()
+            }
         }
     }
                 

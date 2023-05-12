@@ -120,7 +120,7 @@ class DiscoverViewModel: ObservableObject {
         cardViews.removeFirst()
         lastCardIndex += 1
         lastMoveIndex += 1
-        newSpotCount -= 1
+        self.newSpotCount -= 1
         let secretSpots = newSecretSpots.sorted(by: {$0.distanceFromUser < $1.distanceFromUser})
         if lastCardIndex <= secretSpots.count - 1 {
             let spot = secretSpots[lastCardIndex]

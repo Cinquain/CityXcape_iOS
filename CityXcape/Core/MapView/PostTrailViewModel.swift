@@ -28,6 +28,7 @@ class PostTrailViewModel: NSObject, ObservableObject {
     @Published var alertMessage: String = ""
     
     @Published var selectedSpots: [SecretSpot] = []
+    let manager = CoreDataManager.instance
     @Published var allspots: [SecretSpot] = CoreDataManager.instance.spotEntities
                                                 .map({SecretSpot(entity: $0)})
     

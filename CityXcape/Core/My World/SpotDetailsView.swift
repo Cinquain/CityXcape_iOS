@@ -13,7 +13,7 @@ import Shimmer
 struct SpotDetailsView: View {
     @Environment(\.presentationMode) var presentationMode
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
-    @EnvironmentObject var vm: SpotViewModel
+    @StateObject var vm: SpotViewModel = SpotViewModel()
 
     @State var spot: SecretSpot 
     @StateObject var mapViewModel: MapViewModel = MapViewModel()
@@ -160,6 +160,7 @@ struct SpotDetailsView: View {
                     }
                 }
             }
+            
 
         
         
