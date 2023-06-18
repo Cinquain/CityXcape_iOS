@@ -222,7 +222,6 @@ class WorldViewModel: NSObject, ObservableObject {
                 self.showFriendRequest.toggle()
             }
         }
-        
     }
     
     func loadUserSecretSpots() {

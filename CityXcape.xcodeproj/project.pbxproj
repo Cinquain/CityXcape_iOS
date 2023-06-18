@@ -165,6 +165,8 @@
 		21E2861527CE56150068208E /* MyJournal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E2861427CE56150068208E /* MyJournal.swift */; };
 		21E318CC28AD240500F8A9A2 /* FriendsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E318CB28AD240500F8A9A2 /* FriendsView.swift */; };
 		21E318CE28AD367200F8A9A2 /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E318CD28AD367200F8A9A2 /* UserView.swift */; };
+		21E3C80D2A1BF82400B2BC8A /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E3C80C2A1BF82400B2BC8A /* AVKit.framework */; };
+		21E3C80F2A1BFAB100B2BC8A /* GoogleDataTransport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21E3C80E2A1BFAB100B2BC8A /* GoogleDataTransport.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		21E4DC072753D8D9004276D2 /* CheckinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E4DC062753D8D9004276D2 /* CheckinView.swift */; };
 		21E6B2B728D605390015B306 /* ProgressCircle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E6B2B628D605390015B306 /* ProgressCircle.swift */; };
 		21E854C3286B37FC00B4B5B0 /* ImageSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E854C2286B37FC00B4B5B0 /* ImageSaver.swift */; };
@@ -348,6 +350,9 @@
 		21E2861427CE56150068208E /* MyJournal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyJournal.swift; sourceTree = "<group>"; };
 		21E318CB28AD240500F8A9A2 /* FriendsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsView.swift; sourceTree = "<group>"; };
 		21E318CD28AD367200F8A9A2 /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
+		21E3C80C2A1BF82400B2BC8A /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		21E3C80E2A1BFAB100B2BC8A /* GoogleDataTransport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = GoogleDataTransport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		21E3C8102A1BFE3A00B2BC8A /* libswiftWebKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libswiftWebKit.tbd; path = usr/lib/swift/libswiftWebKit.tbd; sourceTree = SDKROOT; };
 		21E4DC062753D8D9004276D2 /* CheckinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckinView.swift; sourceTree = "<group>"; };
 		21E6B2B628D605390015B306 /* ProgressCircle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCircle.swift; sourceTree = "<group>"; };
 		21E854C2286B37FC00B4B5B0 /* ImageSaver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSaver.swift; sourceTree = "<group>"; };
@@ -379,6 +384,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21E3C80F2A1BFAB100B2BC8A /* GoogleDataTransport.framework in Frameworks */,
+				21E3C80D2A1BF82400B2BC8A /* AVKit.framework in Frameworks */,
 				219A9C102850E1F400BD6060 /* CodeScanner in Frameworks */,
 				21D85F5026EAAE1E00502636 /* SDWebImageSwiftUI in Frameworks */,
 				21E92CB628552572005D11DE /* StoreKit.framework in Frameworks */,
@@ -756,6 +763,9 @@
 		2C5DDA3884E8770F1BEF8846 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				21E3C8102A1BFE3A00B2BC8A /* libswiftWebKit.tbd */,
+				21E3C80E2A1BFAB100B2BC8A /* GoogleDataTransport.framework */,
+				21E3C80C2A1BF82400B2BC8A /* AVKit.framework */,
 				21E92CB528552572005D11DE /* StoreKit.framework */,
 				DCA9C5911349B641DAFDEFD7 /* Pods_CityXcape.framework */,
 			);
@@ -1249,7 +1259,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.4;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/swift",
+				);
+				MARKETING_VERSION = 1.7.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1276,7 +1290,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.7.4;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SDKROOT)/usr/lib/swift",
+				);
+				MARKETING_VERSION = 1.7.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.cityportal.CityXcape;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

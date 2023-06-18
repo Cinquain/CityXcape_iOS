@@ -14,7 +14,7 @@ struct FeedView: View {
     
     @ObservedObject var vm: FeedViewModel
     @ObservedObject var discoverVM: DiscoverViewModel
-    @EnvironmentObject var worldVM: WorldViewModel
+    @ObservedObject var worldVM: WorldViewModel
     @Binding var selectedTab: Int
     @State private var showMenu: Bool = false
     let width: CGFloat = UIScreen.screenWidth
@@ -217,7 +217,7 @@ extension FeedView {
 struct Feed_Previews: PreviewProvider {
     @State static var number: Int = 1
     static var previews: some View {
-        FeedView(vm: FeedViewModel(),discoverVM: DiscoverViewModel(), selectedTab: $number)
+        FeedView(vm: FeedViewModel(),discoverVM: DiscoverViewModel(), worldVM: WorldViewModel(), selectedTab: $number)
             .colorScheme(.dark)
             .environmentObject(WorldViewModel())
     }

@@ -9,12 +9,11 @@ import SwiftUI
 
 struct DiscoverView: View {
     
-    @StateObject var vm: DiscoverViewModel
-    @StateObject var worldVM: WorldViewModel
+    @ObservedObject var vm: DiscoverViewModel
+    @ObservedObject var worldVM: WorldViewModel
 
     @AppStorage(CurrentUserDefaults.userId) var userId: String?
     
-
     @State private var isPresented: Bool = false
     @State private var currentSpot: SecretSpot?
     @Binding var selectedTab: Int
@@ -33,12 +32,10 @@ struct DiscoverView: View {
             ZStack(alignment: .top) {
                     
                     if vm.newSecretSpots.isEmpty {
-                             VStack {
-                                   emptyStateIcon
-                                 
-                                   refreshButton
-                                     
-                             }
+                         VStack {
+                           emptyStateIcon
+                           refreshButton
+                         }
                                      
                      } else {
                     
@@ -56,9 +53,7 @@ struct DiscoverView: View {
                                                 .foregroundColor(.white)
                                                 .font(.title2)
                                                 .fontWeight(.medium)
-                                                .fullScreenCover(isPresented: $vm.showSignUp) {
-                                                    OnboardingView()
-                                                }
+                                                .fullScreenCover(isPresented: $vm.showSignUp) {OnboardingView()}
                                         }
                                         .opacity(dragState.translation.width <  -dragThreshold && vm.isTopCard(cardView: cardview) ? 1 :0.0)
                                         
@@ -108,7 +103,7 @@ struct DiscoverView: View {
                         
                     }
 
-                   //End of Scrollview
+                   //End of card stack
                 
                 VStack {
                     Spacer()

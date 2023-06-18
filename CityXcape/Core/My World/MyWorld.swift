@@ -26,6 +26,7 @@ struct MyWorld: View {
 
     let manager = CoreDataManager.instance
     let width = UIScreen.screenWidth
+    
     var body: some View {
    
             NavigationView {
@@ -51,7 +52,9 @@ struct MyWorld: View {
                                                 .onTapGesture(perform: {
                                                     
                                                     self.currentSpot = spot
-                                                    AnalyticsService.instance.viewedSecretSpot()
+                                                    AnalyticsService
+                                                        .instance
+                                                        .viewedSecretSpot()
                                                 })
                                                 .sheet(item: $currentSpot) {
                                                     //Dismiss Code
@@ -68,7 +71,6 @@ struct MyWorld: View {
                                     
                                 }
                             }
-                            
                             
                             //End of Scrollview
                         }

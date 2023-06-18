@@ -213,6 +213,7 @@ class DataService {
         let spotId = spot.id
         let feedDocument = REF_FEED.document()
         let feedId = feedDocument.documentID
+        let spotPrice = spot.price
 
         //Save swipe to history
         let historyData: [String: Any] =
@@ -223,15 +224,14 @@ class DataService {
                         .setData(historyData)
 
         //Increment view and save count by one
-        let increment: Int64 = 1
+        let countIncrement: Int64 = 1
         let data: [String: Any] = [
-            SecretSpotField.viewCount: FieldValue.increment(increment),
-            SecretSpotField.saveCount : FieldValue.increment(increment)
+            SecretSpotField.viewCount: FieldValue.increment(countIncrement),
+            SecretSpotField.saveCount : FieldValue.increment(countIncrement)
         ]
         REF_POST.document(spot.id).updateData(data)
         
 
-        //Save post id in user's world
         
         let savedData: [String: Any] =
             ["savedOn": FieldValue.serverTimestamp(),
@@ -241,9 +241,10 @@ class DataService {
              UserField.bio: bio,
             ]
         
+        //Save to user's private world
         REF_WORLD.document(ServerPath.secret).collection(uid).document(spotId).setData(savedData)
 
-        //Add user to saved collection in spot
+        //Add user to saved collection in spot data
         REF_POST.document(spotId).collection(ServerPath.save).document(uid).setData(savedData) { [weak self] error in
             guard let self = self else {return}
             if let error = error {
@@ -252,8 +253,8 @@ class DataService {
                 return
             }
             
-            //Decrement buyer wallet remotely
-            let decrement: Int64 = -1
+            //Decrement buyer wallet by spot price
+            let decrement: Int64 = -Int64(spotPrice)
             let userData : [String: Any] = [
                 UserField.streetCred : FieldValue.increment(decrement)
             ]
@@ -263,9 +264,11 @@ class DataService {
             //Increment owner wallet
             let ownerId = spot.ownerId
             let ownerWalletData: [String: Any] = [
-                UserField.streetCred : FieldValue.increment(increment)
+                UserField.streetCred : FieldValue.increment(Int64(spotPrice))
             ]
             AuthService.instance.updateUserField(uid: ownerId, data: ownerWalletData)
+            
+            //Update the general feed
             let rank = self.rank ?? "Tourist"
             let userLong = self.locationManager.userlocation?.longitude ?? 0
             let userLat = self.locationManager.userlocation?.latitude ?? 0
